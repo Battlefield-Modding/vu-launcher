@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
+import { saveUserCredentials } from '@/api'
 
 const formSchema = z.object({
   username: z.string().min(2).max(50),
@@ -29,19 +30,15 @@ export default function PlayerCredentialsForm({ setSheetOpen }: { setSheetOpen: 
     },
   })
 
-  // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values)
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    const status = await saveUserCredentials(values)
 
-    // TODO: Send values to rust. Get OK/FAIL response from rust.
-
-    // ** If Success, Toast
-    toast('Updated VU Credentials Successfully!')
-    setSheetOpen(() => false)
-
-    // ** If fail, give error message
+    if (status) {
+      toast('Updated VU Credentials Successfully!')
+      setSheetOpen(() => false)
+    } else {
+      toast('Something went wrong.')
+    }
   }
 
   return (

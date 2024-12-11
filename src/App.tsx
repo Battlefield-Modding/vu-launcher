@@ -6,10 +6,16 @@ import Home from './routes/Home'
 import LauncherSettings from './routes/LauncherSettings'
 import { Toaster } from 'sonner'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { useEffect } from 'react'
+import { firstTimeSetup } from './api'
 
 const queryClient = new QueryClient()
 
 function App() {
+  useEffect(() => {
+    firstTimeSetup()
+  }, [])
+
   return (
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
