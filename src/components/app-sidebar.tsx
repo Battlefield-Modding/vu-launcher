@@ -1,4 +1,5 @@
-import { Calendar, Home, Inbox, Search, Settings } from 'lucide-react'
+import { Home, List, Server, Settings, User } from 'lucide-react'
+import reactIcon from '@/assets/VUIcon.svg'
 
 import {
   Sidebar,
@@ -15,27 +16,27 @@ import {
 const items = [
   {
     title: 'Home',
-    url: '#',
+    url: '/',
     icon: Home,
   },
   {
-    title: 'Inbox',
+    title: 'Servers',
     url: '#',
-    icon: Inbox,
+    icon: Server,
   },
   {
-    title: 'Calendar',
+    title: 'Mods',
     url: '#',
-    icon: Calendar,
+    icon: List,
   },
   {
-    title: 'Search',
+    title: 'Player Settings',
     url: '#',
-    icon: Search,
+    icon: User,
   },
   {
-    title: 'Settings',
-    url: '#',
+    title: 'Launcher Settings',
+    url: '/settings',
     icon: Settings,
   },
 ]
@@ -45,7 +46,10 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
+          <div className="ml-1 flex w-24 justify-start rounded-md border border-white bg-sidebar-foreground p-2">
+            <img src={reactIcon} alt="" className="" />
+          </div>
+          <SidebarGroupLabel>Unofficial VU Launcher</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
