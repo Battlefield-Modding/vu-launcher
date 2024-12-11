@@ -30,11 +30,6 @@ const items = [
     icon: List,
   },
   {
-    title: 'Player Settings',
-    url: '/playersettings',
-    icon: User,
-  },
-  {
     title: 'Launcher Settings',
     url: '/launchersettings',
     icon: Settings,
