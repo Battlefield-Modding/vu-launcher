@@ -31,12 +31,12 @@ const items = [
   },
   {
     title: 'Player Settings',
-    url: '#',
+    url: '/playersettings',
     icon: User,
   },
   {
     title: 'Launcher Settings',
-    url: '/settings',
+    url: '/launchersettings',
     icon: Settings,
   },
 ]

@@ -3,7 +3,8 @@ import { BrowserRouter, Route, Routes } from 'react-router'
 import { SidebarProvider, SidebarTrigger } from './components/ui/sidebar'
 import { AppSidebar } from './components/app-sidebar'
 import Home from './routes/Home'
-import Settings from './routes/Settings'
+import PlayerSettings from './routes/PlayerSettings'
+import LauncherSettings from './routes/LauncherSettings'
 
 function App() {
   return (
@@ -14,7 +15,8 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/settings" element={<Settings />} />
+            <Route path="/playersettings" element={<PlayerSettings />} />
+            <Route path="/launchersettings" element={<LauncherSettings />} />
           </Routes>
         </BrowserRouter>
       </main>
