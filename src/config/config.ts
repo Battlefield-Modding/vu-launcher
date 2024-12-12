@@ -1,4 +1,10 @@
-export const DEFAULT_STALE_TIME = 60 * 1000 // 60 seconds
+export const STALE =
+{
+  default: 60 * 1000, // 60,
+  medium: 30 * 1000, // 30s
+  short: 15 * 1000, // 15s
+  never: 0 // never stale
+}
 
 export enum rust_fns {
   get_random_number = 'get_random_number',
@@ -7,7 +13,8 @@ export enum rust_fns {
   first_time_setup = 'first_time_setup',
   get_user_preferences = 'get_user_preferences',
   set_user_preferences = 'set_user_preferences',
-  play_vu = 'play_vu'
+  play_vu = 'play_vu',
+  is_vu_installed = "is_vu_installed"
 }
 
 export enum routes {

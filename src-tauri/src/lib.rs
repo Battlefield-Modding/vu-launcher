@@ -195,6 +195,14 @@ async fn play_vu() -> bool {
     return true;
 }
 
+#[tauri::command]
+fn is_vu_installed() -> bool {
+    match get_reg_vu_install_location() {
+        Ok(_) => return true,
+        Err(_) => return false,
+    }
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -206,6 +214,7 @@ pub fn run() {
             get_user_preferences,
             set_user_preferences,
             play_vu,
+            is_vu_installed
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

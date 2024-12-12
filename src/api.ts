@@ -45,3 +45,8 @@ export async function getUserPreferences(){
   const info = JSON.parse(await invoke(rust_fns.get_user_preferences))
   return info
 }
+
+export async function vuIsInstalled(): Promise<boolean> {
+  const info = JSON.parse(await invoke(rust_fns.is_vu_installed))
+  return info
+}
