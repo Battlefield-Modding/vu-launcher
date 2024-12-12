@@ -23,3 +23,25 @@ export async function saveUserCredentials({username, password}: {username: strin
 export async function playVU(){
   invoke(rust_fns.play_vu)
 }
+
+function isValidCredential(cred: String){
+  if (typeof cred === "string"){
+    if (cred.length >= 2) {
+      return true
+    }
+  }
+  return false
+}
+
+export async function doesCredentialsExist(): Promise<boolean>{
+  const info = await getUserPreferences()
+  if (isValidCredential(info.username) && isValidCredential(info.password)){
+    return true
+  }
+  return false
+}
+
+export async function getUserPreferences(){
+  const info = JSON.parse(await invoke(rust_fns.get_user_preferences))
+  return info
+}

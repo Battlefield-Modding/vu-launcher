@@ -8,20 +8,36 @@ import {
 } from '@/components/ui/sheet'
 import { User } from 'lucide-react'
 import PlayerCredentialsForm from './credentials-form'
-import { useState } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
+import { useEffect, useState } from 'react'
+import { doesCredentialsExist } from '@/api'
+import clsx from 'clsx'
 
 export default function CredentialsSheet() {
+  const [credsExist, setCredsExist] = useState(false)
+
+  async function checkCreds() {
+    const result = await doesCredentialsExist()
+    setCredsExist(result)
+  }
+
+  useEffect(() => {
+    checkCreds()
+  }, [])
+
   const [sheetOpen, setSheetOpen] = useState(false)
   return (
     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
       <SheetTrigger>
-        <Card>
-          <CardHeader>
-            <CardTitle>Save VU Credentials</CardTitle>
-            <CardDescription>Allows for VU to auto-login</CardDescription>
-          </CardHeader>
-        </Card>
+        <div
+          className={clsx(
+            'text-md flex rounded-md p-1.5 text-secondary hover:bg-primary',
+            !credsExist && 'bg-red-600',
+            credsExist && 'bg-green-600',
+          )}
+        >
+          AutoLogin
+          <User />
+        </div>
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
@@ -29,7 +45,7 @@ export default function CredentialsSheet() {
           <SheetDescription>Updates your credentials for VU Auto-Login</SheetDescription>
         </SheetHeader>
         <br />
-        <PlayerCredentialsForm setSheetOpen={setSheetOpen} />
+        <PlayerCredentialsForm setSheetOpen={setSheetOpen} checkCreds={checkCreds} />
       </SheetContent>
     </Sheet>
   )

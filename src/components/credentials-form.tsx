@@ -21,7 +21,13 @@ const formSchema = z.object({
   password: z.string().min(2).max(50),
 })
 
-export default function PlayerCredentialsForm({ setSheetOpen }: { setSheetOpen: any }) {
+export default function PlayerCredentialsForm({
+  setSheetOpen,
+  checkCreds,
+}: {
+  setSheetOpen: any
+  checkCreds: any
+}) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -35,6 +41,7 @@ export default function PlayerCredentialsForm({ setSheetOpen }: { setSheetOpen: 
 
     if (status) {
       toast('Updated VU Credentials Successfully!')
+      checkCreds()
       setSheetOpen(() => false)
     } else {
       toast('Something went wrong.')

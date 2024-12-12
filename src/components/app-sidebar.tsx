@@ -1,4 +1,4 @@
-import { Home, List, Server, Settings, User } from 'lucide-react'
+import { Home, List, Server, Settings } from 'lucide-react'
 import reactIcon from '@/assets/VUIcon.svg'
 
 import {
@@ -12,27 +12,28 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
 import { Link } from 'react-router'
+import { routes } from '@/config/config'
 
 // Menu items.
 const items = [
   {
     title: 'Home',
-    url: '/',
+    url: routes.HOME,
     icon: Home,
   },
   {
     title: 'Servers',
-    url: '#',
+    url: routes.SERVERS,
     icon: Server,
   },
   {
     title: 'Mods',
-    url: '#',
+    url: routes.MODS,
     icon: List,
   },
   {
     title: 'Launcher Settings',
-    url: '/launchersettings',
+    url: routes.SETTINGS,
     icon: Settings,
   },
 ]

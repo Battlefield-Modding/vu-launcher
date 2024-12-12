@@ -9,3 +9,10 @@ export enum rust_fns {
   set_user_preferences = 'set_user_preferences',
   play_vu = 'play_vu'
 }
+
+export enum routes {
+  HOME = "/",
+  SERVERS = "/servers",
+  MODS = "/mods",
+  SETTINGS = "/settings"
+}
