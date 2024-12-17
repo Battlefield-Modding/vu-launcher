@@ -32,7 +32,7 @@ const items = [
     icon: List,
   },
   {
-    title: 'Launcher Settings',
+    title: 'Settings',
     url: routes.SETTINGS,
     icon: Settings,
   },
@@ -43,18 +43,24 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <div className="ml-1 flex w-24 justify-start rounded-md border border-white bg-sidebar-foreground p-2">
+          {/* <div className="ml-1 flex w-24 justify-start rounded-md border border-white bg-sidebar-foreground p-2">
             <img src={reactIcon} alt="" className="" />
           </div>
-          <SidebarGroupLabel>Unofficial VU Launcher</SidebarGroupLabel>
+          <SidebarGroupLabel>Unofficial VU Launcher</SidebarGroupLabel> */}
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
+                  <SidebarMenuButton
+                    variant={'outline'}
+                    asChild
+                    className="flex min-h-[10vh] gap-[1vw] text-[2vw]"
+                  >
                     <Link to={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
+                      <div>
+                        <item.icon className="h-auto w-[2vw]" />
+                      </div>
+                      <p>{item.title}</p>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
