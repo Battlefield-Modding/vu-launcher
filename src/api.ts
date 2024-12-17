@@ -46,6 +46,18 @@ export async function getUserPreferences(){
   return info
 }
 
+export async function getUsers(){
+  const info = await getUserPreferences()
+  const users = [
+    {username: info.username, password: info.password},
+    {username: "TestOne", password: info.password},
+    {username: "TestTwo", password: info.password},
+
+  ]
+  console.log(users)
+  return users
+}
+
 export async function vuIsInstalled(): Promise<boolean> {
   const info = JSON.parse(await invoke(rust_fns.is_vu_installed))
   return info

@@ -1,12 +1,12 @@
-import { playVU, vuIsInstalled } from '@/api'
+import { getUserPreferences, getUsers, playVU, vuIsInstalled } from '@/api'
 import { Button } from '@/components/ui/button'
-import { routes, STALE } from '@/config/config'
+import { STALE } from '@/config/config'
 import { useQuery } from '@tanstack/react-query'
-import { Download, Loader, Play, Search, Server } from 'lucide-react'
+import { Download, Loader, Play, Search } from 'lucide-react'
 import { toast } from 'sonner'
 import { getCurrentWindow } from '@tauri-apps/api/window'
 import CredentialsSheet from '@/components/credentials-sheet'
-import { Link } from 'react-router'
+import AppSelectUser from '@/components/app-select-user'
 
 export default function Home() {
   const { isPending, isError, data, error } = useQuery({
@@ -34,7 +34,7 @@ export default function Home() {
   }
 
   // TODO: Remove the ! after building is done
-  const vuInstalled = !data
+  const vuInstalled = data
 
   if (vuInstalled) {
     return (
@@ -42,16 +42,8 @@ export default function Home() {
         <div className="m-auto flex max-h-96 max-w-96 flex-col justify-between gap-8 rounded-md bg-primary p-8">
           <div className="flex flex-1 flex-wrap gap-1 rounded-md bg-secondary p-2">
             <CredentialsSheet />
-            <Link to={routes.SERVERS}>
-              <Button>
-                Servers
-                <Server />
-              </Button>
-            </Link>
-            <Button>
-              Install VU
-              <Download />
-            </Button>
+
+            <AppSelectUser />
           </div>
 
           <Button

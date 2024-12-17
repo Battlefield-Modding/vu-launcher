@@ -1,4 +1,4 @@
-import { Home, List, Server, Settings } from 'lucide-react'
+import { Home, List, Server, Settings, User } from 'lucide-react'
 import reactIcon from '@/assets/VUIcon.svg'
 
 import {
@@ -43,10 +43,10 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          {/* <div className="ml-1 flex w-24 justify-start rounded-md border border-white bg-sidebar-foreground p-2">
+          <div className="ml-1 flex w-24 justify-start rounded-md border border-white bg-sidebar-foreground p-2">
             <img src={reactIcon} alt="" className="" />
           </div>
-          <SidebarGroupLabel>Unofficial VU Launcher</SidebarGroupLabel> */}
+          <SidebarGroupLabel>Unofficial VU Launcher</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
