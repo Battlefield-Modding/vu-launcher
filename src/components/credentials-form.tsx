@@ -15,6 +15,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
 import { saveUserCredentials } from '@/api'
+import { useQueryClient } from '@tanstack/react-query'
 
 const formSchema = z.object({
   username: z.string().min(2).max(50),
@@ -28,6 +29,8 @@ export default function PlayerCredentialsForm({
   setSheetOpen: any
   checkCreds: any
 }) {
+  const queryClient = useQueryClient()
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -42,6 +45,7 @@ export default function PlayerCredentialsForm({
     if (status) {
       toast('Updated VU Credentials Successfully!')
       checkCreds()
+      queryClient.invalidateQueries({ queryKey: ['select-users'], refetchType: 'all' })
       setSheetOpen(() => false)
     } else {
       toast('Something went wrong.')

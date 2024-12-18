@@ -33,24 +33,29 @@ export default function AppSelectUser() {
       </div>
     )
   }
-  // const users = await getUsers()
-  return (
-    <Select>
-      <SelectTrigger className="w-[180px]">
-        <SelectValue placeholder={data[0].username} />
-      </SelectTrigger>
-      <SelectContent>
-        {data.map((item) => {
-          return (
-            <SelectItem key={item.username} value={item.username}>
-              {item.username}
-            </SelectItem>
-          )
-        })}
-        {/* <SelectItem value="light">Light</SelectItem>
-        <SelectItem value="dark">Dark</SelectItem>
-        <SelectItem value="system">System</SelectItem> */}
-      </SelectContent>
-    </Select>
-  )
+
+  if (!data[0].username) {
+    return (
+      <div className="rounded-md bg-destructive pl-2 pr-2 text-xl leading-9">
+        <h1>No Users Found</h1>
+      </div>
+    )
+  } else {
+    return (
+      <Select>
+        <SelectTrigger className="w-[180px]">
+          <SelectValue placeholder={data[0].username} />
+        </SelectTrigger>
+        <SelectContent>
+          {data.map((item) => {
+            return (
+              <SelectItem key={item.username} value={item.username}>
+                {item.username}
+              </SelectItem>
+            )
+          })}
+        </SelectContent>
+      </Select>
+    )
+  }
 }
