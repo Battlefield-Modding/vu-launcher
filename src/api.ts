@@ -15,7 +15,11 @@ export async function firstTimeSetup(){
 
 export async function saveUserCredentials({username, password}: {username: string, password:string}){
   const preferences = JSON.parse(await invoke(rust_fns.get_user_preferences));
-  const newPreferences = {...preferences, username, password}
+  const accounts = preferences.accounts ?? []
+  accounts.push({username, password})
+  console.log(accounts)
+  const newPreferences = {...preferences, accounts}
+  console.log(newPreferences)
   const status = await invoke(rust_fns.set_user_preferences, {newPreferences})
   return status
 }
@@ -34,9 +38,11 @@ function isValidCredential(cred: String){
 }
 
 export async function doesCredentialsExist(): Promise<boolean>{
-  const info = await getUserPreferences()
-  if (isValidCredential(info.username) && isValidCredential(info.password)){
-    return true
+  const {accounts} = await getUserPreferences()
+  if(accounts[0]){
+    if (isValidCredential(accounts[0].username) && isValidCredential(accounts[0].password)){
+      return true
+    }
   }
   return false
 }
@@ -46,16 +52,10 @@ export async function getUserPreferences(){
   return info
 }
 
-export async function getUsers(){
-  const info = await getUserPreferences()
-  const users = [
-    {username: info.username, password: info.password},
-    {username: "TestOne", password: info.password},
-    {username: "TestTwo", password: info.password},
-
-  ]
-  console.log(users)
-  return users
+export async function getaccounts(){
+  const {accounts} = await getUserPreferences()
+  console.log(accounts)
+  return accounts
 }
 
 export async function vuIsInstalled(): Promise<boolean> {

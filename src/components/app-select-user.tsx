@@ -1,4 +1,4 @@
-import { getUsers } from '@/api'
+import { getaccounts } from '@/api'
 import {
   Select,
   SelectContent,
@@ -13,7 +13,7 @@ import { Loader } from 'lucide-react'
 export default function AppSelectUser() {
   const { isPending, isError, data, error } = useQuery({
     queryKey: ['select-users'],
-    queryFn: getUsers,
+    queryFn: getaccounts,
     staleTime: STALE.never,
   })
 
@@ -29,12 +29,12 @@ export default function AppSelectUser() {
   if (isError) {
     return (
       <div className="rounded-md bg-destructive pl-2 pr-2 text-xl leading-9">
-        <h1>No Users Found</h1>
+        <h1>ERROR: No Users Found</h1>
       </div>
     )
   }
 
-  if (!data[0].username) {
+  if (!data || !data[0]) {
     return (
       <div className="rounded-md bg-destructive pl-2 pr-2 text-xl leading-9">
         <h1>No Users Found</h1>

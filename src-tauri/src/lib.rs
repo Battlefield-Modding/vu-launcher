@@ -18,11 +18,16 @@ use reg_functions::{
 };
 
 #[derive(Serialize, Deserialize, Debug)]
+struct Account {
+    username: String,
+    password: String,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
 struct UserPreferences {
     is_sidebar_enabled: bool,
     venice_unleashed_shortcut_location: String,
-    username: String,
-    password: String,
+    accounts: Vec<Account>,
 }
 
 fn config_folder_exists() -> bool {
@@ -47,11 +52,16 @@ fn set_default_preferences() {
         Err(_) => return,
     };
     let path_to_vu_client = String::from(Path::new(&path).join("vu.exe").to_str().unwrap());
+    let sample_account = Account {
+        username: String::from(""),
+        password: String::from(""),
+    };
+    let mut sample_account_array = Vec::new();
+    sample_account_array.push(sample_account);
     let sample_preferences = UserPreferences {
         is_sidebar_enabled: false,
         venice_unleashed_shortcut_location: path_to_vu_client,
-        username: String::from(""),
-        password: String::from(""),
+        accounts: sample_account_array,
     };
     save_user_preferences(sample_preferences);
 }
@@ -186,9 +196,9 @@ async fn play_vu() -> bool {
             "/C",
             &preferences.venice_unleashed_shortcut_location,
             "-username",
-            &preferences.username,
+            &preferences.accounts[0].username,
             "-password",
-            &preferences.password,
+            &preferences.accounts[0].password,
         ])
         .output()
         .expect("failed to execute process");
@@ -206,6 +216,7 @@ fn is_vu_installed() -> bool {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_shell::init())
         .invoke_handler(tauri::generate_handler![
             get_random_number,

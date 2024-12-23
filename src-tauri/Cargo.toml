@@ -27,4 +27,5 @@ walkdir = "2.5.0"
 winreg = "0.52.0"
 dirs-next = "2.0.0"
 reqwest = "0.12.9"
+tauri-plugin-dialog = "2"
 

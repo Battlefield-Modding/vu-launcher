@@ -35,7 +35,7 @@ export default function CredentialsSheet() {
             credsExist && 'bg-green-600',
           )}
         >
-          AutoLogin
+          {credsExist ? 'AutoLogin' : 'Click to Login'}
           <User />
         </div>
       </SheetTrigger>
