@@ -62,3 +62,8 @@ export async function vuIsInstalled(): Promise<boolean> {
   const info = JSON.parse(await invoke(rust_fns.is_vu_installed))
   return info
 }
+
+export async function fetchVUData(){
+  const info = JSON.parse(await invoke(rust_fns.get_vu_data))
+  console.log(info)
+}

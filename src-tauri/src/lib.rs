@@ -17,6 +17,9 @@ use reg_functions::{
     set_install_path_registry, set_settings_json_path_registry,
 };
 
+mod web;
+use web::{get_vu_info, VeniceEndpointData};
+
 #[derive(Serialize, Deserialize, Debug)]
 struct Account {
     username: String,
@@ -185,6 +188,22 @@ fn get_random_number() -> i32 {
 }
 
 #[tauri::command]
+async fn get_vu_data() -> String {
+    let info = get_vu_info().await;
+    let proper = match info {
+        Ok(data) => data,
+        Err(_) => VeniceEndpointData {
+            buildnum: -1,
+            installer_size: -1,
+            zip_size: -1,
+            installer_url: String::from("-1"),
+            zip_url: String::from("-1"),
+        },
+    };
+    serde_json::to_string(&proper).unwrap()
+}
+
+#[tauri::command]
 async fn play_vu() -> bool {
     let preferences_prematch = get_user_preferences_as_struct();
     let preferences = match preferences_prematch {
@@ -225,7 +244,8 @@ pub fn run() {
             get_user_preferences,
             set_user_preferences,
             play_vu,
-            is_vu_installed
+            is_vu_installed,
+            get_vu_data
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

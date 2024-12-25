@@ -26,6 +26,6 @@ rand = "0.8.5"
 walkdir = "2.5.0"
 winreg = "0.52.0"
 dirs-next = "2.0.0"
-reqwest = "0.12.9"
+reqwest = { version = "0.12.9", features = ["blocking"] }
 tauri-plugin-dialog = "2"
 
