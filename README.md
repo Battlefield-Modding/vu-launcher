@@ -1,7 +1,13 @@
-# Tauri + React + Typescript
-
-This template should help get you started developing with Tauri, React and Typescript in Vite.
-
-## Recommended IDE Setup
-
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+# Unofficial VU Launcher
+## What?
+A launcher for Battlefield 3: Venice Unleashed.
+It is made with Tauri and React.
+## Why?
+Trying to learn Tauri/React and I want to make it easier to use Venice Unleashed.
+Some QoL improvements that I want:
+- Easy installation of mods
+- Easy configuration of server
+- Easy swapping between server configurations (loadouts)
+- Easy adding of launch arguments including auto login, auto server join, etc
+## How to use?
+The launcher cannot be used yet as it is early in development.
