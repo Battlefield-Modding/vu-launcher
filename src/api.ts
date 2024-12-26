@@ -67,3 +67,14 @@ export async function fetchVUData(){
   const info = JSON.parse(await invoke(rust_fns.get_vu_data))
   console.log(info)
 }
+
+export async function fetchVUDataDummy(){
+  const info = { 
+    buildnum: 20079, 
+    installer_url: "https://veniceunleashed.net/files/vu.exe", 
+    installer_size: 116838512, 
+    zip_url: "https://veniceunleashed.net/files/vu.zip", 
+    zip_size: 166447363 
+  }
+  return info
+}
