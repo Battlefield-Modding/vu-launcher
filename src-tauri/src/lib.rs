@@ -7,7 +7,10 @@ use std::{
 use serde::{Deserialize, Serialize};
 use serde_json;
 
+use tauri::{Manager, WindowEvent};
 use walkdir::WalkDir;
+
+use tauri_plugin_positioner::{Position, WindowExt};
 
 use dirs_next;
 
@@ -18,7 +21,9 @@ use reg_functions::{
 };
 
 mod web;
-use web::{get_vu_info, VeniceEndpointData};
+use web::{download_game, get_vu_info, VeniceEndpointData};
+
+mod speed_calc;
 
 #[derive(Serialize, Deserialize, Debug)]
 struct Account {
@@ -52,19 +57,17 @@ fn set_default_preferences() {
     let path_prematch = get_reg_vu_install_location();
     let path = match path_prematch {
         Ok(info) => info,
-        Err(_) => return,
+        Err(_) => {
+            println!("Could not VU install location. Aborting creation of Preferences File.");
+            return;
+        }
     };
     let path_to_vu_client = String::from(Path::new(&path).join("vu.exe").to_str().unwrap());
-    let sample_account = Account {
-        username: String::from(""),
-        password: String::from(""),
-    };
-    let mut sample_account_array = Vec::new();
-    sample_account_array.push(sample_account);
+
     let sample_preferences = UserPreferences {
         is_sidebar_enabled: false,
         venice_unleashed_shortcut_location: path_to_vu_client,
-        accounts: sample_account_array,
+        accounts: Vec::new(),
     };
     save_user_preferences(sample_preferences);
 }
@@ -100,12 +103,7 @@ fn make_config_folder() {
 
 #[tauri::command]
 fn first_time_setup() {
-    if config_folder_exists() {
-        match get_install_path_registry() {
-            Ok(_) => println!("Exists"),
-            Err(_) => set_install_path_registry(),
-        }
-    } else {
+    if !config_folder_exists() {
         make_config_folder();
         set_install_path_registry();
         set_settings_json_path_registry();
@@ -183,6 +181,7 @@ fn set_user_preferences(new_preferences: UserPreferences) -> bool {
 
 #[tauri::command]
 fn get_random_number() -> i32 {
+    set_default_preferences();
     let num = rand::random();
     return num;
 }
@@ -245,7 +244,8 @@ pub fn run() {
             set_user_preferences,
             play_vu,
             is_vu_installed,
-            get_vu_data
+            get_vu_data,
+            download_game,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

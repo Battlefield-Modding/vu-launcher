@@ -19,7 +19,7 @@ pub fn set_settings_json_path_registry() {
 }
 
 pub fn get_install_path_registry() -> io::Result<String> {
-    let install_path = get_reg_value("InstallDir");
+    let install_path = get_reg_value("InstallPath");
     install_path
 }
 
@@ -31,7 +31,7 @@ pub fn set_install_path_registry() {
     };
 
     path_to_documents.push("venice_unleashed_launcher");
-    set_reg_value("InstallDir", path_to_documents.as_mut_os_string());
+    set_reg_value("InstallPath", path_to_documents.as_mut_os_string());
 }
 
 fn get_reg_value(keyname: &str) -> io::Result<String> {

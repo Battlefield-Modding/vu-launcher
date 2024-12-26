@@ -1,4 +1,4 @@
-import { playVU, vuIsInstalled } from '@/api'
+import { getRandomNumber, playVU, vuIsInstalled } from '@/api'
 import { Button } from '@/components/ui/button'
 import { STALE } from '@/config/config'
 import { useQuery } from '@tanstack/react-query'
@@ -34,8 +34,7 @@ export default function Home() {
     )
   }
 
-  // TODO: Remove the ! after building is done
-  const vuInstalled = !data
+  const vuInstalled = data
 
   if (vuInstalled) {
     return (
@@ -65,6 +64,10 @@ export default function Home() {
       </div>
     )
   } else {
-    return <InstallVU />
+    return (
+      <div className="m-auto flex min-h-[100vh] flex-col justify-center">
+        <InstallVU />
+      </div>
+    )
   }
 }

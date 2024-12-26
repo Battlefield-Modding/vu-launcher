@@ -15,7 +15,8 @@ export enum rust_fns {
   set_user_preferences = 'set_user_preferences',
   play_vu = 'play_vu',
   is_vu_installed = "is_vu_installed",
-  get_vu_data = "get_vu_data"
+  get_vu_data = "get_vu_data",
+  download_game = "download_game"
 }
 
 export enum routes {
