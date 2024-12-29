@@ -23,6 +23,9 @@ use reg_functions::{
 mod web;
 use web::{download_game, get_vu_info, VeniceEndpointData};
 
+mod servers;
+use servers::update_server_config;
+
 mod speed_calc;
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -246,6 +249,7 @@ pub fn run() {
             is_vu_installed,
             get_vu_data,
             download_game,
+            update_server_config
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

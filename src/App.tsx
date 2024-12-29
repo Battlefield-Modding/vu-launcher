@@ -9,7 +9,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { firstTimeSetup } from './api'
 import { routes } from './config/config'
-import Servers from './routes/Servers'
+import Servers from './routes/Servers/Servers'
 import Mods from './routes/Mods'
 
 const queryClient = new QueryClient()

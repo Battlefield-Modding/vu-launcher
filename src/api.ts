@@ -1,5 +1,6 @@
 import {invoke} from "@tauri-apps/api/core"
 import { rust_fns } from "./config/config"
+import { ServerLoadout } from "./routes/Servers/defaultServerConfig"
 
 // if a rust fn param is `param_one`
 // then js invoke param is `paramOne`
@@ -77,4 +78,9 @@ export async function fetchVUDataDummy(){
     zip_size: 166447363 
   }
   return info
+}
+
+export async function updateServerConfig(loadout: ServerLoadout){
+  const status = JSON.parse(await invoke(rust_fns.update_server_config, {loadout}))
+  return status
 }
