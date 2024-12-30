@@ -39,7 +39,11 @@ export default function FileUpload() {
       console.log('Setting up listeners for drag+drop')
       handleDrop = await listen<DropPayload>('tauri://drag-drop', async (event) => {
         setIsDraggingOver(() => false)
-        if (event.payload && event.payload.paths[0]) {
+        if (
+          event.payload &&
+          event.payload.paths[0] &&
+          event.payload.paths[0].includes('server.key')
+        ) {
           const info = await serverKeySetup(event.payload.paths[0] as String)
           if (info) {
             queryClient.invalidateQueries({
@@ -49,6 +53,8 @@ export default function FileUpload() {
             toast('Successfully imported server key.')
             cleanupListeners()
           }
+        } else {
+          toast('Incorrect File. Please use server.key')
         }
       })
 
@@ -79,18 +85,22 @@ export default function FileUpload() {
           directory: true,
         })
         if (installPath) {
-          const confirmed = await confirm('Copying server key from' + installPath + '?')
+          if (installPath.includes('server.key')) {
+            const confirmed = await confirm('Copying server key from' + installPath + '?')
 
-          if (confirmed) {
-            const info = await serverKeySetup(installPath)
-            if (info) {
-              queryClient.invalidateQueries({
-                queryKey: [QueryKey.ServerKeyExists],
-                refetchType: 'all',
-              })
-              toast('Successfully imported server key.')
-              cleanupListeners()
+            if (confirmed) {
+              const info = await serverKeySetup(installPath)
+              if (info) {
+                queryClient.invalidateQueries({
+                  queryKey: [QueryKey.ServerKeyExists],
+                  refetchType: 'all',
+                })
+                toast('Successfully imported server key.')
+                cleanupListeners()
+              }
             }
+          } else {
+            toast('Incorrect File. Please use server.key')
           }
         }
       }}
