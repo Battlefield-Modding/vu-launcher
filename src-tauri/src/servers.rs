@@ -52,11 +52,33 @@ pub fn server_key_setup(path: String) -> bool {
     };
 }
 
+fn copy_server_key(path: &PathBuf) {
+    let install_path = match reg_functions::get_install_path_registry() {
+        Ok(val) => val,
+        Err(err) => err.to_string(),
+    };
+
+    let mut key_path = PathBuf::new();
+    key_path.push(install_path);
+    key_path.push("server.key");
+
+    let mut copied_key_path = path.clone();
+    let _ = copied_key_path.push("server.key");
+    println!("{:?}", copied_key_path);
+
+    match fs::copy(key_path, copied_key_path) {
+        Ok(_) => println!("Copied successfully"),
+        Err(err) => println!("{:?}", err),
+    };
+}
+
 #[tauri::command]
 pub fn set_server_loadout(loadout: ServerLoadout) -> Result<bool, String> {
     let mut loadout_path = get_loadouts_path();
     loadout_path.push(&loadout.name);
+
     loadout_path.push("Server");
+    let server_path = loadout_path.clone();
     loadout_path.push("Admin");
 
     match fs::exists(&loadout_path) {
@@ -67,6 +89,9 @@ pub fn set_server_loadout(loadout: ServerLoadout) -> Result<bool, String> {
         }
         Err(_) => println!("Couldn't create loadout: {}", &loadout.name),
     }
+
+    // move the server key over once folders are made
+    copy_server_key(&server_path);
 
     let mut startup_path = loadout_path.clone();
     let _ = startup_path.push("startup.txt");
