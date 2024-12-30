@@ -181,7 +181,7 @@ pub async fn start_server_loadout(name: String) -> bool {
             "-serverInstancePath",
             loadout_path_as_str,
         ])
-        .output()
+        .spawn()
         .expect("failed to execute process");
 
     return true;

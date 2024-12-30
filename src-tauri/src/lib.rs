@@ -224,7 +224,7 @@ async fn play_vu() -> bool {
             "-password",
             &preferences.accounts[0].password,
         ])
-        .output()
+        .spawn()
         .expect("failed to execute process");
     return true;
 }
