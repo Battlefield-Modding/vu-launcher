@@ -17,7 +17,15 @@ export enum rust_fns {
   is_vu_installed = "is_vu_installed",
   get_vu_data = "get_vu_data",
   download_game = "download_game",
-  update_server_config = 'update_server_config'
+  set_server_loadout = 'set_server_loadout',
+  get_loadout_names = 'get_loadout_names',
+  delete_server_loadout = 'delete_server_loadout'
+}
+
+export enum QueryKey {
+  UserList = 'UserList',
+  IsVuInstalled = 'IsVuInstalled',
+  ServerLoadouts = 'ServerLoadouts',
 }
 
 export enum routes {
