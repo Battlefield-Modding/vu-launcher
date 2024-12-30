@@ -18,6 +18,7 @@ import { saveUserCredentials, updateServerConfig } from '@/api'
 import { useQueryClient } from '@tanstack/react-query'
 import { Textarea } from '@/components/ui/textarea'
 import { defaultServerConfig, ServerLoadout } from '../defaultServerConfig'
+import { QueryKey } from '@/config/config'
 
 const formSchema = z.object({
   name: z.string().min(2).max(50),
@@ -45,7 +46,7 @@ export default function ServerForm({ setSheetOpen }: { setSheetOpen: any }) {
 
     if (status) {
       toast(`Success! Saved loadout: ${values.name}`)
-      queryClient.invalidateQueries({ queryKey: ['server-loadout-list'], refetchType: 'all' })
+      queryClient.invalidateQueries({ queryKey: [QueryKey.ServerLoadouts], refetchType: 'all' })
       setSheetOpen(() => false)
     } else {
       toast('Something went wrong.')

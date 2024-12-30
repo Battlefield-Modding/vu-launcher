@@ -6,13 +6,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { STALE } from '@/config/config'
+import { QueryKey, STALE } from '@/config/config'
 import { useQuery } from '@tanstack/react-query'
 import { Loader } from 'lucide-react'
 
 export default function AppSelectUser() {
   const { isPending, isError, data, error } = useQuery({
-    queryKey: ['select-users'],
+    queryKey: [QueryKey.UserList],
     queryFn: getaccounts,
     staleTime: STALE.never,
   })

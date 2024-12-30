@@ -1,6 +1,6 @@
 import { fetchVUData } from '@/api'
 import { Button } from '@/components/ui/button'
-import { rust_fns } from '@/config/config'
+import { QueryKey, rust_fns } from '@/config/config'
 import { invoke } from '@tauri-apps/api/core'
 import { open } from '@tauri-apps/plugin-dialog'
 import { Download, Play, Search } from 'lucide-react'
@@ -72,7 +72,7 @@ function InstallVU() {
       setGameDownloadUpdateExtracting(false)
       console.log('VU Installation Completed')
       toast('VU Installation Completed')
-      queryClient.invalidateQueries({ queryKey: ['vu-is-installed'], refetchType: 'all' })
+      queryClient.invalidateQueries({ queryKey: [QueryKey.IsVuInstalled], refetchType: 'all' })
       // getGameInstallationPath();
       // checkConfigExists();
     })
