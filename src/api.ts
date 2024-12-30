@@ -2,14 +2,6 @@ import {invoke} from "@tauri-apps/api/core"
 import { rust_fns } from "./config/config"
 import { ServerLoadout } from "./routes/Servers/defaultServerConfig"
 
-// if a rust fn param is `param_one`
-// then js invoke param is `paramOne`
-
-export async function getRandomNumber(){
-  const num = await invoke(rust_fns.get_random_number)
-  return num
-}
-
 export async function firstTimeSetup(){
   await invoke(rust_fns.first_time_setup)
 }
@@ -81,6 +73,17 @@ export async function fetchVUDataDummy(){
 }
 
 export async function updateServerConfig(loadout: ServerLoadout){
-  const status = JSON.parse(await invoke(rust_fns.update_server_config, {loadout}))
+  const status = JSON.parse(await invoke(rust_fns.set_server_loadout, {loadout}))
   return status
+}
+
+export async function getLoadoutNames(){
+  const info = await invoke(rust_fns.get_loadout_names)
+  return info
+}
+
+export async function deleteServerLoadout(name: String){
+  console.log(`Deleting: ${name}`)
+  const info = await invoke(rust_fns.delete_server_loadout, {name})
+  return info
 }
