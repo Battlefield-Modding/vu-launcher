@@ -99,3 +99,8 @@ export async function serverKeySetup(path: String){
   console.log(`Server Key Created? ${info}`)
   return info
 }
+
+export async function startServerLoadout(name: String){
+  const info = await invoke(rust_fns.start_server_loadout, {name})
+  return info
+}

@@ -21,7 +21,8 @@ export enum rust_fns {
   get_loadout_names = 'get_loadout_names',
   delete_server_loadout = 'delete_server_loadout',
   server_key_exists = 'server_key_exists',
-  server_key_setup = 'server_key_setup'  
+  server_key_setup = 'server_key_setup',
+  start_server_loadout = 'start_server_loadout'  
 }
 
 export enum QueryKey {

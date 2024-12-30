@@ -1,11 +1,12 @@
 use std::{
     fs::{self, write},
     path::PathBuf,
+    process::Command,
 };
 
 use serde::{Deserialize, Serialize};
 
-use crate::reg_functions;
+use crate::{get_user_preferences_as_struct, reg_functions};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ServerLoadout {
@@ -154,6 +155,35 @@ pub fn delete_server_loadout(name: String) -> bool {
         }
         Err(_) => return false,
     }
+}
+
+#[tauri::command]
+pub fn start_server_loadout(name: String) -> bool {
+    let mut loadout_path = get_loadouts_path();
+    loadout_path.push(&name);
+    loadout_path.push("Server");
+
+    let preferences_prematch = get_user_preferences_as_struct();
+    let preferences = match preferences_prematch {
+        Ok(info) => info,
+        Err(_) => return false,
+    };
+
+    let loadout_path_as_str = loadout_path.to_str().unwrap();
+    println!("{:?}", loadout_path_as_str);
+
+    Command::new("cmd")
+        .args([
+            "/C",
+            &preferences.venice_unleashed_shortcut_location,
+            "-server",
+            "-dedicated",
+            "-serverInstancePath",
+            loadout_path_as_str,
+        ])
+        .output()
+        .expect("failed to execute process");
+    return true;
 }
 
 fn get_loadouts_path() -> PathBuf {

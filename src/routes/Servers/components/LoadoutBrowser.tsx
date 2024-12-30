@@ -1,4 +1,4 @@
-import { deleteServerLoadout, getLoadoutNames } from '@/api'
+import { deleteServerLoadout, getLoadoutNames, startServerLoadout } from '@/api'
 import { Button } from '@/components/ui/button'
 import { QueryKey, STALE } from '@/config/config'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
@@ -67,7 +67,13 @@ function LoadoutBrowser() {
             <Button variant={'secondary'}>
               <Edit />
             </Button>
-            <Button variant={'constructive'}>
+            <Button
+              variant={'constructive'}
+              onClick={async () => {
+                startServerLoadout(name)
+                toast('Starting VU Server...')
+              }}
+            >
               <Play />
             </Button>
           </div>
