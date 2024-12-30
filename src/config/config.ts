@@ -19,13 +19,16 @@ export enum rust_fns {
   download_game = "download_game",
   set_server_loadout = 'set_server_loadout',
   get_loadout_names = 'get_loadout_names',
-  delete_server_loadout = 'delete_server_loadout'
+  delete_server_loadout = 'delete_server_loadout',
+  server_key_exists = 'server_key_exists',
+  server_key_setup = 'server_key_setup'  
 }
 
 export enum QueryKey {
   UserList = 'UserList',
   IsVuInstalled = 'IsVuInstalled',
   ServerLoadouts = 'ServerLoadouts',
+  ServerKeyExists = 'ServerKeyExists'
 }
 
 export enum routes {

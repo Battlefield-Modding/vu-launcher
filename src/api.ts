@@ -87,3 +87,15 @@ export async function deleteServerLoadout(name: String){
   const info = await invoke(rust_fns.delete_server_loadout, {name})
   return info
 }
+
+export async function serverKeyExists(){
+  const info = await invoke(rust_fns.server_key_exists)
+  console.log(`Server Key Exists? ${info}`)
+  return info
+}
+
+export async function serverKeySetup(path: String){
+  const info = await invoke(rust_fns.server_key_setup, {path})
+  console.log(`Server Key Created? ${info}`)
+  return info
+}

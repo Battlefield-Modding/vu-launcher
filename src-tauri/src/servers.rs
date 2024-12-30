@@ -17,27 +17,55 @@ pub struct ServerLoadout {
 }
 
 #[tauri::command]
+pub fn server_key_exists() -> bool {
+    let install_path = match reg_functions::get_install_path_registry() {
+        Ok(val) => val,
+        Err(_) => return false,
+    };
+
+    let mut key_path = PathBuf::new();
+    key_path.push(install_path);
+    key_path.push("server.key");
+
+    return key_path.exists();
+}
+
+#[tauri::command]
+pub fn server_key_setup(path: String) -> bool {
+    let mut path_to_key = PathBuf::new();
+    path_to_key.push(path);
+
+    let install_path = match reg_functions::get_install_path_registry() {
+        Ok(val) => val,
+        Err(err) => err.to_string(),
+    };
+
+    let mut destination_path = PathBuf::new();
+    destination_path.push(install_path);
+    destination_path.push("server.key");
+
+    let result = fs::copy(path_to_key, destination_path);
+
+    match result {
+        Ok(_) => return true,
+        Err(_) => return false,
+    };
+}
+
+#[tauri::command]
 pub fn set_server_loadout(loadout: ServerLoadout) -> Result<bool, String> {
     let mut loadout_path = get_loadouts_path();
-
-    match fs::exists(&loadout_path) {
-        Ok(boolean) => {
-            if !boolean {
-                _ = fs::create_dir(&loadout_path)
-            }
-        }
-        Err(_) => println!("Couldn't create /servers folder"),
-    }
-
     loadout_path.push(&loadout.name);
+    loadout_path.push("Server");
+    loadout_path.push("Admin");
 
     match fs::exists(&loadout_path) {
         Ok(boolean) => {
             if !boolean {
-                _ = fs::create_dir(&loadout_path)
+                _ = fs::create_dir_all(&loadout_path);
             }
         }
-        Err(_) => println!("Couldn't create /{:?} folder", &loadout.name),
+        Err(_) => println!("Couldn't create loadout: {}", &loadout.name),
     }
 
     let mut startup_path = loadout_path.clone();
@@ -66,14 +94,20 @@ pub fn get_loadout_names() -> Vec<String> {
     // this function will return content from all server loadouts
     let loadout_path = get_loadouts_path();
 
-    let dir_reader = fs::read_dir(&loadout_path).unwrap();
+    let dir_reader = fs::read_dir(&loadout_path);
     let mut loadout_dirs: Vec<String> = Vec::new();
-    dir_reader.for_each(|item| {
-        let temp = item.unwrap().file_name();
-        let temp_as_str = String::from(temp.to_string_lossy());
-        loadout_dirs.push(temp_as_str);
-    });
-
+    match dir_reader {
+        Ok(reader) => {
+            reader.for_each(|item| {
+                let temp = item.unwrap().file_name();
+                let temp_as_str = String::from(temp.to_string_lossy());
+                loadout_dirs.push(temp_as_str);
+            });
+        }
+        Err(err) => {
+            println!("{:?}", err);
+        }
+    };
     loadout_dirs
 }
 
@@ -105,6 +139,6 @@ fn get_loadouts_path() -> PathBuf {
 
     let mut loadout_path = PathBuf::new();
     loadout_path.push(install_path);
-    loadout_path.push("servers");
+    loadout_path.push("loadouts");
     return loadout_path;
 }
