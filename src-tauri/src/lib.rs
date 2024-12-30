@@ -24,7 +24,7 @@ mod web;
 use web::{download_game, get_vu_info, VeniceEndpointData};
 
 mod servers;
-use servers::update_server_config;
+use servers::{delete_server_loadout, get_loadout_names, set_server_loadout};
 
 mod speed_calc;
 
@@ -249,7 +249,9 @@ pub fn run() {
             is_vu_installed,
             get_vu_data,
             download_game,
-            update_server_config
+            set_server_loadout,
+            get_loadout_names,
+            delete_server_loadout,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
