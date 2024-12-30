@@ -158,7 +158,7 @@ pub fn delete_server_loadout(name: String) -> bool {
 }
 
 #[tauri::command]
-pub fn start_server_loadout(name: String) -> bool {
+pub async fn start_server_loadout(name: String) -> bool {
     let mut loadout_path = get_loadouts_path();
     loadout_path.push(&name);
     loadout_path.push("Server");
@@ -183,6 +183,7 @@ pub fn start_server_loadout(name: String) -> bool {
         ])
         .output()
         .expect("failed to execute process");
+
     return true;
 }
 

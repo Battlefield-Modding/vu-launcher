@@ -7,6 +7,7 @@ import { toast } from 'sonner'
 import ServerSheet from './server-sheet'
 
 function LoadoutBrowser() {
+  const queryClient = useQueryClient()
   const { isPending, isError, data, error } = useQuery({
     queryKey: [QueryKey.ServerLoadouts],
     queryFn: getLoadoutNames,
@@ -29,8 +30,6 @@ function LoadoutBrowser() {
       </div>
     )
   }
-
-  const queryClient = useQueryClient()
 
   if (!data) {
     return <></>
