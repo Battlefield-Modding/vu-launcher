@@ -25,8 +25,8 @@ use web::{download_game, get_vu_info, VeniceEndpointData};
 
 mod servers;
 use servers::{
-    delete_server_loadout, get_loadout_names, server_key_exists, server_key_setup,
-    set_server_loadout, start_server_loadout,
+    delete_server_loadout, get_loadout_names, save_server_guid, server_key_exists,
+    server_key_setup, set_server_loadout, start_server_loadout,
 };
 
 mod speed_calc;
@@ -42,6 +42,7 @@ struct UserPreferences {
     is_sidebar_enabled: bool,
     venice_unleashed_shortcut_location: String,
     accounts: Vec<Account>,
+    server_guid: String,
 }
 
 fn config_folder_exists() -> bool {
@@ -74,6 +75,7 @@ fn set_default_preferences() {
         is_sidebar_enabled: false,
         venice_unleashed_shortcut_location: path_to_vu_client,
         accounts: Vec::new(),
+        server_guid: String::from(""),
     };
     save_user_preferences(sample_preferences);
 }
@@ -209,12 +211,18 @@ async fn get_vu_data() -> String {
 }
 
 #[tauri::command]
-async fn play_vu() -> bool {
+async fn play_vu(server_password: String) -> bool {
     let preferences_prematch = get_user_preferences_as_struct();
     let preferences = match preferences_prematch {
         Ok(info) => info,
         Err(_) => return false,
     };
+    let mut server_join_string = String::from("vu://join/");
+    server_join_string.push_str(&preferences.server_guid);
+    server_join_string.push_str("/");
+    server_join_string.push_str(&server_password);
+    println!("{:?}", server_join_string);
+
     Command::new("cmd")
         .args([
             "/C",
@@ -223,6 +231,7 @@ async fn play_vu() -> bool {
             &preferences.accounts[0].username,
             "-password",
             &preferences.accounts[0].password,
+            &server_join_string,
         ])
         .spawn()
         .expect("failed to execute process");
@@ -257,7 +266,8 @@ pub fn run() {
             delete_server_loadout,
             server_key_exists,
             server_key_setup,
-            start_server_loadout
+            start_server_loadout,
+            save_server_guid
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -6,7 +6,7 @@ use std::{
 
 use serde::{Deserialize, Serialize};
 
-use crate::{get_user_preferences_as_struct, reg_functions};
+use crate::{get_user_preferences_as_struct, reg_functions, save_user_preferences};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ServerLoadout {
@@ -185,6 +185,27 @@ pub async fn start_server_loadout(name: String) -> bool {
         .expect("failed to execute process");
 
     return true;
+}
+
+#[tauri::command]
+pub fn save_server_guid(guid: String) -> bool {
+    let preferences = get_user_preferences_as_struct();
+    match preferences {
+        Ok(mut pref) => {
+            pref.server_guid = guid;
+            match save_user_preferences(pref) {
+                Ok(_) => return true,
+                Err(err) => {
+                    println!("{:?}", err);
+                    return false;
+                }
+            };
+        }
+        Err(err) => {
+            println!("{:?}", err);
+            return false;
+        }
+    };
 }
 
 fn get_loadouts_path() -> PathBuf {

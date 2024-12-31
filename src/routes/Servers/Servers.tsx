@@ -5,6 +5,10 @@ import { QueryKey, STALE } from '@/config/config'
 import { serverKeyExists } from '@/api'
 import { useQuery } from '@tanstack/react-query'
 import FileUpload from './components/FileUpload'
+import serverKeyImage from '@/assets/server-key-info.png'
+import { Input } from '@/components/ui/input'
+import { Form } from '@/components/ui/form'
+import ServerGuidForm from './components/ServerGuidForm'
 
 export default function Servers() {
   const { isPending, isError, data, error } = useQuery({
@@ -36,18 +40,29 @@ export default function Servers() {
         <div className="bg-destructive pl-2 pr-2 text-center text-xl font-bold leading-9">
           <h1 className="p-4">Server Key Not Found</h1>
         </div>
-        <div className="bg-destructive-foreground">
-          <h1 className="font-bold">1.) Download your server key from:</h1>
-          <a
-            href="https://veniceunleashed.net/keys"
-            target="_blank"
-            className="ml-6 text-blue-800 underline"
-          >
-            https://veniceunleashed.net/keys
-          </a>
-          <h1 className="font-bold">2.) Drag and Drop your key into this window:</h1>
+        <div className="flex flex-col gap-8 bg-destructive-foreground p-8">
+          <div>
+            <h1 className="text-2xl font-bold">1.) Download server.key from:</h1>
+            <a
+              href="https://veniceunleashed.net/keys"
+              target="_blank"
+              className="ml-9 text-blue-800 underline hover:bg-blue-100 hover:opacity-80"
+            >
+              https://veniceunleashed.net/keys
+              <img src={serverKeyImage} alt="" className="" />
+            </a>
+          </div>
+
+          <div>
+            <h1 className="text-2xl font-bold">2.) Copy Server GUID from above:</h1>
+            <ServerGuidForm />
+          </div>
+
+          <div>
+            <h1 className="text-2xl font-bold">3.) Drag and Drop your key into this window:</h1>
+          </div>
         </div>
-        <div className="flex flex-1 flex-col">
+        <div className="flex min-h-[30vh] flex-1 flex-col">
           <FileUpload />
         </div>
       </div>

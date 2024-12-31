@@ -17,8 +17,8 @@ export async function saveUserCredentials({username, password}: {username: strin
   return status
 }
 
-export async function playVU(){
-  invoke(rust_fns.play_vu)
+export async function playVU(serverPassword: String){
+  invoke(rust_fns.play_vu, {serverPassword})
 }
 
 function isValidCredential(cred: String){
@@ -104,4 +104,10 @@ export async function startServerLoadout(name: String){
   const info = await invoke(rust_fns.start_server_loadout, {name})
   console.log(`Started the server: ${info}`)
   return info
+}
+
+export async function saveServerGUID(guid: String){
+  const status = await invoke(rust_fns.save_server_guid, {guid})
+  console.log(`Saved GUID: ${status}`)
+  return status
 }

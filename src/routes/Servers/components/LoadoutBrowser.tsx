@@ -73,7 +73,7 @@ function LoadoutBrowser() {
                 if (status) {
                   toast('Started VU Server. Starting Client in 10 seconds...')
                   setTimeout(() => {
-                    playVU()
+                    playVU('YOUR_SERVER_PASSWORD_HERE')
                   }, 10000)
                 } else {
                   toast('Something went wrong starting VU Server...')

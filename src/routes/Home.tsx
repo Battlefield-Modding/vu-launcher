@@ -51,7 +51,7 @@ export default function Home() {
             className="p-8 text-2xl"
             onClick={() => {
               toast('Starting VU...')
-              playVU()
+              playVU('')
               setTimeout(() => {
                 getCurrentWindow().minimize()
               }, 1500)
