@@ -111,3 +111,9 @@ export async function saveServerGUID(guid: String){
   console.log(`Saved GUID: ${status}`)
   return status
 }
+
+export async function getServerLoadout(name: String){
+  const info = JSON.parse(await invoke(rust_fns.get_server_loadout, {name}))
+  console.log(`Saved Loadout: ${info}`)
+  return info
+}

@@ -23,7 +23,8 @@ export enum rust_fns {
   server_key_exists = 'server_key_exists',
   server_key_setup = 'server_key_setup',
   start_server_loadout = 'start_server_loadout',
-  save_server_guid = 'save_server_guid'
+  save_server_guid = 'save_server_guid',
+  get_server_loadout = 'get_server_loadout'
 }
 
 export enum QueryKey {

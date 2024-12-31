@@ -1,5 +1,5 @@
 use std::{
-    fs::{self, write},
+    fs::{self, read_to_string, write},
     path::PathBuf,
     process::Command,
 };
@@ -135,6 +135,44 @@ pub fn get_loadout_names() -> Vec<String> {
         }
     };
     loadout_dirs
+}
+
+#[tauri::command]
+pub fn get_server_loadout(name: String) -> ServerLoadout {
+    let mut loadout_path: PathBuf = get_loadouts_path();
+    loadout_path.push(&name);
+
+    loadout_path.push("Server");
+    let server_path = loadout_path.clone();
+    loadout_path.push("Admin");
+
+    let mut startup_path = loadout_path.clone();
+    let _ = startup_path.push("startup.txt");
+    println!("{:?}", startup_path);
+    let mut maplist_path = loadout_path.clone();
+    let _ = maplist_path.push("maplist.txt");
+    println!("{:?}", maplist_path);
+    let mut modlist_path = loadout_path.clone();
+    let _ = modlist_path.push("modlist.txt");
+    println!("{:?}", modlist_path);
+    let mut banlist_path = loadout_path.clone();
+    let _ = banlist_path.push("banlist.txt");
+    println!("{:?}", banlist_path);
+
+    let startup_string = read_to_string(startup_path).unwrap();
+    let modlist_string = read_to_string(modlist_path).unwrap();
+    let maplist_string = read_to_string(maplist_path).unwrap();
+    let banlist_string = read_to_string(banlist_path).unwrap();
+
+    let my_loadout = ServerLoadout {
+        name,
+        banlist: banlist_string,
+        modlist: modlist_string,
+        maplist: maplist_string,
+        startup: startup_string,
+    };
+
+    my_loadout
 }
 
 #[tauri::command]
