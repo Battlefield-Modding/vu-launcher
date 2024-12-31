@@ -33,7 +33,6 @@ export default function ServerGuidForm() {
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
     const status = await saveServerGUID(values.guid)
     if (status) {
       setSavedGUID(() => true)

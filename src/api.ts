@@ -10,18 +10,16 @@ export async function saveUserCredentials({username, password}: {username: strin
   const preferences = JSON.parse(await invoke(rust_fns.get_user_preferences));
   const accounts = preferences.accounts ?? []
   accounts.push({username, password})
-  console.log(accounts)
   const newPreferences = {...preferences, accounts}
-  console.log(newPreferences)
   const status = await invoke(rust_fns.set_user_preferences, {newPreferences})
   return status
 }
 
-export async function playVU(serverPassword: String){
+export async function playVU(serverPassword: string){
   invoke(rust_fns.play_vu, {serverPassword})
 }
 
-function isValidCredential(cred: String){
+function isValidCredential(cred: string){
   if (typeof cred === "string"){
     if (cred.length >= 2) {
       return true
@@ -47,7 +45,6 @@ export async function getUserPreferences(){
 
 export async function getaccounts(){
   const {accounts} = await getUserPreferences()
-  console.log(accounts)
   return accounts
 }
 
@@ -82,38 +79,32 @@ export async function getLoadoutNames(){
   return info
 }
 
-export async function deleteServerLoadout(name: String){
-  console.log(`Deleting: ${name}`)
+export async function deleteServerLoadout(name: string){
   const info = await invoke(rust_fns.delete_server_loadout, {name})
   return info
 }
 
 export async function serverKeyExists(){
   const info = await invoke(rust_fns.server_key_exists)
-  console.log(`Server Key Exists? ${info}`)
   return info
 }
 
-export async function serverKeySetup(path: String){
+export async function serverKeySetup(path: string){
   const info = await invoke(rust_fns.server_key_setup, {path})
-  console.log(`Server Key Created? ${info}`)
   return info
 }
 
-export async function startServerLoadout(name: String){
+export async function startServerLoadout(name: string){
   const info = await invoke(rust_fns.start_server_loadout, {name})
-  console.log(`Started the server: ${info}`)
   return info
 }
 
-export async function saveServerGUID(guid: String){
+export async function saveServerGUID(guid: string){
   const status = await invoke(rust_fns.save_server_guid, {guid})
-  console.log(`Saved GUID: ${status}`)
   return status
 }
 
-export async function getServerLoadout(name: String){
-  const info = JSON.parse(await invoke(rust_fns.get_server_loadout, {name}))
-  console.log(`Saved Loadout: ${info}`)
+export async function getServerLoadout(name: string){
+  const info = JSON.parse(await invoke(rust_fns.get_server_loadout, {name}) as string)
   return info
 }
