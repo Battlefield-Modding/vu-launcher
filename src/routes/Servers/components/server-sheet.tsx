@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react'
 import { doesCredentialsExist } from '@/api'
 import clsx from 'clsx'
 import ServerForm from './server-form'
+import { Loadout } from '@/config/config'
 
 export default function ServerSheet() {
   const [sheetOpen, setSheetOpen] = useState(false)
@@ -33,7 +34,7 @@ export default function ServerSheet() {
           <SheetDescription>Creates a Loadout for a server</SheetDescription>
         </SheetHeader>
         <br />
-        <ServerForm setSheetOpen={setSheetOpen} />
+        <ServerForm setSheetOpen={setSheetOpen} defaultConfig={undefined!} />
       </SheetContent>
     </Sheet>
   )

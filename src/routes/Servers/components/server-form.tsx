@@ -18,7 +18,7 @@ import { saveUserCredentials, updateServerConfig } from '@/api'
 import { useQueryClient } from '@tanstack/react-query'
 import { Textarea } from '@/components/ui/textarea'
 import { defaultServerConfig, ServerLoadout } from '../defaultServerConfig'
-import { QueryKey } from '@/config/config'
+import { Loadout, QueryKey } from '@/config/config'
 
 const formSchema = z.object({
   name: z.string().min(2).max(50),
@@ -28,25 +28,42 @@ const formSchema = z.object({
   banlist: z.string().min(0).max(5000),
 })
 
-export default function ServerForm({ setSheetOpen }: { setSheetOpen: any }) {
+export default function ServerForm({
+  setSheetOpen,
+  defaultConfig,
+}: {
+  setSheetOpen: any
+  defaultConfig: Loadout
+}) {
   const queryClient = useQueryClient()
+
+  const defaults = defaultConfig ?? defaultServerConfig
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      ...defaultServerConfig,
+      ...defaults,
     },
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
     const loadout: ServerLoadout = values
-    console.log(loadout)
     const status = await updateServerConfig(loadout)
 
     if (status) {
-      toast(`Success! Saved loadout: ${values.name}`)
-      queryClient.invalidateQueries({ queryKey: [QueryKey.ServerLoadouts], refetchType: 'all' })
+      if (defaultConfig?.name) {
+        toast(`Success! Updated loadout: ${values.name}`)
+        queryClient.invalidateQueries({
+          queryKey: [`${QueryKey.GetServerLoadout}-${defaultConfig.name}`],
+          refetchType: 'all',
+        })
+      } else {
+        toast(`Success! Created loadout: ${values.name}`)
+        queryClient.invalidateQueries({
+          queryKey: [QueryKey.ServerLoadouts],
+          refetchType: 'all',
+        })
+      }
       setSheetOpen(() => false)
     } else {
       toast('Something went wrong.')
@@ -63,7 +80,12 @@ export default function ServerForm({ setSheetOpen }: { setSheetOpen: any }) {
             <FormItem>
               <FormLabel>Loadout Name</FormLabel>
               <FormControl>
-                <Input type="text" placeholder="name" {...field} />
+                <Input
+                  type="text"
+                  placeholder="name"
+                  {...field}
+                  disabled={defaultConfig?.name !== undefined}
+                />
               </FormControl>
               <FormDescription>The nickname for this server loadout.</FormDescription>
               <FormMessage />
@@ -80,7 +102,13 @@ export default function ServerForm({ setSheetOpen }: { setSheetOpen: any }) {
                 <Textarea placeholder="Startup" {...field} rows={15} />
               </FormControl>
               <FormDescription>
-                <code>https://docs.veniceunleashed.net/hosting/commands/</code>
+                <a
+                  href="https://docs.veniceunleashed.net/hosting/commands/"
+                  target="_blank"
+                  className="text-blue-800 underline"
+                >
+                  https://docs.veniceunleashed.net/hosting/commands/
+                </a>
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -96,7 +124,13 @@ export default function ServerForm({ setSheetOpen }: { setSheetOpen: any }) {
                 <Textarea placeholder="Maplist" {...field} rows={15} />
               </FormControl>
               <FormDescription>
-                <code>https://docs.veniceunleashed.net/hosting/maps/</code>
+                <a
+                  href="https://docs.veniceunleashed.net/hosting/maps/"
+                  target="_blank"
+                  className="text-blue-800 underline"
+                >
+                  https://docs.veniceunleashed.net/hosting/maps/
+                </a>
               </FormDescription>
               <FormMessage />
             </FormItem>

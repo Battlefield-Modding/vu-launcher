@@ -5,6 +5,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Delete, Edit, Loader, Play } from 'lucide-react'
 import { toast } from 'sonner'
 import ServerSheet from './server-sheet'
+import EditServerSheet from './EditServerSheet'
 
 function LoadoutBrowser() {
   const queryClient = useQueryClient()
@@ -40,9 +41,10 @@ function LoadoutBrowser() {
         <div key={`${name}-${index}`} className="rounded-md border border-black bg-black p-4">
           <h1 className="mb-8 flex gap-4 text-xl">
             {name.length >= 15 ? `${name.substring(0, 15)}...` : name}
+            <EditServerSheet name={name} />
           </h1>
 
-          <div className="flex gap-4">
+          <div className="flex justify-between gap-4">
             <Button
               variant={'destructive'}
               onClick={async () => {
@@ -62,9 +64,6 @@ function LoadoutBrowser() {
               }}
             >
               <Delete />
-            </Button>
-            <Button variant={'secondary'}>
-              <Edit />
             </Button>
             <Button
               variant={'constructive'}

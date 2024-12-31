@@ -138,7 +138,7 @@ pub fn get_loadout_names() -> Vec<String> {
 }
 
 #[tauri::command]
-pub fn get_server_loadout(name: String) -> ServerLoadout {
+pub fn get_server_loadout(name: String) -> String {
     let mut loadout_path: PathBuf = get_loadouts_path();
     loadout_path.push(&name);
 
@@ -172,7 +172,7 @@ pub fn get_server_loadout(name: String) -> ServerLoadout {
         startup: startup_string,
     };
 
-    my_loadout
+    serde_json::to_string(&my_loadout).unwrap()
 }
 
 #[tauri::command]

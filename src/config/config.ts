@@ -31,7 +31,8 @@ export enum QueryKey {
   UserList = 'UserList',
   IsVuInstalled = 'IsVuInstalled',
   ServerLoadouts = 'ServerLoadouts',
-  ServerKeyExists = 'ServerKeyExists'
+  ServerKeyExists = 'ServerKeyExists',
+  GetServerLoadout = "GetServerLoadout"
 }
 
 export enum routes {
@@ -39,4 +40,12 @@ export enum routes {
   SERVERS = "/servers",
   MODS = "/mods",
   SETTINGS = "/settings"
+}
+
+export type Loadout = {
+  name: string,
+  startup: string,
+  maplist: string,
+  modlist: string,
+  banlist: string,
 }
