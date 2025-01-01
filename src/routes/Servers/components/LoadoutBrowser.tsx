@@ -34,7 +34,7 @@ function LoadoutBrowser() {
   return (
     <div className="grid grid-cols-2 gap-8 p-8 text-white">
       {data.map((name, index) => (
-        <ServerLoadoutPreview name={name} index={index} />
+        <ServerLoadoutPreview name={name} index={index} key={`${name}-${index}`} />
       ))}
     </div>
   )
