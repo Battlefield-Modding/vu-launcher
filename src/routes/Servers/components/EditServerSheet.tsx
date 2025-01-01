@@ -14,38 +14,8 @@ import ServerForm from './server-form'
 import { Loadout, QueryKey, STALE } from '@/config/config'
 import { useQuery } from '@tanstack/react-query'
 
-export default function EditServerSheet({ name }: { name: string }) {
+export default function EditServerSheet({ name, data }: { name: string; data: Loadout }) {
   const [sheetOpen, setSheetOpen] = useState(false)
-  const { isPending, isError, data, error } = useQuery({
-    queryKey: [`${QueryKey.GetServerLoadout}-${name}`],
-    queryFn: async () => {
-      const data = await getServerLoadout(name)
-      return data
-    },
-    staleTime: STALE.never,
-  })
-
-  if (isPending) {
-    return (
-      <div>
-        <h1>Fetching Loadout {name}</h1>
-        <Loader />
-      </div>
-    )
-  }
-
-  if (isError) {
-    return (
-      <div className="rounded-md bg-destructive pl-2 pr-2 text-xl leading-9">
-        <h1>ERROR: No Loadouts Found</h1>
-      </div>
-    )
-  }
-
-  if (!data) {
-    return <></>
-  }
-
   return (
     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
       <SheetTrigger>
