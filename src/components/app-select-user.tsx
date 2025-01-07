@@ -28,7 +28,7 @@ export default function AppSelectUser() {
 
   if (isError) {
     return (
-      <div className="rounded-md bg-destructive pl-2 pr-2 text-xl leading-9">
+      <div className="rounded-md bg-red-600 pl-2 pr-2 text-xl leading-9 text-white">
         <h1>ERROR: No Users Found</h1>
       </div>
     )
@@ -36,7 +36,7 @@ export default function AppSelectUser() {
 
   if (!data || !data[0]) {
     return (
-      <div className="rounded-md bg-destructive pl-2 pr-2 text-xl leading-9">
+      <div className="rounded-md bg-red-600 pl-2 pr-2 text-xl leading-9 text-white">
         <h1>No Users Found</h1>
       </div>
     )
