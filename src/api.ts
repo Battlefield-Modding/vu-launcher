@@ -113,3 +113,7 @@ export async function setVUInstallLocation(installdir: string){
   const info = await invoke(rust_fns.set_vu_install_location_registry, {installdir})
   return info
 }
+
+export async function openExplorerAtLoadout(loadoutName: string){
+  await invoke(rust_fns.open_explorer_for_loadout, {loadoutName})
+}

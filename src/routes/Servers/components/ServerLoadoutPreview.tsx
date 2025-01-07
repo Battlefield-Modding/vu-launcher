@@ -1,7 +1,13 @@
 import EditServerSheet from './EditServerSheet'
 import { Button } from '@/components/ui/button'
-import { Delete, Loader, Play } from 'lucide-react'
-import { deleteServerLoadout, getServerLoadout, playVU, startServerLoadout } from '@/api'
+import { Delete, File, Folder, Loader, Play } from 'lucide-react'
+import {
+  deleteServerLoadout,
+  getServerLoadout,
+  openExplorerAtLoadout,
+  playVU,
+  startServerLoadout,
+} from '@/api'
 import { toast } from 'sonner'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { QueryKey, STALE } from '@/config/config'
@@ -92,6 +98,11 @@ function ServerLoadoutPreview({ name, index }: { name: string; index: number }) 
     }
   }
 
+  async function handleOpenExplorer() {
+    toast(`Opened explorer for loadout: ${name}`)
+    await openExplorerAtLoadout(name)
+  }
+
   return (
     <div className="rounded-md border border-black bg-black p-4">
       <h1 className="mb-8 flex gap-4 text-xl">
@@ -102,6 +113,9 @@ function ServerLoadoutPreview({ name, index }: { name: string; index: number }) 
       <div className="flex justify-between gap-4">
         <Button variant={'destructive'} onClick={handleDelete}>
           <Delete />
+        </Button>
+        <Button variant={'secondary'} onClick={handleOpenExplorer}>
+          <Folder />
         </Button>
         <Button variant={'constructive'} onClick={handlePlay}>
           <Play />

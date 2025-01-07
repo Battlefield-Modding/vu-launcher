@@ -1,6 +1,6 @@
 use std::{
     fs, io,
-    path::{self, Path},
+    path::{self, Path, PathBuf},
     process::Command,
 };
 
@@ -25,8 +25,9 @@ use web::{download_game, get_vu_info, VeniceEndpointData};
 
 mod servers;
 use servers::{
-    delete_server_loadout, get_loadout_names, get_server_loadout, save_server_guid,
-    server_key_exists, server_key_setup, set_server_loadout, start_server_loadout,
+    delete_server_loadout, get_loadout_names, get_loadouts_path, get_server_loadout,
+    save_server_guid, server_key_exists, server_key_setup, set_server_loadout,
+    start_server_loadout,
 };
 
 mod speed_calc;
@@ -239,6 +240,18 @@ async fn play_vu(server_password: String) -> bool {
 }
 
 #[tauri::command]
+fn open_explorer_for_loadout(loadout_name: String) {
+    let mut path_to_loadout = get_loadouts_path();
+    path_to_loadout.push(loadout_name);
+    path_to_loadout.push("Server");
+
+    Command::new("explorer")
+        .args(&path_to_loadout.to_str())
+        .spawn()
+        .expect("failed to execute process");
+}
+
+#[tauri::command]
 fn is_vu_installed() -> bool {
     match get_reg_vu_install_location() {
         Ok(_) => return true,
@@ -269,7 +282,8 @@ pub fn run() {
             start_server_loadout,
             save_server_guid,
             get_server_loadout,
-            set_vu_install_location_registry
+            set_vu_install_location_registry,
+            open_explorer_for_loadout
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

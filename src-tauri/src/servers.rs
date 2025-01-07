@@ -246,7 +246,7 @@ pub fn save_server_guid(guid: String) -> bool {
     };
 }
 
-fn get_loadouts_path() -> PathBuf {
+pub fn get_loadouts_path() -> PathBuf {
     let install_path = match reg_functions::get_install_path_registry() {
         Ok(val) => val,
         Err(err) => err.to_string(),
