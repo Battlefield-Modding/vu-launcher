@@ -83,6 +83,7 @@ export default function ServerForm({
                 <Input
                   type="text"
                   placeholder="name"
+                  autoFocus={defaultConfig?.name === undefined}
                   {...field}
                   disabled={defaultConfig?.name !== undefined}
                 />
