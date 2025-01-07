@@ -218,22 +218,54 @@ async fn play_vu(server_password: String) -> bool {
         Ok(info) => info,
         Err(_) => return false,
     };
+
+    let mut args: Vec<&str> = Vec::new();
+    args.push("/C");
+    args.push(&preferences.venice_unleashed_shortcut_location);
+
+    match preferences.accounts.len() {
+        0 => {
+            println!("No user credentials found.")
+        }
+        _ => {
+            args.push("-username");
+            args.push(&preferences.accounts[0].username);
+            args.push("-password");
+            args.push(&preferences.accounts[0].password);
+        }
+    };
+
     let mut server_join_string = String::from("vu://join/");
-    server_join_string.push_str(&preferences.server_guid);
-    server_join_string.push_str("/");
-    server_join_string.push_str(&server_password);
-    println!("{:?}", server_join_string);
+
+    match preferences.server_guid.len() {
+        0 => {
+            println!("No server GUID supplied.")
+        }
+        _ => {
+            server_join_string.push_str(&preferences.server_guid);
+
+            match server_password.len() {
+                0 => {
+                    println!("No server password supplied")
+                }
+                _ => {
+                    server_join_string.push_str(&server_password);
+                }
+            };
+        }
+    };
+
+    match server_join_string.len() {
+        10 => {
+            println!("Server join string is empty.")
+        }
+        _ => {
+            args.push(&server_join_string);
+        }
+    };
 
     Command::new("cmd")
-        .args([
-            "/C",
-            &preferences.venice_unleashed_shortcut_location,
-            "-username",
-            &preferences.accounts[0].username,
-            "-password",
-            &preferences.accounts[0].password,
-            &server_join_string,
-        ])
+        .args(args)
         .spawn()
         .expect("failed to execute process");
     return true;
