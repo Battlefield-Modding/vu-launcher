@@ -83,7 +83,7 @@ export default function Servers() {
       <div className="m-auto mb-0 mt-8 rounded-md bg-primary p-8">
         <ServerSheet />
       </div>
-      <div className="m-auto mt-0">
+      <div className="m-auto mt-0 w-full">
         <LoadoutBrowser />
       </div>
     </div>

@@ -1,6 +1,6 @@
 import EditServerSheet from './EditServerSheet'
 import { Button } from '@/components/ui/button'
-import { Delete, File, Folder, Loader, Play } from 'lucide-react'
+import { Folder, Loader, Play, Trash } from 'lucide-react'
 import {
   deleteServerLoadout,
   getServerLoadout,
@@ -104,20 +104,20 @@ function ServerLoadoutPreview({ name, index }: { name: string; index: number }) 
   }
 
   return (
-    <div className="rounded-md border border-black bg-black p-4">
-      <h1 className="mb-8 flex gap-4 text-xl">
+    <div className="max-w-96 rounded-md border border-black bg-black p-4">
+      <h1 className="mb-8 flex justify-between text-xl">
         {name.length >= 15 ? `${name.substring(0, 15)}...` : name}
         <EditServerSheet name={name} data={data} />
       </h1>
 
       <div className="flex justify-between gap-4">
         <Button variant={'destructive'} onClick={handleDelete}>
-          <Delete />
+          <Trash />
         </Button>
         <Button variant={'secondary'} onClick={handleOpenExplorer}>
           <Folder />
         </Button>
-        <Button variant={'constructive'} onClick={handlePlay}>
+        <Button variant={'constructive'} onClick={handlePlay} className="flex-1">
           <Play />
         </Button>
       </div>
