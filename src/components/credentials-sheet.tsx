@@ -42,7 +42,16 @@ export default function CredentialsSheet() {
       <SheetContent>
         <SheetHeader>
           <SheetTitle>Save VU Credentials</SheetTitle>
-          <SheetDescription>Updates your credentials for VU Auto-Login</SheetDescription>
+          <SheetDescription>
+            <p>No account? Sign up here: </p>
+            <a
+              className="text-blue-800 underline"
+              href="https://veniceunleashed.net/signup"
+              target="_blank"
+            >
+              https://veniceunleashed.net/signup
+            </a>
+          </SheetDescription>
         </SheetHeader>
         <br />
         <PlayerCredentialsForm setSheetOpen={setSheetOpen} checkCreds={checkCreds} />
