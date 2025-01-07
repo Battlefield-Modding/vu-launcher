@@ -1,20 +1,14 @@
 import EditServerSheet from './EditServerSheet'
 import { Button } from '@/components/ui/button'
-import { Folder, Loader, Play, Trash } from 'lucide-react'
-import {
-  deleteServerLoadout,
-  getServerLoadout,
-  openExplorerAtLoadout,
-  playVU,
-  startServerLoadout,
-} from '@/api'
+import { Folder, Loader, Play } from 'lucide-react'
+import { getServerLoadout, openExplorerAtLoadout, playVU, startServerLoadout } from '@/api'
 import { toast } from 'sonner'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { QueryKey, STALE } from '@/config/config'
+import ChooseAccountDialog from './ChooseAccountDialog'
+import DeleteLoadoutDialog from './DeleteLoadoutDialog'
 
 function ServerLoadoutPreview({ name, index }: { name: string; index: number }) {
-  const queryClient = useQueryClient()
-
   const { isPending, isError, data, error } = useQuery({
     queryKey: [`${QueryKey.GetServerLoadout}-${name}`],
     queryFn: async () => {
@@ -70,22 +64,6 @@ function ServerLoadoutPreview({ name, index }: { name: string; index: number }) 
     return finalPassword
   }
 
-  async function handleDelete() {
-    const wantToDelete = await confirm(`Are you sure you want to delete ${name}?`)
-    if (wantToDelete) {
-      const status = await deleteServerLoadout(name)
-      if (status) {
-        toast('Deleted server loadout.')
-        queryClient.invalidateQueries({
-          queryKey: [QueryKey.ServerLoadouts],
-          refetchType: 'all',
-        })
-      } else {
-        toast(`Failed to delete loadout: ${name}`)
-      }
-    }
-  }
-
   async function handlePlay() {
     let status = await startServerLoadout(name)
     if (status) {
@@ -111,9 +89,7 @@ function ServerLoadoutPreview({ name, index }: { name: string; index: number }) 
       </h1>
 
       <div className="flex justify-between gap-4">
-        <Button variant={'destructive'} onClick={handleDelete}>
-          <Trash />
-        </Button>
+        <DeleteLoadoutDialog name={name} />
         <Button variant={'secondary'} onClick={handleOpenExplorer}>
           <Folder />
         </Button>
