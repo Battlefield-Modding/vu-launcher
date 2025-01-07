@@ -6,11 +6,16 @@ import { serverKeyExists } from '@/api'
 import { useQuery } from '@tanstack/react-query'
 import FileUpload from './components/FileUpload'
 import serverKeyImage from '@/assets/server-key-info.png'
-import { Input } from '@/components/ui/input'
-import { Form } from '@/components/ui/form'
 import ServerGuidForm from './components/ServerGuidForm'
+import { useState } from 'react'
 
 export default function Servers() {
+  const [isGuidSaved, setIsGuidSaved] = useState(false)
+
+  function handleGuid(val: boolean) {
+    setIsGuidSaved(() => val)
+  }
+
   const { isPending, isError, data, error } = useQuery({
     queryKey: [QueryKey.ServerKeyExists],
     queryFn: serverKeyExists,
@@ -49,22 +54,25 @@ export default function Servers() {
               className="ml-9 text-blue-800 underline hover:bg-blue-100 hover:opacity-80"
             >
               https://veniceunleashed.net/keys
-              <img src={serverKeyImage} alt="" className="" />
+              {!isGuidSaved && <img src={serverKeyImage} alt="" className="" />}
             </a>
           </div>
 
           <div>
             <h1 className="text-2xl font-bold">2.) Copy Server GUID from above:</h1>
-            <ServerGuidForm />
+            <ServerGuidForm handleGuid={handleGuid} />
           </div>
 
           <div>
             <h1 className="text-2xl font-bold">3.) Drag and Drop your key into this window:</h1>
           </div>
         </div>
-        <div className="flex min-h-[30vh] flex-1 flex-col">
-          <FileUpload />
-        </div>
+
+        {isGuidSaved && (
+          <div className="flex min-h-[30vh] flex-1 flex-col">
+            <FileUpload />
+          </div>
+        )}
       </div>
     )
   }

@@ -23,7 +23,7 @@ const formSchema = z.object({
   guid: z.string().min(2).max(50),
 })
 
-export default function ServerGuidForm() {
+export default function ServerGuidForm({ handleGuid }: { handleGuid: (val: boolean) => void }) {
   const [savedGUID, setSavedGUID] = useState(false)
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -36,6 +36,7 @@ export default function ServerGuidForm() {
     const status = await saveServerGUID(values.guid)
     if (status) {
       setSavedGUID(() => true)
+      handleGuid(true)
       toast('Updated Server GUID Successfully!')
     } else {
       toast('Something went wrong.')
