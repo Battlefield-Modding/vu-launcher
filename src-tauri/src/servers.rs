@@ -125,9 +125,18 @@ pub fn get_loadout_names() -> Vec<String> {
     match dir_reader {
         Ok(reader) => {
             reader.for_each(|item| {
-                let temp = item.unwrap().file_name();
-                let temp_as_str = String::from(temp.to_string_lossy());
-                loadout_dirs.push(temp_as_str);
+                match item {
+                    Ok(info) => {
+                        if info.path().is_dir() {
+                            let temp = info.file_name();
+                            let temp_as_str = String::from(temp.to_string_lossy());
+                            loadout_dirs.push(temp_as_str);
+                        }
+                    }
+                    Err(_) => {
+                        println!("Error when reading loadout names.")
+                    }
+                };
             });
         }
         Err(err) => {
@@ -159,10 +168,34 @@ pub fn get_server_loadout(name: String) -> String {
     let _ = banlist_path.push("banlist.txt");
     println!("{:?}", banlist_path);
 
-    let startup_string = read_to_string(startup_path).unwrap();
-    let modlist_string = read_to_string(modlist_path).unwrap();
-    let maplist_string = read_to_string(maplist_path).unwrap();
-    let banlist_string = read_to_string(banlist_path).unwrap();
+    let startup_string = match read_to_string(startup_path) {
+        Ok(info) => info,
+        Err(err) => {
+            println!("{:?}", err);
+            err.to_string()
+        }
+    };
+    let modlist_string = match read_to_string(modlist_path) {
+        Ok(info) => info,
+        Err(err) => {
+            println!("{:?}", err);
+            err.to_string()
+        }
+    };
+    let maplist_string = match read_to_string(maplist_path) {
+        Ok(info) => info,
+        Err(err) => {
+            println!("{:?}", err);
+            err.to_string()
+        }
+    };
+    let banlist_string = match read_to_string(banlist_path) {
+        Ok(info) => info,
+        Err(err) => {
+            println!("{:?}", err);
+            err.to_string()
+        }
+    };
 
     let my_loadout = ServerLoadout {
         name,
