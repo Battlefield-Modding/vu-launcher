@@ -108,3 +108,8 @@ export async function getServerLoadout(name: string){
   const info = JSON.parse(await invoke(rust_fns.get_server_loadout, {name}) as string)
   return info
 }
+
+export async function setVUInstallLocation(installdir: string){
+  const info = await invoke(rust_fns.set_vu_install_location_registry, {installdir})
+  return info
+}

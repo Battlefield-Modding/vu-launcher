@@ -17,7 +17,7 @@ use dirs_next;
 mod reg_functions;
 use reg_functions::{
     get_install_path_registry, get_reg_vu_install_location, get_settings_json_path_registry,
-    set_install_path_registry, set_settings_json_path_registry,
+    set_install_path_registry, set_settings_json_path_registry, set_vu_install_location_registry,
 };
 
 mod web;
@@ -268,7 +268,8 @@ pub fn run() {
             server_key_setup,
             start_server_loadout,
             save_server_guid,
-            get_server_loadout
+            get_server_loadout,
+            set_vu_install_location_registry
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
