@@ -14,14 +14,24 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
-import { saveUserCredentials, updateServerConfig } from '@/api'
+import { updateServerConfig } from '@/api'
 import { useQueryClient } from '@tanstack/react-query'
 import { Textarea } from '@/components/ui/textarea'
 import { defaultServerConfig, ServerLoadout } from '../defaultServerConfig'
 import { Loadout, QueryKey } from '@/config/config'
 
 const formSchema = z.object({
-  name: z.string().min(2).max(50),
+  name: z
+    .string()
+    .min(2)
+    .max(50)
+    .refine(
+      (value) =>
+        /^[^\s^\x00-\x1f\\?*:"";<>|\/.][^\x00-\x1f\\?*:"";<>|\/]*[^\s^\x00-\x1f\\?*:"";<>|\/.]+$/g.test(
+          value ?? '',
+        ),
+      "A loadout name can't contain any of the following characters\: \\ / : * ? \" < > | '",
+    ),
   startup: z.string().min(10).max(5000),
   maplist: z.string().min(10).max(5000),
   modlist: z.string().min(0).max(5000),
@@ -88,7 +98,10 @@ export default function ServerForm({
                   disabled={defaultConfig?.name !== undefined}
                 />
               </FormControl>
-              <FormDescription>The nickname for this server loadout.</FormDescription>
+              <FormDescription>
+                The nickname for this server loadout. Can't contain any of the following characters:
+                \ / : * ? " {'<'} {'>'} | '
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
