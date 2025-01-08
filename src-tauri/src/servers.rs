@@ -86,6 +86,9 @@ pub fn set_server_loadout(loadout: ServerLoadout) -> Result<bool, String> {
         Ok(boolean) => {
             if !boolean {
                 _ = fs::create_dir_all(&loadout_path);
+            } else {
+                println!("Couldn't create loadout: {}", &loadout.name);
+                return Ok(false);
             }
         }
         Err(_) => println!("Couldn't create loadout: {}", &loadout.name),

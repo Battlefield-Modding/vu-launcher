@@ -76,7 +76,7 @@ export default function ServerForm({
       }
       setSheetOpen(() => false)
     } else {
-      toast('Something went wrong.')
+      toast('Use a different loadout name.')
     }
   }
 
