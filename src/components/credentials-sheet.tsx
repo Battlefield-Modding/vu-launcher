@@ -30,9 +30,9 @@ export default function CredentialsSheet() {
       <SheetTrigger>
         <div
           className={clsx(
-            'text-md flex rounded-md p-1.5 text-secondary hover:bg-primary',
-            !credsExist && 'bg-red-600',
-            credsExist && 'bg-green-600',
+            'text-md flex rounded-md p-1.5 text-secondary',
+            !credsExist && 'bg-red-600 hover:bg-red-600/80',
+            credsExist && 'bg-green-600 hover:bg-green-600/80',
           )}
         >
           {credsExist ? 'AutoLogin' : 'Click to Login'}
@@ -42,7 +42,16 @@ export default function CredentialsSheet() {
       <SheetContent>
         <SheetHeader>
           <SheetTitle>Save VU Credentials</SheetTitle>
-          <SheetDescription>Updates your credentials for VU Auto-Login</SheetDescription>
+          <SheetDescription>
+            <p>No account? Sign up here: </p>
+            <a
+              className="text-blue-800 underline"
+              href="https://veniceunleashed.net/signup"
+              target="_blank"
+            >
+              https://veniceunleashed.net/signup
+            </a>
+          </SheetDescription>
         </SheetHeader>
         <br />
         <PlayerCredentialsForm setSheetOpen={setSheetOpen} checkCreds={checkCreds} />

@@ -1,6 +1,6 @@
-import { fetchVUData } from '@/api'
+import { fetchVUData, setVUInstallLocation } from '@/api'
 import { Button } from '@/components/ui/button'
-import { rust_fns } from '@/config/config'
+import { QueryKey, rust_fns } from '@/config/config'
 import { invoke } from '@tauri-apps/api/core'
 import { open } from '@tauri-apps/plugin-dialog'
 import { Download, Play, Search } from 'lucide-react'
@@ -72,7 +72,7 @@ function InstallVU() {
       setGameDownloadUpdateExtracting(false)
       console.log('VU Installation Completed')
       toast('VU Installation Completed')
-      queryClient.invalidateQueries({ queryKey: ['vu-is-installed'], refetchType: 'all' })
+      queryClient.invalidateQueries({ queryKey: [QueryKey.IsVuInstalled], refetchType: 'all' })
       // getGameInstallationPath();
       // checkConfigExists();
     })
@@ -108,6 +108,45 @@ function InstallVU() {
     })
   }, [])
 
+  async function handleDownloadVU() {
+    const installPath = await open({
+      multiple: false,
+      directory: true,
+    })
+    if (installPath) {
+      const confirmed = await confirm(
+        'Are you sure? Venice Unleashed Launcher will be installed to: ' +
+          installPath +
+          '\\VeniceUnleashed',
+      )
+
+      if (confirmed) {
+        setGameDownloadUpdateInstalling(() => true)
+        await invoke(rust_fns.download_game, { installPath })
+      }
+    }
+  }
+
+  async function handleSetVUInstallLocation() {
+    const dir = await open({
+      multiple: false,
+      directory: true,
+    })
+    if (!dir) {
+      return
+    }
+    const status = await setVUInstallLocation(dir)
+    if (status) {
+      queryClient.invalidateQueries({
+        queryKey: [QueryKey.IsVuInstalled],
+        refetchType: 'all',
+      })
+      toast(`Successfully set VU install to: ${dir}`)
+    } else {
+      toast('Something went wrong setting VU install location.')
+    }
+  }
+
   return (
     <div className="m-auto flex max-h-[500px] max-w-[500px] flex-col justify-between gap-8 rounded-md bg-primary p-8">
       {!gameDownloadUpdateInstalling && (
@@ -117,47 +156,14 @@ function InstallVU() {
           </div>
           <div className="flex flex-1 justify-center gap-4 align-middle text-xl leading-9 text-white">
             <h1 className="flex-1">VU already installed?</h1>
-            <Button
-              variant={'secondary'}
-              onClick={async () => {
-                const dir = await open({
-                  multiple: false,
-                  directory: true,
-                })
-                if (!dir) {
-                  return
-                }
-                // await invoke('set_wallpaper_directory', { dir })
-              }}
-            >
+            <Button variant={'secondary'} onClick={handleSetVUInstallLocation}>
               <Search /> Find VU
             </Button>
           </div>
 
           <div className="flex flex-1 justify-center gap-4 align-middle text-xl leading-9">
             <h1 className="flex-1 text-white">VU not installed?</h1>
-            <Button
-              variant={'secondary'}
-              className=""
-              onClick={async () => {
-                const installPath = await open({
-                  multiple: false,
-                  directory: true,
-                })
-                if (installPath) {
-                  const confirmed = await confirm(
-                    'Are you sure? Venice Unleashed Launcher will be installed to: ' +
-                      installPath +
-                      '\\VeniceUnleashed',
-                  )
-
-                  if (confirmed) {
-                    setGameDownloadUpdateInstalling(() => true)
-                    await invoke(rust_fns.download_game, { installPath })
-                  }
-                }
-              }}
-            >
+            <Button variant={'secondary'} className="" onClick={handleDownloadVU}>
               <Download size={'10px'} />
               <p>Download VU</p>
             </Button>

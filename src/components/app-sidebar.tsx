@@ -1,5 +1,5 @@
 import { Home, List, Server, Settings, User } from 'lucide-react'
-import reactIcon from '@/assets/VUIcon.svg'
+import vuIcon from '@/assets/VUIcon.svg'
 
 import {
   Sidebar,
@@ -11,8 +11,9 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
-import { Link } from 'react-router'
+import { Link, useLocation } from 'react-router'
 import { routes } from '@/config/config'
+import clsx from 'clsx'
 
 // Menu items.
 const items = [
@@ -39,12 +40,13 @@ const items = [
 ]
 
 export function AppSidebar() {
+  const { pathname } = useLocation()
   return (
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
           <div className="ml-1 flex w-24 justify-start rounded-md border border-white bg-sidebar-foreground p-2">
-            <img src={reactIcon} alt="" className="" />
+            <img src={vuIcon} alt="" className="" />
           </div>
           <SidebarGroupLabel>Unofficial VU Launcher</SidebarGroupLabel>
           <SidebarGroupContent>
@@ -53,8 +55,14 @@ export function AppSidebar() {
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     variant={'outline'}
+                    isActive={pathname === item.url}
                     asChild
-                    className="flex min-h-[10vh] gap-[1vw] text-[2vw]"
+                    className={clsx(
+                      'flex min-h-[10vh] gap-[1vw] text-[2vw]',
+                      pathname === item.url
+                        ? 'border border-primary/30 opacity-70'
+                        : 'border border-white',
+                    )}
                   >
                     <Link to={item.url}>
                       <div>

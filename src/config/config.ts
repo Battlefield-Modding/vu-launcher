@@ -6,6 +6,11 @@ export const STALE =
   never: 0 // never stale
 }
 
+export type UserCredential = {
+  username: string,
+  password: string
+}
+
 export enum rust_fns {
   get_random_number = 'get_random_number',
   set_launcher_directory = 'set_launcher_directory',
@@ -16,7 +21,25 @@ export enum rust_fns {
   play_vu = 'play_vu',
   is_vu_installed = "is_vu_installed",
   get_vu_data = "get_vu_data",
-  download_game = "download_game"
+  download_game = "download_game",
+  set_server_loadout = 'set_server_loadout',
+  get_loadout_names = 'get_loadout_names',
+  delete_server_loadout = 'delete_server_loadout',
+  server_key_exists = 'server_key_exists',
+  server_key_setup = 'server_key_setup',
+  start_server_loadout = 'start_server_loadout',
+  save_server_guid = 'save_server_guid',
+  get_server_loadout = 'get_server_loadout',
+  set_vu_install_location_registry = 'set_vu_install_location_registry',
+  open_explorer_for_loadout = 'open_explorer_for_loadout'
+}
+
+export enum QueryKey {
+  UserList = 'UserList',
+  IsVuInstalled = 'IsVuInstalled',
+  ServerLoadouts = 'ServerLoadouts',
+  ServerKeyExists = 'ServerKeyExists',
+  GetServerLoadout = "GetServerLoadout"
 }
 
 export enum routes {
@@ -24,4 +47,24 @@ export enum routes {
   SERVERS = "/servers",
   MODS = "/mods",
   SETTINGS = "/settings"
+}
+
+export type Loadout = {
+  name: string,
+  startup: string,
+  maplist: string,
+  modlist: string,
+  banlist: string,
+}
+
+export type DragDropEventTauri = {
+  event: string,
+  payload: {
+    paths: string[],
+    position: {
+      x: number,
+      y: number
+    }
+  },
+  id: number
 }

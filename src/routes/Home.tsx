@@ -1,6 +1,6 @@
-import { getRandomNumber, playVU, vuIsInstalled } from '@/api'
+import { playVU, vuIsInstalled } from '@/api'
 import { Button } from '@/components/ui/button'
-import { STALE } from '@/config/config'
+import { QueryKey, STALE } from '@/config/config'
 import { useQuery } from '@tanstack/react-query'
 import { Loader, Play } from 'lucide-react'
 import { toast } from 'sonner'
@@ -11,7 +11,7 @@ import InstallVU from '@/components/InstallVU'
 
 export default function Home() {
   const { isPending, isError, data, error } = useQuery({
-    queryKey: ['vu-is-installed'],
+    queryKey: [QueryKey.IsVuInstalled],
     queryFn: vuIsInstalled,
     staleTime: STALE.never,
   })
@@ -51,7 +51,7 @@ export default function Home() {
             className="p-8 text-2xl"
             onClick={() => {
               toast('Starting VU...')
-              playVU()
+              playVU('')
               setTimeout(() => {
                 getCurrentWindow().minimize()
               }, 1500)
