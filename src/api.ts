@@ -78,8 +78,8 @@ export async function updateServerConfig(loadout: ServerLoadout){
   return status
 }
 
-export async function getLoadoutNames(){
-  const info = await invoke(rust_fns.get_loadout_names)
+export async function getLoadoutNames(): Promise<string[]>{
+  const info = await invoke(rust_fns.get_loadout_names) as string[]
   return info
 }
 
