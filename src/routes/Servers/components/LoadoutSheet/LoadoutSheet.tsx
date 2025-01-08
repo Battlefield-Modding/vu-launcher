@@ -6,12 +6,10 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
-import { Plus, User } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import { doesCredentialsExist } from '@/api'
+import { Plus } from 'lucide-react'
+import { useState } from 'react'
 import clsx from 'clsx'
 import ServerForm from './LoadoutForm'
-import { Loadout } from '@/config/config'
 
 export default function LoadoutSheet() {
   const [sheetOpen, setSheetOpen] = useState(false)

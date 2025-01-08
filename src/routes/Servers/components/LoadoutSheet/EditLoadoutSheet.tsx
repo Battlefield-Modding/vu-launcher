@@ -6,15 +6,13 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
-import { Edit, Loader } from 'lucide-react'
+import { Edit } from 'lucide-react'
 import { useState } from 'react'
-import { getServerLoadout } from '@/api'
 import clsx from 'clsx'
 import LoadoutForm from './LoadoutForm'
-import { Loadout, QueryKey, STALE } from '@/config/config'
-import { useQuery } from '@tanstack/react-query'
+import { Loadout } from '@/config/config'
 
-export default function EditLoadoutSheet({ name, data }: { name: string; data: Loadout }) {
+export default function EditLoadoutSheet({ data }: { data: Loadout }) {
   const [sheetOpen, setSheetOpen] = useState(false)
   return (
     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>

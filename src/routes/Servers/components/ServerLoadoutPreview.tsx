@@ -1,15 +1,13 @@
-import EditServerSheet from './LoadoutSheet/EditLoadoutSheet'
-import { Button } from '@/components/ui/button'
-import { Folder, Loader, Play, Server, User } from 'lucide-react'
+import EditLoadoutSheet from './LoadoutSheet/EditLoadoutSheet'
+import { Folder, Loader, Server, User } from 'lucide-react'
 import { getServerLoadout, openExplorerAtLoadout, playVU, startServerLoadout } from '@/api'
 import { toast } from 'sonner'
 import { useQuery } from '@tanstack/react-query'
 import { QueryKey, STALE } from '@/config/config'
-import ChooseAccountDialog from './ChooseAccountSheet/ChooseAccountSheet'
 import DeleteLoadoutDialog from './DeleteLoadoutDialog'
 import ChooseAccountSheet from './ChooseAccountSheet/ChooseAccountSheet'
 
-function ServerLoadoutPreview({ name, index }: { name: string; index: number }) {
+function ServerLoadoutPreview({ name }: { name: string }) {
   const { isPending, isError, data, error } = useQuery({
     queryKey: [`${QueryKey.GetServerLoadout}-${name}`],
     queryFn: async () => {
@@ -32,6 +30,7 @@ function ServerLoadoutPreview({ name, index }: { name: string; index: number }) 
     return (
       <div className="rounded-md bg-destructive pl-2 pr-2 text-xl leading-9">
         <h1>ERROR: No Loadouts Found</h1>
+        <p>{error.message}</p>
       </div>
     )
   }
@@ -95,7 +94,7 @@ function ServerLoadoutPreview({ name, index }: { name: string; index: number }) 
     <div className="max-w-96 rounded-md border border-black bg-black p-4">
       <h1 className="mb-8 flex justify-between text-xl">
         {name.length >= 15 ? `${name.substring(0, 15)}...` : name}
-        <EditServerSheet name={name} data={data} />
+        <EditLoadoutSheet data={data} />
       </h1>
 
       <div className="flex justify-between gap-4">

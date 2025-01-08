@@ -9,14 +9,11 @@ import {
   FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
-import { saveServerGUID, saveUserCredentials } from '@/api'
-import { useQueryClient } from '@tanstack/react-query'
-import { QueryKey } from '@/config/config'
+import { saveServerGUID } from '@/api'
 import { useState } from 'react'
 
 const formSchema = z.object({

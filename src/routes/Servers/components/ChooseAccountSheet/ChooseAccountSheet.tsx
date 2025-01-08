@@ -1,5 +1,5 @@
 import { getaccounts, playVU, startServerLoadout } from '@/api'
-import { QueryKey, STALE, UserCredential } from '@/config/config'
+import { QueryKey, STALE } from '@/config/config'
 import { useQuery } from '@tanstack/react-query'
 import { Loader, Server, UserCheck } from 'lucide-react'
 import ChooseAccountForm from './ChooseAccountForm'
@@ -42,6 +42,7 @@ function ChooseAccountSheet({
     return (
       <div className="rounded-md bg-red-600 pl-2 pr-2 text-xl leading-9 text-white">
         <h1>ERROR: No Users Found</h1>
+        <p>{error.message}</p>
       </div>
     )
   }
