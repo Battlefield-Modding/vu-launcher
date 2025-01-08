@@ -10,10 +10,10 @@ import { Plus, User } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { doesCredentialsExist } from '@/api'
 import clsx from 'clsx'
-import ServerForm from './server-form'
+import ServerForm from './LoadoutForm'
 import { Loadout } from '@/config/config'
 
-export default function ServerSheet() {
+export default function LoadoutSheet() {
   const [sheetOpen, setSheetOpen] = useState(false)
   return (
     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>

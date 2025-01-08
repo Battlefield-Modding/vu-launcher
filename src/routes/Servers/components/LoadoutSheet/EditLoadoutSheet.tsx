@@ -10,11 +10,11 @@ import { Edit, Loader } from 'lucide-react'
 import { useState } from 'react'
 import { getServerLoadout } from '@/api'
 import clsx from 'clsx'
-import ServerForm from './server-form'
+import LoadoutForm from './LoadoutForm'
 import { Loadout, QueryKey, STALE } from '@/config/config'
 import { useQuery } from '@tanstack/react-query'
 
-export default function EditServerSheet({ name, data }: { name: string; data: Loadout }) {
+export default function EditLoadoutSheet({ name, data }: { name: string; data: Loadout }) {
   const [sheetOpen, setSheetOpen] = useState(false)
   return (
     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
@@ -34,7 +34,7 @@ export default function EditServerSheet({ name, data }: { name: string; data: Lo
           <SheetDescription>Modifies existing Loadout for a server</SheetDescription>
         </SheetHeader>
         <br />
-        <ServerForm setSheetOpen={setSheetOpen} defaultConfig={data} />
+        <LoadoutForm setSheetOpen={setSheetOpen} defaultConfig={data} />
       </SheetContent>
     </Sheet>
   )

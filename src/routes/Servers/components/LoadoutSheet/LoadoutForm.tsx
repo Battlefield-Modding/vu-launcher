@@ -17,7 +17,7 @@ import { toast } from 'sonner'
 import { updateServerConfig } from '@/api'
 import { useQueryClient } from '@tanstack/react-query'
 import { Textarea } from '@/components/ui/textarea'
-import { defaultServerConfig, ServerLoadout } from '../defaultServerConfig'
+import { defaultServerConfig, ServerLoadout } from '../../defaultServerConfig'
 import { Loadout, QueryKey } from '@/config/config'
 
 const formSchema = z.object({
@@ -38,7 +38,7 @@ const formSchema = z.object({
   banlist: z.string().min(0).max(5000),
 })
 
-export default function ServerForm({
+export default function LoadoutForm({
   setSheetOpen,
   defaultConfig,
 }: {

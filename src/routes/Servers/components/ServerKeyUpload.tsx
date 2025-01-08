@@ -11,7 +11,7 @@ import { QueryKey } from '@/config/config'
 import { toast } from 'sonner'
 import { open } from '@tauri-apps/plugin-dialog'
 
-export default function FileUpload() {
+export default function ServerKeyUpload() {
   const [isDraggingOver, setIsDraggingOver] = useState(false)
   let handleDrop: UnlistenFn | undefined
   let handleDragEnter: UnlistenFn | undefined

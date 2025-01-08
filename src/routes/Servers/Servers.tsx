@@ -1,10 +1,10 @@
 import { Loader } from 'lucide-react'
-import ServerSheet from './components/server-sheet'
+import LoadoutSheet from './components/LoadoutSheet/LoadoutSheet'
 import LoadoutBrowser from './components/LoadoutBrowser'
 import { QueryKey, STALE } from '@/config/config'
 import { serverKeyExists } from '@/api'
 import { useQuery } from '@tanstack/react-query'
-import FileUpload from './components/FileUpload'
+import FileUpload from './components/ServerKeyUpload'
 import serverKeyImage from '@/assets/server-key-info.png'
 import ServerGuidForm from './components/ServerGuidForm'
 import { useState } from 'react'
@@ -81,7 +81,7 @@ export default function Servers() {
   return (
     <div className="m-auto flex min-h-[100vh] flex-col justify-center">
       <div className="m-auto mb-0 mt-8 rounded-md bg-primary p-8">
-        <ServerSheet />
+        <LoadoutSheet />
       </div>
       <div className="m-auto mt-0 w-full">
         <LoadoutBrowser />

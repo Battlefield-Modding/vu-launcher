@@ -1,13 +1,13 @@
-import EditServerSheet from './EditServerSheet'
+import EditServerSheet from './LoadoutSheet/EditLoadoutSheet'
 import { Button } from '@/components/ui/button'
 import { Folder, Loader, Play, Server, User } from 'lucide-react'
 import { getServerLoadout, openExplorerAtLoadout, playVU, startServerLoadout } from '@/api'
 import { toast } from 'sonner'
 import { useQuery } from '@tanstack/react-query'
 import { QueryKey, STALE } from '@/config/config'
-import ChooseAccountDialog from './ChooseAccountSheet'
+import ChooseAccountDialog from './ChooseAccountSheet/ChooseAccountSheet'
 import DeleteLoadoutDialog from './DeleteLoadoutDialog'
-import ChooseAccountSheet from './ChooseAccountSheet'
+import ChooseAccountSheet from './ChooseAccountSheet/ChooseAccountSheet'
 
 function ServerLoadoutPreview({ name, index }: { name: string; index: number }) {
   const { isPending, isError, data, error } = useQuery({
