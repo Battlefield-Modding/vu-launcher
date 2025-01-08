@@ -32,7 +32,7 @@ function LoadoutBrowser() {
     return <></>
   }
   return (
-    <div className="grid grid-cols-2 gap-8 p-8 text-white 2xl:grid-cols-5">
+    <div className="m- flex w-full flex-wrap justify-center gap-4 p-8 text-white">
       {data.map((name, index) => (
         <ServerLoadoutPreview name={name} index={index} key={`${name}-${index}`} />
       ))}

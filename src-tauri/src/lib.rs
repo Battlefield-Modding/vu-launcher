@@ -212,7 +212,7 @@ async fn get_vu_data() -> String {
 }
 
 #[tauri::command]
-async fn play_vu(server_password: String) -> bool {
+async fn play_vu(server_password: String, users: Vec<usize>) -> bool {
     let preferences_prematch = get_user_preferences_as_struct();
     let preferences = match preferences_prematch {
         Ok(info) => info,
@@ -223,18 +223,6 @@ async fn play_vu(server_password: String) -> bool {
     args.push("/C");
     args.push(&preferences.venice_unleashed_shortcut_location);
 
-    match preferences.accounts.len() {
-        0 => {
-            println!("No user credentials found.")
-        }
-        _ => {
-            args.push("-username");
-            args.push(&preferences.accounts[0].username);
-            args.push("-password");
-            args.push(&preferences.accounts[0].password);
-        }
-    };
-
     let mut server_join_string = String::from("vu://join/");
 
     match preferences.server_guid.len() {
@@ -243,6 +231,7 @@ async fn play_vu(server_password: String) -> bool {
         }
         _ => {
             server_join_string.push_str(&preferences.server_guid);
+            server_join_string.push_str("/");
 
             match server_password.len() {
                 0 => {
@@ -264,10 +253,42 @@ async fn play_vu(server_password: String) -> bool {
         }
     };
 
-    Command::new("cmd")
-        .args(args)
-        .spawn()
-        .expect("failed to execute process");
+    match users.len() {
+        0 => {
+            match preferences.accounts.len() {
+                0 => {
+                    println!("No user credentials found.")
+                }
+                _ => {
+                    args.push("-username");
+                    args.push(&preferences.accounts[0].username);
+                    args.push("-password");
+                    args.push(&preferences.accounts[0].password);
+
+                    Command::new("cmd")
+                        .args(args)
+                        .spawn()
+                        .expect("failed to execute process");
+                }
+            };
+        }
+        _ => {
+            for index in users {
+                let mut copied_args: Vec<&str> = args.clone();
+
+                copied_args.push("-username");
+                copied_args.push(&preferences.accounts[index].username);
+                copied_args.push("-password");
+                copied_args.push(&preferences.accounts[index].password);
+
+                Command::new("cmd")
+                    .args(copied_args)
+                    .spawn()
+                    .expect("failed to execute process");
+            }
+        }
+    };
+
     return true;
 }
 

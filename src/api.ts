@@ -1,5 +1,5 @@
 import {invoke} from "@tauri-apps/api/core"
-import { rust_fns } from "./config/config"
+import { rust_fns, UserCredential } from "./config/config"
 import { ServerLoadout } from "./routes/Servers/defaultServerConfig"
 
 export async function firstTimeSetup(){
@@ -15,8 +15,12 @@ export async function saveUserCredentials({username, password}: {username: strin
   return status
 }
 
-export async function playVU(serverPassword: string){
-  invoke(rust_fns.play_vu, {serverPassword})
+export async function playVU(serverPassword: string, users?: number[]){
+  if (users) {
+    invoke(rust_fns.play_vu, {serverPassword, users})
+  } else {
+    invoke(rust_fns.play_vu, {serverPassword, users: []})
+  }
 }
 
 function isValidCredential(cred: string){
@@ -43,7 +47,7 @@ export async function getUserPreferences(){
   return info
 }
 
-export async function getaccounts(){
+export async function getaccounts(): Promise<UserCredential[]>{
   const {accounts} = await getUserPreferences()
   return accounts
 }

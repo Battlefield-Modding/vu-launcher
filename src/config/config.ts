@@ -6,6 +6,11 @@ export const STALE =
   never: 0 // never stale
 }
 
+export type UserCredential = {
+  username: string,
+  password: string
+}
+
 export enum rust_fns {
   get_random_number = 'get_random_number',
   set_launcher_directory = 'set_launcher_directory',

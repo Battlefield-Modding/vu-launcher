@@ -1,12 +1,13 @@
 import EditServerSheet from './EditServerSheet'
 import { Button } from '@/components/ui/button'
-import { Folder, Loader, Play } from 'lucide-react'
+import { Folder, Loader, Play, Server, User } from 'lucide-react'
 import { getServerLoadout, openExplorerAtLoadout, playVU, startServerLoadout } from '@/api'
 import { toast } from 'sonner'
 import { useQuery } from '@tanstack/react-query'
 import { QueryKey, STALE } from '@/config/config'
-import ChooseAccountDialog from './ChooseAccountDialog'
+import ChooseAccountDialog from './ChooseAccountSheet'
 import DeleteLoadoutDialog from './DeleteLoadoutDialog'
+import ChooseAccountSheet from './ChooseAccountSheet'
 
 function ServerLoadoutPreview({ name, index }: { name: string; index: number }) {
   const { isPending, isError, data, error } = useQuery({
@@ -67,10 +68,19 @@ function ServerLoadoutPreview({ name, index }: { name: string; index: number }) 
   async function handlePlay() {
     let status = await startServerLoadout(name)
     if (status) {
-      toast('Started VU Server. Starting Client in 10 seconds...')
+      toast('Started VU Server. Starting Client in 1 second...')
       setTimeout(() => {
         playVU(getServerPassword())
-      }, 10000)
+      }, 1000)
+    } else {
+      toast(`Failed to start loadout: ${name}`)
+    }
+  }
+
+  async function handleServer() {
+    let status = await startServerLoadout(name)
+    if (status) {
+      toast('Started VU Server...')
     } else {
       toast(`Failed to start loadout: ${name}`)
     }
@@ -90,12 +100,26 @@ function ServerLoadoutPreview({ name, index }: { name: string; index: number }) 
 
       <div className="flex justify-between gap-4">
         <DeleteLoadoutDialog name={name} />
-        <Button variant={'secondary'} onClick={handleOpenExplorer}>
+        <div
+          className="rounded-md bg-secondary p-1.5 text-primary hover:cursor-pointer hover:bg-secondary/80"
+          onClick={handleOpenExplorer}
+        >
           <Folder />
-        </Button>
-        <Button variant={'constructive'} onClick={handlePlay} className="flex-1">
-          <Play />
-        </Button>
+        </div>
+        <div
+          onClick={handleServer}
+          className="flex rounded-md bg-green-800 p-1.5 hover:cursor-pointer hover:bg-green-800/80"
+        >
+          <Server />
+        </div>
+        <div
+          onClick={handlePlay}
+          className="flex rounded-md bg-green-600 p-1.5 hover:cursor-pointer hover:bg-green-600/80"
+        >
+          <Server />
+          <User />
+        </div>
+        <ChooseAccountSheet name={name} getServerPassword={getServerPassword} />
       </div>
     </div>
   )
