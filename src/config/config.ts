@@ -56,3 +56,15 @@ export type Loadout = {
   modlist: string,
   banlist: string,
 }
+
+export type DragDropEventTauri = {
+  event: string,
+  payload: {
+    paths: string[],
+    position: {
+      x: number,
+      y: number
+    }
+  },
+  id: number
+}

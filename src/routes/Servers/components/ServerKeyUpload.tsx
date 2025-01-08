@@ -1,13 +1,11 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import { useDropzone } from 'react-dropzone'
+import { useEffect, useState } from 'react'
 
-import { getCurrentWebview } from '@tauri-apps/api/webview'
 import { listen, UnlistenFn } from '@tauri-apps/api/event'
 import { serverKeySetup } from '@/api'
 import clsx from 'clsx'
-import { Droplet, Search, Upload } from 'lucide-react'
+import { Search, Upload } from 'lucide-react'
 import { useQueryClient } from '@tanstack/react-query'
-import { QueryKey } from '@/config/config'
+import { QueryKey, DragDropEventTauri } from '@/config/config'
 import { toast } from 'sonner'
 import { open } from '@tauri-apps/plugin-dialog'
 
@@ -37,14 +35,12 @@ export default function ServerKeyUpload() {
   useEffect(() => {
     ;(async () => {
       console.log('Setting up listeners for drag+drop')
-      handleDrop = await listen<DropPayload>('tauri://drag-drop', async (event) => {
+      handleDrop = await listen('tauri://drag-drop', async (event: DragDropEventTauri) => {
         setIsDraggingOver(() => false)
-        if (
-          event.payload &&
-          event.payload.paths[0] &&
-          event.payload.paths[0].includes('server.key')
-        ) {
-          const info = await serverKeySetup(event.payload.paths[0] as String)
+        const payload = event.payload
+
+        if (payload && payload.paths[0] && payload.paths[0].includes('server.key')) {
+          const info = await serverKeySetup(event.payload.paths[0] as string)
           if (info) {
             queryClient.invalidateQueries({
               queryKey: [QueryKey.ServerKeyExists],
@@ -58,14 +54,11 @@ export default function ServerKeyUpload() {
         }
       })
 
-      handleDragEnter = await listen<DropPayload>('tauri://drag-enter', () => {
+      handleDragEnter = await listen('tauri://drag-enter', () => {
         setIsDraggingOver(() => true)
-        console.log('dragging')
       })
 
-      handleDragLeave = await listen<DropPayload>('tauri://drag-leave', () =>
-        setIsDraggingOver(() => false),
-      )
+      handleDragLeave = await listen('tauri://drag-leave', () => setIsDraggingOver(() => false))
     })()
 
     return () => {
