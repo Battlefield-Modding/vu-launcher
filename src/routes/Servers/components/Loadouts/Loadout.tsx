@@ -1,13 +1,13 @@
-import EditLoadoutSheet from './LoadoutSheet/EditLoadoutSheet'
+import EditLoadoutSheet from '../LoadoutSheet/EditLoadoutSheet'
 import { Folder, Loader, Server, User } from 'lucide-react'
 import { getServerLoadout, openExplorerAtLoadout, playVU, startServerLoadout } from '@/api'
 import { toast } from 'sonner'
 import { useQuery } from '@tanstack/react-query'
 import { QueryKey, STALE } from '@/config/config'
 import DeleteLoadoutDialog from './DeleteLoadoutDialog'
-import ChooseAccountSheet from './ChooseAccountSheet/ChooseAccountSheet'
+import ChooseAccountSheet from '../ChooseAccountSheet/ChooseAccountSheet'
 
-function ServerLoadoutPreview({ name }: { name: string }) {
+function Loadout({ name }: { name: string }) {
   const { isPending, isError, data, error } = useQuery({
     queryKey: [`${QueryKey.GetServerLoadout}-${name}`],
     queryFn: async () => {
@@ -124,4 +124,4 @@ function ServerLoadoutPreview({ name }: { name: string }) {
   )
 }
 
-export default ServerLoadoutPreview
+export default Loadout

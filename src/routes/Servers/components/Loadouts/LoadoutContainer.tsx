@@ -2,9 +2,9 @@ import { getLoadoutNames } from '@/api'
 import { QueryKey, STALE } from '@/config/config'
 import { useQuery } from '@tanstack/react-query'
 import { Loader } from 'lucide-react'
-import ServerLoadoutPreview from './ServerLoadoutPreview'
+import Loadout from './Loadout'
 
-function LoadoutBrowser() {
+function LoadoutContainer() {
   const { isPending, isError, data, error } = useQuery({
     queryKey: [QueryKey.ServerLoadouts],
     queryFn: getLoadoutNames,
@@ -35,10 +35,10 @@ function LoadoutBrowser() {
   return (
     <div className="m- flex w-full flex-wrap justify-center gap-4 p-8 text-white">
       {data.map((name, index) => (
-        <ServerLoadoutPreview name={name} key={`${name}-${index}`} />
+        <Loadout name={name} key={`${name}-${index}`} />
       ))}
     </div>
   )
 }
 
-export default LoadoutBrowser
+export default LoadoutContainer

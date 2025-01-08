@@ -1,6 +1,6 @@
 import { Loader } from 'lucide-react'
 import LoadoutSheet from './components/LoadoutSheet/LoadoutSheet'
-import LoadoutBrowser from './components/LoadoutBrowser'
+import LoadoutBrowser from './components/Loadouts/LoadoutContainer'
 import { QueryKey, STALE } from '@/config/config'
 import { serverKeyExists } from '@/api'
 import { useQuery } from '@tanstack/react-query'
