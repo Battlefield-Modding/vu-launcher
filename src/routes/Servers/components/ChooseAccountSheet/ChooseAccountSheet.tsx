@@ -78,10 +78,12 @@ function ChooseAccountSheet({
           </div>
         </SheetTrigger>
         <SheetContent>
-          <SheetHeader>
-            <SheetTitle>Join with what account(s)?</SheetTitle>
+          <SheetHeader className="m-auto w-96">
+            <SheetTitle>
+              Join <code>{name}</code> with what account(s)?
+            </SheetTitle>
             <SheetDescription>
-              Choose which VU accounts to join with when your server starts.
+              Choose which VU accounts to join with when your server <code>{name}</code> starts.
             </SheetDescription>
           </SheetHeader>
           <br />

@@ -4,8 +4,8 @@ import { useForm } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
 import { UserCredential } from '@/config/config'
+import { Checkbox } from '@/components/ui/checkbox'
 
 const formSchema = z.object({
   account0: z.boolean(),
@@ -61,16 +61,16 @@ export default function ChooseAccountForm({
             name={`account${index}` as 'account0' | 'account1' | 'account2' | 'account3'}
             key={`serverStartupAccounts-${x.username}`}
             render={({ field }) => (
-              <FormItem className="flex">
-                <FormLabel className="flex-1 text-2xl">{x.username}</FormLabel>
-                <FormControl className="w-1/5">
-                  <Input type="checkbox" {...field} defaultChecked={index <= 1} />
+              <FormItem className="m-auto flex w-96 justify-between">
+                <FormLabel className="text-2xl">{x.username}</FormLabel>
+                <FormControl className="h-10 w-1/6">
+                  <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                 </FormControl>
               </FormItem>
             )}
           />
         ))}
-        <Button type="submit" className="p-8 text-2xl">
+        <Button type="submit" className="m-auto w-96 p-8 text-2xl">
           Play
         </Button>
       </form>
