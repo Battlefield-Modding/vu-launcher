@@ -66,37 +66,39 @@ export default function ServerKeyUpload() {
     }
   }, [])
 
+  async function handleClick() {
+    const installPath = await open({
+      multiple: false,
+      directory: false,
+    })
+    if (installPath) {
+      if (installPath.includes('server.key')) {
+        const confirmed = await confirm('Copying server key from' + installPath + '?')
+
+        if (confirmed) {
+          const info = await serverKeySetup(installPath)
+          if (info) {
+            queryClient.invalidateQueries({
+              queryKey: [QueryKey.ServerKeyExists],
+              refetchType: 'all',
+            })
+            toast('Successfully imported server key.')
+            cleanupListeners()
+          }
+        }
+      } else {
+        toast('Incorrect File. Please use server.key')
+      }
+    }
+  }
+
   return (
     <div
       className={clsx(
         'flex flex-1 flex-col justify-center border-2 border-dashed border-secondary bg-sidebar-foreground text-center text-white',
         isDraggingOver && 'bg-green-400/50',
       )}
-      onClick={async () => {
-        const installPath = await open({
-          multiple: false,
-          directory: true,
-        })
-        if (installPath) {
-          if (installPath.includes('server.key')) {
-            const confirmed = await confirm('Copying server key from' + installPath + '?')
-
-            if (confirmed) {
-              const info = await serverKeySetup(installPath)
-              if (info) {
-                queryClient.invalidateQueries({
-                  queryKey: [QueryKey.ServerKeyExists],
-                  refetchType: 'all',
-                })
-                toast('Successfully imported server key.')
-                cleanupListeners()
-              }
-            }
-          } else {
-            toast('Incorrect File. Please use server.key')
-          }
-        }
-      }}
+      onClick={handleClick}
     >
       {isDraggingOver ? (
         <div className="text-md m-auto flex flex-col gap-8">
