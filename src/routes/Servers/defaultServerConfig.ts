@@ -4,12 +4,3 @@ export const defaultServerConfig = {
   "maplist": "XP1_002 ConquestLarge0 1 # This will play \"Gulf of Oman\" on CQL once.",
   "banlist": "# playerNameOne\n# playerNameTwo",
 }
-
-export type ServerLoadout = {
-  name: string,
-  startup: string,
-  maplist: string,
-  modlist: string,
-  banlist: string,
-  mods: string[]
-}

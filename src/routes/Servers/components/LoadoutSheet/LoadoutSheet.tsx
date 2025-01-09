@@ -60,7 +60,7 @@ export default function LoadoutSheet() {
           <SheetDescription>Creates a Loadout for a server</SheetDescription>
         </SheetHeader>
         <br />
-        <LoadoutForm setSheetOpen={setSheetOpen} existingConfig={undefined!} mods={data} />
+        <LoadoutForm setSheetOpen={setSheetOpen} mods={data} />
       </SheetContent>
     </Sheet>
   )

@@ -9,8 +9,8 @@ import {
 import { Edit } from 'lucide-react'
 import { useState } from 'react'
 import clsx from 'clsx'
-import LoadoutForm from './LoadoutForm'
 import { Loadout } from '@/config/config'
+import EditLoadoutForm from './EditLoadoutForm'
 
 export default function EditLoadoutSheet({ existingConfig }: { existingConfig: Loadout }) {
   const [sheetOpen, setSheetOpen] = useState(false)
@@ -33,11 +33,7 @@ export default function EditLoadoutSheet({ existingConfig }: { existingConfig: L
           <SheetDescription>Modifies existing Loadout for a server</SheetDescription>
         </SheetHeader>
         <br />
-        <LoadoutForm
-          setSheetOpen={setSheetOpen}
-          existingConfig={existingConfig}
-          mods={undefined!}
-        />
+        <EditLoadoutForm setSheetOpen={setSheetOpen} existingConfig={existingConfig} />
       </SheetContent>
     </Sheet>
   )

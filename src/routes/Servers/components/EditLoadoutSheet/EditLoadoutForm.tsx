@@ -14,10 +14,9 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
-import { createServerLoadout } from '@/api'
+import { updateServerLoadout } from '@/api'
 import { useQueryClient } from '@tanstack/react-query'
 import { Textarea } from '@/components/ui/textarea'
-import { defaultServerConfig } from '../../defaultServerConfig'
 import { Loadout, QueryKey } from '@/config/config'
 import { Checkbox } from '@/components/ui/checkbox'
 
@@ -39,13 +38,19 @@ const formSchema = z.object({
   banlist: z.string().min(0).max(5000),
 })
 
-export default function LoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any; mods: string[] }) {
+export default function EditLoadoutForm({
+  setSheetOpen,
+  existingConfig,
+}: {
+  setSheetOpen: any
+  existingConfig: Loadout
+}) {
   const queryClient = useQueryClient()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      ...defaultServerConfig,
+      ...existingConfig,
     },
   })
 
@@ -69,18 +74,20 @@ export default function LoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any;
       mods: correctedMods,
       modlist: '',
     }
-    const status = await createServerLoadout(loadout)
+    // TODO: connect to rust
 
-    if (status) {
-      toast(`Success! Created loadout: ${values.name}`)
-      queryClient.invalidateQueries({
-        queryKey: [QueryKey.ServerLoadouts],
-        refetchType: 'all',
-      })
-      setSheetOpen(() => false)
-    } else {
-      toast('Use a different loadout name.')
-    }
+    // const status = await updateServerLoadout(loadout)
+
+    // if (status) {
+    //   toast(`Success! Updated loadout: ${values.name}`)
+    //   queryClient.invalidateQueries({
+    //     queryKey: [`${QueryKey.GetServerLoadout}-${existingConfig.name}`],
+    //     refetchType: 'all',
+    //   })
+    //   setSheetOpen(() => false)
+    // } else {
+    //   toast('Use a different loadout name.')
+    // }
   }
 
   return (
@@ -93,7 +100,13 @@ export default function LoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any;
             <FormItem>
               <FormLabel className="text-2xl underline">Loadout Name</FormLabel>
               <FormControl>
-                <Input type="text" placeholder="name" {...field} />
+                <Input
+                  type="text"
+                  placeholder="name"
+                  autoFocus={existingConfig?.name === undefined}
+                  {...field}
+                  disabled={existingConfig?.name !== undefined}
+                />
               </FormControl>
               <FormDescription>
                 The nickname for this server loadout. Can't contain any of the following characters:
@@ -151,7 +164,7 @@ export default function LoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any;
           <FormLabel className="text-2xl underline">ModList</FormLabel>
           <FormDescription>Which Mods do you want installed?</FormDescription>
         </FormItem>
-        {mods.map((nameOfMod, index) => {
+        {existingConfig.mods.map((nameOfMod, index) => {
           // a dot will create an unwanted object
           let nameWithoutDots = nameOfMod.split('.').join('*')
 

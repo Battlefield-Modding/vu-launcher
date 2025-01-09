@@ -1,4 +1,4 @@
-import EditLoadoutSheet from '../LoadoutSheet/EditLoadoutSheet'
+import EditLoadoutSheet from '../EditLoadoutSheet/EditLoadoutSheet'
 import { Folder, Loader, Server, User } from 'lucide-react'
 import { getServerLoadout, openExplorerAtLoadout, playVU, startServerLoadout } from '@/api'
 import { toast } from 'sonner'

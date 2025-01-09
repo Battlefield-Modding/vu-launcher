@@ -78,7 +78,7 @@ fn copy_server_key(path: &PathBuf) {
 }
 
 #[tauri::command]
-pub fn set_server_loadout(loadout: ServerLoadout) -> Result<bool, String> {
+pub fn create_server_loadout(loadout: ServerLoadout) -> Result<bool, String> {
     let mut loadout_path = get_loadouts_path();
     loadout_path.push(&loadout.name);
 
@@ -113,11 +113,14 @@ pub fn set_server_loadout(loadout: ServerLoadout) -> Result<bool, String> {
     let mut banlist_path = loadout_path.clone();
     let _ = banlist_path.push("banlist.txt");
     println!("{:?}", banlist_path);
+    let mut mods_path = loadout_path.clone();
+    let _ = mods_path.push("Mods");
 
     let _ = write(startup_path, loadout.startup);
     let _ = write(modlist_path, loadout.modlist);
     let _ = write(maplist_path, loadout.maplist);
     let _ = write(banlist_path, loadout.banlist);
+    let _ = fs::create_dir(mods_path);
 
     Ok(true)
 }

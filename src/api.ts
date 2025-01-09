@@ -1,6 +1,5 @@
 import {invoke} from "@tauri-apps/api/core"
-import { rust_fns, UserCredential } from "./config/config"
-import { ServerLoadout } from "./routes/Servers/defaultServerConfig"
+import { Loadout, rust_fns, UserCredential } from "./config/config"
 
 export async function firstTimeSetup(){
   await invoke(rust_fns.first_time_setup)
@@ -73,9 +72,14 @@ export async function fetchVUDataDummy(){
   return info
 }
 
-export async function updateServerConfig(loadout: ServerLoadout){
-  const status = JSON.parse(await invoke(rust_fns.set_server_loadout, {loadout}))
+export async function createServerLoadout(loadout: Loadout){
+  const status = JSON.parse(await invoke(rust_fns.create_server_loadout, {loadout}))
   return status
+}
+
+export async function updateServerLoadout(loadout: Loadout){
+  // const status = JSON.parse(await invoke(rust_fns.update_server_loadout, {loadout}))
+  // return status
 }
 
 export async function getLoadoutNames(): Promise<string[]>{
