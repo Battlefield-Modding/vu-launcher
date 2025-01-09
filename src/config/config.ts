@@ -31,7 +31,10 @@ export enum rust_fns {
   save_server_guid = 'save_server_guid',
   get_server_loadout = 'get_server_loadout',
   set_vu_install_location_registry = 'set_vu_install_location_registry',
-  open_explorer_for_loadout = 'open_explorer_for_loadout'
+  open_explorer_for_loadout = 'open_explorer_for_loadout',
+  get_mod_names_in_cache = "get_mod_names_in_cache",
+  import_mod_to_cache = "import_mod_to_cache",
+  remove_mod_from_cache = "remove_mod_from_cache"
 }
 
 export enum QueryKey {
@@ -39,7 +42,8 @@ export enum QueryKey {
   IsVuInstalled = 'IsVuInstalled',
   ServerLoadouts = 'ServerLoadouts',
   ServerKeyExists = 'ServerKeyExists',
-  GetServerLoadout = "GetServerLoadout"
+  GetServerLoadout = "GetServerLoadout",
+  GetModNamesInCache = "GetModNamesInCache"
 }
 
 export enum routes {

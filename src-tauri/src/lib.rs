@@ -30,6 +30,9 @@ use servers::{
     start_server_loadout,
 };
 
+mod mods;
+use mods::{get_mod_names_in_cache, import_mod_to_cache, remove_mod_from_cache};
+
 mod speed_calc;
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -336,7 +339,10 @@ pub fn run() {
             save_server_guid,
             get_server_loadout,
             set_vu_install_location_registry,
-            open_explorer_for_loadout
+            open_explorer_for_loadout,
+            get_mod_names_in_cache,
+            import_mod_to_cache,
+            remove_mod_from_cache
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

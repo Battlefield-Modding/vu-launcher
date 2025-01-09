@@ -121,3 +121,18 @@ export async function setVUInstallLocation(installdir: string){
 export async function openExplorerAtLoadout(loadoutName: string){
   await invoke(rust_fns.open_explorer_for_loadout, {loadoutName})
 }
+
+export async function getModNamesInCache(): Promise<string[]>{
+  const names = await invoke(rust_fns.get_mod_names_in_cache) as string[]
+  return names
+}
+
+export async function importModToCache(modLocation: string): Promise<boolean>{
+  const status = await invoke(rust_fns.import_mod_to_cache, {modLocation}) as boolean
+  return status
+}
+
+export async function removeModFromCache(modName: string): Promise<boolean> {
+  const status = await invoke(rust_fns.remove_mod_from_cache, {modName}) as boolean
+  return status
+}

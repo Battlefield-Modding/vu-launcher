@@ -7,6 +7,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { QueryKey, DragDropEventTauri } from '@/config/config'
 import { toast } from 'sonner'
 import { open } from '@tauri-apps/plugin-dialog'
+import { importModToCache } from '@/api'
 
 export default function ModUpload() {
   const [isDraggingOver, setIsDraggingOver] = useState(false)
@@ -39,9 +40,17 @@ export default function ModUpload() {
         const payload = event.payload
 
         if (payload && payload.paths[0] && payload.paths[0].includes('.zip')) {
-          console.log(event.payload.paths[0])
-          toast(event.payload.paths[0])
-          // TODO: Connect to rust
+          const info = payload.paths[0]
+          const result = await importModToCache(info)
+          if (result) {
+            queryClient.invalidateQueries({
+              queryKey: [QueryKey.GetModNamesInCache],
+              refetchType: 'all',
+            })
+            toast(`Successfully imported mod from: ${info}`)
+          } else {
+            toast('Something went wrong. Mod might already exist.')
+          }
         } else {
           toast('Only .zip files are accepted')
         }
@@ -69,9 +78,16 @@ export default function ModUpload() {
         const confirmed = await confirm('Copying mod from "' + installPath + '" ?')
 
         if (confirmed) {
-          console.log(installPath)
-          toast(installPath)
-          // TODO: Connect to rust
+          const result = await importModToCache(installPath)
+          if (result) {
+            queryClient.invalidateQueries({
+              queryKey: [QueryKey.GetModNamesInCache],
+              refetchType: 'all',
+            })
+            toast(`Successfully imported mod from: ${installPath}`)
+          } else {
+            toast('Something went wrong. Mod might already exist.')
+          }
         }
       } else {
         toast('Only .zip files are accepted')
