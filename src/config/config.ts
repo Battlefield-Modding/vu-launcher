@@ -59,6 +59,7 @@ export type Loadout = {
   maplist: string,
   modlist: string,
   banlist: string,
+  mods: string[]
 }
 
 export type DragDropEventTauri = {

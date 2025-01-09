@@ -21,7 +21,7 @@ pub fn get_mod_cache_path() -> PathBuf {
     return loadout_path;
 }
 
-fn get_mod_path_for_loadout(name: String) -> PathBuf {
+fn get_mod_path_for_loadout(name: &String) -> PathBuf {
     let mut loadout_path = get_loadouts_path();
     loadout_path.push(&name);
     loadout_path.push("Server");
@@ -34,12 +34,7 @@ fn get_mod_path_for_loadout(name: String) -> PathBuf {
 pub fn get_mod_names_in_cache() -> Vec<String> {
     // this function will return content from all server loadouts
     let mod_cache_path = get_mod_cache_path();
-    let modnames = get_mod_names_in_path(mod_cache_path);
-    modnames
-}
-
-fn get_mod_names_in_path(path: PathBuf) -> Vec<String> {
-    let dir_reader = fs::read_dir(&path);
+    let dir_reader = fs::read_dir(&mod_cache_path);
     let mut mod_names: Vec<String> = Vec::new();
     match dir_reader {
         Ok(reader) => {
@@ -56,7 +51,6 @@ fn get_mod_names_in_path(path: PathBuf) -> Vec<String> {
                             }
                             None => {}
                         };
-                        if info.path().extension().unwrap() == "zip" {}
                     }
                     Err(_) => {
                         println!("Error when reading mod names.")
@@ -122,11 +116,36 @@ pub fn remove_mod_from_cache(mod_name: String) -> bool {
     }
 }
 
-pub fn get_mod_names_for_loadout(name: String) -> Vec<String> {
+pub fn get_mod_names_for_loadout(name: &String) -> Vec<String> {
     // get mod names for loadout
     let path = get_mod_path_for_loadout(name);
-    let names = get_mod_names_in_path(path);
-    names
+    let dir_reader = fs::read_dir(&path);
+    let mut mod_names: Vec<String> = Vec::new();
+    match dir_reader {
+        Ok(reader) => {
+            reader.for_each(|item| {
+                match item {
+                    Ok(info) => {
+                        match info.path().is_dir() {
+                            true => {
+                                let temp = info.file_name();
+                                let temp_as_str = String::from(temp.to_string_lossy());
+                                mod_names.push(temp_as_str);
+                            }
+                            false => {}
+                        };
+                    }
+                    Err(_) => {
+                        println!("Error when reading mod names.")
+                    }
+                };
+            });
+        }
+        Err(err) => {
+            println!("{:?}", err);
+        }
+    };
+    mod_names
 }
 
 pub fn install_mod_to_loadout() {

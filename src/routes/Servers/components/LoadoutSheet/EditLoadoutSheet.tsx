@@ -12,8 +12,9 @@ import clsx from 'clsx'
 import LoadoutForm from './LoadoutForm'
 import { Loadout } from '@/config/config'
 
-export default function EditLoadoutSheet({ data }: { data: Loadout }) {
+export default function EditLoadoutSheet({ existingConfig }: { existingConfig: Loadout }) {
   const [sheetOpen, setSheetOpen] = useState(false)
+
   return (
     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
       <SheetTrigger>
@@ -32,7 +33,11 @@ export default function EditLoadoutSheet({ data }: { data: Loadout }) {
           <SheetDescription>Modifies existing Loadout for a server</SheetDescription>
         </SheetHeader>
         <br />
-        <LoadoutForm setSheetOpen={setSheetOpen} defaultConfig={data} />
+        <LoadoutForm
+          setSheetOpen={setSheetOpen}
+          existingConfig={existingConfig}
+          mods={undefined!}
+        />
       </SheetContent>
     </Sheet>
   )

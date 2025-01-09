@@ -6,7 +6,10 @@ use std::{
 
 use serde::{Deserialize, Serialize};
 
-use crate::{get_user_preferences_as_struct, reg_functions, save_user_preferences};
+use crate::{
+    get_user_preferences_as_struct, mods::get_mod_names_for_loadout, reg_functions,
+    save_user_preferences,
+};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ServerLoadout {
@@ -15,6 +18,7 @@ pub struct ServerLoadout {
     maplist: String,
     modlist: String,
     banlist: String,
+    mods: Vec<String>,
 }
 
 #[tauri::command]
@@ -155,7 +159,6 @@ pub fn get_server_loadout(name: String) -> String {
     loadout_path.push(&name);
 
     loadout_path.push("Server");
-    let server_path = loadout_path.clone();
     loadout_path.push("Admin");
 
     let mut startup_path = loadout_path.clone();
@@ -200,12 +203,14 @@ pub fn get_server_loadout(name: String) -> String {
         }
     };
 
+    let mods = get_mod_names_for_loadout(&name);
     let my_loadout = ServerLoadout {
         name,
         banlist: banlist_string,
         modlist: modlist_string,
         maplist: maplist_string,
         startup: startup_string,
+        mods,
     };
 
     serde_json::to_string(&my_loadout).unwrap()

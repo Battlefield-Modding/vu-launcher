@@ -94,7 +94,7 @@ function Loadout({ name }: { name: string }) {
     <div className="max-w-96 rounded-md border border-black bg-black p-4">
       <h1 className="mb-8 flex justify-between text-xl">
         {name.length >= 15 ? `${name.substring(0, 15)}...` : name}
-        <EditLoadoutSheet data={data} />
+        <EditLoadoutSheet existingConfig={data} />
       </h1>
 
       <div className="flex justify-between gap-4">

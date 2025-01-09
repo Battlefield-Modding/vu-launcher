@@ -110,6 +110,7 @@ export async function saveServerGUID(guid: string){
 
 export async function getServerLoadout(name: string){
   const info = JSON.parse(await invoke(rust_fns.get_server_loadout, {name}) as string)
+  console.table(info)
   return info
 }
 

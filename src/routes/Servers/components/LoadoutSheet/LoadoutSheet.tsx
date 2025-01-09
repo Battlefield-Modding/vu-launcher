@@ -6,13 +6,41 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
-import { Plus } from 'lucide-react'
+import { Loader, Plus } from 'lucide-react'
 import { useState } from 'react'
 import clsx from 'clsx'
-import ServerForm from './LoadoutForm'
+import LoadoutForm from './LoadoutForm'
+import { QueryKey, STALE } from '@/config/config'
+import { useQuery } from '@tanstack/react-query'
+import { getModNamesInCache } from '@/api'
 
 export default function LoadoutSheet() {
   const [sheetOpen, setSheetOpen] = useState(false)
+
+  const { isPending, isError, data, error } = useQuery({
+    queryKey: [QueryKey.GetModNamesInCache],
+    queryFn: getModNamesInCache,
+    staleTime: STALE.never,
+  })
+
+  if (isPending) {
+    return (
+      <div>
+        <h1>LOADING Mods</h1>
+        <Loader />
+      </div>
+    )
+  }
+
+  if (isError) {
+    return (
+      <div className="rounded-md bg-red-600 pl-2 pr-2 text-xl leading-9 text-white">
+        <h1>ERROR: No Mods Found</h1>
+        <p>{error.message}</p>
+      </div>
+    )
+  }
+
   return (
     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
       <SheetTrigger>
@@ -32,7 +60,7 @@ export default function LoadoutSheet() {
           <SheetDescription>Creates a Loadout for a server</SheetDescription>
         </SheetHeader>
         <br />
-        <ServerForm setSheetOpen={setSheetOpen} defaultConfig={undefined!} />
+        <LoadoutForm setSheetOpen={setSheetOpen} existingConfig={undefined!} mods={data} />
       </SheetContent>
     </Sheet>
   )

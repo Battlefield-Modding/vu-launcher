@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { any, z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 
@@ -19,6 +19,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { Textarea } from '@/components/ui/textarea'
 import { defaultServerConfig, ServerLoadout } from '../../defaultServerConfig'
 import { Loadout, QueryKey } from '@/config/config'
+import { Checkbox } from '@/components/ui/checkbox'
 
 const formSchema = z.object({
   name: z
@@ -34,20 +35,23 @@ const formSchema = z.object({
     ),
   startup: z.string().min(10).max(5000),
   maplist: z.string().min(10).max(5000),
-  modlist: z.string().min(0).max(5000),
+  mods: z.any(),
   banlist: z.string().min(0).max(5000),
 })
 
 export default function LoadoutForm({
   setSheetOpen,
-  defaultConfig,
+  existingConfig,
+  mods,
 }: {
   setSheetOpen: any
-  defaultConfig: Loadout
+  existingConfig: Loadout
+  mods: string[]
 }) {
   const queryClient = useQueryClient()
+  const defaults = existingConfig ?? defaultServerConfig
 
-  const defaults = defaultConfig ?? defaultServerConfig
+  const sanitizedMods = mods ?? existingConfig.mods ?? []
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -56,28 +60,48 @@ export default function LoadoutForm({
     },
   })
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    const loadout: ServerLoadout = values
-    const status = await updateServerConfig(loadout)
-
-    if (status) {
-      if (defaultConfig?.name) {
-        toast(`Success! Updated loadout: ${values.name}`)
-        queryClient.invalidateQueries({
-          queryKey: [`${QueryKey.GetServerLoadout}-${defaultConfig.name}`],
-          refetchType: 'all',
-        })
-      } else {
-        toast(`Success! Created loadout: ${values.name}`)
-        queryClient.invalidateQueries({
-          queryKey: [QueryKey.ServerLoadouts],
-          refetchType: 'all',
-        })
+  function onlyIncludeSelectedMods(mods: { string: boolean }) {
+    const correctedMods = []
+    for (const [key, value] of Object.entries(mods)) {
+      if (value) {
+        // this is to undo the zod workaround of converting . to *
+        let mod_name_with_dots = key.split('*').join('.')
+        correctedMods.push(mod_name_with_dots)
       }
-      setSheetOpen(() => false)
-    } else {
-      toast('Use a different loadout name.')
     }
+    return correctedMods
+  }
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    let correctedMods = onlyIncludeSelectedMods(values.mods)
+
+    values = {
+      ...values,
+      mods: correctedMods,
+    }
+
+    console.log(values)
+    // const loadout: ServerLoadout = values
+    // const status = await updateServerConfig(loadout)
+
+    // if (status) {
+    //   if (existingConfig?.name) {
+    //     toast(`Success! Updated loadout: ${values.name}`)
+    //     queryClient.invalidateQueries({
+    //       queryKey: [`${QueryKey.GetServerLoadout}-${existingConfig.name}`],
+    //       refetchType: 'all',
+    //     })
+    //   } else {
+    //     toast(`Success! Created loadout: ${values.name}`)
+    //     queryClient.invalidateQueries({
+    //       queryKey: [QueryKey.ServerLoadouts],
+    //       refetchType: 'all',
+    //     })
+    //   }
+    //   setSheetOpen(() => false)
+    // } else {
+    //   toast('Use a different loadout name.')
+    // }
   }
 
   return (
@@ -88,14 +112,14 @@ export default function LoadoutForm({
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Loadout Name</FormLabel>
+              <FormLabel className="text-2xl underline">Loadout Name</FormLabel>
               <FormControl>
                 <Input
                   type="text"
                   placeholder="name"
-                  autoFocus={defaultConfig?.name === undefined}
+                  autoFocus={existingConfig?.name === undefined}
                   {...field}
-                  disabled={defaultConfig?.name !== undefined}
+                  disabled={existingConfig?.name !== undefined}
                 />
               </FormControl>
               <FormDescription>
@@ -111,7 +135,7 @@ export default function LoadoutForm({
           name="startup"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Startup.txt</FormLabel>
+              <FormLabel className="text-2xl underline">Startup.txt</FormLabel>
               <FormControl>
                 <Textarea placeholder="Startup" {...field} rows={15} />
               </FormControl>
@@ -133,7 +157,7 @@ export default function LoadoutForm({
           name="maplist"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Maplist.txt</FormLabel>
+              <FormLabel className="text-2xl underline">Maplist.txt</FormLabel>
               <FormControl>
                 <Textarea placeholder="Maplist" {...field} rows={15} />
               </FormControl>
@@ -150,26 +174,36 @@ export default function LoadoutForm({
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="modlist"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Modlist.txt</FormLabel>
-              <FormControl>
-                <Textarea placeholder="Modlist" {...field} rows={5} />
-              </FormControl>
-              <FormDescription>What mods your server will run.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <FormItem>
+          <FormLabel className="text-2xl underline">ModList</FormLabel>
+          <FormDescription>Which Mods do you want installed?</FormDescription>
+        </FormItem>
+        {sanitizedMods.map((nameOfMod, index) => {
+          // a dot will create an unwanted object
+          let nameWithoutDots = nameOfMod.split('.').join('*')
+
+          return (
+            <FormField
+              control={form.control}
+              name={`mods.${nameWithoutDots}`}
+              key={`serverMods-${nameOfMod}`}
+              render={({ field }) => (
+                <FormItem className="flex gap-4">
+                  <FormLabel className="mt-1 text-xl">{nameOfMod}</FormLabel>
+                  <FormControl className="h-6 w-6">
+                    <Checkbox onCheckedChange={field.onChange} />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+          )
+        })}
         <FormField
           control={form.control}
           name="banlist"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Banlist.txt</FormLabel>
+              <FormLabel className="text-2xl underline">Banlist.txt</FormLabel>
               <FormControl>
                 <Textarea placeholder="Banlist" {...field} rows={5} />
               </FormControl>
