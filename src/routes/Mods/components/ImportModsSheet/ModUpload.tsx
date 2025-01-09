@@ -49,7 +49,7 @@ export default function ModUpload() {
             })
             toast(`Successfully imported mod from: ${info}`)
           } else {
-            toast('Something went wrong. Mod might already exist.')
+            toast('Failed to import mod. May already exist?')
           }
         } else {
           toast('Only .zip files are accepted')
@@ -86,7 +86,7 @@ export default function ModUpload() {
             })
             toast(`Successfully imported mod from: ${installPath}`)
           } else {
-            toast('Something went wrong. Mod might already exist.')
+            toast('Failed to import mod. May already exist?')
           }
         }
       } else {
