@@ -77,9 +77,9 @@ export async function createServerLoadout(loadout: Loadout){
   return status
 }
 
-export async function updateServerLoadout(loadout: Loadout){
-  // const status = JSON.parse(await invoke(rust_fns.update_server_loadout, {loadout}))
-  // return status
+export async function editServerLoadout(loadout: Loadout){
+  const status = JSON.parse(await invoke(rust_fns.edit_server_loadout, {loadout}))
+  return status
 }
 
 export async function getLoadoutNames(): Promise<string[]>{
@@ -141,3 +141,4 @@ export async function removeModFromCache(modName: string): Promise<boolean> {
   const status = await invoke(rust_fns.remove_mod_from_cache, {modName}) as boolean
   return status
 }
+

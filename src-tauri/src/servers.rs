@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
     get_user_preferences_as_struct,
-    mods::{get_mod_names_for_loadout, install_mods_on_loadout_creation},
+    mods::{get_mod_names_in_loadout, install_mods_on_loadout_creation},
     reg_functions, save_user_preferences,
 };
 
@@ -118,10 +118,41 @@ pub fn create_server_loadout(loadout: ServerLoadout) -> Result<bool, String> {
     let _ = mods_path.push("Mods");
 
     let _ = fs::create_dir(mods_path);
-    install_mods_on_loadout_creation(&loadout);
+    let mod_list = install_mods_on_loadout_creation(&loadout);
 
     let _ = write(startup_path, loadout.startup);
-    // let _ = write(modlist_path, loadout.modlist);
+    let _ = write(modlist_path, mod_list.join("\n"));
+    let _ = write(maplist_path, loadout.maplist);
+    let _ = write(banlist_path, loadout.banlist);
+
+    println!("{:?}", loadout.mods);
+
+    Ok(true)
+}
+
+#[tauri::command]
+pub fn edit_server_loadout(loadout: ServerLoadout) -> Result<bool, String> {
+    let loadout_path = get_loadout_path(&loadout.name);
+
+    let mut startup_path = loadout_path.clone();
+    let _ = startup_path.push("startup.txt");
+    println!("{:?}", startup_path);
+    let mut maplist_path = loadout_path.clone();
+    let _ = maplist_path.push("maplist.txt");
+    println!("{:?}", maplist_path);
+    let mut modlist_path = loadout_path.clone();
+    let _ = modlist_path.push("modlist.txt");
+    println!("{:?}", modlist_path);
+    let mut banlist_path = loadout_path.clone();
+    let _ = banlist_path.push("banlist.txt");
+    println!("{:?}", banlist_path);
+    let mut mods_path = loadout_path.clone();
+    let _ = mods_path.push("Mods");
+
+    let mod_list = install_mods_on_loadout_creation(&loadout);
+
+    let _ = write(startup_path, loadout.startup);
+    let _ = write(modlist_path, mod_list.join("\n"));
     let _ = write(maplist_path, loadout.maplist);
     let _ = write(banlist_path, loadout.banlist);
 
@@ -211,7 +242,7 @@ pub fn get_server_loadout(name: String) -> String {
         }
     };
 
-    let mods = get_mod_names_for_loadout(&name);
+    let mods = get_mod_names_in_loadout(&name);
     let my_loadout = ServerLoadout {
         name,
         banlist: banlist_string,
@@ -314,5 +345,14 @@ pub fn get_loadouts_path() -> PathBuf {
     let mut loadout_path = PathBuf::new();
     loadout_path.push(install_path);
     loadout_path.push("loadouts");
+    return loadout_path;
+}
+
+fn get_loadout_path(name: &String) -> PathBuf {
+    let mut loadout_path: PathBuf = get_loadouts_path();
+    loadout_path.push(&name);
+
+    loadout_path.push("Server");
+    loadout_path.push("Admin");
     return loadout_path;
 }

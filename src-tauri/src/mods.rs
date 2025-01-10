@@ -54,7 +54,7 @@ pub fn get_mod_cache_path() -> PathBuf {
 //     println!("{:?}", info);
 // }
 
-fn make_folder_names_same_as_mod_json_names(loadout_name: &String) {
+fn make_folder_names_same_as_mod_json_names(loadout_name: &String) -> Vec<String> {
     let mods_path = get_mod_path_for_loadout(&loadout_name);
     let dir_reader = fs::read_dir(&mods_path);
     let mut mod_list: Vec<String> = Vec::new();
@@ -83,23 +83,37 @@ fn make_folder_names_same_as_mod_json_names(loadout_name: &String) {
                             let info_for_rust: Result<ModJson, Error> = serde_json::from_str(&info);
                             match info_for_rust {
                                 Ok(matched_mod_json_info) => {
-                                    mod_list.push(String::from(&matched_mod_json_info.Name));
-
                                     if original_mod_name.eq(&matched_mod_json_info.Name) {
                                         println!("Folder name and ModJson [Name] match!")
                                     } else {
                                         let mut new_mod_path = mods_path.clone();
                                         new_mod_path.push(&matched_mod_json_info.Name);
 
-                                        match fs::rename(original_mod_path, new_mod_path) {
+                                        match fs::rename(&original_mod_path, new_mod_path) {
                                             Ok(_) => {
+                                                mod_list.push(String::from(
+                                                    &matched_mod_json_info.Name,
+                                                ));
                                                 println!(
                                                     "Successfully renamed mod folder for: {}",
                                                     &matched_mod_json_info.Name
                                                 );
                                             }
                                             Err(err) => {
+                                                println!(
+                                                    "Failed to rename this mod."
+                                                );
                                                 println!("{:?}", err);
+
+                                                match fs::remove_dir_all(&original_mod_path){
+                                                    Ok(_) => {
+                                                        println!("Successfully deleted unrenamable folder")
+                                                    },
+                                                    Err(inner_err) => {
+                                                        println!("{:?}", inner_err)
+                                                    }
+                                                };
+
                                             }
                                         };
                                     }
@@ -122,8 +136,7 @@ fn make_folder_names_same_as_mod_json_names(loadout_name: &String) {
             println!("{:?}", err);
         }
     };
-
-    update_modlist(loadout_name, mod_list);
+    mod_list
 }
 
 fn update_modlist(loadout_name: &String, mod_list: Vec<String>) {
@@ -254,7 +267,7 @@ pub fn remove_mod_from_cache(mod_name: String) -> bool {
     }
 }
 
-pub fn get_mod_names_for_loadout(name: &String) -> Vec<String> {
+pub fn get_mod_names_in_loadout(name: &String) -> Vec<String> {
     // get mod names for loadout
     let path = get_mod_path_for_loadout(name);
     let dir_reader = fs::read_dir(&path);
@@ -266,9 +279,19 @@ pub fn get_mod_names_for_loadout(name: &String) -> Vec<String> {
                     Ok(info) => {
                         match info.path().is_dir() {
                             true => {
-                                let temp = info.file_name();
-                                let temp_as_str = String::from(temp.to_string_lossy());
-                                mod_names.push(temp_as_str);
+                                let mut path_to_mod_json = info.path().clone();
+                                path_to_mod_json.push("mod.json");
+
+                                match path_to_mod_json.exists() {
+                                    true => {
+                                        let temp = info.file_name();
+                                        let temp_as_str = String::from(temp.to_string_lossy());
+                                        mod_names.push(temp_as_str);
+                                    }
+                                    false => {
+                                        println!("No mod.json in this folder. Ignoring.")
+                                    }
+                                }
                             }
                             false => {}
                         };
@@ -286,15 +309,22 @@ pub fn get_mod_names_for_loadout(name: &String) -> Vec<String> {
     mod_names
 }
 
-pub fn install_mods_on_loadout_creation(loadout: &ServerLoadout) {
+pub fn install_mods_on_loadout_creation(loadout: &ServerLoadout) -> Vec<String> {
     let path_to_mods_folder = get_mod_path_for_loadout(&loadout.name);
     let mods = &loadout.mods;
 
+    let mut mod_names: Vec<String> = Vec::new();
     for mod_name in mods {
-        install_mod_to_loadout(mod_name, path_to_mods_folder.clone());
+        if mod_name.contains(".zip") {
+            install_mod_to_loadout(mod_name, path_to_mods_folder.clone());
+        } else {
+            mod_names.push(String::from(mod_name));
+        }
     }
 
-    make_folder_names_same_as_mod_json_names(&loadout.name);
+    let mut newly_installed_mod_names = make_folder_names_same_as_mod_json_names(&loadout.name);
+    mod_names.append(&mut newly_installed_mod_names);
+    mod_names
 }
 
 fn install_mod_to_loadout(mod_name: &String, path_to_mods_folder: PathBuf) {
