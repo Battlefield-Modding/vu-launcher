@@ -1,5 +1,6 @@
 use std::{
-    env, fs,
+    env,
+    fs::{self, read_to_string},
     io::{self},
     path::{self, Path, PathBuf},
 };
@@ -267,9 +268,10 @@ pub fn remove_mod_from_cache(mod_name: String) -> bool {
     }
 }
 
-pub fn get_mod_names_in_loadout(name: &String) -> Vec<String> {
+#[tauri::command]
+pub fn get_mod_names_in_loadout(name: String) -> Vec<String> {
     // get mod names for loadout
-    let path = get_mod_path_for_loadout(name);
+    let path = get_mod_path_for_loadout(&name);
     let dir_reader = fs::read_dir(&path);
     let mut mod_names: Vec<String> = Vec::new();
     match dir_reader {
@@ -343,8 +345,52 @@ fn install_mod_to_loadout(mod_name: &String, path_to_mods_folder: PathBuf) {
     }
 }
 
-pub fn remove_mod_from_loadout() {
-    // remove mod from loadout
+#[tauri::command]
+pub fn remove_mod_from_loadout(name: String, modname: String) -> bool {
+    if name.contains("mod-cache") {
+        return remove_mod_from_cache(modname);
+    }
+    let mut mod_path = get_mod_path_for_loadout(&name);
+    mod_path.push(&modname);
+    match fs::remove_dir_all(mod_path) {
+        Ok(_) => {
+            match remove_mod_from_modlist(&name, &modname) {
+                true => {
+                    println!("Successfully deleted mod from loadout");
+                    return true;
+                }
+                false => return false,
+            };
+        }
+        Err(err) => {
+            println!("{:?}", err);
+            return false;
+        }
+    }
+}
+
+fn remove_mod_from_modlist(loadout_name: &String, mod_name: &String) -> bool {
+    let mut modlist_path = get_admin_path_for_loadout(&loadout_name);
+    modlist_path.push("modlist.txt");
+
+    let modlist_string = match read_to_string(&modlist_path) {
+        Ok(info) => info,
+        Err(err) => {
+            println!("{:?}", err);
+            err.to_string()
+        }
+    };
+
+    let modlist_filtered = modlist_string.split("\n").filter(|x| x != &mod_name);
+    let collected_modlist: Vec<&str> = modlist_filtered.collect();
+    let final_string = collected_modlist.join("\n");
+    match fs::write(&modlist_path, final_string) {
+        Ok(_) => return true,
+        Err(err) => {
+            println!("{:?}", err);
+            return false;
+        }
+    };
 }
 
 pub fn update_mod_within_loadout() {

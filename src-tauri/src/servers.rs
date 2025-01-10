@@ -242,7 +242,7 @@ pub fn get_server_loadout(name: String) -> String {
         }
     };
 
-    let mods = get_mod_names_in_loadout(&name);
+    let mods = get_mod_names_in_loadout(name.clone());
     let my_loadout = ServerLoadout {
         name,
         banlist: banlist_string,

@@ -146,3 +146,13 @@ export async function importLoadoutFromPath(name: string, path: string): Promise
   const status = await invoke(rust_fns.import_loadout_from_path, {name, path}) as boolean
   return status
 }
+
+export async function getModNamesInLoadout(name: string): Promise<string[]> {
+  const status = await invoke(rust_fns.get_mod_names_in_loadout, {name}) as string[]
+  return status
+}
+
+export async function removeModFromLoadout(name:string, modname:string): Promise<boolean>{
+  const status = await invoke(rust_fns.remove_mod_from_loadout, {name, modname}) as boolean
+  return status
+}

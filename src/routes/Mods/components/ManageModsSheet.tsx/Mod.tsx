@@ -1,22 +1,22 @@
-import { removeModFromCache } from '@/api'
+import { removeModFromLoadout } from '@/api'
 import { QueryKey } from '@/config/config'
 import { useQueryClient } from '@tanstack/react-query'
 import { Trash } from 'lucide-react'
 import { toast } from 'sonner'
 
-function Mod({ modName }: { modName: string }) {
+function Mod({ modName, loadoutName }: { modName: string; loadoutName: string }) {
   const queryClient = useQueryClient()
 
   async function handleDelete() {
-    const result = await removeModFromCache(modName)
+    const result = await removeModFromLoadout(loadoutName, modName)
     if (result) {
       queryClient.invalidateQueries({
         queryKey: [QueryKey.GetModNamesInCache],
         refetchType: 'all',
       })
-      toast(`Successfully deleted ${modName} from cache`)
+      toast(`Successfully deleted ${modName} from ${loadoutName}`)
     } else {
-      toast('Could not delete mod from cache.')
+      toast(`Could not delete ${modName} from ${loadoutName}`)
     }
   }
 

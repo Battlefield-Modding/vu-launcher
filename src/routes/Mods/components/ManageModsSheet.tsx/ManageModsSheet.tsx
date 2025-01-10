@@ -1,4 +1,4 @@
-import { getModNamesInCache } from '@/api'
+import { getLoadoutNames, getModNamesInCache, getModNamesInLoadout } from '@/api'
 import {
   Sheet,
   SheetContent,
@@ -12,13 +12,33 @@ import { useQuery } from '@tanstack/react-query'
 import { Loader, Trash } from 'lucide-react'
 import { useState } from 'react'
 import Mod from './Mod'
+import clsx from 'clsx'
 
 export default function ManageModsSheet() {
   const [sheetOpen, setSheetOpen] = useState(false)
 
   const { isPending, isError, data, error } = useQuery({
     queryKey: [QueryKey.GetModNamesInCache],
-    queryFn: getModNamesInCache,
+    queryFn: async (): Promise<Array<{ name: string; mods: string[] }>> => {
+      const modsArray = []
+
+      const modsInCache = await getModNamesInCache()
+      modsArray.push({
+        name: 'mod-cache',
+        mods: modsInCache,
+      })
+
+      const loadoutNames = await getLoadoutNames()
+      for (const loadout of loadoutNames) {
+        const mods = await getModNamesInLoadout(loadout)
+        modsArray.push({
+          name: loadout,
+          mods,
+        })
+      }
+
+      return modsArray
+    },
     staleTime: STALE.never,
   })
 
@@ -44,8 +64,6 @@ export default function ManageModsSheet() {
     return <></>
   }
 
-  console.log(data)
-
   return (
     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
       <SheetTrigger>
@@ -54,15 +72,32 @@ export default function ManageModsSheet() {
         </div>
       </SheetTrigger>
       <SheetContent>
-        <SheetHeader>
-          <SheetTitle>
-            Mods inside <code>mod-cache</code>
-          </SheetTitle>
-          <SheetDescription>Delete</SheetDescription>
-        </SheetHeader>
-        <div className="flex w-full flex-wrap justify-between">
-          {data.map((x, index) => {
-            return <Mod modName={x} key={`${index}-${x}`} />
+        <SheetHeader></SheetHeader>
+
+        <div className="flex h-full w-full flex-wrap gap-16">
+          {data.map((loadout, outerIndex) => {
+            if (loadout.mods?.length > 0) {
+              return (
+                <div
+                  className={clsx(
+                    'max-w-64 rounded-md',
+                    loadout.name === 'mod-cache' ? 'bg-red-300 p-4' : 'bg-gray-300 p-4',
+                  )}
+                  key={`mod-deletion-container_${loadout.name}`}
+                >
+                  <SheetTitle className="underline">
+                    Mods inside <code>{loadout.name}</code>
+                  </SheetTitle>
+                  {loadout.mods.map((modName, modIndex) => (
+                    <Mod
+                      modName={modName}
+                      loadoutName={loadout.name}
+                      key={`${modName}-${outerIndex}-${modIndex}`}
+                    />
+                  ))}
+                </div>
+              )
+            }
           })}
         </div>
       </SheetContent>

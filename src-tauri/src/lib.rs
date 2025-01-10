@@ -31,7 +31,10 @@ use servers::{
 };
 
 mod mods;
-use mods::{get_mod_names_in_cache, import_mod_to_cache, remove_mod_from_cache};
+use mods::{
+    get_mod_names_in_cache, get_mod_names_in_loadout, import_mod_to_cache, remove_mod_from_cache,
+    remove_mod_from_loadout,
+};
 
 mod speed_calc;
 
@@ -345,7 +348,9 @@ pub fn run() {
             import_mod_to_cache,
             remove_mod_from_cache,
             edit_server_loadout,
-            import_loadout_from_path
+            import_loadout_from_path,
+            get_mod_names_in_loadout,
+            remove_mod_from_loadout
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
