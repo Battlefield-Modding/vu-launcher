@@ -57,7 +57,7 @@ pub fn get_mod_cache_path() -> PathBuf {
 fn make_folder_names_same_as_mod_json_names(loadout_name: &String) {
     let mods_path = get_mod_path_for_loadout(&loadout_name);
     let dir_reader = fs::read_dir(&mods_path);
-    let mut mod_json_info: Vec<ModFolderInfo> = Vec::new();
+    let mut mod_list: Vec<String> = Vec::new();
     match dir_reader {
         Ok(reader) => {
             reader.for_each(|item| {
@@ -83,6 +83,8 @@ fn make_folder_names_same_as_mod_json_names(loadout_name: &String) {
                             let info_for_rust: Result<ModJson, Error> = serde_json::from_str(&info);
                             match info_for_rust {
                                 Ok(matched_mod_json_info) => {
+                                    mod_list.push(String::from(&matched_mod_json_info.Name));
+
                                     if original_mod_name.eq(&matched_mod_json_info.Name) {
                                         println!("Folder name and ModJson [Name] match!")
                                     } else {
@@ -101,11 +103,6 @@ fn make_folder_names_same_as_mod_json_names(loadout_name: &String) {
                                             }
                                         };
                                     }
-
-                                    mod_json_info.push(ModFolderInfo {
-                                        original_mod_name,
-                                        mod_json: matched_mod_json_info,
-                                    });
                                 }
                                 Err(err) => {
                                     println!("{:?}", err);
@@ -125,7 +122,23 @@ fn make_folder_names_same_as_mod_json_names(loadout_name: &String) {
             println!("{:?}", err);
         }
     };
-    println!("{:?}", mod_json_info)
+
+    update_modlist(loadout_name, mod_list);
+}
+
+fn update_modlist(loadout_name: &String, mod_list: Vec<String>) {
+    let mut modlist_path = get_admin_path_for_loadout(loadout_name);
+    modlist_path.push("modlist.txt");
+
+    let string_to_write = mod_list.join("\n");
+    match fs::write(modlist_path, string_to_write) {
+        Ok(_) => {
+            println!("Successfully update Modlist.txt")
+        }
+        Err(err) => {
+            println!("{:?}", err);
+        }
+    }
 }
 
 // fn get_mod_json_data(loadout_name: String, mod_folder_name: String) -> ModJson {
@@ -137,6 +150,14 @@ fn make_folder_names_same_as_mod_json_names(loadout_name: &String) {
 //     let info_for_rust = serde_json::from_str(&info)?;
 //     info_for_rust
 // }
+
+fn get_admin_path_for_loadout(name: &String) -> PathBuf {
+    let mut admin_path = get_loadouts_path();
+    admin_path.push(&name);
+    admin_path.push("Server");
+    admin_path.push("Admin");
+    admin_path
+}
 
 fn get_mod_path_for_loadout(name: &String) -> PathBuf {
     let mut loadout_path = get_loadouts_path();
@@ -273,24 +294,23 @@ pub fn install_mods_on_loadout_creation(loadout: &ServerLoadout) {
         install_mod_to_loadout(mod_name, path_to_mods_folder.clone());
     }
 
-    make_folder_names_same_as_mod_json_names(&loadout.name)
+    make_folder_names_same_as_mod_json_names(&loadout.name);
 }
 
 fn install_mod_to_loadout(mod_name: &String, path_to_mods_folder: PathBuf) {
-    // install mod to loadout
     let mut path_to_mod = get_mod_cache_path();
     path_to_mod.push(mod_name);
 
     let destination = path_to_mods_folder.clone();
 
     match extract_zip(path_to_mod.as_path(), destination.as_path()) {
-        Ok(_) => println!("Zip successfully extracted!"),
-        Err(err) => panic!("{}{}", "Error while extracting Zip", err),
+        Ok(_) => {
+            println!("Zip successfully extracted!");
+        }
+        Err(err) => {
+            panic!("{}{}", "Error while extracting Zip", err);
+        }
     }
-
-    // make sure the mod doesn't already exist in loadout
-    // take zip folder from cache
-    // extract it to the loadout
 }
 
 pub fn remove_mod_from_loadout() {
@@ -315,10 +335,11 @@ pub fn open_mod_within_loadot_in_vscode() {
 // copied from Limit Theory Launcher
 // *********************************
 fn extract_zip(zip_path: &Path, path: &Path) -> Result<(), String> {
-    println!("*******************EXTRACT ZIP*******************");
-    println!("{:?}", zip_path);
-    println!("{:?}", path);
-    println!("*******************EXTRACT ZIP*******************");
+    let initial_dir = match env::current_dir() {
+        Ok(info) => info,
+        Err(_) => get_mod_cache_path(),
+    };
+
     if !path.exists() {
         match std::fs::create_dir(&path) {
             Ok(_) => match env::set_current_dir(&path) {
@@ -378,5 +399,11 @@ fn extract_zip(zip_path: &Path, path: &Path) -> Result<(), String> {
         }
     }
 
+    match env::set_current_dir(initial_dir) {
+        Ok(_) => {
+            println!("Successfully reset env dir");
+        }
+        Err(err) => println!("{:?}", err),
+    };
     Ok(())
 }
