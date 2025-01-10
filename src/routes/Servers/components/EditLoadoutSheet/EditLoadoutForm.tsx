@@ -18,6 +18,8 @@ import { useQueryClient } from '@tanstack/react-query'
 import { Textarea } from '@/components/ui/textarea'
 import { Loadout, QueryKey } from '@/config/config'
 import { Checkbox } from '@/components/ui/checkbox'
+import { useState } from 'react'
+import { Loader2Icon } from 'lucide-react'
 
 const formSchema = z.object({
   startup: z.string().min(10).max(5000),
@@ -36,6 +38,7 @@ export default function EditLoadoutForm({
   modsInCache: string[]
 }) {
   const queryClient = useQueryClient()
+  const [submitLoading, setSubmitLoading] = useState(false)
 
   const activatedMods = existingConfig.modlist.split('\n')
   const allModsInLoadout = existingConfig.mods
@@ -86,7 +89,9 @@ export default function EditLoadoutForm({
       name: existingConfig.name,
     }
 
+    setSubmitLoading(() => true)
     const status = await editServerLoadout(loadout)
+    setSubmitLoading(() => false)
 
     if (status) {
       toast(`Success! Updated loadout: ${existingConfig.name}`)
@@ -172,8 +177,11 @@ export default function EditLoadoutForm({
           )
         })}
         <FormItem>
-          <FormLabel className="text-2xl underline">ModList - New Mods</FormLabel>
-          <FormDescription>Which new mods do you want installed?</FormDescription>
+          <FormLabel className="text-2xl underline">ModList - Mod Cache</FormLabel>
+          <FormDescription>
+            Which new mods do you want installed from mod cache? NOTE: This will not overwrite an
+            existing mod.
+          </FormDescription>
         </FormItem>
         {installableMods.map((nameOfMod, index) => {
           // a dot will create an unwanted object
@@ -208,6 +216,11 @@ export default function EditLoadoutForm({
             </FormItem>
           )}
         />
+        {submitLoading && (
+          <div className="fixed bottom-10 flex w-full justify-center">
+            <Loader2Icon className="h-16 w-16 animate-spin" />
+          </div>
+        )}
         <Button type="submit">Submit</Button>
       </form>
     </Form>

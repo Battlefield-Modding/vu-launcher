@@ -1,4 +1,4 @@
-import { any, z } from 'zod'
+import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 
@@ -20,6 +20,8 @@ import { Textarea } from '@/components/ui/textarea'
 import { defaultServerConfig } from '../../defaultServerConfig'
 import { Loadout, QueryKey } from '@/config/config'
 import { Checkbox } from '@/components/ui/checkbox'
+import { useState } from 'react'
+import { Loader2Icon } from 'lucide-react'
 
 const formSchema = z.object({
   name: z
@@ -41,6 +43,7 @@ const formSchema = z.object({
 
 export default function LoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any; mods: string[] }) {
   const queryClient = useQueryClient()
+  const [submitLoading, setSubmitLoading] = useState(false)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -69,7 +72,10 @@ export default function LoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any;
       mods: correctedMods,
       modlist: '',
     }
+
+    setSubmitLoading(() => true)
     const status = await createServerLoadout(loadout)
+    setSubmitLoading(() => false)
 
     if (status) {
       toast(`Success! Created loadout: ${values.name}`)
@@ -194,6 +200,11 @@ export default function LoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any;
             </FormItem>
           )}
         />
+        {submitLoading && (
+          <div className="fixed bottom-10 flex w-full justify-center">
+            <Loader2Icon className="h-16 w-16 animate-spin" />
+          </div>
+        )}
         <Button type="submit">Submit</Button>
       </form>
     </Form>
