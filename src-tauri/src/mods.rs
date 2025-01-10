@@ -1,12 +1,34 @@
 use std::{
-    env, fs, io,
+    env, fs,
+    io::{self},
     path::{self, Path, PathBuf},
 };
+
+use serde::{Deserialize, Serialize};
+use serde_json::Error;
 
 use crate::{
     reg_functions,
     servers::{get_loadouts_path, ServerLoadout},
 };
+
+#[allow(non_snake_case)]
+#[derive(Serialize, Deserialize, Debug)]
+pub struct ModJson {
+    pub Name: String,
+    pub Authors: Vec<String>,
+    pub Description: String,
+    pub URL: String,
+    pub Version: String,
+    pub HasWebUI: bool,
+    pub HasVeniceEXT: bool,
+}
+
+#[derive(Debug)]
+pub struct ModFolderInfo {
+    original_mod_name: String,
+    mod_json: ModJson,
+}
 
 pub fn get_mod_cache_path() -> PathBuf {
     let install_path = match reg_functions::get_install_path_registry() {
@@ -23,6 +45,98 @@ pub fn get_mod_cache_path() -> PathBuf {
     }
     return loadout_path;
 }
+
+// fn overwrite_extracted_folder_name_with_mod_json_name(
+//     loadout_name: String,
+//     extracted_folder_name: String,
+// ) {
+//     let info = get_mod_json_data(loadout_name, mod_folder_name);
+//     println!("{:?}", info);
+// }
+
+fn make_folder_names_same_as_mod_json_names(loadout_name: &String) {
+    let mods_path = get_mod_path_for_loadout(&loadout_name);
+    let dir_reader = fs::read_dir(&mods_path);
+    let mut mod_json_info: Vec<ModFolderInfo> = Vec::new();
+    match dir_reader {
+        Ok(reader) => {
+            reader.for_each(|item| {
+                match item {
+                    Ok(info) => {
+                        // fs::rename(info.file_name(), info.file_name());
+                        let mut inner_mod_json_path = info.path();
+                        let original_mod_path = inner_mod_json_path.clone();
+                        let original_mod_name =
+                            match inner_mod_json_path.clone().file_name().unwrap().to_str() {
+                                Some(name) => name.to_owned(),
+                                None => {
+                                    println!("Could not find folder name. Aborting renaming");
+                                    return;
+                                }
+                            };
+
+                        inner_mod_json_path.push("mod.json");
+                        println!("{:?}", inner_mod_json_path);
+
+                        if inner_mod_json_path.exists() {
+                            let info = fs::read_to_string(inner_mod_json_path).unwrap();
+                            let info_for_rust: Result<ModJson, Error> = serde_json::from_str(&info);
+                            match info_for_rust {
+                                Ok(matched_mod_json_info) => {
+                                    if original_mod_name.eq(&matched_mod_json_info.Name) {
+                                        println!("Folder name and ModJson [Name] match!")
+                                    } else {
+                                        let mut new_mod_path = mods_path.clone();
+                                        new_mod_path.push(&matched_mod_json_info.Name);
+
+                                        match fs::rename(original_mod_path, new_mod_path) {
+                                            Ok(_) => {
+                                                println!(
+                                                    "Successfully renamed mod folder for: {}",
+                                                    &matched_mod_json_info.Name
+                                                );
+                                            }
+                                            Err(err) => {
+                                                println!("{:?}", err);
+                                            }
+                                        };
+                                    }
+
+                                    mod_json_info.push(ModFolderInfo {
+                                        original_mod_name,
+                                        mod_json: matched_mod_json_info,
+                                    });
+                                }
+                                Err(err) => {
+                                    println!("{:?}", err);
+                                }
+                            }
+                        } else {
+                            println!("Mod JSON does not exist for {:?}", inner_mod_json_path);
+                        }
+                    }
+                    Err(_) => {
+                        println!("Error when reading mod JSONs")
+                    }
+                };
+            });
+        }
+        Err(err) => {
+            println!("{:?}", err);
+        }
+    };
+    println!("{:?}", mod_json_info)
+}
+
+// fn get_mod_json_data(loadout_name: String, mod_folder_name: String) -> ModJson {
+//     let mut mods_path = get_mod_path_for_loadout(&loadout_name);
+//     mods_path.push(&mod_folder_name);
+//     mods_path.push("mod.json");
+
+//     let info = fs::read_to_string(mods_path)?;
+//     let info_for_rust = serde_json::from_str(&info)?;
+//     info_for_rust
+// }
 
 fn get_mod_path_for_loadout(name: &String) -> PathBuf {
     let mut loadout_path = get_loadouts_path();
@@ -159,7 +273,7 @@ pub fn install_mods_on_loadout_creation(loadout: &ServerLoadout) {
         install_mod_to_loadout(mod_name, path_to_mods_folder.clone());
     }
 
-    // extract from source to dest
+    make_folder_names_same_as_mod_json_names(&loadout.name)
 }
 
 fn install_mod_to_loadout(mod_name: &String, path_to_mods_folder: PathBuf) {

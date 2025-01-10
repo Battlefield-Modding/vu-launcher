@@ -342,7 +342,7 @@ pub fn run() {
             open_explorer_for_loadout,
             get_mod_names_in_cache,
             import_mod_to_cache,
-            remove_mod_from_cache
+            remove_mod_from_cache,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
