@@ -3,7 +3,10 @@ use std::{
     path::{self, Path, PathBuf},
 };
 
-use crate::{reg_functions, servers::get_loadouts_path};
+use crate::{
+    reg_functions,
+    servers::{get_loadouts_path, ServerLoadout},
+};
 
 pub fn get_mod_cache_path() -> PathBuf {
     let install_path = match reg_functions::get_install_path_registry() {
@@ -148,8 +151,29 @@ pub fn get_mod_names_for_loadout(name: &String) -> Vec<String> {
     mod_names
 }
 
-pub fn install_mod_to_loadout() {
+pub fn install_mods_on_loadout_creation(loadout: &ServerLoadout) {
+    let path_to_mods_folder = get_mod_path_for_loadout(&loadout.name);
+    let mods = &loadout.mods;
+
+    for mod_name in mods {
+        install_mod_to_loadout(mod_name, path_to_mods_folder.clone());
+    }
+
+    // extract from source to dest
+}
+
+fn install_mod_to_loadout(mod_name: &String, path_to_mods_folder: PathBuf) {
     // install mod to loadout
+    let mut path_to_mod = get_mod_cache_path();
+    path_to_mod.push(mod_name);
+
+    let destination = path_to_mods_folder.clone();
+
+    match extract_zip(path_to_mod.as_path(), destination.as_path()) {
+        Ok(_) => println!("Zip successfully extracted!"),
+        Err(err) => panic!("{}{}", "Error while extracting Zip", err),
+    }
+
     // make sure the mod doesn't already exist in loadout
     // take zip folder from cache
     // extract it to the loadout
@@ -176,7 +200,11 @@ pub fn open_mod_within_loadot_in_vscode() {
 // *********************************
 // copied from Limit Theory Launcher
 // *********************************
-async fn extract_zip(zip_path: &Path, path: &Path) -> Result<(), String> {
+fn extract_zip(zip_path: &Path, path: &Path) -> Result<(), String> {
+    println!("*******************EXTRACT ZIP*******************");
+    println!("{:?}", zip_path);
+    println!("{:?}", path);
+    println!("*******************EXTRACT ZIP*******************");
     if !path.exists() {
         match std::fs::create_dir(&path) {
             Ok(_) => match env::set_current_dir(&path) {

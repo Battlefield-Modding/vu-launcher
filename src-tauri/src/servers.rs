@@ -7,18 +7,19 @@ use std::{
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    get_user_preferences_as_struct, mods::get_mod_names_for_loadout, reg_functions,
-    save_user_preferences,
+    get_user_preferences_as_struct,
+    mods::{get_mod_names_for_loadout, install_mods_on_loadout_creation},
+    reg_functions, save_user_preferences,
 };
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ServerLoadout {
-    name: String,
-    startup: String,
-    maplist: String,
-    modlist: String,
-    banlist: String,
-    mods: Vec<String>,
+    pub name: String,
+    pub startup: String,
+    pub maplist: String,
+    pub modlist: String,
+    pub banlist: String,
+    pub mods: Vec<String>,
 }
 
 #[tauri::command]
@@ -116,11 +117,15 @@ pub fn create_server_loadout(loadout: ServerLoadout) -> Result<bool, String> {
     let mut mods_path = loadout_path.clone();
     let _ = mods_path.push("Mods");
 
+    let _ = fs::create_dir(mods_path);
+    install_mods_on_loadout_creation(&loadout);
+
     let _ = write(startup_path, loadout.startup);
     let _ = write(modlist_path, loadout.modlist);
     let _ = write(maplist_path, loadout.maplist);
     let _ = write(banlist_path, loadout.banlist);
-    let _ = fs::create_dir(mods_path);
+
+    println!("{:?}", loadout.mods);
 
     Ok(true)
 }

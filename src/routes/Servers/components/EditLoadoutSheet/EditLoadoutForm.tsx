@@ -162,7 +162,7 @@ export default function EditLoadoutForm({
         />
         <FormItem>
           <FormLabel className="text-2xl underline">ModList</FormLabel>
-          <FormDescription>Which Mods do you want installed?</FormDescription>
+          <FormDescription>Which mods do you want enabled?</FormDescription>
         </FormItem>
         {existingConfig.mods.map((nameOfMod, index) => {
           // a dot will create an unwanted object
