@@ -93,7 +93,16 @@ export default function LoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any;
             <FormItem>
               <FormLabel className="text-2xl underline">Loadout Name</FormLabel>
               <FormControl>
-                <Input type="text" placeholder="name" {...field} />
+                <Input
+                  type="text"
+                  placeholder="name"
+                  {...field}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault()
+                    }
+                  }}
+                />
               </FormControl>
               <FormDescription>
                 The nickname for this server loadout. Can't contain any of the following characters:
