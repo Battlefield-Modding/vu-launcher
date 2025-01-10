@@ -300,6 +300,7 @@ fn open_explorer_for_loadout(loadout_name: String) {
     let mut path_to_loadout = get_loadouts_path();
     path_to_loadout.push(loadout_name);
     path_to_loadout.push("Server");
+    path_to_loadout.push("Admin");
 
     Command::new("explorer")
         .args(&path_to_loadout.to_str())
