@@ -121,7 +121,7 @@ pub fn create_server_loadout(loadout: ServerLoadout) -> Result<bool, String> {
     install_mods_on_loadout_creation(&loadout);
 
     let _ = write(startup_path, loadout.startup);
-    let _ = write(modlist_path, loadout.modlist);
+    // let _ = write(modlist_path, loadout.modlist);
     let _ = write(maplist_path, loadout.maplist);
     let _ = write(banlist_path, loadout.banlist);
 
@@ -236,7 +236,17 @@ pub fn delete_server_loadout(name: String) -> bool {
         Ok(folder_exists) => {
             if folder_exists {
                 println!("Removing dir: {:?}", loadout_path);
-                return fs::remove_dir_all(&loadout_path).is_ok();
+                match fs::remove_dir_all(&loadout_path) {
+                    Ok(_) => {
+                        println!("Successfully deleted loadout {}", &name);
+                        return true;
+                    }
+                    Err(err) => {
+                        println!("Failed to delete loadout {}", &name);
+                        println!("{:?}", err);
+                        return false;
+                    }
+                };
             }
             return false;
         }
