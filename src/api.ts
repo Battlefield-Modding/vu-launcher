@@ -142,3 +142,7 @@ export async function removeModFromCache(modName: string): Promise<boolean> {
   return status
 }
 
+export async function importLoadoutFromPath(name: string, path: string): Promise<boolean>{
+  const status = await invoke(rust_fns.import_loadout_from_path, {name, path}) as boolean
+  return status
+}

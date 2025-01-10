@@ -356,3 +356,35 @@ fn get_loadout_path(name: &String) -> PathBuf {
     loadout_path.push("Admin");
     return loadout_path;
 }
+
+#[tauri::command]
+pub fn import_loadout_from_path(name: String, path: String) -> bool {
+    let mut target_path = get_loadouts_path();
+    target_path.push(name);
+    target_path.push("Server");
+
+    if !path.ends_with("Server") {
+        println!("This isn't server???");
+        return false;
+    }
+
+    if !target_path.exists() {
+        match fs::create_dir_all(&target_path) {
+            Ok(_) => match dircpy::copy_dir(path, target_path) {
+                Ok(_) => {
+                    println!("Successfully copied over loadout!");
+                    return true;
+                }
+                Err(err) => {
+                    println!("{:?}", err);
+                    return false;
+                }
+            },
+            Err(err) => {
+                println!("{:?}", err);
+                return false;
+            }
+        }
+    }
+    return false;
+}

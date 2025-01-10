@@ -35,7 +35,8 @@ export enum rust_fns {
   get_mod_names_in_cache = "get_mod_names_in_cache",
   import_mod_to_cache = "import_mod_to_cache",
   remove_mod_from_cache = "remove_mod_from_cache",
-  edit_server_loadout = "edit_server_loadout"
+  edit_server_loadout = "edit_server_loadout",
+  import_loadout_from_path = "import_loadout_from_path"
 }
 
 export enum QueryKey {

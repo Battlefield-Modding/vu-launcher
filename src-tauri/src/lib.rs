@@ -26,8 +26,8 @@ use web::{download_game, get_vu_info, VeniceEndpointData};
 mod servers;
 use servers::{
     create_server_loadout, delete_server_loadout, edit_server_loadout, get_loadout_names,
-    get_loadouts_path, get_server_loadout, save_server_guid, server_key_exists, server_key_setup,
-    start_server_loadout,
+    get_loadouts_path, get_server_loadout, import_loadout_from_path, save_server_guid,
+    server_key_exists, server_key_setup, start_server_loadout,
 };
 
 mod mods;
@@ -344,7 +344,8 @@ pub fn run() {
             get_mod_names_in_cache,
             import_mod_to_cache,
             remove_mod_from_cache,
-            edit_server_loadout
+            edit_server_loadout,
+            import_loadout_from_path
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
