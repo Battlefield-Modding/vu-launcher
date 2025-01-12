@@ -87,8 +87,8 @@ export async function getLoadoutNames(): Promise<string[]>{
   return info
 }
 
-export async function deleteServerLoadout(name: string){
-  const info = await invoke(rust_fns.delete_server_loadout, {name})
+export async function deleteServerLoadout(name: string): Promise<boolean>{
+  const info = await invoke(rust_fns.delete_server_loadout, {name}) as boolean
   return info
 }
 

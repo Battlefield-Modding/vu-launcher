@@ -20,6 +20,7 @@ import LoadoutUpload from './LoadoutUpload'
 import { useQueryClient } from '@tanstack/react-query'
 import { QueryKey } from '@/config/config'
 import clsx from 'clsx'
+import LoaderComponent from '@/components/app-loader'
 
 const formSchema = z.object({
   name: z
@@ -44,6 +45,7 @@ export default function LoadoutUploadForm({
 }) {
   const queryClient = useQueryClient()
   const [path, setPath] = useState('')
+  const [submitLoading, setSubmitLoading] = useState(false)
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -56,9 +58,10 @@ export default function LoadoutUploadForm({
       toast('Loadout name already used. Pick another.')
       return
     }
-    console.log(values)
-    console.log(path)
+
+    setSubmitLoading(() => true)
     const status = await importLoadoutFromPath(values.name, path)
+    setSubmitLoading(() => false)
 
     if (status) {
       toast(`Imported loadout ${values.name} successfully!`)
@@ -93,6 +96,8 @@ export default function LoadoutUploadForm({
         />
         <LoadoutUpload setPath={setPath} />
         {path && <FormLabel>Will copy from: {path}</FormLabel>}
+
+        {submitLoading && <LoaderComponent />}
 
         <Button
           type="submit"

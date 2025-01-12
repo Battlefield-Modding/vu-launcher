@@ -1,4 +1,5 @@
 import { deleteServerLoadout } from '@/api'
+import LoaderComponent from '@/components/app-loader'
 import {
   Dialog,
   DialogClose,
@@ -11,18 +12,32 @@ import {
 import { QueryKey } from '@/config/config'
 import { useQueryClient } from '@tanstack/react-query'
 import { Trash, X } from 'lucide-react'
+import { useRef, useState } from 'react'
 import { toast } from 'sonner'
 
 function DeleteLoadoutDialog({ name }: { name: string }) {
   const queryClient = useQueryClient()
+  const [submitLoading, setSubmitLoading] = useState(false)
+  const dialogCloseRef = useRef(null)
 
   async function handleDelete() {
-    await deleteServerLoadout(name)
-    toast('Deleted server loadout.')
-    queryClient.invalidateQueries({
-      queryKey: [QueryKey.ServerLoadouts],
-      refetchType: 'all',
-    })
+    setSubmitLoading(() => true)
+    const status = await deleteServerLoadout(name)
+    setSubmitLoading(() => false)
+
+    if (status) {
+      if (dialogCloseRef.current) {
+        const element = dialogCloseRef.current as HTMLDialogElement
+        element.click()
+        toast('Deleted server loadout.')
+        queryClient.invalidateQueries({
+          queryKey: [QueryKey.ServerLoadouts],
+          refetchType: 'all',
+        })
+      }
+    } else {
+      toast(`Error. Failed to delete ${name}`)
+    }
   }
 
   return (
@@ -52,11 +67,14 @@ function DeleteLoadoutDialog({ name }: { name: string }) {
               Cancel
             </p>
           </DialogClose>
-          <DialogClose onClick={handleDelete}>
+          {submitLoading && <LoaderComponent />}
+
+          <div onClick={handleDelete}>
             <p className="flex gap-4 rounded-md bg-red-600 p-2 text-white hover:bg-red-600/80">
               <Trash /> Delete: {name.length >= 20 ? `${name.substring(0, 20)}...` : name}
             </p>
-          </DialogClose>
+          </div>
+          <DialogClose ref={dialogCloseRef}></DialogClose>
         </div>
       </DialogContent>
     </Dialog>

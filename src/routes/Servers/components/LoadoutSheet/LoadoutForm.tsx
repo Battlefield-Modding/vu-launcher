@@ -21,7 +21,7 @@ import { defaultServerConfig } from '../../defaultServerConfig'
 import { Loadout, QueryKey } from '@/config/config'
 import { Checkbox } from '@/components/ui/checkbox'
 import { useState } from 'react'
-import { Loader2Icon } from 'lucide-react'
+import LoaderComponent from '@/components/app-loader'
 
 const formSchema = z.object({
   name: z
@@ -200,11 +200,7 @@ export default function LoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any;
             </FormItem>
           )}
         />
-        {submitLoading && (
-          <div className="fixed bottom-10 flex w-full justify-center">
-            <Loader2Icon className="h-16 w-16 animate-spin" />
-          </div>
-        )}
+        {submitLoading && <LoaderComponent />}
         <Button type="submit">Submit</Button>
       </form>
     </Form>
