@@ -1,11 +1,12 @@
-import EditLoadoutSheet from '../LoadoutSheet/EditLoadoutSheet'
+import EditLoadoutSheet from '../EditLoadoutSheet/EditLoadoutSheet'
 import { Folder, Loader, Server, User } from 'lucide-react'
 import { getServerLoadout, openExplorerAtLoadout, playVU, startServerLoadout } from '@/api'
 import { toast } from 'sonner'
 import { useQuery } from '@tanstack/react-query'
 import { QueryKey, STALE } from '@/config/config'
-import DeleteLoadoutDialog from './DeleteLoadoutDialog'
 import ChooseAccountSheet from '../ChooseAccountSheet/ChooseAccountSheet'
+import ManageModsSheet from '../ManageModsSheet/ManageModsSheet'
+import DeleteLoadoutDialog from './DeleteLoadoutDialog'
 
 function Loadout({ name }: { name: string }) {
   const { isPending, isError, data, error } = useQuery({
@@ -92,9 +93,12 @@ function Loadout({ name }: { name: string }) {
 
   return (
     <div className="max-w-96 rounded-md border border-black bg-black p-4">
-      <h1 className="mb-8 flex justify-between text-xl">
+      <h1 className="mb-8 flex justify-between gap-2 text-xl">
         {name.length >= 15 ? `${name.substring(0, 15)}...` : name}
-        <EditLoadoutSheet data={data} />
+        <div className="flex gap-2">
+          <ManageModsSheet loadout={data} />
+          <EditLoadoutSheet existingConfig={data} />
+        </div>
       </h1>
 
       <div className="flex justify-between gap-4">

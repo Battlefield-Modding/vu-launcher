@@ -25,9 +25,15 @@ use web::{download_game, get_vu_info, VeniceEndpointData};
 
 mod servers;
 use servers::{
-    delete_server_loadout, get_loadout_names, get_loadouts_path, get_server_loadout,
-    save_server_guid, server_key_exists, server_key_setup, set_server_loadout,
-    start_server_loadout,
+    create_server_loadout, delete_server_loadout, edit_server_loadout, get_loadout_names,
+    get_loadouts_path, get_server_loadout, import_loadout_from_path, save_server_guid,
+    server_key_exists, server_key_setup, start_server_loadout,
+};
+
+mod mods;
+use mods::{
+    get_mod_names_in_cache, get_mod_names_in_loadout, import_mod_to_cache, open_mod_with_vscode,
+    remove_mod_from_cache, remove_mod_from_loadout,
 };
 
 mod speed_calc;
@@ -297,6 +303,7 @@ fn open_explorer_for_loadout(loadout_name: String) {
     let mut path_to_loadout = get_loadouts_path();
     path_to_loadout.push(loadout_name);
     path_to_loadout.push("Server");
+    path_to_loadout.push("Admin");
 
     Command::new("explorer")
         .args(&path_to_loadout.to_str())
@@ -327,7 +334,7 @@ pub fn run() {
             is_vu_installed,
             get_vu_data,
             download_game,
-            set_server_loadout,
+            create_server_loadout,
             get_loadout_names,
             delete_server_loadout,
             server_key_exists,
@@ -336,7 +343,15 @@ pub fn run() {
             save_server_guid,
             get_server_loadout,
             set_vu_install_location_registry,
-            open_explorer_for_loadout
+            open_explorer_for_loadout,
+            get_mod_names_in_cache,
+            import_mod_to_cache,
+            remove_mod_from_cache,
+            edit_server_loadout,
+            import_loadout_from_path,
+            get_mod_names_in_loadout,
+            remove_mod_from_loadout,
+            open_mod_with_vscode
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

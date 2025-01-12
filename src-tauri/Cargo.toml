@@ -32,4 +32,5 @@ zip = "2.2.2"
 tokio = { version = "1.42.0"}
 futures-util = "0.3.31"
 tauri-plugin-positioner = "2.2.0"
+dircpy = "0.3.19"
 

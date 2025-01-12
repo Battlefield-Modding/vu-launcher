@@ -6,15 +6,15 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
-import { Loader, Plus } from 'lucide-react'
+import { Edit, Loader } from 'lucide-react'
 import { useState } from 'react'
 import clsx from 'clsx'
-import LoadoutForm from './LoadoutForm'
-import { QueryKey, STALE } from '@/config/config'
-import { useQuery } from '@tanstack/react-query'
+import { Loadout, QueryKey, STALE } from '@/config/config'
+import EditLoadoutForm from './EditLoadoutForm'
 import { getModNamesInCache } from '@/api'
+import { useQuery } from '@tanstack/react-query'
 
-export default function LoadoutSheet() {
+export default function EditLoadoutSheet({ existingConfig }: { existingConfig: Loadout }) {
   const [sheetOpen, setSheetOpen] = useState(false)
 
   const { isPending, isError, data, error } = useQuery({
@@ -46,21 +46,29 @@ export default function LoadoutSheet() {
       <SheetTrigger>
         <div
           className={clsx(
-            'flex gap-2 rounded-md p-2 text-xl leading-6 text-secondary hover:bg-green-800/80',
-            'bg-green-800',
+            'flex gap-2 rounded-md p-2 text-xl leading-6 text-secondary hover:bg-gray-600/80',
+            'bg-gray-600',
           )}
         >
-          Create Loadout
-          <Plus />
+          <Edit />
         </div>
       </SheetTrigger>
       <SheetContent className="overflow-y-scroll">
         <SheetHeader>
-          <SheetTitle>Save Server Loadout</SheetTitle>
-          <SheetDescription>Creates a Loadout for a server</SheetDescription>
+          <SheetTitle>
+            Edit Loadout{' '}
+            <code className="text-md rounded-md bg-gray-800 p-1 pl-2 pr-2 text-white">
+              {existingConfig.name}
+            </code>
+          </SheetTitle>
+          <SheetDescription>Modifies existing Loadout for a server</SheetDescription>
         </SheetHeader>
         <br />
-        <LoadoutForm setSheetOpen={setSheetOpen} mods={data} />
+        <EditLoadoutForm
+          setSheetOpen={setSheetOpen}
+          existingConfig={existingConfig}
+          modsInCache={data}
+        />
       </SheetContent>
     </Sheet>
   )

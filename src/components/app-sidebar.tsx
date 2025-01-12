@@ -1,4 +1,4 @@
-import { Home, List, Server, Settings, User } from 'lucide-react'
+import { Book, Home, Server, Settings } from 'lucide-react'
 import vuIcon from '@/assets/VUIcon.svg'
 
 import {
@@ -30,7 +30,7 @@ const items = [
   {
     title: 'Mods',
     url: routes.MODS,
-    icon: List,
+    icon: Book,
   },
   {
     title: 'Settings',

@@ -12,53 +12,68 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
-import { createServerLoadout } from '@/api'
+import { editServerLoadout } from '@/api'
 import { useQueryClient } from '@tanstack/react-query'
 import { Textarea } from '@/components/ui/textarea'
-import { defaultServerConfig } from '../../defaultServerConfig'
 import { Loadout, QueryKey } from '@/config/config'
 import { Checkbox } from '@/components/ui/checkbox'
 import { useState } from 'react'
 import LoaderComponent from '@/components/app-loader'
 
 const formSchema = z.object({
-  name: z
-    .string()
-    .min(2)
-    .max(50)
-    .refine(
-      (value) =>
-        /^[^\s^\x00-\x1f\\?*:"";<>|\/.][^\x00-\x1f\\?*:"";<>|\/]*[^\s^\x00-\x1f\\?*:"";<>|\/.]+$/g.test(
-          value ?? '',
-        ),
-      "A loadout name can't contain any of the following characters\: \\ / : * ? \" < > | '",
-    ),
   startup: z.string().min(10).max(5000),
   maplist: z.string().min(10).max(5000),
   mods: z.any(),
   banlist: z.string().min(0).max(5000),
 })
 
-export default function LoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any; mods: string[] }) {
+export default function EditLoadoutForm({
+  setSheetOpen,
+  existingConfig,
+  modsInCache,
+}: {
+  setSheetOpen: any
+  existingConfig: Loadout
+  modsInCache: string[]
+}) {
   const queryClient = useQueryClient()
   const [submitLoading, setSubmitLoading] = useState(false)
+
+  const activatedMods = existingConfig.modlist.split('\n')
+  const allModsInLoadout = existingConfig.mods
+  const installableMods = modsInCache
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      ...defaultServerConfig,
+      ...existingConfig,
+      mods: {},
     },
   })
 
   function onlyIncludeSelectedMods(mods: { string: boolean }) {
     const correctedMods = []
     for (const [key, value] of Object.entries(mods)) {
+      // untouched checkboxes are UNDEFINED
+      // so if it's default checked, and undefined, well get fucked.
+      if (value === undefined) {
+        if (activatedMods.includes(key)) {
+          console.log(
+            `Activated mod [${key}] was undefined. This means we are going to keep it in the mod list!!!`,
+          )
+          correctedMods.push(key)
+        }
+      }
+
       if (value) {
         // this is to undo the zod workaround of converting . to *
-        let mod_name_with_dots = key.split('*').join('.')
-        correctedMods.push(mod_name_with_dots)
+        if (key.includes('*')) {
+          let mod_name_with_dots = key.split('*').join('.')
+          correctedMods.push(mod_name_with_dots)
+        } else {
+          correctedMods.push(key)
+        }
       }
     }
     return correctedMods
@@ -71,21 +86,22 @@ export default function LoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any;
       ...values,
       mods: correctedMods,
       modlist: '',
+      name: existingConfig.name,
     }
 
     setSubmitLoading(() => true)
-    const status = await createServerLoadout(loadout)
+    const status = await editServerLoadout(loadout)
     setSubmitLoading(() => false)
 
     if (status) {
-      toast(`Success! Created loadout: ${values.name}`)
+      toast(`Success! Updated loadout: ${existingConfig.name}`)
       queryClient.invalidateQueries({
-        queryKey: [QueryKey.ServerLoadouts],
+        queryKey: [`${QueryKey.GetServerLoadout}-${existingConfig.name}`],
         refetchType: 'all',
       })
       setSheetOpen(() => false)
     } else {
-      toast('Use a different loadout name.')
+      toast('Something went wrong updating loadout!')
     }
   }
 
@@ -94,38 +110,12 @@ export default function LoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any;
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-2xl underline">Loadout Name</FormLabel>
-              <FormControl>
-                <Input
-                  type="text"
-                  placeholder="name"
-                  {...field}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault()
-                    }
-                  }}
-                />
-              </FormControl>
-              <FormDescription>
-                The nickname for this server loadout. Can't contain any of the following characters:
-                \ / : * ? " {'<'} {'>'} | '
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
           name="startup"
           render={({ field }) => (
             <FormItem>
               <FormLabel className="text-2xl underline">Startup.txt</FormLabel>
               <FormControl>
-                <Textarea placeholder="Startup" {...field} rows={15} />
+                <Textarea placeholder="Startup" {...field} rows={5} />
               </FormControl>
               <FormDescription>
                 <a
@@ -147,7 +137,7 @@ export default function LoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any;
             <FormItem>
               <FormLabel className="text-2xl underline">Maplist.txt</FormLabel>
               <FormControl>
-                <Textarea placeholder="Maplist" {...field} rows={15} />
+                <Textarea placeholder="Maplist" {...field} rows={3} />
               </FormControl>
               <FormDescription>
                 <a
@@ -163,13 +153,39 @@ export default function LoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any;
           )}
         />
         <FormItem>
-          <FormLabel className="text-2xl underline">ModList</FormLabel>
-          <FormDescription>Which Mods do you want installed?</FormDescription>
+          <FormLabel className="text-2xl underline">ModList - Existing Mods</FormLabel>
+          <FormDescription>Which mods do you want enabled?</FormDescription>
         </FormItem>
-        {mods.map((nameOfMod, index) => {
+        {allModsInLoadout.map((nameOfMod, index) => {
+          return (
+            <FormField
+              control={form.control}
+              name={`mods.${nameOfMod}`}
+              key={`serverMods-${nameOfMod}`}
+              render={({ field }) => (
+                <FormItem className="flex gap-4">
+                  <FormLabel className="mt-1 text-xl">{nameOfMod}</FormLabel>
+                  <FormControl className="h-6 w-6">
+                    <Checkbox
+                      onCheckedChange={field.onChange}
+                      defaultChecked={activatedMods.includes(nameOfMod)}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+          )
+        })}
+        <FormItem>
+          <FormLabel className="text-2xl underline">ModList - Mod Cache</FormLabel>
+          <FormDescription>
+            Which new mods do you want installed from mod cache? NOTE: This will not overwrite an
+            existing mod.
+          </FormDescription>
+        </FormItem>
+        {installableMods.map((nameOfMod, index) => {
           // a dot will create an unwanted object
           let nameWithoutDots = nameOfMod.split('.').join('*')
-
           return (
             <FormField
               control={form.control}
@@ -193,7 +209,7 @@ export default function LoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any;
             <FormItem>
               <FormLabel className="text-2xl underline">Banlist.txt</FormLabel>
               <FormControl>
-                <Textarea placeholder="Banlist" {...field} rows={5} />
+                <Textarea placeholder="Banlist" {...field} rows={3} />
               </FormControl>
               <FormDescription>A list of players to prevent from joining.</FormDescription>
               <FormMessage />

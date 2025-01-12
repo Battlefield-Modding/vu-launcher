@@ -6,15 +6,20 @@ use std::{
 
 use serde::{Deserialize, Serialize};
 
-use crate::{get_user_preferences_as_struct, reg_functions, save_user_preferences};
+use crate::{
+    get_user_preferences_as_struct,
+    mods::{get_mod_names_in_loadout, install_mods_on_loadout_creation},
+    reg_functions, save_user_preferences,
+};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ServerLoadout {
-    name: String,
-    startup: String,
-    maplist: String,
-    modlist: String,
-    banlist: String,
+    pub name: String,
+    pub startup: String,
+    pub maplist: String,
+    pub modlist: String,
+    pub banlist: String,
+    pub mods: Vec<String>,
 }
 
 #[tauri::command]
@@ -74,7 +79,7 @@ fn copy_server_key(path: &PathBuf) {
 }
 
 #[tauri::command]
-pub fn set_server_loadout(loadout: ServerLoadout) -> Result<bool, String> {
+pub fn create_server_loadout(loadout: ServerLoadout) -> Result<bool, String> {
     let mut loadout_path = get_loadouts_path();
     loadout_path.push(&loadout.name);
 
@@ -109,11 +114,49 @@ pub fn set_server_loadout(loadout: ServerLoadout) -> Result<bool, String> {
     let mut banlist_path = loadout_path.clone();
     let _ = banlist_path.push("banlist.txt");
     println!("{:?}", banlist_path);
+    let mut mods_path = loadout_path.clone();
+    let _ = mods_path.push("Mods");
+
+    let _ = fs::create_dir(mods_path);
+    let mod_list = install_mods_on_loadout_creation(&loadout);
 
     let _ = write(startup_path, loadout.startup);
-    let _ = write(modlist_path, loadout.modlist);
+    let _ = write(modlist_path, mod_list.join("\n"));
     let _ = write(maplist_path, loadout.maplist);
     let _ = write(banlist_path, loadout.banlist);
+
+    println!("{:?}", loadout.mods);
+
+    Ok(true)
+}
+
+#[tauri::command]
+pub fn edit_server_loadout(loadout: ServerLoadout) -> Result<bool, String> {
+    let loadout_path = get_loadout_path(&loadout.name);
+
+    let mut startup_path = loadout_path.clone();
+    let _ = startup_path.push("startup.txt");
+    println!("{:?}", startup_path);
+    let mut maplist_path = loadout_path.clone();
+    let _ = maplist_path.push("maplist.txt");
+    println!("{:?}", maplist_path);
+    let mut modlist_path = loadout_path.clone();
+    let _ = modlist_path.push("modlist.txt");
+    println!("{:?}", modlist_path);
+    let mut banlist_path = loadout_path.clone();
+    let _ = banlist_path.push("banlist.txt");
+    println!("{:?}", banlist_path);
+    let mut mods_path = loadout_path.clone();
+    let _ = mods_path.push("Mods");
+
+    let mod_list = install_mods_on_loadout_creation(&loadout);
+
+    let _ = write(startup_path, loadout.startup);
+    let _ = write(modlist_path, mod_list.join("\n"));
+    let _ = write(maplist_path, loadout.maplist);
+    let _ = write(banlist_path, loadout.banlist);
+
+    println!("{:?}", loadout.mods);
 
     Ok(true)
 }
@@ -155,7 +198,6 @@ pub fn get_server_loadout(name: String) -> String {
     loadout_path.push(&name);
 
     loadout_path.push("Server");
-    let server_path = loadout_path.clone();
     loadout_path.push("Admin");
 
     let mut startup_path = loadout_path.clone();
@@ -200,12 +242,14 @@ pub fn get_server_loadout(name: String) -> String {
         }
     };
 
+    let mods = get_mod_names_in_loadout(name.clone());
     let my_loadout = ServerLoadout {
         name,
         banlist: banlist_string,
         modlist: modlist_string,
         maplist: maplist_string,
         startup: startup_string,
+        mods,
     };
 
     serde_json::to_string(&my_loadout).unwrap()
@@ -223,7 +267,17 @@ pub fn delete_server_loadout(name: String) -> bool {
         Ok(folder_exists) => {
             if folder_exists {
                 println!("Removing dir: {:?}", loadout_path);
-                return fs::remove_dir_all(&loadout_path).is_ok();
+                match fs::remove_dir_all(&loadout_path) {
+                    Ok(_) => {
+                        println!("Successfully deleted loadout {}", &name);
+                        return true;
+                    }
+                    Err(err) => {
+                        println!("Failed to delete loadout {}", &name);
+                        println!("{:?}", err);
+                        return false;
+                    }
+                };
             }
             return false;
         }
@@ -292,4 +346,45 @@ pub fn get_loadouts_path() -> PathBuf {
     loadout_path.push(install_path);
     loadout_path.push("loadouts");
     return loadout_path;
+}
+
+fn get_loadout_path(name: &String) -> PathBuf {
+    let mut loadout_path: PathBuf = get_loadouts_path();
+    loadout_path.push(&name);
+
+    loadout_path.push("Server");
+    loadout_path.push("Admin");
+    return loadout_path;
+}
+
+#[tauri::command]
+pub fn import_loadout_from_path(name: String, path: String) -> bool {
+    let mut target_path = get_loadouts_path();
+    target_path.push(name);
+    target_path.push("Server");
+
+    if !path.ends_with("Server") {
+        println!("This isn't server???");
+        return false;
+    }
+
+    if !target_path.exists() {
+        match fs::create_dir_all(&target_path) {
+            Ok(_) => match dircpy::copy_dir(path, target_path) {
+                Ok(_) => {
+                    println!("Successfully copied over loadout!");
+                    return true;
+                }
+                Err(err) => {
+                    println!("{:?}", err);
+                    return false;
+                }
+            },
+            Err(err) => {
+                println!("{:?}", err);
+                return false;
+            }
+        }
+    }
+    return false;
 }
