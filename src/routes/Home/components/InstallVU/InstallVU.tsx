@@ -1,14 +1,15 @@
 import { setVUInstallLocation } from '@/api'
+import { Button } from '@/components/ui/button'
 import { QueryKey, rust_fns } from '@/config/config'
 import { invoke } from '@tauri-apps/api/core'
 import { open } from '@tauri-apps/plugin-dialog'
+import { Download, Search } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
 import { listen } from '@tauri-apps/api/event'
+import { Progress } from '@/components/ui/progress'
 import { useQueryClient } from '@tanstack/react-query'
-import InstallProgress from './InstallProgress'
-import VUNotInstalled from './VUNotInstalled'
 
 interface TauriEmitEvent {
   payload: number
@@ -72,8 +73,6 @@ function InstallVU() {
       console.log('VU Installation Completed')
       toast('VU Installation Completed')
       queryClient.invalidateQueries({ queryKey: [QueryKey.IsVuInstalled], refetchType: 'all' })
-      // getGameInstallationPath();
-      // checkConfigExists();
     })
 
     listen('tauri://update-status', (event: LauncherUpdateStatusEvent) => {
@@ -149,18 +148,58 @@ function InstallVU() {
   return (
     <div className="m-auto flex max-h-[500px] max-w-[500px] flex-col justify-between gap-8 rounded-md bg-primary p-8">
       {!gameDownloadUpdateInstalling && (
-        <VUNotInstalled
-          handleDownloadVU={handleDownloadVU}
-          handleSetVUInstallLocation={handleSetVUInstallLocation}
-        />
+        <>
+          <div className="flex flex-1 justify-center gap-4 align-middle text-3xl leading-9 text-white">
+            <h1>VU not found!</h1>
+          </div>
+          <div className="flex flex-1 justify-center gap-4 align-middle text-xl leading-9 text-white">
+            <h1 className="flex-1">VU already installed?</h1>
+            <Button variant={'secondary'} onClick={handleSetVUInstallLocation}>
+              <Search /> Find VU
+            </Button>
+          </div>
+
+          <div className="flex flex-1 justify-center gap-4 align-middle text-xl leading-9">
+            <h1 className="flex-1 text-white">Download VU</h1>
+            <Button variant={'secondary'} className="" onClick={handleDownloadVU}>
+              <Download size={'10px'} />
+              <p>Choose Install Location</p>
+            </Button>
+          </div>
+        </>
       )}
 
       {gameDownloadUpdateInstalling && (
-        <InstallProgress
-          gameDownloadUpdateExtracting={gameDownloadUpdateExtracting}
-          gameDownloadUpdateExtractingFilesRemaining={gameDownloadUpdateExtractingFilesRemaining}
-          gameDownloadUpdateProgress={gameDownloadUpdateProgress}
-        />
+        <>
+          <div className="flex flex-1 justify-center gap-4 align-middle text-3xl leading-9 text-white">
+            <h1>Downloading VU</h1>
+          </div>
+
+          <div className="flex w-full flex-col rounded-md text-white">
+            {!gameDownloadUpdateExtracting ? (
+              <div className="mb-2 flex h-6">
+                <Progress value={gameDownloadUpdateProgress} className="h-full w-full flex-1" />
+              </div>
+            ) : (
+              <div className="mb-2 flex h-6">
+                <Progress value={gameDownloadUpdateProgress} className="h-full w-full flex-1" />
+              </div>
+            )}
+            {!gameDownloadUpdateExtracting ? (
+              <div className="flex justify-end">
+                {/* <p className="noselect mr-2 text-right text-sm">{gameDownloadUpdateSpeed} MB/s</p> */}
+
+                <p className="noselect mr-2 text-right text-sm">
+                  {gameDownloadUpdateProgress.toFixed(2)} %
+                </p>
+              </div>
+            ) : (
+              <p className="noselect mr-2 text-right text-sm font-light">
+                Extracting Files ({gameDownloadUpdateExtractingFilesRemaining} left)
+              </p>
+            )}
+          </div>
+        </>
       )}
     </div>
   )

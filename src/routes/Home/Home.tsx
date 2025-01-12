@@ -34,7 +34,7 @@ export default function Home() {
     )
   }
 
-  const vuInstalled = !data
+  const vuInstalled = data
 
   if (vuInstalled) {
     return (
