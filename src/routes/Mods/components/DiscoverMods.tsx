@@ -16,7 +16,7 @@ function DiscoverMods() {
           </Button>
         </a>
 
-        <a href="https://community.veniceunleashed.net/c/modding/releases/13">
+        <a href="https://community.veniceunleashed.net/c/modding/releases/13" target="_blank">
           <Button variant={'secondary'} className="w-full flex-1 p-8 text-2xl">
             <Globe />
             VU Forums <img src={VUIcon} className="w-8 rounded bg-black p-1 pb-2 pt-2" />
