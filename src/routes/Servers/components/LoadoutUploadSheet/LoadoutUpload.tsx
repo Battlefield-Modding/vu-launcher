@@ -55,7 +55,7 @@ export default function LoadoutUpload({ setPath }: { setPath: (state: string) =>
   async function handleClick() {
     const installPath = await open({
       multiple: false,
-      directory: false,
+      directory: true,
     })
     if (installPath) {
       if (installPath.includes('Server')) {
