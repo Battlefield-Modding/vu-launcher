@@ -20,7 +20,7 @@ import LoadoutUpload from './LoadoutUpload'
 import { useQueryClient } from '@tanstack/react-query'
 import { QueryKey } from '@/config/config'
 import clsx from 'clsx'
-import LoaderComponent from '@/components/app-loader'
+import LoaderComponent from '@/components/LoaderComponent'
 
 const formSchema = z.object({
   name: z

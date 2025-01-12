@@ -10,7 +10,7 @@ import { QueryKey, STALE } from '@/config/config'
 import { useQuery } from '@tanstack/react-query'
 import { Loader } from 'lucide-react'
 
-export default function AppSelectUser() {
+export default function VUAccountSelect() {
   const { isPending, isError, data, error } = useQuery({
     queryKey: [QueryKey.UserList],
     queryFn: getaccounts,

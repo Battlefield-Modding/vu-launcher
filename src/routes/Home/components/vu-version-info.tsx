@@ -2,7 +2,7 @@ import { fetchVUData, fetchVUDataDummy } from '@/api'
 import { STALE } from '@/config/config'
 import { useQuery } from '@tanstack/react-query'
 import { Loader } from 'lucide-react'
-import { Button } from './ui/button'
+import { Button } from '@/components/ui/button'
 
 function VuVersionInfo() {
   const { isPending, isError, data, error } = useQuery({

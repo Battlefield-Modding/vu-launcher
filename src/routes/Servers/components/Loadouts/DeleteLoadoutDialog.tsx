@@ -1,5 +1,5 @@
 import { deleteServerLoadout } from '@/api'
-import LoaderComponent from '@/components/app-loader'
+import LoaderComponent from '@/components/LoaderComponent'
 import {
   Dialog,
   DialogClose,

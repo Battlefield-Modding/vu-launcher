@@ -7,12 +7,12 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet'
 import { User } from 'lucide-react'
-import PlayerCredentialsForm from './credentials-form'
+import PlayerCredentialsForm from './PlayerCredentialsForm'
 import { useEffect, useState } from 'react'
 import { doesCredentialsExist } from '@/api'
 import clsx from 'clsx'
 
-export default function CredentialsSheet() {
+export default function PlayerCredentialsSheet() {
   const [credsExist, setCredsExist] = useState(false)
 
   async function checkCreds() {

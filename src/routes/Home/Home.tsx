@@ -5,9 +5,9 @@ import { useQuery } from '@tanstack/react-query'
 import { Loader, Play } from 'lucide-react'
 import { toast } from 'sonner'
 import { getCurrentWindow } from '@tauri-apps/api/window'
-import CredentialsSheet from '@/components/credentials-sheet'
-import AppSelectUser from '@/components/app-select-user'
-import InstallVU from '@/components/InstallVU'
+import CredentialsSheet from './components/PlayerCredentialsSheet/PlayerCredentialsSheet'
+import VUAccountSelect from './components/VUAccountSelect'
+import InstallVU from './components/InstallVU/InstallVU'
 
 export default function Home() {
   const { isPending, isError, data, error } = useQuery({
@@ -34,7 +34,7 @@ export default function Home() {
     )
   }
 
-  const vuInstalled = data
+  const vuInstalled = !data
 
   if (vuInstalled) {
     return (
@@ -43,7 +43,7 @@ export default function Home() {
           <div className="flex flex-1 flex-wrap gap-1 rounded-md bg-secondary p-2">
             <CredentialsSheet />
 
-            <AppSelectUser />
+            <VUAccountSelect />
           </div>
 
           <Button
