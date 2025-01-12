@@ -95,7 +95,7 @@ function Loadout({ name }: { name: string }) {
     <div className="max-w-96 rounded-md border border-black bg-black p-4">
       <h1 className="mb-8 flex justify-between gap-2 text-xl">
         {name.length >= 15 ? `${name.substring(0, 15)}...` : name}
-        <div className="flex gap-2">
+        <div className="flex gap-4">
           <ManageModsSheet loadout={data} />
           <EditLoadoutSheet existingConfig={data} />
         </div>

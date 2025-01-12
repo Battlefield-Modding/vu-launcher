@@ -3,7 +3,6 @@ import { Loadout } from '@/config/config'
 import { Book } from 'lucide-react'
 import { useState } from 'react'
 import Mod from './Mod'
-import clsx from 'clsx'
 
 export default function ManageModsSheet({ loadout }: { loadout: Loadout }) {
   const [sheetOpen, setSheetOpen] = useState(false)
@@ -11,12 +10,7 @@ export default function ManageModsSheet({ loadout }: { loadout: Loadout }) {
   return (
     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
       <SheetTrigger>
-        <div
-          className={clsx(
-            'flex gap-2 rounded-md p-2 text-xl leading-6 text-secondary hover:bg-gray-600/80',
-            'bg-gray-600',
-          )}
-        >
+        <div className="flex gap-2 rounded-md bg-secondary p-2 text-xl leading-6 text-primary hover:bg-secondary/80">
           <Book />
         </div>
       </SheetTrigger>
