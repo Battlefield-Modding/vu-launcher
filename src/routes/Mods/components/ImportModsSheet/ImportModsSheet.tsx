@@ -7,7 +7,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet'
 import ModUpload from './ModUpload'
-import { Container, CupSoda, Download, Folder, Hotel, PaintBucket, Upload } from 'lucide-react'
+import { Upload } from 'lucide-react'
 import { useState } from 'react'
 
 export default function ImportModsSheet() {
