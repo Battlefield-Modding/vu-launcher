@@ -64,30 +64,33 @@ export default function ManageModsSheet() {
           Manage Mods <Book />
         </div>
       </SheetTrigger>
-      <SheetContent>
+      <SheetContent className="overflow-y-scroll">
         <SheetHeader></SheetHeader>
 
-        <div className="flex h-full w-full flex-wrap gap-16">
+        <div className="flex flex-col gap-8">
           {data.map((loadout, outerIndex) => {
             if (loadout.mods?.length > 0) {
               return (
                 <div
                   className={clsx(
-                    'max-w-64 rounded-md',
+                    'rounded-md',
                     loadout.name === 'mod-cache' ? 'bg-red-300 p-4' : 'bg-gray-300 p-4',
                   )}
                   key={`mod-deletion-container_${loadout.name}`}
                 >
-                  <SheetTitle className="underline">
-                    Mods inside <code>{loadout.name}</code>
+                  <SheetTitle>
+                    <p>Mods inside</p>
+                    <code className="underline">{loadout.name}</code>
                   </SheetTitle>
-                  {loadout.mods.map((modName, modIndex) => (
-                    <Mod
-                      modName={modName}
-                      loadoutName={loadout.name}
-                      key={`${modName}-${outerIndex}-${modIndex}`}
-                    />
-                  ))}
+                  <div className="flex flex-wrap gap-4">
+                    {loadout.mods.map((modName, modIndex) => (
+                      <Mod
+                        modName={modName}
+                        loadoutName={loadout.name}
+                        key={`${modName}-${outerIndex}-${modIndex}`}
+                      />
+                    ))}
+                  </div>
                 </div>
               )
             }
