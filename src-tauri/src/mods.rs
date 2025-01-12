@@ -42,7 +42,7 @@ pub fn get_mod_cache_path() -> PathBuf {
     return loadout_path;
 }
 
-fn make_folder_names_same_as_mod_json_names(loadout_name: &String) -> Vec<String> {
+fn make_folder_names_same_as_mod_json_names(loadout_name: &String) -> io::Result<Vec<String>> {
     let mods_path = get_mod_path_for_loadout(&loadout_name);
     let dir_reader = fs::read_dir(&mods_path);
     let mut mod_list: Vec<String> = Vec::new();
@@ -123,7 +123,7 @@ fn make_folder_names_same_as_mod_json_names(loadout_name: &String) -> Vec<String
             println!("{:?}", err);
         }
     };
-    mod_list
+    Ok(mod_list)
 }
 
 fn get_admin_path_for_loadout(name: &String) -> PathBuf {
@@ -279,8 +279,14 @@ pub fn install_mods_on_loadout_creation(loadout: &ServerLoadout) -> Vec<String> 
         }
     }
 
-    let mut newly_installed_mod_names = make_folder_names_same_as_mod_json_names(&loadout.name);
-    mod_names.append(&mut newly_installed_mod_names);
+    match make_folder_names_same_as_mod_json_names(&loadout.name) {
+        Ok(mut info) => {
+            mod_names.append(&mut info);
+        }
+        Err(err) => {
+            println!("{:?}", err);
+        }
+    }
     mod_names
 }
 
