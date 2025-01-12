@@ -1,9 +1,8 @@
 use std::{
     env,
-    ffi::OsStr,
     fs::{self, read_to_string},
     io::{self},
-    path::{self, Path, PathBuf},
+    path::{Path, PathBuf},
     process::Command,
 };
 
@@ -27,12 +26,6 @@ pub struct ModJson {
     pub HasVeniceEXT: bool,
 }
 
-#[derive(Debug)]
-pub struct ModFolderInfo {
-    original_mod_name: String,
-    mod_json: ModJson,
-}
-
 pub fn get_mod_cache_path() -> PathBuf {
     let install_path = match reg_functions::get_install_path_registry() {
         Ok(val) => val,
@@ -49,14 +42,6 @@ pub fn get_mod_cache_path() -> PathBuf {
     return loadout_path;
 }
 
-// fn overwrite_extracted_folder_name_with_mod_json_name(
-//     loadout_name: String,
-//     extracted_folder_name: String,
-// ) {
-//     let info = get_mod_json_data(loadout_name, mod_folder_name);
-//     println!("{:?}", info);
-// }
-
 fn make_folder_names_same_as_mod_json_names(loadout_name: &String) -> Vec<String> {
     let mods_path = get_mod_path_for_loadout(&loadout_name);
     let dir_reader = fs::read_dir(&mods_path);
@@ -66,7 +51,6 @@ fn make_folder_names_same_as_mod_json_names(loadout_name: &String) -> Vec<String
             reader.for_each(|item| {
                 match item {
                     Ok(info) => {
-                        // fs::rename(info.file_name(), info.file_name());
                         let mut inner_mod_json_path = info.path();
                         let original_mod_path = inner_mod_json_path.clone();
                         let original_mod_name =
@@ -142,31 +126,6 @@ fn make_folder_names_same_as_mod_json_names(loadout_name: &String) -> Vec<String
     mod_list
 }
 
-fn update_modlist(loadout_name: &String, mod_list: Vec<String>) {
-    let mut modlist_path = get_admin_path_for_loadout(loadout_name);
-    modlist_path.push("modlist.txt");
-
-    let string_to_write = mod_list.join("\n");
-    match fs::write(modlist_path, string_to_write) {
-        Ok(_) => {
-            println!("Successfully update Modlist.txt")
-        }
-        Err(err) => {
-            println!("{:?}", err);
-        }
-    }
-}
-
-// fn get_mod_json_data(loadout_name: String, mod_folder_name: String) -> ModJson {
-//     let mut mods_path = get_mod_path_for_loadout(&loadout_name);
-//     mods_path.push(&mod_folder_name);
-//     mods_path.push("mod.json");
-
-//     let info = fs::read_to_string(mods_path)?;
-//     let info_for_rust = serde_json::from_str(&info)?;
-//     info_for_rust
-// }
-
 fn get_admin_path_for_loadout(name: &String) -> PathBuf {
     let mut admin_path = get_loadouts_path();
     admin_path.push(&name);
@@ -176,17 +135,13 @@ fn get_admin_path_for_loadout(name: &String) -> PathBuf {
 }
 
 fn get_mod_path_for_loadout(name: &String) -> PathBuf {
-    let mut loadout_path = get_loadouts_path();
-    loadout_path.push(&name);
-    loadout_path.push("Server");
-    loadout_path.push("Admin");
+    let mut loadout_path = get_admin_path_for_loadout(name);
     loadout_path.push("Mods");
     loadout_path
 }
 
 #[tauri::command]
 pub fn get_mod_names_in_cache() -> Vec<String> {
-    // this function will return content from all server loadouts
     let mod_cache_path = get_mod_cache_path();
     let dir_reader = fs::read_dir(&mod_cache_path);
     let mut mod_names: Vec<String> = Vec::new();
@@ -221,7 +176,6 @@ pub fn get_mod_names_in_cache() -> Vec<String> {
 
 #[tauri::command]
 pub fn import_mod_to_cache(mod_location: String) -> bool {
-    // import mod to cache
     let mut target_path = get_mod_cache_path();
 
     let mod_location_as_path = PathBuf::from(mod_location);
@@ -272,7 +226,6 @@ pub fn remove_mod_from_cache(mod_name: String) -> bool {
 
 #[tauri::command]
 pub fn get_mod_names_in_loadout(name: String) -> Vec<String> {
-    // get mod names for loadout
     let path = get_mod_path_for_loadout(&name);
     let dir_reader = fs::read_dir(&path);
     let mut mod_names: Vec<String> = Vec::new();
@@ -460,20 +413,6 @@ fn remove_mod_from_modlist(loadout_name: &String, mod_name: &String) -> bool {
             return false;
         }
     };
-}
-
-pub fn update_mod_within_loadout() {
-    // update mod within loadout
-    // if mod doesn't already exist, install to loadout
-    // if mod exists, extract to same place and overwrite existing files
-}
-
-pub fn open_explorer_in_mod_folder() {
-    // open explorer in mod folder
-}
-
-pub fn open_mod_within_loadot_in_vscode() {
-    // open vscode within loadout within mod
 }
 
 // *********************************
