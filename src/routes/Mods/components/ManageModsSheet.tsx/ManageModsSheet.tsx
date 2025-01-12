@@ -1,15 +1,8 @@
 import { getLoadoutNames, getModNamesInCache, getModNamesInLoadout } from '@/api'
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet'
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { QueryKey, STALE } from '@/config/config'
 import { useQuery } from '@tanstack/react-query'
-import { Loader, Trash } from 'lucide-react'
+import { Book, Loader } from 'lucide-react'
 import { useState } from 'react'
 import Mod from './Mod'
 import clsx from 'clsx'
@@ -67,8 +60,8 @@ export default function ManageModsSheet() {
   return (
     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
       <SheetTrigger>
-        <div className="flex gap-1 rounded-md bg-red-600 p-4 text-white hover:bg-red-600/80">
-          Delete Mods <Trash />
+        <div className="flex gap-1 rounded-md bg-gray-600 p-4 text-white hover:bg-gray-600/80">
+          Manage Mods <Book />
         </div>
       </SheetTrigger>
       <SheetContent>

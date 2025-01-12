@@ -14,7 +14,7 @@ function Mod({ modName, loadoutName }: { modName: string; loadoutName: string })
   }
 
   return (
-    <div className="mt-4 flex flex-col gap-8 rounded-md bg-primary p-2 text-white">
+    <div className="mt-4 flex flex-col gap-8 rounded-md bg-primary p-4 text-white">
       <h1>{modName.length >= 20 ? `${modName.substring(0, 20)}...` : modName}</h1>
       <div className="flex justify-end">
         {modName.includes('.zip') ? (

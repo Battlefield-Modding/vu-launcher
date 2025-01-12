@@ -1,8 +1,10 @@
 use std::{
     env,
+    ffi::OsStr,
     fs::{self, read_to_string},
     io::{self},
     path::{self, Path, PathBuf},
+    process::Command,
 };
 
 use serde::{Deserialize, Serialize};
@@ -367,6 +369,73 @@ pub fn remove_mod_from_loadout(name: String, modname: String) -> bool {
             return false;
         }
     }
+}
+
+#[tauri::command]
+pub fn open_mod_with_vscode(name: String, modname: String) -> bool {
+    let mut path_to_mod = get_mod_path_for_loadout(&name);
+    path_to_mod.push(modname);
+
+    let path_to_workspace = match get_vs_code_workspace_file(path_to_mod.clone()) {
+        Ok(info) => info,
+        Err(_) => path_to_mod.clone(),
+    };
+
+    if path_to_mod.eq(&path_to_workspace) {
+        match &path_to_mod.to_str() {
+            Some(path) => {
+                println!("Attempting to open in vscode");
+                let mut args = Vec::new();
+                args.push("/C");
+                args.push("code");
+                args.push(path);
+
+                Command::new("cmd")
+                    .args(args)
+                    .spawn()
+                    .expect("failed to execute process");
+
+                return true;
+            }
+            None => return false,
+        };
+    } else {
+        match path_to_workspace.to_str() {
+            Some(final_path) => {
+                println!("Attempting to VSCode Workspace");
+                let mut args = Vec::new();
+                args.push("/C");
+                args.push("code");
+                args.push(final_path);
+
+                Command::new("cmd")
+                    .args(args)
+                    .spawn()
+                    .expect("failed to execute process");
+
+                return true;
+            }
+            None => return false,
+        }
+    }
+}
+
+fn get_vs_code_workspace_file(mod_path: PathBuf) -> io::Result<PathBuf> {
+    for entry in fs::read_dir(&mod_path.as_path())? {
+        let entry = entry?;
+        if entry.path().is_file() {
+            match entry.path().extension() {
+                Some(name) => {
+                    if name == "code-workspace" {
+                        return Ok(entry.path());
+                    }
+                }
+                None => {}
+            }
+        }
+    }
+
+    return Ok(mod_path);
 }
 
 fn remove_mod_from_modlist(loadout_name: &String, mod_name: &String) -> bool {

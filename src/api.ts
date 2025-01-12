@@ -156,3 +156,8 @@ export async function removeModFromLoadout(name:string, modname:string): Promise
   const status = await invoke(rust_fns.remove_mod_from_loadout, {name, modname}) as boolean
   return status
 }
+
+export async function openModWithVsCode({name, modname}: {name: string, modname:string}): Promise<boolean>{
+  const status = await invoke(rust_fns.open_mod_with_vscode, {name, modname}) as boolean
+  return status
+}
