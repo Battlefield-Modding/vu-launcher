@@ -45,10 +45,18 @@ struct Account {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
+struct Server {
+    nickname: String,
+    guid: String,
+    password: String,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
 struct UserPreferences {
     is_sidebar_enabled: bool,
     venice_unleashed_shortcut_location: String,
     accounts: Vec<Account>,
+    servers: Vec<Server>,
     server_guid: String,
 }
 
@@ -82,6 +90,7 @@ fn set_default_preferences() {
         is_sidebar_enabled: false,
         venice_unleashed_shortcut_location: path_to_vu_client,
         accounts: Vec::new(),
+        servers: Vec::new(),
         server_guid: String::from(""),
     };
     save_user_preferences(sample_preferences);
@@ -218,7 +227,7 @@ async fn get_vu_data() -> String {
 }
 
 #[tauri::command]
-async fn play_vu(server_password: String, users: Vec<usize>) -> bool {
+async fn play_vu(account_index: usize, server_index: usize) -> bool {
     let preferences_prematch = get_user_preferences_as_struct();
     let preferences = match preferences_prematch {
         Ok(info) => info,
@@ -231,20 +240,21 @@ async fn play_vu(server_password: String, users: Vec<usize>) -> bool {
 
     let mut server_join_string = String::from("vu://join/");
 
-    match preferences.server_guid.len() {
+    match preferences.servers.len() {
         0 => {
             println!("No server GUID supplied.")
         }
         _ => {
-            server_join_string.push_str(&preferences.server_guid);
+            let server = &preferences.servers[server_index];
+            server_join_string.push_str(&server.guid);
             server_join_string.push_str("/");
 
-            match server_password.len() {
+            match &server.password.len() {
                 0 => {
                     println!("No server password supplied")
                 }
                 _ => {
-                    server_join_string.push_str(&server_password);
+                    server_join_string.push_str(&server.password);
                 }
             };
         }
@@ -259,41 +269,22 @@ async fn play_vu(server_password: String, users: Vec<usize>) -> bool {
         }
     };
 
-    match users.len() {
+    match preferences.accounts.len() {
         0 => {
-            match preferences.accounts.len() {
-                0 => {
-                    println!("No user credentials found.")
-                }
-                _ => {
-                    args.push("-username");
-                    args.push(&preferences.accounts[0].username);
-                    args.push("-password");
-                    args.push(&preferences.accounts[0].password);
-
-                    Command::new("cmd")
-                        .args(args)
-                        .spawn()
-                        .expect("failed to execute process");
-                }
-            };
+            println!("No user credentials found.")
         }
         _ => {
-            for index in users {
-                let mut copied_args: Vec<&str> = args.clone();
-
-                copied_args.push("-username");
-                copied_args.push(&preferences.accounts[index].username);
-                copied_args.push("-password");
-                copied_args.push(&preferences.accounts[index].password);
-
-                Command::new("cmd")
-                    .args(copied_args)
-                    .spawn()
-                    .expect("failed to execute process");
-            }
+            args.push("-username");
+            args.push(&preferences.accounts[account_index].username);
+            args.push("-password");
+            args.push(&preferences.accounts[account_index].password);
         }
     };
+
+    Command::new("cmd")
+        .args(args)
+        .spawn()
+        .expect("failed to execute process");
 
     return true;
 }

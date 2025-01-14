@@ -1,4 +1,4 @@
-import { getaccounts, playVUOnLocalServer, startServerLoadout } from '@/api'
+import { getUsers, playVUOnLocalServer, startServerLoadout } from '@/api'
 import { QueryKey, STALE } from '@/config/config'
 import { useQuery } from '@tanstack/react-query'
 import { Loader, Server, UserCheck } from 'lucide-react'
@@ -25,7 +25,7 @@ function ChooseAccountSheet({
 
   const { isPending, isError, data, error } = useQuery({
     queryKey: [QueryKey.UserList],
-    queryFn: getaccounts,
+    queryFn: getUsers,
     staleTime: STALE.never,
   })
 

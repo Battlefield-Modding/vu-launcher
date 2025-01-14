@@ -1,5 +1,5 @@
 import {invoke} from "@tauri-apps/api/core"
-import { Loadout, rust_fns, UserCredential } from "./config/config"
+import { Loadout, rust_fns, SavedServer, UserCredential, UserPreferences } from "./config/config"
 
 export async function firstTimeSetup(){
   await invoke(rust_fns.first_time_setup)
@@ -14,12 +14,9 @@ export async function saveUserCredentials({username, password}: {username: strin
   return status
 }
 
-export async function playVU(serverPassword: string, users?: number[]){
-  if (users) {
-    invoke(rust_fns.play_vu, {serverPassword, users})
-  } else {
-    invoke(rust_fns.play_vu, {serverPassword, users: []})
-  }
+export async function playVU({accountIndex, serverIndex}: {accountIndex: number, serverIndex: number}): Promise<boolean> {
+  const status = await invoke(rust_fns.play_vu, {accountIndex, serverIndex}) as boolean
+  return status
 }
 
 export async function playVUOnLocalServer(serverPassword: string, users?: number[]){
@@ -54,7 +51,7 @@ export async function getUserPreferences(){
   return info
 }
 
-export async function getaccounts(): Promise<UserCredential[]>{
+export async function getUsers(): Promise<UserCredential[]>{
   const {accounts} = await getUserPreferences()
   return accounts
 }
@@ -167,5 +164,53 @@ export async function removeModFromLoadout(name:string, modname:string): Promise
 
 export async function openModWithVsCode({name, modname}: {name: string, modname:string}): Promise<boolean>{
   const status = await invoke(rust_fns.open_mod_with_vscode, {name, modname}) as boolean
+  return status
+}
+
+export async function deleteUserCredentials({username}: {username: string}){
+  const preferences = JSON.parse(await invoke(rust_fns.get_user_preferences)) as UserPreferences
+  const accounts = preferences.accounts ?? [];
+  const filteredAccounts = accounts.filter((item) => {
+    if(item.username !== username){
+      return item
+    }
+  })
+  const newPreferences = {...preferences, accounts: filteredAccounts}
+  const status = await invoke(rust_fns.set_user_preferences, {newPreferences})
+  return status
+}
+
+export async function getAllServers(): Promise<SavedServer[]>{
+  const {servers} = await getUserPreferences()
+  return servers
+}
+
+export async function getServersAndAccounts(): Promise<{servers:SavedServer[], accounts: UserCredential[]}> {
+  const {servers, accounts} = await getUserPreferences();
+  return {servers, accounts}
+}
+
+export async function deleteServer({server}: {server: SavedServer}): Promise<boolean>{
+  const preferences = JSON.parse(await invoke(rust_fns.get_user_preferences)) as UserPreferences
+  const servers = preferences.servers ?? [];
+
+  const filteredServers = servers.filter((item) => {
+    if(item.guid !== server.guid){
+      return item
+    }
+  })
+
+  const newPreferences = {...preferences, servers: filteredServers}
+  const status = await invoke(rust_fns.set_user_preferences, {newPreferences}) as boolean
+  
+  return status
+}
+
+export async function addServer({nickname, guid, password}: {nickname: string, guid: string, password: string}): Promise<boolean>{
+  const preferences = JSON.parse(await invoke(rust_fns.get_user_preferences));
+  const servers = preferences.servers ?? []
+  servers.push({nickname, guid, password})
+  const newPreferences = {...preferences, servers}
+  const status = await invoke(rust_fns.set_user_preferences, {newPreferences}) as boolean
   return status
 }

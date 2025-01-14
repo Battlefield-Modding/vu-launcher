@@ -50,7 +50,9 @@ export enum QueryKey {
   ServerKeyExists = 'ServerKeyExists',
   GetServerLoadout = "GetServerLoadout",
   GetModNamesInCache = "GetModNamesInCache",
-  CredentialsExist = "CredentialsExist"
+  CredentialsExist = "CredentialsExist",
+  ServerList = "ServerList",
+  PlayVUInformation = "PlayVUInformation"
 }
 
 export enum routes {
@@ -79,4 +81,17 @@ export type DragDropEventTauri = {
     }
   },
   id: number
+}
+
+export type UserPreferences = {
+  is_sidebar_enabled: boolean,
+  venice_unleashed_shortcut_location: string,
+  accounts: UserCredential[],
+  servers: SavedServer[],
+  server_guid: string,
+}
+
+export type SavedServer = {
+  nickname: string,
+  guid: string
 }

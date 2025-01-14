@@ -1,13 +1,11 @@
-import { playVU, vuIsInstalled } from '@/api'
-import { Button } from '@/components/ui/button'
+import { vuIsInstalled } from '@/api'
 import { QueryKey, STALE } from '@/config/config'
 import { useQuery } from '@tanstack/react-query'
-import { Loader, Play } from 'lucide-react'
-import { toast } from 'sonner'
-import { getCurrentWindow } from '@tauri-apps/api/window'
-import CredentialsSheet from './components/PlayerCredentialsSheet/PlayerCredentialsSheet'
-import VUAccountSelect from './components/VUAccountSelect'
+import { Loader } from 'lucide-react'
 import InstallVU from './components/InstallVU/InstallVU'
+import PlayVUForm from './components/PlayVU/PlayVUForm'
+import PlayerCredentialsSheet from './components/PlayerCredentialsSheet/PlayerCredentialsSheet'
+import ServerSheet from './components/ServerSheet/ServerSheet'
 
 export default function Home() {
   const { isPending, isError, data, error } = useQuery({
@@ -39,27 +37,12 @@ export default function Home() {
   if (vuInstalled) {
     return (
       <div className="m-auto flex min-h-[100vh] flex-col justify-center">
-        <div className="m-auto flex max-h-96 max-w-96 flex-col justify-between gap-8 rounded-md bg-primary p-8">
-          <div className="flex flex-1 flex-wrap gap-1 rounded-md bg-secondary p-2">
-            <CredentialsSheet />
-
-            <VUAccountSelect />
+        <div className="m-auto flex max-w-96 flex-col justify-between gap-8 rounded-md bg-primary p-8 text-white">
+          <div className="flex justify-between">
+            <PlayerCredentialsSheet />
+            <ServerSheet />
           </div>
-
-          <Button
-            variant={'constructive'}
-            className="p-8 text-2xl"
-            onClick={() => {
-              toast('Starting VU...')
-              playVU('')
-              setTimeout(() => {
-                getCurrentWindow().minimize()
-              }, 1500)
-            }}
-          >
-            <Play />
-            PLAY
-          </Button>
+          <PlayVUForm />
         </div>
       </div>
     )
