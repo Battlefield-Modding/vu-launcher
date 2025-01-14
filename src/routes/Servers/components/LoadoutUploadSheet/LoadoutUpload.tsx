@@ -59,11 +59,7 @@ export default function LoadoutUpload({ setPath }: { setPath: (state: string) =>
     })
     if (installPath) {
       if (installPath.includes('Server')) {
-        const confirmed = await confirm('Copying Server Loadout from ' + installPath + '?')
-
-        if (confirmed) {
-          setPath(installPath)
-        }
+        setPath(installPath)
       } else {
         toast('Incorrect directory. Please choose the Server folder which contains Admin/mods/...')
       }
