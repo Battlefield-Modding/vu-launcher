@@ -23,13 +23,7 @@ const formSchema = z.object({
   password: z.string().min(2).max(50),
 })
 
-export default function PlayerCredentialsForm({
-  setSheetOpen,
-  checkCreds,
-}: {
-  setSheetOpen: any
-  checkCreds: any
-}) {
+export default function PlayerCredentialsForm({ setSheetOpen }: { setSheetOpen: any }) {
   const queryClient = useQueryClient()
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -45,7 +39,6 @@ export default function PlayerCredentialsForm({
 
     if (status) {
       toast('Updated VU Credentials Successfully!')
-      checkCreds()
       queryClient.invalidateQueries({ queryKey: [QueryKey.UserList], refetchType: 'all' })
       setSheetOpen(() => false)
     } else {

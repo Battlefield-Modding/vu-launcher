@@ -6,25 +6,43 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
-import { User } from 'lucide-react'
+import { Loader, User } from 'lucide-react'
 import PlayerCredentialsForm from './PlayerCredentialsForm'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { doesCredentialsExist } from '@/api'
 import clsx from 'clsx'
+import { useQuery } from '@tanstack/react-query'
+import { QueryKey, STALE } from '@/config/config'
 
 export default function PlayerCredentialsSheet() {
-  const [credsExist, setCredsExist] = useState(false)
+  const [sheetOpen, setSheetOpen] = useState(false)
 
-  async function checkCreds() {
-    const result = await doesCredentialsExist()
-    setCredsExist(result)
+  const { isPending, isError, data, error } = useQuery({
+    queryKey: [QueryKey.CredentialsExist],
+    queryFn: doesCredentialsExist,
+    staleTime: STALE.never,
+  })
+
+  if (isPending) {
+    return (
+      <div>
+        <h1>LOADING Mods</h1>
+        <Loader />
+      </div>
+    )
   }
 
-  useEffect(() => {
-    checkCreds()
-  }, [])
+  if (isError) {
+    return (
+      <div className="rounded-md bg-red-600 pl-2 pr-2 text-xl leading-9 text-white">
+        <h1>ERROR: No Mods Found</h1>
+        <p>{error.message}</p>
+      </div>
+    )
+  }
 
-  const [sheetOpen, setSheetOpen] = useState(false)
+  const credsExist = data
+
   return (
     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
       <SheetTrigger>
@@ -35,7 +53,7 @@ export default function PlayerCredentialsSheet() {
             credsExist && 'bg-green-600 hover:bg-green-600/80',
           )}
         >
-          {credsExist ? 'AutoLogin' : 'Click to Login'}
+          {credsExist ? 'Add User' : 'Click to Login'}
           <User />
         </div>
       </SheetTrigger>
@@ -43,7 +61,7 @@ export default function PlayerCredentialsSheet() {
         <SheetHeader>
           <SheetTitle>Save VU Credentials</SheetTitle>
           <SheetDescription>
-            <p>No account? Sign up here: </p>
+            No account? Sign up here:
             <a
               className="text-blue-800 underline"
               href="https://veniceunleashed.net/signup"
@@ -54,7 +72,7 @@ export default function PlayerCredentialsSheet() {
           </SheetDescription>
         </SheetHeader>
         <br />
-        <PlayerCredentialsForm setSheetOpen={setSheetOpen} checkCreds={checkCreds} />
+        <PlayerCredentialsForm setSheetOpen={setSheetOpen} />
       </SheetContent>
     </Sheet>
   )

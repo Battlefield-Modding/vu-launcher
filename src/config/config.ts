@@ -50,6 +50,7 @@ export enum QueryKey {
   ServerKeyExists = 'ServerKeyExists',
   GetServerLoadout = "GetServerLoadout",
   GetModNamesInCache = "GetModNamesInCache",
+  CredentialsExist = "CredentialsExist"
 }
 
 export enum routes {
