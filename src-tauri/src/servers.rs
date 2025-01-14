@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
     get_user_preferences_as_struct,
-    mods::{get_mod_names_in_loadout, install_mods_on_loadout_creation},
+    mods::{get_mod_names_in_loadout, install_mods, make_folder_names_same_as_mod_json_names},
     reg_functions, save_user_preferences,
 };
 
@@ -118,7 +118,7 @@ pub fn create_server_loadout(loadout: ServerLoadout) -> Result<bool, String> {
     let _ = mods_path.push("Mods");
 
     let _ = fs::create_dir(mods_path);
-    let mod_list = install_mods_on_loadout_creation(&loadout);
+    let mod_list = install_mods(&loadout);
 
     let _ = write(startup_path, loadout.startup);
     let _ = write(modlist_path, mod_list.join("\n"));
@@ -149,7 +149,7 @@ pub fn edit_server_loadout(loadout: ServerLoadout) -> Result<bool, String> {
     let mut mods_path = loadout_path.clone();
     let _ = mods_path.push("Mods");
 
-    let mod_list = install_mods_on_loadout_creation(&loadout);
+    let mod_list = install_mods(&loadout);
 
     let _ = write(startup_path, loadout.startup);
     let _ = write(modlist_path, mod_list.join("\n"));
@@ -360,7 +360,7 @@ fn get_loadout_path(name: &String) -> PathBuf {
 #[tauri::command]
 pub fn import_loadout_from_path(name: String, path: String) -> bool {
     let mut target_path = get_loadouts_path();
-    target_path.push(name);
+    target_path.push(&name);
     target_path.push("Server");
 
     if !path.ends_with("Server") {
@@ -373,6 +373,14 @@ pub fn import_loadout_from_path(name: String, path: String) -> bool {
             Ok(_) => match dircpy::copy_dir(path, target_path) {
                 Ok(_) => {
                     println!("Successfully copied over loadout!");
+                    match make_folder_names_same_as_mod_json_names(&name) {
+                        Ok(_) => {
+                            println!("Successfully renamed folders based on modjson, upon loadout import.");
+                        }
+                        Err(err) => {
+                            println!("{:?}", err);
+                        }
+                    }
                     return true;
                 }
                 Err(err) => {

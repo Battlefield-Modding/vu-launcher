@@ -18,9 +18,9 @@ use crate::{
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ModJson {
     pub Name: String,
-    pub Authors: Vec<String>,
-    pub Description: String,
-    pub URL: String,
+    pub Authors: Option<Vec<String>>,
+    pub Description: Option<String>,
+    pub URL: Option<String>,
     pub Version: String,
     pub HasWebUI: bool,
     pub HasVeniceEXT: bool,
@@ -42,9 +42,10 @@ pub fn get_mod_cache_path() -> PathBuf {
     return loadout_path;
 }
 
-fn make_folder_names_same_as_mod_json_names(loadout_name: &String) -> io::Result<Vec<String>> {
+pub fn make_folder_names_same_as_mod_json_names(loadout_name: &String) -> io::Result<Vec<String>> {
     let mods_path = get_mod_path_for_loadout(&loadout_name);
     let mut mod_list: Vec<String> = Vec::new();
+
     fs::read_dir(&mods_path)?.for_each(|item| {
         match item {
             Ok(info) => {
@@ -64,7 +65,7 @@ fn make_folder_names_same_as_mod_json_names(loadout_name: &String) -> io::Result
                     let mod_json_contents_string = match fs::read_to_string(mod_json_path) {
                         Ok(text) => text,
                         Err(err) => {
-                            println!("{:?}", err);
+                            println!("Failed to read modJSON for mod: {} due to reason: \n {:?}", &mod_folder_name, err);
                             return;
                         }
                     };
@@ -85,16 +86,42 @@ fn make_folder_names_same_as_mod_json_names(loadout_name: &String) -> io::Result
                                             &mod_json.Name
                                         );
                                     }
-                                    Err(err) => {
-                                        println!("Failed to rename this mod.");
-                                        println!("{:?}", err);
+                                    Err(_) => {
+                                        println!("Failed to rename {}. Attempting to store inside MOD_DUMP", &mod_json.Name);
 
-                                        match fs::remove_dir_all(&original_mod_path) {
-                                            Ok(_) => {
-                                                println!("Successfully deleted unrenamable folder")
+                                        let mut mod_dump_folder_path = mods_path.clone();
+                                        mod_dump_folder_path.push("FAILED_TO_RENAME");
+
+                                        if !mod_dump_folder_path.exists(){
+                                            match fs::create_dir(&mod_dump_folder_path) {
+                                                Ok(_) => {
+                                                    println!("Created MOD_DUMP folder path");
+                                                },
+                                                Err(err) => {
+                                                    println!("{:?}", err);
+                                                    return;
+                                                }
+                                                
                                             }
-                                            Err(inner_err) => {
-                                                println!("{:?}", inner_err)
+                                        }
+                                        
+                                        mod_dump_folder_path.push(&mod_folder_name);
+
+                                        match fs::rename(&original_mod_path, mod_dump_folder_path) {
+                                            Ok(_) => {
+                                                println!("Successfully moved {} into FAILED_TO_RENAME folder.", &mod_folder_name);
+                                            }
+                                            Err(_) => {
+                                                println!("Error. Could not move {} into FAILED_TO_RENAME folder. DELETING!", &mod_folder_name);
+
+                                                match fs::remove_dir_all(&original_mod_path){
+                                                    Ok(_) => {
+                                                        println!("Deleted unrenamable mod: {}", &mod_folder_name)
+                                                    }, 
+                                                    Err(err) => {
+                                                        println!("{:?}", err);
+                                                    }
+                                                };
                                             }
                                         };
                                     }
@@ -102,7 +129,7 @@ fn make_folder_names_same_as_mod_json_names(loadout_name: &String) -> io::Result
                             }
                         }
                         Err(err) => {
-                            println!("{:?}", err);
+                            println!("Mod JSON failed to convert to struct for {:?} due to reason: \n {:?}", info.path(), err);
                         }
                     }
                 } else {
@@ -257,7 +284,7 @@ pub fn get_mod_names_in_loadout(name: String) -> Vec<String> {
     mod_names
 }
 
-pub fn install_mods_on_loadout_creation(loadout: &ServerLoadout) -> Vec<String> {
+pub fn install_mods(loadout: &ServerLoadout) -> Vec<String> {
     let path_to_mods_folder = get_mod_path_for_loadout(&loadout.name);
     let mods = &loadout.mods;
 
