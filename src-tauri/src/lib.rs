@@ -299,6 +299,87 @@ async fn play_vu(server_password: String, users: Vec<usize>) -> bool {
 }
 
 #[tauri::command]
+async fn play_vu_on_local_server(server_password: String, users: Vec<usize>) -> bool {
+    let preferences_prematch = get_user_preferences_as_struct();
+    let preferences = match preferences_prematch {
+        Ok(info) => info,
+        Err(_) => return false,
+    };
+
+    let mut args: Vec<&str> = Vec::new();
+    args.push("/C");
+    args.push(&preferences.venice_unleashed_shortcut_location);
+
+    let mut server_join_string = String::from("vu://join/");
+
+    match preferences.server_guid.len() {
+        0 => {
+            println!("No server GUID supplied.")
+        }
+        _ => {
+            server_join_string.push_str(&preferences.server_guid);
+            server_join_string.push_str("/");
+
+            match server_password.len() {
+                0 => {
+                    println!("No server password supplied")
+                }
+                _ => {
+                    server_join_string.push_str(&server_password);
+                }
+            };
+        }
+    };
+
+    match server_join_string.len() {
+        10 => {
+            println!("Server join string is empty.")
+        }
+        _ => {
+            args.push(&server_join_string);
+        }
+    };
+
+    match users.len() {
+        0 => {
+            match preferences.accounts.len() {
+                0 => {
+                    println!("No user credentials found.")
+                }
+                _ => {
+                    args.push("-username");
+                    args.push(&preferences.accounts[0].username);
+                    args.push("-password");
+                    args.push(&preferences.accounts[0].password);
+
+                    Command::new("cmd")
+                        .args(args)
+                        .spawn()
+                        .expect("failed to execute process");
+                }
+            };
+        }
+        _ => {
+            for index in users {
+                let mut copied_args: Vec<&str> = args.clone();
+
+                copied_args.push("-username");
+                copied_args.push(&preferences.accounts[index].username);
+                copied_args.push("-password");
+                copied_args.push(&preferences.accounts[index].password);
+
+                Command::new("cmd")
+                    .args(copied_args)
+                    .spawn()
+                    .expect("failed to execute process");
+            }
+        }
+    };
+
+    return true;
+}
+
+#[tauri::command]
 fn open_explorer_for_loadout(loadout_name: String) {
     let mut path_to_loadout = get_loadouts_path();
     path_to_loadout.push(loadout_name);
@@ -351,7 +432,8 @@ pub fn run() {
             import_loadout_from_path,
             get_mod_names_in_loadout,
             remove_mod_from_loadout,
-            open_mod_with_vscode
+            open_mod_with_vscode,
+            play_vu_on_local_server
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

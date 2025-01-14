@@ -22,6 +22,14 @@ export async function playVU(serverPassword: string, users?: number[]){
   }
 }
 
+export async function playVUOnLocalServer(serverPassword: string, users?: number[]){
+  if (users) {
+    invoke(rust_fns.play_vu_on_local_server, {serverPassword, users})
+  } else {
+    invoke(rust_fns.play_vu_on_local_server, {serverPassword, users: []})
+  }
+}
+
 function isValidCredential(cred: string){
   if (typeof cred === "string"){
     if (cred.length >= 2) {

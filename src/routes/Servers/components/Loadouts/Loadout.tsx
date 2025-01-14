@@ -1,6 +1,11 @@
 import EditLoadoutSheet from '../EditLoadoutSheet/EditLoadoutSheet'
 import { Folder, Loader, Server, User } from 'lucide-react'
-import { getServerLoadout, openExplorerAtLoadout, playVU, startServerLoadout } from '@/api'
+import {
+  getServerLoadout,
+  openExplorerAtLoadout,
+  playVUOnLocalServer,
+  startServerLoadout,
+} from '@/api'
 import { toast } from 'sonner'
 import { useQuery } from '@tanstack/react-query'
 import { QueryKey, STALE } from '@/config/config'
@@ -70,7 +75,7 @@ function Loadout({ name }: { name: string }) {
     if (status) {
       toast('Started VU Server. Starting Client in 1 second...')
       setTimeout(() => {
-        playVU(getServerPassword())
+        playVUOnLocalServer(getServerPassword())
       }, 1000)
     } else {
       toast(`Failed to start loadout: ${name}`)

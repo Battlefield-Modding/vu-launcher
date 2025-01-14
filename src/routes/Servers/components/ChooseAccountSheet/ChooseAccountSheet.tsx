@@ -1,4 +1,4 @@
-import { getaccounts, playVU, startServerLoadout } from '@/api'
+import { getaccounts, playVUOnLocalServer, startServerLoadout } from '@/api'
 import { QueryKey, STALE } from '@/config/config'
 import { useQuery } from '@tanstack/react-query'
 import { Loader, Server, UserCheck } from 'lucide-react'
@@ -52,7 +52,7 @@ function ChooseAccountSheet({
     if (status) {
       toast('Started VU Server. Starting Client in 1 second...')
       setTimeout(() => {
-        playVU(getServerPassword(), users)
+        playVUOnLocalServer(getServerPassword(), users)
       }, 1000)
     } else {
       toast(`Failed to start loadout: ${name}`)
