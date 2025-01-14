@@ -56,7 +56,7 @@ export default function PlayerCredentialsForm({ setSheetOpen }: { setSheetOpen: 
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input type="password" placeholder="username" {...field} />
+                <Input type="text" placeholder="username" {...field} autoFocus />
               </FormControl>
               <FormDescription>
                 Your VU Username. This will be stored in plaintext in a local JSON file.
