@@ -33,14 +33,14 @@ pub fn get_mod_cache_path() -> PathBuf {
         Err(err) => err.to_string(),
     };
 
-    let mut loadout_path = PathBuf::new();
-    loadout_path.push(install_path);
-    loadout_path.push("mod-cache");
+    let mut mod_cache_path = PathBuf::new();
+    mod_cache_path.push(install_path);
+    mod_cache_path.push("mod-cache");
 
-    if !&loadout_path.exists() {
-        fs::create_dir(&loadout_path);
+    if !&mod_cache_path.exists() {
+        fs::create_dir(&mod_cache_path);
     }
-    return loadout_path;
+    return mod_cache_path;
 }
 
 pub fn make_folder_names_same_as_mod_json_names(loadout_name: &String) -> io::Result<Vec<String>> {
