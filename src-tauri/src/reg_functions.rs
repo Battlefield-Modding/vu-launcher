@@ -19,13 +19,14 @@ pub fn set_settings_json_path_registry() {
 }
 
 pub fn get_install_path_registry() -> io::Result<String> {
-    let install_path = get_reg_value("InstallDir");
+    // TODO: make the .exe installer make installDir/installPath regkey
+    let install_path = get_reg_value("");
     install_path
 }
 
 fn get_reg_value(keyname: &str) -> io::Result<String> {
     let hklm = RegKey::predef(HKEY_CURRENT_USER);
-    let path = r"SOFTWARE\vu-launcher";
+    let path = r"SOFTWARE\vu-launcher\vu-launcher";
 
     let key = hklm.open_subkey(path)?;
     let reg_value = key.get_value(keyname)?;
@@ -34,7 +35,7 @@ fn get_reg_value(keyname: &str) -> io::Result<String> {
 
 fn set_reg_value(keyname: &str, keyvalue: &OsString) -> io::Result<bool> {
     let hklm = RegKey::predef(HKEY_CURRENT_USER);
-    let path = r"SOFTWARE\vu-launcher";
+    let path = r"SOFTWARE\vu-launcher\vu-launcher";
 
     let (key, _disp) = hklm.create_subkey(&path)?;
 
