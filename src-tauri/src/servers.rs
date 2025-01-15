@@ -187,7 +187,10 @@ pub fn get_loadout_names() -> Vec<String> {
             });
         }
         Err(err) => {
-            println!("{:?}", err);
+            println!(
+                "Failed to get loadout names at path {:?} due to reason: \n{:?}",
+                &loadout_path, err
+            );
         }
     };
     loadout_dirs
@@ -344,10 +347,15 @@ pub fn get_loadouts_path() -> PathBuf {
         Err(err) => err.to_string(),
     };
 
-    let mut loadout_path = PathBuf::new();
-    loadout_path.push(install_path);
-    loadout_path.push("loadouts");
-    return loadout_path;
+    let mut loadouts_path = PathBuf::new();
+    loadouts_path.push(install_path);
+    loadouts_path.push("loadouts");
+
+    if !loadouts_path.exists() {
+        fs::create_dir(&loadouts_path);
+    }
+
+    return loadouts_path;
 }
 
 fn get_loadout_path(name: &String) -> PathBuf {
