@@ -30,7 +30,12 @@ function LoadoutContainer() {
   }
 
   if (!data) {
-    return <></>
+    return (
+      <div className="rounded-md bg-destructive pl-2 pr-2 text-xl leading-9">
+        <h1>No Loadouts Found</h1>
+        <p>Create a loadout and it will appear here.</p>
+      </div>
+    )
   }
   return (
     <div className="m- flex w-full flex-wrap justify-center gap-4 p-8 text-white">

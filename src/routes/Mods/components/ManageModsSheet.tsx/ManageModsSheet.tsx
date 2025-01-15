@@ -54,7 +54,12 @@ export default function ManageModsSheet() {
   }
 
   if (!data) {
-    return <></>
+    return (
+      <div className="rounded-md bg-secondary pl-2 pr-2 text-xl leading-9 text-primary">
+        <h1>No mods found</h1>
+        <p>Once you download some mods they will appear here?</p>
+      </div>
+    )
   }
 
   return (
@@ -65,7 +70,9 @@ export default function ManageModsSheet() {
         </div>
       </SheetTrigger>
       <SheetContent className="overflow-y-scroll">
-        <SheetHeader></SheetHeader>
+        <SheetHeader>
+          <SheetTitle>Installed Mods Appear Here</SheetTitle>
+        </SheetHeader>
 
         <div className="flex flex-col gap-8">
           {data.map((loadout, outerIndex) => {

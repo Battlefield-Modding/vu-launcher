@@ -42,7 +42,12 @@ function Loadout({ name }: { name: string }) {
   }
 
   if (!data) {
-    return <></>
+    return (
+      <div className="rounded-md bg-secondary pl-2 pr-2 text-xl leading-9 text-black">
+        <h1>No information found on loadout</h1>
+        <p>This should never happen?</p>
+      </div>
+    )
   }
 
   function getServerPassword() {
