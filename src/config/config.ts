@@ -52,7 +52,8 @@ export enum QueryKey {
   GetModNamesInCache = "GetModNamesInCache",
   CredentialsExist = "CredentialsExist",
   ServerList = "ServerList",
-  PlayVUInformation = "PlayVUInformation"
+  PlayVUInformation = "PlayVUInformation",
+  UserPreferences = "UserPreferences"
 }
 
 export enum routes {

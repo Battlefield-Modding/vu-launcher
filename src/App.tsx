@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router'
 import { SidebarProvider, SidebarTrigger } from './components/ui/sidebar'
 import { AppSidebar } from './components/AppSidebar'
 import Home from './routes/Home/Home'
-import LauncherSettings from './routes/LauncherSettings'
+import Settings from './routes/Settings/Settings'
 import { Toaster } from 'sonner'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useEffect } from 'react'
@@ -30,7 +30,7 @@ function App() {
               <Route path={routes.HOME} element={<Home />} />
               <Route path={routes.SERVERS} element={<Servers />} />
               <Route path={routes.MODS} element={<Mods />} />
-              <Route path={routes.SETTINGS} element={<LauncherSettings />} />
+              <Route path={routes.SETTINGS} element={<Settings />} />
             </Routes>
           </main>
           <Toaster />

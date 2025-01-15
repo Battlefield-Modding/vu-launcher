@@ -46,8 +46,8 @@ export async function doesCredentialsExist(): Promise<boolean>{
   return false
 }
 
-export async function getUserPreferences(){
-  const info = JSON.parse(await invoke(rust_fns.get_user_preferences))
+export async function getUserPreferences(): Promise<UserPreferences>{
+  const info = JSON.parse(await invoke(rust_fns.get_user_preferences)) as UserPreferences
   return info
 }
 
