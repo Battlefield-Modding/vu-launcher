@@ -19,24 +19,13 @@ pub fn set_settings_json_path_registry() {
 }
 
 pub fn get_install_path_registry() -> io::Result<String> {
-    let install_path = get_reg_value("InstallPath");
+    let install_path = get_reg_value("InstallDir");
     install_path
-}
-
-pub fn set_install_path_registry() {
-    let doc_dir = dirs_next::document_dir();
-    let mut path_to_documents = match doc_dir {
-        Some(info) => info,
-        None => return,
-    };
-
-    path_to_documents.push("venice_unleashed_launcher");
-    set_reg_value("InstallPath", path_to_documents.as_mut_os_string());
 }
 
 fn get_reg_value(keyname: &str) -> io::Result<String> {
     let hklm = RegKey::predef(HKEY_CURRENT_USER);
-    let path = r"SOFTWARE\VeniceUnleashedLauncher";
+    let path = r"SOFTWARE\vu-launcher";
 
     let key = hklm.open_subkey(path)?;
     let reg_value = key.get_value(keyname)?;
@@ -45,7 +34,7 @@ fn get_reg_value(keyname: &str) -> io::Result<String> {
 
 fn set_reg_value(keyname: &str, keyvalue: &OsString) -> io::Result<bool> {
     let hklm = RegKey::predef(HKEY_CURRENT_USER);
-    let path = r"SOFTWARE\VeniceUnleashedLauncher";
+    let path = r"SOFTWARE\vu-launcher";
 
     let (key, _disp) = hklm.create_subkey(&path)?;
 

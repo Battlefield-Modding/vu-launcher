@@ -18,7 +18,7 @@ use dirs_next;
 mod reg_functions;
 use reg_functions::{
     get_install_path_registry, get_reg_vu_install_location, get_settings_json_path_registry,
-    set_install_path_registry, set_settings_json_path_registry, set_vu_install_location_registry,
+    set_settings_json_path_registry, set_vu_install_location_registry,
 };
 
 mod web;
@@ -63,21 +63,6 @@ struct UserPreferences {
     server_guid: String,
 }
 
-fn config_folder_exists() -> bool {
-    let doc_dir = dirs_next::document_dir();
-    let mut path_to_documents = match doc_dir {
-        Some(info) => info,
-        None => return false,
-    };
-
-    path_to_documents.push("venice_unleashed_launcher");
-    if path_to_documents.exists() {
-        return true;
-    } else {
-        return false;
-    }
-}
-
 fn set_default_preferences() {
     let path_prematch = get_reg_vu_install_location();
     let path = match path_prematch {
@@ -113,28 +98,17 @@ fn save_user_preferences(preferences: UserPreferences) -> io::Result<bool> {
     }
 }
 
-fn make_config_folder() {
-    let doc_dir = dirs_next::document_dir();
-    let mut path_to_documents = match doc_dir {
-        Some(info) => info,
-        None => return,
-    };
-
-    path_to_documents.push("venice_unleashed_launcher");
-    let new_path = fs::create_dir(path_to_documents);
-    match new_path {
-        Ok(_) => println!("Successfully made the new directory"),
-        Err(error) => println!("{:?}", error),
-    }
-}
-
 #[tauri::command]
 fn first_time_setup() {
-    if !config_folder_exists() {
-        make_config_folder();
-        set_install_path_registry();
-        set_settings_json_path_registry();
-        set_default_preferences()
+    match get_settings_json_path_registry() {
+        Ok(_) => {
+            println!("Settings path already exists in registry.")
+        }
+        Err(_) => {
+            println!("Settings path does not exist in registry. Doing first time setup now...");
+            set_settings_json_path_registry();
+            set_default_preferences()
+        }
     }
 }
 
