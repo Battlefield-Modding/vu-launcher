@@ -24,7 +24,7 @@ import LoaderComponent from '@/components/LoaderComponent'
 const formSchema = z.object({
   startup: z.string().min(10).max(5000),
   maplist: z.string().min(10).max(5000),
-  mods: z.any(),
+  mods: z.any().optional(),
   banlist: z.string().min(0).max(5000),
 })
 
@@ -54,25 +54,27 @@ export default function EditLoadoutForm({
 
   function onlyIncludeSelectedMods(mods: { string: boolean }) {
     const correctedMods = []
-    for (const [key, value] of Object.entries(mods)) {
-      // untouched checkboxes are UNDEFINED
-      // so if it's default checked, and undefined, well get fucked.
-      if (value === undefined) {
-        if (activatedMods.includes(key)) {
-          console.log(
-            `Activated mod [${key}] was undefined. This means we are going to keep it in the mod list!!!`,
-          )
-          correctedMods.push(key)
+    if (mods) {
+      for (const [key, value] of Object.entries(mods)) {
+        // untouched checkboxes are UNDEFINED
+        // so if it's default checked, and undefined, well get fucked.
+        if (value === undefined) {
+          if (activatedMods.includes(key)) {
+            console.log(
+              `Activated mod [${key}] was undefined. This means we are going to keep it in the mod list!!!`,
+            )
+            correctedMods.push(key)
+          }
         }
-      }
 
-      if (value) {
-        // this is to undo the zod workaround of converting . to *
-        if (key.includes('*')) {
-          let mod_name_with_dots = key.split('*').join('.')
-          correctedMods.push(mod_name_with_dots)
-        } else {
-          correctedMods.push(key)
+        if (value) {
+          // this is to undo the zod workaround of converting . to *
+          if (key.includes('*')) {
+            let mod_name_with_dots = key.split('*').join('.')
+            correctedMods.push(mod_name_with_dots)
+          } else {
+            correctedMods.push(key)
+          }
         }
       }
     }

@@ -37,7 +37,7 @@ const formSchema = z.object({
     ),
   startup: z.string().min(10).max(5000),
   maplist: z.string().min(10).max(5000),
-  mods: z.any(),
+  mods: z.any().optional(),
   banlist: z.string().min(0).max(5000),
 })
 
@@ -54,11 +54,13 @@ export default function LoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any;
 
   function onlyIncludeSelectedMods(mods: { string: boolean }) {
     const correctedMods = []
-    for (const [key, value] of Object.entries(mods)) {
-      if (value) {
-        // this is to undo the zod workaround of converting . to *
-        let mod_name_with_dots = key.split('*').join('.')
-        correctedMods.push(mod_name_with_dots)
+    if (mods) {
+      for (const [key, value] of Object.entries(mods)) {
+        if (value) {
+          // this is to undo the zod workaround of converting . to *
+          let mod_name_with_dots = key.split('*').join('.')
+          correctedMods.push(mod_name_with_dots)
+        }
       }
     }
     return correctedMods
