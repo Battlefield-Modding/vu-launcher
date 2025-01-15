@@ -4,6 +4,7 @@ use std::{
     io::{self},
     path::{Path, PathBuf},
     process::Command,
+    os::windows::process::CommandExt,
 };
 
 use serde::{Deserialize, Serialize};
@@ -11,7 +12,7 @@ use serde_json::Error;
 
 use crate::{
     reg_functions,
-    servers::{get_loadouts_path, ServerLoadout},
+    servers::{get_loadouts_path, ServerLoadout}, CREATE_NO_WINDOW,
 };
 
 #[allow(non_snake_case)]
@@ -369,6 +370,7 @@ pub fn open_mod_with_vscode(name: String, modname: String) -> bool {
 
                 Command::new("cmd")
                     .args(args)
+                    .creation_flags(CREATE_NO_WINDOW)
                     .spawn()
                     .expect("failed to execute process");
 
@@ -387,6 +389,7 @@ pub fn open_mod_with_vscode(name: String, modname: String) -> bool {
 
                 Command::new("cmd")
                     .args(args)
+                    .creation_flags(CREATE_NO_WINDOW)
                     .spawn()
                     .expect("failed to execute process");
 

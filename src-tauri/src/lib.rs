@@ -1,5 +1,6 @@
 use std::{
     fs, io,
+    os::windows::process::CommandExt,
     path::{self, Path, PathBuf},
     process::Command,
 };
@@ -37,6 +38,8 @@ use mods::{
 };
 
 mod speed_calc;
+
+pub const CREATE_NO_WINDOW: u32 = 0x08000000;
 
 #[derive(Serialize, Deserialize, Debug)]
 struct Account {
@@ -288,6 +291,7 @@ async fn play_vu(account_index: usize, server_index: usize) -> bool {
 
     Command::new("cmd")
         .args(args)
+        .creation_flags(CREATE_NO_WINDOW)
         .spawn()
         .expect("failed to execute process");
 
@@ -350,6 +354,7 @@ async fn play_vu_on_local_server(server_password: String, users: Vec<usize>) -> 
 
                     Command::new("cmd")
                         .args(args)
+                        .creation_flags(CREATE_NO_WINDOW)
                         .spawn()
                         .expect("failed to execute process");
                 }
@@ -366,6 +371,7 @@ async fn play_vu_on_local_server(server_password: String, users: Vec<usize>) -> 
 
                 Command::new("cmd")
                     .args(copied_args)
+                    .creation_flags(CREATE_NO_WINDOW)
                     .spawn()
                     .expect("failed to execute process");
             }
@@ -384,6 +390,7 @@ fn open_explorer_for_loadout(loadout_name: String) {
 
     Command::new("explorer")
         .args(&path_to_loadout.to_str())
+        .creation_flags(CREATE_NO_WINDOW)
         .spawn()
         .expect("failed to execute process");
 }

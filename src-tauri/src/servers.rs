@@ -1,5 +1,6 @@
 use std::{
     fs::{self, read_to_string, write},
+    os::windows::process::CommandExt,
     path::PathBuf,
     process::Command,
 };
@@ -9,7 +10,7 @@ use serde::{Deserialize, Serialize};
 use crate::{
     get_user_preferences_as_struct,
     mods::{get_mod_names_in_loadout, install_mods, make_folder_names_same_as_mod_json_names},
-    reg_functions, save_user_preferences,
+    reg_functions, save_user_preferences, CREATE_NO_WINDOW,
 };
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -309,6 +310,7 @@ pub async fn start_server_loadout(name: String) -> bool {
             "-serverInstancePath",
             loadout_path_as_str,
         ])
+        .creation_flags(CREATE_NO_WINDOW)
         .spawn()
         .expect("failed to execute process");
 
