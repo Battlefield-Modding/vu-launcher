@@ -57,7 +57,7 @@ function InstallVU() {
       console.log('Download speed: ' + value)
     })
 
-    listen('download-extracting', (event: TauriEmitEvent) => {
+    listen('download-extracting', () => {
       setGameDownloadUpdateExtracting(true)
       console.log('Files Extracting.')
     })
@@ -67,7 +67,7 @@ function InstallVU() {
       console.log('Files remaining:', event.payload)
     })
 
-    listen('install-complete', (event) => {
+    listen('install-complete', () => {
       setGameDownloadUpdateInstalling(false)
       setGameDownloadUpdateExtracting(false)
       console.log('VU Installation Completed')
@@ -99,6 +99,7 @@ function InstallVU() {
 
         setGameDownloadUpdateProgress(progress)
         setGameDownloadUpdateSpeed(parseFloat(downloadSpeed.toFixed(2)))
+        console.log(gameDownloadUpdateSpeed)
 
         lastTime = currentTime
         lastDownloaded = downloadedChunkLength

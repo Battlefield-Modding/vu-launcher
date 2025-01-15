@@ -1,4 +1,4 @@
-import { deleteUserCredentials, removeModFromLoadout } from '@/api'
+import { deleteUserCredentials } from '@/api'
 import {
   Dialog,
   DialogClose,

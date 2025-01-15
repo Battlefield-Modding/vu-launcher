@@ -166,7 +166,7 @@ export default function LoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any;
           <FormLabel className="text-2xl underline">ModList</FormLabel>
           <FormDescription>Which Mods do you want installed?</FormDescription>
         </FormItem>
-        {mods.map((nameOfMod, index) => {
+        {mods.map((nameOfMod) => {
           // a dot will create an unwanted object
           let nameWithoutDots = nameOfMod.split('.').join('*')
 

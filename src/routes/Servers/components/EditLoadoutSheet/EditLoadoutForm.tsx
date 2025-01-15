@@ -156,7 +156,7 @@ export default function EditLoadoutForm({
           <FormLabel className="text-2xl underline">ModList - Existing Mods</FormLabel>
           <FormDescription>Which mods do you want enabled?</FormDescription>
         </FormItem>
-        {allModsInLoadout.map((nameOfMod, index) => {
+        {allModsInLoadout.map((nameOfMod) => {
           return (
             <FormField
               control={form.control}
@@ -183,7 +183,7 @@ export default function EditLoadoutForm({
             existing mod.
           </FormDescription>
         </FormItem>
-        {installableMods.map((nameOfMod, index) => {
+        {installableMods.map((nameOfMod) => {
           // a dot will create an unwanted object
           let nameWithoutDots = nameOfMod.split('.').join('*')
           return (

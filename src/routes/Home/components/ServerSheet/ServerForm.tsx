@@ -37,7 +37,13 @@ export default function ServerForm({ setSheetOpen }: { setSheetOpen: any }) {
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const status = await addServer(values)
+    let temp = {
+      nickname: values.nickname,
+      guid: values.guid,
+      password: values.password ?? '',
+    }
+
+    const status = await addServer(temp)
 
     if (status) {
       toast(`Success! Added ${values.nickname} to auto-join servers!`)

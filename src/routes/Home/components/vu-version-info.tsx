@@ -1,4 +1,4 @@
-import { fetchVUData, fetchVUDataDummy } from '@/api'
+import { fetchVUDataDummy } from '@/api'
 import { STALE } from '@/config/config'
 import { useQuery } from '@tanstack/react-query'
 import { Loader } from 'lucide-react'
@@ -20,11 +20,14 @@ function VuVersionInfo() {
   }
 
   if (isError) {
-    ;<div className="m-auto flex max-h-[500px] max-w-[500px] flex-col justify-between gap-8 rounded-md bg-primary p-8">
-      <div className="flex flex-1 justify-center gap-4 align-middle text-3xl leading-9 text-white">
-        <h1>Could not load VU version info!</h1>
+    return (
+      <div className="m-auto flex max-h-[500px] max-w-[500px] flex-col justify-between gap-8 rounded-md bg-primary p-8">
+        <div className="flex flex-1 justify-center gap-4 align-middle text-3xl leading-9 text-white">
+          <h1>Could not load VU version info!</h1>
+          <p>{error.message}</p>
+        </div>
       </div>
-    </div>
+    )
   }
 
   return (

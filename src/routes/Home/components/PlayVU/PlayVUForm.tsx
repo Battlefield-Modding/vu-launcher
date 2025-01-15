@@ -20,9 +20,9 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { toast } from 'sonner'
-import { QueryKey, SavedServer, STALE, UserCredential } from '@/config/config'
+import { QueryKey, STALE } from '@/config/config'
 import { useQuery } from '@tanstack/react-query'
-import { getAllServers, getServersAndAccounts, playVU } from '@/api'
+import { getServersAndAccounts, playVU } from '@/api'
 import { Loader, Play } from 'lucide-react'
 import DeleteVUCredentialDialog from './DeleteVUCredentialDialog'
 import DeleteVUServerDialog from './DeleteVUServerDialog'
@@ -57,6 +57,7 @@ export default function PlayVUForm() {
     return (
       <div className="rounded-md bg-red-600 pl-2 pr-2 text-xl leading-9 text-white">
         <h1>ERROR: No accounts/Servers Found</h1>
+        <p>{error.message}</p>
       </div>
     )
   }
