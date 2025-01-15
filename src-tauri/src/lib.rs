@@ -68,7 +68,7 @@ fn set_default_preferences() {
     let path = match path_prematch {
         Ok(info) => info,
         Err(_) => {
-            println!("Could not VU install location. Aborting creation of Preferences File.");
+            println!("Could not find VU install location. Aborting creation of Preferences File.");
             return;
         }
     };
@@ -81,33 +81,52 @@ fn set_default_preferences() {
         servers: Vec::new(),
         server_guid: String::from(""),
     };
-    save_user_preferences(sample_preferences);
+    match save_user_preferences(sample_preferences) {
+        Ok(_) => {
+            println!("Successfully saved user preferences!");
+        }
+        Err(err) => {
+            println!("Failed to save user preferences due to reason:\n{:?}", err);
+        }
+    };
 }
 
-fn save_user_preferences(preferences: UserPreferences) -> io::Result<bool> {
+fn save_user_preferences(preferences: UserPreferences) -> io::Result<()> {
     let str = serde_json::to_string(&preferences);
 
     let path_string = get_settings_json_path_registry()?;
     let new_path = Path::new(&path_string);
 
-    let result = fs::write(new_path, str.unwrap());
+    let result = fs::write(new_path, str.unwrap())?;
 
-    match result {
-        Ok(_) => return Ok(true),
-        Err(error) => return Err(error),
-    }
+    Ok(result)
+}
+
+fn settings_json_exists() -> bool {
+    match get_install_path_registry() {
+        Ok(info) => {
+            let mut path_to_settings_json = PathBuf::from(info);
+            path_to_settings_json.push("settings.json");
+            if path_to_settings_json.exists() {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        Err(_) => return false,
+    };
 }
 
 #[tauri::command]
 fn first_time_setup() {
-    match get_settings_json_path_registry() {
-        Ok(_) => {
-            println!("Settings path already exists in registry.")
+    match settings_json_exists() {
+        true => {
+            println!("Settings JSON already exists.")
         }
-        Err(_) => {
-            println!("Settings path does not exist in registry. Doing first time setup now...");
+        false => {
+            println!("Settings JSON does not exist. Doing first time setup now...");
             set_settings_json_path_registry();
-            set_default_preferences()
+            set_default_preferences();
         }
     }
 }
