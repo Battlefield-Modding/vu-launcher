@@ -73,11 +73,7 @@ export default function PlayVUForm() {
       accountIndex = parseInt(formData.accountIndex)
     }
 
-    if (formData.serverIndex === undefined) {
-      if (data && data.servers.length > 0) {
-        serverIndex = 0
-      }
-    } else {
+    if (formData.serverIndex !== undefined) {
       serverIndex = parseInt(formData.serverIndex)
     }
 
@@ -141,14 +137,14 @@ export default function PlayVUForm() {
           name="serverIndex"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Server</FormLabel>
+              <FormLabel>Auto-Join Server</FormLabel>
               <Select onValueChange={field.onChange}>
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder={data.servers[0]?.nickname ?? 'None'} />
+                    <SelectValue placeholder="None" />
                   </SelectTrigger>
                 </FormControl>
-                <SelectContent defaultValue={data.servers[0]?.nickname ?? 'None'}>
+                <SelectContent defaultValue="None">
                   {data.servers.map((x, index) => {
                     return (
                       <div className="flex" key={x.nickname}>

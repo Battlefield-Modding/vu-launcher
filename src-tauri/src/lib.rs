@@ -244,20 +244,25 @@ async fn play_vu(account_index: usize, server_index: usize) -> bool {
         0 => {
             println!("No server GUID supplied.")
         }
-        _ => {
-            let server = &preferences.servers[server_index];
-            server_join_string.push_str(&server.guid);
-            server_join_string.push_str("/");
+        _ => match server_index {
+            9001 => {
+                println!("Continuing without an auto-join.");
+            }
+            _ => {
+                let server = &preferences.servers[server_index];
+                server_join_string.push_str(&server.guid);
+                server_join_string.push_str("/");
 
-            match &server.password.len() {
-                0 => {
-                    println!("No server password supplied")
-                }
-                _ => {
-                    server_join_string.push_str(&server.password);
-                }
-            };
-        }
+                match &server.password.len() {
+                    0 => {
+                        println!("No server password supplied")
+                    }
+                    _ => {
+                        server_join_string.push_str(&server.password);
+                    }
+                };
+            }
+        },
     };
 
     match server_join_string.len() {
