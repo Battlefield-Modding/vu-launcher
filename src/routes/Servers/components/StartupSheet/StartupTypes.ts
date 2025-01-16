@@ -5,7 +5,7 @@ export type StartupArgs = {
   vars: Vars
   RM: RM_Commands | undefined,
   vu: VU_Commands,
-  reservedSlots: ReservedSlots[]
+  reservedSlots: string[]
 }
 
 export type Admin = {
@@ -72,8 +72,4 @@ export type RM_Commands = {
 
 export type VU_Commands = {
   serverBanner: string // link to your server banner image
-}
-
-export type ReservedSlots = {
-  add: string // add a single player to reserved slots list  
 }
