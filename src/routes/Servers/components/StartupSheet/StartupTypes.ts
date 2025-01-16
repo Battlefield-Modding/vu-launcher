@@ -5,7 +5,7 @@ export type StartupArgs = {
   vars: Vars
   RM: RM_Commands | undefined,
   vu: VU_Commands,
-  reservedSlots: string[]
+  reservedSlots: ReservedSlots
 }
 
 export type Admin = {
@@ -53,9 +53,9 @@ export type Vars = {
 }
 
 export type RM_Commands = {
-  setDevelopers: string[] // Set list of developers, separated by a space
-  setAdmins: string[] // Set list of admins, separated by a space
-  setLightAdmins: string[] // Set list of light-admins, separated by a space
+  setDevelopers: string // Set list of developers, separated by a space
+  setAdmins: string // Set list of admins, separated by a space
+  setLightAdmins: string // Set list of light-admins, separated by a space
   serverInfo: string // a description for your server
   serverLicenseKey: string // RM Server License Key
   ingameBanner: string // a link to an image
@@ -71,5 +71,9 @@ export type RM_Commands = {
 }
 
 export type VU_Commands = {
-  serverBanner: string // link to your server banner image
+  serverBanner: string | undefined // link to your server banner image
+}
+
+export type ReservedSlots = {
+  add: string // list of players to add to reserved slot
 }
