@@ -6,6 +6,7 @@ import { serverKeyExists } from '@/api'
 import { useQuery } from '@tanstack/react-query'
 import FirstTimeSetup from './components/FirstTimeSetup'
 import LoadoutUploadSheet from './components/LoadoutUploadSheet/LoadoutUploadSheet'
+import StartupSheet from './components/StartupSheet/StartupSheet'
 
 export default function Servers() {
   const { isPending, isError, data, error } = useQuery({
@@ -43,6 +44,7 @@ export default function Servers() {
         <LoadoutUploadSheet />
       </div>
       <div className="m-auto mt-0 w-full">
+        <StartupSheet />
         <LoadoutBrowser />
       </div>
     </div>
