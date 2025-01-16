@@ -1,8 +1,4 @@
-import {
-  defaultStartupArguments,
-  StartupDescriptions,
-  VarsDescriptions,
-} from '../DefaultStartupConfig'
+import { defaultStartupArguments, StartupDescriptions } from '../DefaultStartupConfig'
 import {
   FormControl,
   FormDescription,
@@ -24,8 +20,8 @@ const TranslateTypeToField = {
   number: 'number',
   undefined: 'none',
 }
-
 function FormComponents({ form, sectionName }: { form: any; sectionName: keyof StartupArgs }) {
+  //@ts-expect-error
   return Object.entries(defaultStartupArguments[sectionName]).map(([key, value]) => {
     const fieldType = TranslateTypeToField[typeof value as keyof TranslateTypeToFieldType]
     if (fieldType === 'checkbox') {
@@ -33,7 +29,8 @@ function FormComponents({ form, sectionName }: { form: any; sectionName: keyof S
         <CheckBoxComponent
           defaultChecked={value}
           key={key}
-          description={StartupDescriptions[sectionName as keyof StartupArgs][key as keyof Vars]}
+          //@ts-expect-error
+          description={StartupDescriptions[sectionName as keyof StartupArgs][key as string]}
           sectionName={sectionName}
           form={form}
           keyValue={key}
@@ -46,7 +43,8 @@ function FormComponents({ form, sectionName }: { form: any; sectionName: keyof S
           key={key}
           defaultvalue={value}
           sectionName={sectionName}
-          description={StartupDescriptions[sectionName as keyof StartupArgs][key as keyof Vars]}
+          //@ts-expect-error
+          description={StartupDescriptions[sectionName as keyof StartupArgs][key as string]}
           form={form}
           keyValue={key}
         />
@@ -66,8 +64,10 @@ function FormComponents({ form, sectionName }: { form: any; sectionName: keyof S
             <FormControl>
               <Textarea placeholder={value} {...field} rows={2} className="w-1/2" />
             </FormControl>
+
             <FormDescription>
-              {StartupDescriptions[sectionName as keyof StartupArgs][key as keyof Vars]}
+              {/* @ts-expect-error*  */}
+              {StartupDescriptions[sectionName as keyof StartupArgs][key as string]}
             </FormDescription>
             <FormMessage />
           </FormItem>
