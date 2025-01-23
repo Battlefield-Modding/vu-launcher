@@ -76,7 +76,7 @@ export function AccountMultiSelectForm({
             )}
           />
         ))}
-        <Button type="submit" className="m-auto w-96 p-8 text-2xl">
+        <Button variant="secondary" type="submit" className="m-auto w-96 p-8 text-2xl">
           Play
         </Button>
       </form>
