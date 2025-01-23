@@ -1,12 +1,13 @@
 import { Loader } from 'lucide-react'
 import { QueryKey, STALE } from '@/config/config'
-import { serverKeyExists } from '@/api'
+import { getAllLoadoutJson, serverKeyExists } from '@/api'
 import { useQuery } from '@tanstack/react-query'
 import { FirstTimeSetup } from './components/Forms/FirstTimeSetup/FirstTimeSetup'
 import { LoadoutSheet } from './components/Forms/Loadouts/CreateLoadout/LoadoutSheet'
 import { UploadLoadoutSheet } from './components/Forms/Loadouts/UploadLoadout/UploadLoadoutSheet'
 import { StartupSheet } from './components/Forms/Startup/StartupSheet'
 import { LoadoutContainer } from './components/Loadouts/LoadoutContainer'
+import { Button } from '@/components/ui/button'
 
 export function Servers() {
   const { isPending, isError, data, error } = useQuery({
@@ -46,6 +47,17 @@ export function Servers() {
       <div className="m-auto mt-0 w-full">
         <StartupSheet />
         <LoadoutContainer />
+
+        {/* TODO: Remove this test button */}
+        <Button
+          variant={'secondary'}
+          onClick={async () => {
+            const info = await getAllLoadoutJson()
+            console.log(info)
+          }}
+        >
+          GetAllLoadoutJSON
+        </Button>
       </div>
     </div>
   )

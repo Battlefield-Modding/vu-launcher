@@ -214,3 +214,9 @@ export async function addServer({nickname, guid, password}: {nickname: string, g
   const status = await invoke(rust_fns.set_user_preferences, {newPreferences}) as boolean
   return status
 }
+
+export async function getAllLoadoutJson(){
+  const loadoutJson = await invoke(rust_fns.get_all_loadout_json);
+  console.log(loadoutJson);
+  return loadoutJson
+}

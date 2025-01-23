@@ -40,6 +40,7 @@ use mods::{
 mod speed_calc;
 
 mod loadouts;
+use loadouts::get_all_loadout_json;
 
 pub const CREATE_NO_WINDOW: u32 = 0x08000000;
 
@@ -431,7 +432,8 @@ pub fn run() {
             get_mod_names_in_loadout,
             remove_mod_from_loadout,
             open_mod_with_vscode,
-            play_vu_on_local_server
+            play_vu_on_local_server,
+            get_all_loadout_json
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

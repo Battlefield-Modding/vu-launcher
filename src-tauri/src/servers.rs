@@ -358,7 +358,7 @@ pub fn get_loadouts_path() -> PathBuf {
     return loadouts_path;
 }
 
-fn get_loadout_path(name: &String) -> PathBuf {
+pub fn get_loadout_path(name: &String) -> PathBuf {
     let mut loadout_path: PathBuf = get_loadouts_path();
     loadout_path.push(&name);
 
