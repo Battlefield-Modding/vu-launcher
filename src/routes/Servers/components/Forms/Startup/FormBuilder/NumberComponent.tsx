@@ -28,11 +28,14 @@ export function NumberComponent({
       name={`${sectionName}.${keyValue as keyof Vars}`}
       render={({ field }) => (
         <FormItem className="flex gap-4">
-          <FormLabel className="text-2xl leading-10 underline">{keyValue}</FormLabel>
+          <FormLabel className="text-md flex flex-col justify-center rounded-md bg-sidebar-foreground pl-2 pr-2 text-white">
+            <code>{keyValue}</code>
+          </FormLabel>
+
           <FormControl>
             <Input
               type={'text'}
-              className="w-16"
+              className="max-w-16"
               placeholder={defaultvalue}
               {...field}
               onKeyDown={(e) => {
@@ -42,7 +45,8 @@ export function NumberComponent({
               }}
             />
           </FormControl>
-          <FormDescription>{description}</FormDescription>
+
+          <FormDescription className="leading-10">{description}</FormDescription>
           <FormMessage />
         </FormItem>
       )}

@@ -27,12 +27,15 @@ export function CheckBoxComponent({
       control={form.control}
       name={`${sectionName}.${keyValue as keyof Vars}`}
       render={({ field }) => (
-        <FormItem className="flex">
-          <FormLabel className="text-2xl leading-10 underline">{keyValue}</FormLabel>
+        <FormItem className="flex flex-wrap">
+          <FormLabel className="text-md rounded-md bg-sidebar-foreground p-1 pl-2 pr-2 leading-10 text-white">
+            <code>{keyValue}</code>
+          </FormLabel>
+
           <FormControl>
             <Input
               type={'checkbox'}
-              className="w-16"
+              className="max-w-16"
               defaultChecked={defaultChecked}
               {...field}
               onKeyDown={(e) => {
@@ -42,7 +45,8 @@ export function CheckBoxComponent({
               }}
             />
           </FormControl>
-          <FormDescription>{description}</FormDescription>
+
+          <FormDescription className="leading-9">{description}</FormDescription>
           <FormMessage />
         </FormItem>
       )}

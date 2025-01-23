@@ -60,7 +60,10 @@ export function FormBuilder({ form, sectionName }: { form: any; sectionName: key
         name={`${sectionName}.${key as keyof Vars}`}
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="text-2xl underline">{key}</FormLabel>
+            <FormLabel className="text-md rounded-md bg-sidebar-foreground p-1 pl-2 pr-2 text-white">
+              <code>{key === 'password' ? 'RCON password' : key}</code>
+            </FormLabel>
+
             <FormControl>
               <Textarea placeholder={value} {...field} rows={2} className="w-1/2" />
             </FormControl>
