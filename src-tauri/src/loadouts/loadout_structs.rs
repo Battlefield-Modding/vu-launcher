@@ -1,13 +1,18 @@
+use serde::{Deserialize, Serialize};
+
+#[derive(Serialize, Deserialize, Debug)]
 pub struct LoadoutJson {
     startup: StartupArgs,
     // TODO: add rest of loadout to this struct
 }
 
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Admin {
     password: String, // This is RCON password for remote admin.
 }
 
 #[allow(non_snake_case)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Vars {
     ranked: Option<bool>,         // Change the server between ranked/unranked mode
     serverName: String,           // Set the server name
@@ -49,6 +54,7 @@ pub struct Vars {
 }
 
 #[allow(non_snake_case)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct StartupArgs {
     admin: Admin,
     vars: Vars,
@@ -58,6 +64,7 @@ pub struct StartupArgs {
 }
 
 #[allow(non_snake_case)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct RM_Commands {
     setDevelopers: String,          // Set list of developers, separated by a space
     setAdmins: String,              // Set list of admins, separated by a space
@@ -77,10 +84,12 @@ pub struct RM_Commands {
 }
 
 #[allow(non_snake_case)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct VU_Commands {
     serverBanner: Option<String>, // link to your server banner image
 }
 
+#[derive(Serialize, Deserialize, Debug)]
 pub struct ReservedSlots {
     add: Vec<String>, // list of players to add to reserved slot
 }
