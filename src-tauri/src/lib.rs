@@ -39,6 +39,8 @@ use mods::{
 
 mod speed_calc;
 
+mod loadouts;
+
 pub const CREATE_NO_WINDOW: u32 = 0x08000000;
 
 #[derive(Serialize, Deserialize, Debug)]
