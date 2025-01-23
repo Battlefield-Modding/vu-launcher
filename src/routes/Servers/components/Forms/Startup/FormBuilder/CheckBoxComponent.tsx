@@ -7,9 +7,9 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { StartupArgs, Vars } from '../StartupTypes'
+import { StartupArgs, Vars } from '../Setup/StartupTypes'
 
-function CheckBoxComponent({
+export function CheckBoxComponent({
   form,
   keyValue,
   description,
@@ -49,5 +49,3 @@ function CheckBoxComponent({
     />
   )
 }
-
-export default CheckBoxComponent

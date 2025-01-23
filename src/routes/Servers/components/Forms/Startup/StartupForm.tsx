@@ -4,18 +4,11 @@ import { useForm } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
 import { Form } from '@/components/ui/form'
-import { toast } from 'sonner'
-import { createServerLoadout } from '@/api'
 import { useQueryClient } from '@tanstack/react-query'
-import { Textarea } from '@/components/ui/textarea'
-import { Loadout, QueryKey } from '@/config/config'
-import { Checkbox } from '@/components/ui/checkbox'
 import { useState } from 'react'
-import LoaderComponent from '@/components/LoaderComponent'
-import { defaultStartupArguments } from './DefaultStartupConfig'
-import { Vars } from './StartupTypes'
-import VarsFormComponents from './FormComponents/FormComponents'
-import FormComponents from './FormComponents/FormComponents'
+import { LoaderComponent } from '@/components/LoaderComponent'
+import { defaultStartupArguments } from './Setup/DefaultStartupConfig'
+import { FormBuilder } from './FormBuilder/FormBuilder'
 
 const formSchema = z.object({
   admin: z.object({
@@ -87,7 +80,7 @@ const formSchema = z.object({
   }),
 })
 
-export default function StartupForm({ setSheetOpen, mods }: { setSheetOpen: any; mods: string[] }) {
+export function StartupForm({ setSheetOpen, mods }: { setSheetOpen: any; mods: string[] }) {
   const queryClient = useQueryClient()
   const [submitLoading, setSubmitLoading] = useState(false)
 
@@ -103,11 +96,11 @@ export default function StartupForm({ setSheetOpen, mods }: { setSheetOpen: any;
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormComponents form={form} sectionName="admin" />
-        <FormComponents form={form} sectionName="vars" />
-        {/* <FormComponents form={form} sectionName="RM" /> */}
-        <FormComponents form={form} sectionName="vu" />
-        <FormComponents form={form} sectionName="reservedSlots" />
+        <FormBuilder form={form} sectionName="admin" />
+        <FormBuilder form={form} sectionName="vars" />
+        {/* <FormBuilder form={form} sectionName="RM" /> */}
+        <FormBuilder form={form} sectionName="vu" />
+        <FormBuilder form={form} sectionName="reservedSlots" />
 
         {submitLoading && <LoaderComponent />}
         <Button type="submit">Submit</Button>

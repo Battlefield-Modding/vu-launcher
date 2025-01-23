@@ -7,7 +7,7 @@ import { DragDropEventTauri } from '@/config/config'
 import { toast } from 'sonner'
 import { open } from '@tauri-apps/plugin-dialog'
 
-export default function LoadoutUpload({ setPath }: { setPath: (state: string) => void }) {
+export function LoadoutDragDrop({ setPath }: { setPath: (state: string) => void }) {
   const [isDraggingOver, setIsDraggingOver] = useState(false)
   let handleDrop: UnlistenFn | undefined
   let handleDragEnter: UnlistenFn | undefined

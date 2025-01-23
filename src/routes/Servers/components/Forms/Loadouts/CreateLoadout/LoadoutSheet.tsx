@@ -9,12 +9,12 @@ import {
 import { Loader, Plus } from 'lucide-react'
 import { useState } from 'react'
 import clsx from 'clsx'
-import LoadoutForm from './LoadoutForm'
+import { LoadoutForm } from './LoadoutForm'
 import { QueryKey, STALE } from '@/config/config'
 import { useQuery } from '@tanstack/react-query'
 import { getModNamesInCache } from '@/api'
 
-export default function LoadoutSheet() {
+export function LoadoutSheet() {
   const [sheetOpen, setSheetOpen] = useState(false)
 
   const { isPending, isError, data, error } = useQuery({

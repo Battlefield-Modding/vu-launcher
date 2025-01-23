@@ -1,9 +1,8 @@
 import { useState } from 'react'
-import FileUpload from '../components/ServerKeyUpload'
 import serverKeyImage from '@/assets/server-key-info.png'
-import ServerGuidForm from '../components/ServerGuidForm'
+import { ServerGuidForm } from './ServerGuidForm'
 
-function FirstTimeSetup() {
+export function FirstTimeSetup() {
   const [isGuidSaved, setIsGuidSaved] = useState(false)
 
   function handleGuid(val: boolean) {
@@ -40,11 +39,9 @@ function FirstTimeSetup() {
 
       {isGuidSaved && (
         <div className="flex min-h-[30vh] flex-1 flex-col">
-          <FileUpload />
+          <ServerGuidForm handleGuid={handleGuid} />
         </div>
       )}
     </div>
   )
 }
-
-export default FirstTimeSetup

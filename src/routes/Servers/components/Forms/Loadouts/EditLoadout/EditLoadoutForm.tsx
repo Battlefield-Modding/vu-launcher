@@ -19,7 +19,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Loadout, QueryKey } from '@/config/config'
 import { Checkbox } from '@/components/ui/checkbox'
 import { useState } from 'react'
-import LoaderComponent from '@/components/LoaderComponent'
+import { LoaderComponent } from '@/components/LoaderComponent'
 
 const formSchema = z.object({
   startup: z.string().min(10).max(5000),
@@ -28,7 +28,7 @@ const formSchema = z.object({
   banlist: z.string().min(0).max(5000),
 })
 
-export default function EditLoadoutForm({
+export function EditLoadoutForm({
   setSheetOpen,
   existingConfig,
   modsInCache,

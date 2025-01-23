@@ -1,14 +1,14 @@
 import { Loader } from 'lucide-react'
-import LoadoutSheet from './components/LoadoutSheet/LoadoutSheet'
-import LoadoutBrowser from './components/Loadouts/LoadoutContainer'
 import { QueryKey, STALE } from '@/config/config'
 import { serverKeyExists } from '@/api'
 import { useQuery } from '@tanstack/react-query'
-import FirstTimeSetup from './components/FirstTimeSetup'
-import LoadoutUploadSheet from './components/LoadoutUploadSheet/LoadoutUploadSheet'
-import StartupSheet from './components/StartupSheet/StartupSheet'
+import { FirstTimeSetup } from './components/Forms/FirstTimeSetup/FirstTimeSetup'
+import { LoadoutSheet } from './components/Forms/Loadouts/CreateLoadout/LoadoutSheet'
+import { UploadLoadoutSheet } from './components/Forms/Loadouts/UploadLoadout/UploadLoadoutSheet'
+import { StartupSheet } from './components/Forms/Startup/StartupSheet'
+import { LoadoutContainer } from './components/Loadouts/LoadoutContainer'
 
-export default function Servers() {
+export function Servers() {
   const { isPending, isError, data, error } = useQuery({
     queryKey: [QueryKey.ServerKeyExists],
     queryFn: serverKeyExists,
@@ -41,11 +41,11 @@ export default function Servers() {
     <div className="m-auto flex min-h-[100vh] flex-col justify-center">
       <div className="m-auto mb-0 mt-0 flex w-full justify-center gap-4 rounded-md bg-primary p-8">
         <LoadoutSheet />
-        <LoadoutUploadSheet />
+        <UploadLoadoutSheet />
       </div>
       <div className="m-auto mt-0 w-full">
         <StartupSheet />
-        <LoadoutBrowser />
+        <LoadoutContainer />
       </div>
     </div>
   )

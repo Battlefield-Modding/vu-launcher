@@ -1,4 +1,3 @@
-import EditLoadoutSheet from '../EditLoadoutSheet/EditLoadoutSheet'
 import { Folder, Loader, Server, User } from 'lucide-react'
 import {
   getServerLoadout,
@@ -9,11 +8,12 @@ import {
 import { toast } from 'sonner'
 import { useQuery } from '@tanstack/react-query'
 import { QueryKey, STALE } from '@/config/config'
-import ChooseAccountSheet from '../ChooseAccountSheet/ChooseAccountSheet'
-import ManageModsSheet from '../ManageModsSheet/ManageModsSheet'
-import DeleteLoadoutDialog from './DeleteLoadoutDialog'
+import { ChooseAccountSheet } from '../Forms/AccountMultiSelect/AccountMultiSelectSheet'
+import { ManageModsSheet } from '../ManageMods/ManageModsSheet'
+import { EditLoadoutSheet } from '../Forms/Loadouts/EditLoadout/EditLoadoutSheet'
+import { DeleteLoadoutDialog } from './DeleteLoadoutDialog'
 
-function Loadout({ name }: { name: string }) {
+export function Loadout({ name }: { name: string }) {
   const { isPending, isError, data, error } = useQuery({
     queryKey: [`${QueryKey.GetServerLoadout}-${name}`],
     queryFn: async () => {
@@ -137,5 +137,3 @@ function Loadout({ name }: { name: string }) {
     </div>
   )
 }
-
-export default Loadout

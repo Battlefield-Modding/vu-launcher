@@ -16,11 +16,11 @@ import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
 import { importLoadoutFromPath } from '@/api'
 import { useState } from 'react'
-import LoadoutUpload from './LoadoutUpload'
+import { LoadoutDragDrop } from './LoadoutDragDrop'
 import { useQueryClient } from '@tanstack/react-query'
 import { QueryKey } from '@/config/config'
 import clsx from 'clsx'
-import LoaderComponent from '@/components/LoaderComponent'
+import { LoaderComponent } from '@/components/LoaderComponent'
 
 const formSchema = z.object({
   name: z
@@ -36,7 +36,7 @@ const formSchema = z.object({
     ),
 })
 
-export default function LoadoutUploadForm({
+export function UploadLoadoutForm({
   existingLoadoutNames,
   setSheetOpen,
 }: {
@@ -94,7 +94,7 @@ export default function LoadoutUploadForm({
             </FormItem>
           )}
         />
-        <LoadoutUpload setPath={setPath} />
+        <LoadoutDragDrop setPath={setPath} />
         {path && <FormLabel>Will copy from: {path}</FormLabel>}
 
         {submitLoading && <LoaderComponent />}

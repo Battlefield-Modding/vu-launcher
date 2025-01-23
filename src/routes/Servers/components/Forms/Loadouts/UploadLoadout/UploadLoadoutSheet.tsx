@@ -12,9 +12,9 @@ import clsx from 'clsx'
 import { QueryKey, STALE } from '@/config/config'
 import { useQuery } from '@tanstack/react-query'
 import { getLoadoutNames } from '@/api'
-import LoadoutUploadForm from './LoadoutUploadForm'
+import { UploadLoadoutForm } from './UploadLoadoutForm'
 
-export default function LoadoutUploadSheet() {
+export function UploadLoadoutSheet() {
   const [sheetOpen, setSheetOpen] = useState(false)
 
   const { isPending, isError, data, error } = useQuery({
@@ -62,7 +62,7 @@ export default function LoadoutUploadSheet() {
           </SheetDescription>
         </SheetHeader>
         <br />
-        <LoadoutUploadForm existingLoadoutNames={data} setSheetOpen={setSheetOpen} />
+        <UploadLoadoutForm existingLoadoutNames={data} setSheetOpen={setSheetOpen} />
         {/* <LoadoutForm setSheetOpen={setSheetOpen} mods={data} /> */}
       </SheetContent>
     </Sheet>

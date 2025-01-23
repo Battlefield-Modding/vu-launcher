@@ -1,9 +1,9 @@
 import VSCodeIcon from '@/assets/VSCodeIcon.svg'
-import DeleteModDialog from './DeleteModDialog'
+import { DeleteModDialog } from './DeleteModDialog'
 import { toast } from 'sonner'
 import { openModWithVsCode } from '@/api'
 
-function Mod({ modName, loadoutName }: { modName: string; loadoutName: string }) {
+export function Mod({ modName, loadoutName }: { modName: string; loadoutName: string }) {
   async function handleOpenInVSCode() {
     const status = await openModWithVsCode({ name: loadoutName, modname: modName })
     if (status) {
@@ -33,5 +33,3 @@ function Mod({ modName, loadoutName }: { modName: string; loadoutName: string })
     </div>
   )
 }
-
-export default Mod

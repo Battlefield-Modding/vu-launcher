@@ -7,9 +7,9 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { StartupArgs, Vars } from '../StartupTypes'
+import { StartupArgs, Vars } from '../Setup/StartupTypes'
 
-function NumberComponent({
+export function NumberComponent({
   form,
   keyValue,
   defaultvalue,
@@ -49,5 +49,3 @@ function NumberComponent({
     />
   )
 }
-
-export default NumberComponent

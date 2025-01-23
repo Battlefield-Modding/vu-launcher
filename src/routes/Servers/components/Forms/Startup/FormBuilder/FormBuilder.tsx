@@ -1,4 +1,4 @@
-import { defaultStartupArguments, StartupDescriptions } from '../DefaultStartupConfig'
+import { defaultStartupArguments, StartupDescriptions } from '../Setup/DefaultStartupConfig'
 import {
   FormControl,
   FormDescription,
@@ -7,9 +7,9 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { StartupArgs, Vars } from '../StartupTypes'
-import CheckBoxComponent from './CheckBoxComponent'
-import NumberComponent from './NumberComponent'
+import { StartupArgs, Vars } from '../Setup/StartupTypes'
+import { CheckBoxComponent } from './CheckBoxComponent'
+import { NumberComponent } from './NumberComponent'
 import { Textarea } from '@/components/ui/textarea'
 
 type TranslateTypeToFieldType = {}
@@ -20,7 +20,7 @@ const TranslateTypeToField = {
   number: 'number',
   undefined: 'none',
 }
-function FormComponents({ form, sectionName }: { form: any; sectionName: keyof StartupArgs }) {
+export function FormBuilder({ form, sectionName }: { form: any; sectionName: keyof StartupArgs }) {
   //@ts-expect-error
   return Object.entries(defaultStartupArguments[sectionName]).map(([key, value]) => {
     const fieldType = TranslateTypeToField[typeof value as keyof TranslateTypeToFieldType]
@@ -76,5 +76,3 @@ function FormComponents({ form, sectionName }: { form: any; sectionName: keyof S
     )
   })
 }
-
-export default FormComponents

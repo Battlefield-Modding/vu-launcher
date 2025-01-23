@@ -2,9 +2,9 @@ import { getLoadoutNames } from '@/api'
 import { QueryKey, STALE } from '@/config/config'
 import { useQuery } from '@tanstack/react-query'
 import { Loader } from 'lucide-react'
-import Loadout from './Loadout'
+import { Loadout } from './Loadout'
 
-function LoadoutContainer() {
+export function LoadoutContainer() {
   const { isPending, isError, data, error } = useQuery({
     queryKey: [QueryKey.ServerLoadouts],
     queryFn: getLoadoutNames,
@@ -45,5 +45,3 @@ function LoadoutContainer() {
     </div>
   )
 }
-
-export default LoadoutContainer

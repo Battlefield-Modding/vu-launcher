@@ -20,7 +20,7 @@ const formSchema = z.object({
   guid: z.string().min(2).max(50),
 })
 
-export default function ServerGuidForm({ handleGuid }: { handleGuid: (val: boolean) => void }) {
+export function ServerGuidForm({ handleGuid }: { handleGuid: (val: boolean) => void }) {
   const [savedGUID, setSavedGUID] = useState(false)
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

@@ -2,9 +2,9 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/co
 import { Loadout } from '@/config/config'
 import { Book } from 'lucide-react'
 import { useState } from 'react'
-import Mod from './Mod'
+import { Mod } from './Mod'
 
-export default function ManageModsSheet({ loadout }: { loadout: Loadout }) {
+export function ManageModsSheet({ loadout }: { loadout: Loadout }) {
   const [sheetOpen, setSheetOpen] = useState(false)
 
   return (

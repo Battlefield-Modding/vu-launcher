@@ -1,5 +1,5 @@
 import { deleteServerLoadout } from '@/api'
-import LoaderComponent from '@/components/LoaderComponent'
+import { LoaderComponent } from '@/components/LoaderComponent'
 import {
   Dialog,
   DialogClose,
@@ -15,7 +15,7 @@ import { Trash, X } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { toast } from 'sonner'
 
-function DeleteLoadoutDialog({ name }: { name: string }) {
+export function DeleteLoadoutDialog({ name }: { name: string }) {
   const queryClient = useQueryClient()
   const [submitLoading, setSubmitLoading] = useState(false)
   const dialogCloseRef = useRef(null)
@@ -80,5 +80,3 @@ function DeleteLoadoutDialog({ name }: { name: string }) {
     </Dialog>
   )
 }
-
-export default DeleteLoadoutDialog

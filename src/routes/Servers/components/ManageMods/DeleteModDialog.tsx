@@ -13,7 +13,13 @@ import { useQueryClient } from '@tanstack/react-query'
 import { Trash, X } from 'lucide-react'
 import { toast } from 'sonner'
 
-function DeleteModDialog({ modName, loadoutName }: { modName: string; loadoutName: string }) {
+export function DeleteModDialog({
+  modName,
+  loadoutName,
+}: {
+  modName: string
+  loadoutName: string
+}) {
   const queryClient = useQueryClient()
 
   async function handleDelete() {
@@ -65,5 +71,3 @@ function DeleteModDialog({ modName, loadoutName }: { modName: string; loadoutNam
     </Dialog>
   )
 }
-
-export default DeleteModDialog
