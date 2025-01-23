@@ -14,7 +14,7 @@ const formSchema = z.object({
   account3: z.boolean(),
 })
 
-export default function ChooseAccountForm({
+export function AccountMultiSelectForm({
   users,
   setSheetOpen,
   updateUsers,

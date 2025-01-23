@@ -3,16 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
+import { Form } from '@/components/ui/form'
 import { toast } from 'sonner'
 import { createServerLoadout } from '@/api'
 import { useQueryClient } from '@tanstack/react-query'
@@ -21,7 +12,7 @@ import { Loadout, QueryKey } from '@/config/config'
 import { Checkbox } from '@/components/ui/checkbox'
 import { useState } from 'react'
 import LoaderComponent from '@/components/LoaderComponent'
-import { defaultStartupArguments, VarsDescriptions } from './DefaultStartupConfig'
+import { defaultStartupArguments } from './DefaultStartupConfig'
 import { Vars } from './StartupTypes'
 import VarsFormComponents from './FormComponents/FormComponents'
 import FormComponents from './FormComponents/FormComponents'

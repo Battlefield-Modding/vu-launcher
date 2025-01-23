@@ -2,7 +2,6 @@ import { getUsers, playVUOnLocalServer, startServerLoadout } from '@/api'
 import { QueryKey, STALE } from '@/config/config'
 import { useQuery } from '@tanstack/react-query'
 import { Loader, Server, UserCheck } from 'lucide-react'
-import ChooseAccountForm from './ChooseAccountForm'
 import { toast } from 'sonner'
 import { useState } from 'react'
 import {
@@ -13,8 +12,9 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
+import { AccountMultiSelectForm } from './AccountMultiSelectForm'
 
-function ChooseAccountSheet({
+export function ChooseAccountSheet({
   name,
   getServerPassword,
 }: {
@@ -88,11 +88,13 @@ function ChooseAccountSheet({
             </SheetDescription>
           </SheetHeader>
           <br />
-          <ChooseAccountForm setSheetOpen={setSheetOpen} users={data} updateUsers={updateUsers} />
+          <AccountMultiSelectForm
+            setSheetOpen={setSheetOpen}
+            users={data}
+            updateUsers={updateUsers}
+          />
         </SheetContent>
       </Sheet>
     )
   }
 }
-
-export default ChooseAccountSheet
