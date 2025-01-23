@@ -28,10 +28,10 @@ export type Vars = {
   miniMap: boolean | undefined,                           // Set if minimap is enabled
   hud: boolean | undefined,                               // Set if HUD is enabled
   crossHair: boolean | undefined,                         // Set if crosshair for all weapons is enabled
-  "3dSpotting": boolean | undefined,                        // Set if spotted targets are visible in the 3d-world
+  _3dSpotting: boolean | undefined,                        // Set if spotted targets are visible in the 3d-world
   miniMapSpotting: boolean | undefined,                   // Set if spotted targets are visible on the minimap
   nameTag: boolean | undefined,                           // Set if nametags should be displayed
-  "3pCam": boolean | undefined,                             // Set if allowing to toggle to third person vehicle cameras
+  _3pCam: boolean | undefined,                             // Set if allowing to toggle to third person vehicle cameras
   regenerateHealth: boolean | undefined,                  // Set if health regeneration should be active
   teamKillCountForKick: number | undefined,                // Set number of teamkills allowed during a round
   teamKillValueForKick: number | undefined,                // Set max kill-value allowed for a player before he/she is kicked

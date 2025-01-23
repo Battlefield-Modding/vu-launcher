@@ -3,8 +3,8 @@ import { StartupArgs } from "./StartupTypes";
 export const defaultStartupArguments: StartupArgs = {
   admin: {password: ""},
   vars: {
-    "3dSpotting": true,
-    "3pCam": true,
+    _3dSpotting: true,
+    _3pCam: true,
     autoBalance: false,
     bulletDamage: 1,
     crossHair: true,
