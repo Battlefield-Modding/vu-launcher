@@ -219,7 +219,9 @@ export function EditLoadoutForm({
           )}
         />
         {submitLoading && <LoaderComponent />}
-        <Button type="submit">Submit</Button>
+        <Button variant="secondary" type="submit">
+          Submit
+        </Button>
       </form>
     </Form>
   )

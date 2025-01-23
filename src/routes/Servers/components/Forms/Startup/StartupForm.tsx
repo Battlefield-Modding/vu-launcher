@@ -103,7 +103,9 @@ export function StartupForm({ setSheetOpen, mods }: { setSheetOpen: any; mods: s
         <FormBuilder form={form} sectionName="reservedSlots" />
 
         {submitLoading && <LoaderComponent />}
-        <Button type="submit">Submit</Button>
+        <Button variant="secondary" type="submit">
+          Submit
+        </Button>
       </form>
     </Form>
   )

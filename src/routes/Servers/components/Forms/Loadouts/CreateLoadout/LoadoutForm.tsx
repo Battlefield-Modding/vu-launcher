@@ -203,7 +203,9 @@ export function LoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any; mods: s
           )}
         />
         {submitLoading && <LoaderComponent />}
-        <Button type="submit">Submit</Button>
+        <Button variant={'secondary'} type="submit">
+          Submit
+        </Button>
       </form>
     </Form>
   )

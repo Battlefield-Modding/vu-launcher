@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form'
 import { UserCredential } from '@/config/config'
-import { Checkbox } from '@/components/ui/checkbox'
+import { Input } from '@/components/ui/input'
 
 const formSchema = z.object({
   account0: z.boolean(),
@@ -62,9 +62,15 @@ export function AccountMultiSelectForm({
             key={`serverStartupAccounts-${x.username}`}
             render={({ field }) => (
               <FormItem className="m-auto flex w-96 justify-between">
-                <FormLabel className="text-2xl">{x.username}</FormLabel>
+                <FormLabel className="text-2xl leading-10">{x.username}</FormLabel>
                 <FormControl className="h-10 w-1/6">
-                  <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                  {/* @ts-expect-error */}
+                  <Input
+                    type={'checkbox'}
+                    className="max-w-16"
+                    defaultChecked={field.value}
+                    {...field}
+                  />
                 </FormControl>
               </FormItem>
             )}
