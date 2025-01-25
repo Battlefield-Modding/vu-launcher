@@ -8,6 +8,7 @@ import { UploadLoadoutSheet } from './components/Forms/Loadouts/UploadLoadout/Up
 import { StartupSheet } from './components/Forms/Startup/StartupSheet'
 import { LoadoutContainer } from './components/Loadouts/LoadoutContainer'
 import { Button } from '@/components/ui/button'
+import { MaplistSheet } from './components/Forms/Maplist/MaplistSheet'
 
 export function Servers() {
   const { isPending, isError, data, error } = useQuery({
@@ -46,6 +47,7 @@ export function Servers() {
       </div>
       <div className="m-auto mt-0 w-full">
         <StartupSheet />
+        <MaplistSheet />
         <LoadoutContainer />
 
         {/* TODO: Remove this test button */}
