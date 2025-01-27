@@ -9,14 +9,14 @@ export function ModList({ form, mods }: { form: CreateLoadoutFormType; mods: str
         <FormLabel className="text-2xl underline">ModList</FormLabel>
         <FormDescription>Choose your mods</FormDescription>
       </FormItem>
-      {mods.map((nameOfMod) => {
+      {mods.map((nameOfMod, index) => {
         // a dot will create an unwanted object
         let nameWithoutDots = nameOfMod.split('.').join('*')
 
         return (
           <FormField
             control={form.control}
-            name={`mods.${nameWithoutDots}`}
+            name={`modlist.${nameWithoutDots}`}
             key={`serverMods-${nameOfMod}`}
             render={({ field }) => (
               <FormItem className="flex gap-4">

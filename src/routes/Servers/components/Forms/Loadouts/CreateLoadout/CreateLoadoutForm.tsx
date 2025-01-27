@@ -17,7 +17,7 @@ import { toast } from 'sonner'
 import { createServerLoadout } from '@/api'
 import { useQueryClient } from '@tanstack/react-query'
 import { defaultServerConfig } from './Setup/defaultServerConfig'
-import { LoadoutJSON_AndMods, QueryKey } from '@/config/config'
+import { LoadoutJSON, QueryKey } from '@/config/config'
 import { useState } from 'react'
 import { LoaderComponent } from '@/components/LoaderComponent'
 import { Banlist } from './components/Forms/Banlist'
@@ -76,7 +76,6 @@ export type CreateLoadoutFormType = UseFormReturn<
       gameMode: string
     }[]
     banlist: string[]
-    mods?: any
     modlist?: any
   },
   any,
@@ -107,11 +106,11 @@ export function CreateLoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any; m
   }
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    let correctedMods = onlyIncludeSelectedMods(values.mods)
+    let correctedMods = onlyIncludeSelectedMods(values.modlist)
 
-    const loadout: LoadoutJSON_AndMods = {
+    const loadout: LoadoutJSON = {
       ...values,
-      mods: correctedMods,
+      modlist: correctedMods,
     }
 
     console.log(loadout)

@@ -1,4 +1,4 @@
-import { LoadoutJSON_AndMods } from "@/config/config"
+import { LoadoutJSON } from "@/config/config"
 import { StartupArgs } from "../../../Startup/Setup/StartupTypes"
 
 export type ServerConfig = {
@@ -11,7 +11,7 @@ export type ServerConfig = {
   banlist: string[]
 }
 
-export const defaultServerConfig: LoadoutJSON_AndMods = {
+export const defaultServerConfig: LoadoutJSON = {
   name: "",
   startup: {
     admin:{
@@ -28,6 +28,5 @@ export const defaultServerConfig: LoadoutJSON_AndMods = {
     gameMode: ''
   }],
   banlist: ["player0"],
-  modlist: [""],
-  mods: [""]
+  modlist: [],
 }
