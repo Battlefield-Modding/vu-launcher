@@ -16,12 +16,12 @@ import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
 import { createServerLoadout } from '@/api'
 import { useQueryClient } from '@tanstack/react-query'
-import { Textarea } from '@/components/ui/textarea'
 import { defaultServerConfig } from './Setup/defaultServerConfig'
-import { Loadout, QueryKey } from '@/config/config'
-import { Checkbox } from '@/components/ui/checkbox'
+import { LoadoutJSON_AndMods, QueryKey } from '@/config/config'
 import { useState } from 'react'
 import { LoaderComponent } from '@/components/LoaderComponent'
+import { Banlist } from './components/Forms/Banlist'
+import { Maplist } from './components/Forms/Maplist'
 
 const formSchema = z.object({
   name: z
@@ -35,10 +35,25 @@ const formSchema = z.object({
         ),
       "A loadout name can't contain any of the following characters\: \\ / : * ? \" < > | '",
     ),
-  startup: z.string().min(10).max(5000),
-  maplist: z.string().min(10).max(5000),
+  startup: z.object({
+    admin: z.object({
+      password: z.string(),
+    }),
+    vars: z.object({
+      serverName: z.string(),
+      gamePassword: z.string(),
+      maxPlayers: z.number(),
+    }),
+  }),
+  maplist: z.array(
+    z.object({
+      mapCode: z.string(),
+      gameMode: z.string().min(1),
+    }),
+  ),
   mods: z.any().optional(),
-  banlist: z.string().min(0).max(5000),
+  modlist: z.any().optional(),
+  banlist: z.array(z.string()),
 })
 
 export function LoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any; mods: string[] }) {
@@ -47,9 +62,7 @@ export function LoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any; mods: s
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      ...defaultServerConfig,
-    },
+    defaultValues: { ...defaultServerConfig },
   })
 
   function onlyIncludeSelectedMods(mods: { string: boolean }) {
@@ -69,11 +82,12 @@ export function LoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any; mods: s
   async function onSubmit(values: z.infer<typeof formSchema>) {
     let correctedMods = onlyIncludeSelectedMods(values.mods)
 
-    const loadout: Loadout = {
+    const loadout: LoadoutJSON_AndMods = {
       ...values,
       mods: correctedMods,
-      modlist: '',
     }
+
+    console.log(loadout)
 
     setSubmitLoading(() => true)
     const status = await createServerLoadout(loadout)
@@ -104,6 +118,7 @@ export function LoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any; mods: s
                 <Input
                   type="text"
                   placeholder="name"
+                  autoFocus={true}
                   {...field}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') {
@@ -120,50 +135,108 @@ export function LoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any; mods: s
             </FormItem>
           )}
         />
+
+        {/* STARTUP SECTION */}
         <FormField
           control={form.control}
-          name="startup"
+          name="startup.admin.password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-2xl underline">Startup.txt</FormLabel>
+              <FormLabel className="text-2xl underline">RCON Password</FormLabel>
               <FormControl>
-                <Textarea placeholder="Startup" {...field} rows={15} />
+                <Input
+                  type="text"
+                  placeholder="name"
+                  {...field}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault()
+                    }
+                  }}
+                />
               </FormControl>
-              <FormDescription>
-                <a
-                  href="https://docs.veniceunleashed.net/hosting/commands/"
-                  target="_blank"
-                  className="text-blue-800 underline"
-                >
-                  https://docs.veniceunleashed.net/hosting/commands/
-                </a>
-              </FormDescription>
+              <FormDescription>For connecting to server through PROCON.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
         <FormField
           control={form.control}
-          name="maplist"
+          name="startup.vars.gamePassword"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-2xl underline">Maplist.txt</FormLabel>
+              <FormLabel className="text-2xl underline">Game Password</FormLabel>
               <FormControl>
-                <Textarea placeholder="Maplist" {...field} rows={15} />
+                <Input
+                  type="text"
+                  placeholder="Game Password"
+                  {...field}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault()
+                    }
+                  }}
+                />
+              </FormControl>
+              <FormDescription>Used by users to connect to your server.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name={'startup.vars.maxPlayers'}
+          render={({ field }) => (
+            <FormItem className="flex gap-4">
+              <FormLabel className="text-md flex flex-col justify-center rounded-md bg-sidebar-foreground pl-2 pr-2 text-white">
+                <code>Max Players</code>
+              </FormLabel>
+
+              <FormControl>
+                <Input
+                  type={'text'}
+                  className="max-w-16"
+                  placeholder={'defaultvalue'}
+                  {...field}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault()
+                    }
+                  }}
+                />
+              </FormControl>
+
+              <FormDescription className="leading-10">Max playercount on server</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="startup.vars.serverName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-2xl underline">Server Name</FormLabel>
+              <FormControl>
+                <Input
+                  type="text"
+                  placeholder="[Country][Main Mod] Clan"
+                  {...field}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault()
+                    }
+                  }}
+                />
               </FormControl>
               <FormDescription>
-                <a
-                  href="https://docs.veniceunleashed.net/hosting/maps/"
-                  target="_blank"
-                  className="text-blue-800 underline"
-                >
-                  https://docs.veniceunleashed.net/hosting/maps/
-                </a>
+                Name showed in Server Browser. For Example: [US East][Funbots] ClanName
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
+        {/* END STARTUP SECTION */}
         <FormItem>
           <FormLabel className="text-2xl underline">ModList</FormLabel>
           <FormDescription>Which Mods do you want installed?</FormDescription>
@@ -181,27 +254,26 @@ export function LoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any; mods: s
                 <FormItem className="flex gap-4">
                   <FormLabel className="mt-1 text-xl">{nameOfMod}</FormLabel>
                   <FormControl className="h-6 w-6">
-                    <Checkbox onCheckedChange={field.onChange} />
+                    <FormControl>
+                      <Input
+                        type={'checkbox'}
+                        className="max-w-16"
+                        {...field}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault()
+                          }
+                        }}
+                      />
+                    </FormControl>
                   </FormControl>
                 </FormItem>
               )}
             />
           )
         })}
-        <FormField
-          control={form.control}
-          name="banlist"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-2xl underline">Banlist.txt</FormLabel>
-              <FormControl>
-                <Textarea placeholder="Banlist" {...field} rows={5} />
-              </FormControl>
-              <FormDescription>A list of players to prevent from joining.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <Banlist form={form} />
+        <Maplist form={form} />
         {submitLoading && <LoaderComponent />}
         <Button variant={'secondary'} type="submit">
           Submit

@@ -67,7 +67,6 @@ export function MaplistForm({ setSheetOpen }: { setSheetOpen: any }) {
                   onValueChange={(e) => {
                     setSelectedMap(() => e)
                     clearGamemode()
-                    console.log('Chosen Map Changed!')
                     field.onChange(e)
                   }}
                   defaultValue={field.value}
