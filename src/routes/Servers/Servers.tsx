@@ -3,7 +3,7 @@ import { QueryKey, STALE } from '@/config/config'
 import { getAllLoadoutJson, serverKeyExists } from '@/api'
 import { useQuery } from '@tanstack/react-query'
 import { FirstTimeSetup } from './components/Forms/FirstTimeSetup/FirstTimeSetup'
-import { LoadoutSheet } from './components/Forms/Loadouts/CreateLoadout/LoadoutSheet'
+import { CreateLoadoutSheet } from './components/Forms/Loadouts/CreateLoadout/CreateLoadoutSheet'
 import { UploadLoadoutSheet } from './components/Forms/Loadouts/UploadLoadout/UploadLoadoutSheet'
 import { StartupSheet } from './components/Forms/Startup/StartupSheet'
 import { LoadoutContainer } from './components/Loadouts/LoadoutContainer'
@@ -42,7 +42,7 @@ export function Servers() {
   return (
     <div className="m-auto flex min-h-[100vh] flex-col justify-center">
       <div className="m-auto mb-0 mt-0 flex w-full justify-center gap-4 rounded-md bg-primary p-8">
-        <LoadoutSheet />
+        <CreateLoadoutSheet />
         <UploadLoadoutSheet />
       </div>
       <div className="m-auto mt-0 w-full">

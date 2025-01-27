@@ -1,20 +1,13 @@
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet'
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { Loader, Plus } from 'lucide-react'
 import { useState } from 'react'
 import clsx from 'clsx'
-import { LoadoutForm } from './LoadoutForm'
+import { CreateLoadoutForm } from './CreateLoadoutForm'
 import { QueryKey, STALE } from '@/config/config'
 import { useQuery } from '@tanstack/react-query'
 import { getModNamesInCache } from '@/api'
 
-export function LoadoutSheet() {
+export function CreateLoadoutSheet() {
   const [sheetOpen, setSheetOpen] = useState(false)
 
   const { isPending, isError, data, error } = useQuery({
@@ -56,11 +49,10 @@ export function LoadoutSheet() {
       </SheetTrigger>
       <SheetContent className="overflow-y-scroll">
         <SheetHeader>
-          <SheetTitle>Save Server Loadout</SheetTitle>
-          <SheetDescription>Creates a Loadout for a server</SheetDescription>
+          <SheetTitle className="text-4xl">Create Loadout</SheetTitle>
         </SheetHeader>
         <br />
-        <LoadoutForm setSheetOpen={setSheetOpen} mods={data} />
+        <CreateLoadoutForm setSheetOpen={setSheetOpen} mods={data} />
       </SheetContent>
     </Sheet>
   )
