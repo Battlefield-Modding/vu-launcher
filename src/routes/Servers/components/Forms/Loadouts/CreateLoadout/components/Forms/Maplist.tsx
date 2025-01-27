@@ -16,17 +16,15 @@ import {
 } from '@/components/ui/select'
 import { useFieldArray } from 'react-hook-form'
 import { allMaps } from '../../../../Maplist/Setup/allMaps'
-import { useState } from 'react'
 import { Trash } from 'lucide-react'
+import { CreateLoadoutFormType } from '../../CreateLoadoutForm'
 
-export function Maplist({ form }: { form: any }) {
+export function Maplist({ form }: { form: CreateLoadoutFormType }) {
   const fieldArray = useFieldArray({ name: 'maplist', control: form.control })
 
-  const [selectedMap, setSelectedMap] = useState('')
-
-  function clearGamemode() {
+  function clearGamemode(index: number) {
     // normal form.resetField DOES NOT UPDATE SELECT visually
-    form.setValue('map.gameMode', '')
+    form.setValue(`maplist.${index}.gameMode`, '')
   }
 
   return (
@@ -42,7 +40,7 @@ export function Maplist({ form }: { form: any }) {
           className="mb-4"
           onClick={(e) => {
             e.preventDefault()
-            fieldArray.append('')
+            fieldArray.append({ mapCode: '', gameMode: '' })
           }}
         >
           Add Map
@@ -51,17 +49,17 @@ export function Maplist({ form }: { form: any }) {
       <div className="flex flex-col gap-4">
         {fieldArray.fields.map((x, index) => {
           return (
-            <div className="flex gap-4" key={x.id}>
+            <div className="flex gap-4" key={`maplist-${index}`}>
               <FormLabel className="mb-auto mt-auto text-xl">{index + 1}.&#41;</FormLabel>
               <FormField
                 control={form.control}
                 name={`maplist.${index}.mapCode`}
+                key={`${x.id}-mapCode`}
                 render={({ field }) => (
                   <FormItem className="w-64">
                     <Select
                       onValueChange={(e) => {
-                        setSelectedMap(() => e)
-                        clearGamemode()
+                        clearGamemode(index)
                         console.log('Chosen Map Changed!')
                         field.onChange(e)
                       }}
@@ -89,6 +87,7 @@ export function Maplist({ form }: { form: any }) {
               <FormField
                 control={form.control}
                 name={`maplist.${index}.gameMode`}
+                key={`${x.id}-gameMode`}
                 render={({ field }) => (
                   <FormItem className="w-64">
                     <Select onValueChange={field.onChange} value={field.value}>
@@ -99,7 +98,9 @@ export function Maplist({ form }: { form: any }) {
                       </FormControl>
                       <SelectContent>
                         {allMaps
-                          .filter((x) => x.mapCode === selectedMap)[0]
+                          .filter(
+                            (x) => x.mapCode === form.getValues(`maplist.${index}.mapCode`),
+                          )[0]
                           ?.gameModes.map((x, index) => {
                             return (
                               <SelectItem key={`chosen-gamemode-${index}`} value={x}>
@@ -128,7 +129,7 @@ export function Maplist({ form }: { form: any }) {
                   variant={'constructive'}
                   onClick={(e) => {
                     e.preventDefault()
-                    fieldArray.append('')
+                    fieldArray.append({ mapCode: '', gameMode: '' })
                   }}
                 >
                   Add another Map
