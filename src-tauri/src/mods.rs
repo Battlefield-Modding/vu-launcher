@@ -11,7 +11,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::Error;
 
 use crate::{
-    loadouts::loadout_structs::LoadoutJson, reg_functions, servers::{get_loadouts_path, ServerLoadout}, CREATE_NO_WINDOW
+    loadouts::{get_loadout_json_as_struct, loadout_structs::LoadoutJson, write_to_txt_from_loadout}, reg_functions, servers::{get_loadout_path, get_loadouts_path, ServerLoadout}, CREATE_NO_WINDOW
 };
 
 #[allow(non_snake_case)]
@@ -430,15 +430,44 @@ fn remove_mod_from_modlist(loadout_name: &String, mod_name: &String) -> bool {
     };
 
     let modlist_filtered = modlist_string.split("\n").filter(|x| x != &mod_name);
-    let collected_modlist: Vec<&str> = modlist_filtered.collect();
-    let final_string = collected_modlist.join("\n");
-    match fs::write(&modlist_path, final_string) {
-        Ok(_) => return true,
+    let collected_modlist: Vec<String> = modlist_filtered.map(|x| x.to_owned()).collect();
+    let loadout = get_loadout_json_as_struct(&loadout_name);
+    match loadout {
+        Ok(mut info) => {
+            info.modlist = collected_modlist.clone();
+            let mut loadout_json_path = get_loadout_path(&loadout_name);
+            loadout_json_path.push("loadout.json");
+
+            match serde_json::to_string(&info) {
+                Ok(str) => {
+                    match fs::write(loadout_json_path, str){
+                        Ok(_) => {},
+                        Err(err) => {
+                            println!("Failed to write loadoutJSON after deleting a mod due to error:\n{:?}", err);
+                            return false;
+                        }
+                    }
+        
+                },
+                Err(err) => {
+                    println!("Failed to convert loadoutJSON to string after deleting a mod due to error:\n{:?}", err);
+                    return false;
+                }
+            }
+
+        },  
         Err(err) => {
-            println!("{:?}", err);
-            return false;
+            println!("Failed to get loadout due to error: \n{:?}", err);
+            return false
         }
-    };
+    }
+    match write_to_txt_from_loadout(&loadout_name){
+        Ok(_) => { return true },
+        Err(err) => {
+            println!("Failed to update txt files after deleting mod due to error:\n{:?}", err);
+            return false
+        }
+    }
 }
 
 // *********************************

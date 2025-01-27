@@ -27,7 +27,7 @@ export function DeleteModDialog({
     if (status) {
       toast(`Deleted ${modName} from ${loadoutName}.`)
       queryClient.invalidateQueries({
-        queryKey: [QueryKey.GetModNamesInCache],
+        queryKey: [QueryKey.GetAllLoadoutJSON],
         refetchType: 'all',
       })
     } else {

@@ -56,7 +56,8 @@ export enum QueryKey {
   CredentialsExist = "CredentialsExist",
   ServerList = "ServerList",
   PlayVUInformation = "PlayVUInformation",
-  UserPreferences = "UserPreferences"
+  UserPreferences = "UserPreferences",
+  GetAllLoadoutJSON = "GetAllLoadoutJSON"
 }
 
 export enum routes {

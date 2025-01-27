@@ -12,7 +12,7 @@ use crate::servers::{get_loadout_admin_path, get_loadout_path, get_loadouts_path
 
 pub mod loadout_structs;
 
-fn get_loadout_json_as_struct(loadout_name: &String) -> io::Result<LoadoutJson> {
+pub fn get_loadout_json_as_struct(loadout_name: &String) -> io::Result<LoadoutJson> {
     let mut path_to_loadout_json = get_loadout_path(&loadout_name);
     path_to_loadout_json.push("loadout.json");
     let json_info = read_to_string(&path_to_loadout_json)?;

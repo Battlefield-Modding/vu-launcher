@@ -1,4 +1,4 @@
-import { getLoadoutNames } from '@/api'
+import { getAllLoadoutJson } from '@/api'
 import { QueryKey, STALE } from '@/config/config'
 import { useQuery } from '@tanstack/react-query'
 import { Loader } from 'lucide-react'
@@ -6,8 +6,8 @@ import { Loadout } from './Loadout'
 
 export function LoadoutContainer() {
   const { isPending, isError, data, error } = useQuery({
-    queryKey: [QueryKey.ServerLoadouts],
-    queryFn: getLoadoutNames,
+    queryKey: [QueryKey.GetAllLoadoutJSON],
+    queryFn: getAllLoadoutJson,
     staleTime: STALE.never,
   })
 
@@ -39,8 +39,8 @@ export function LoadoutContainer() {
   }
   return (
     <div className="m- flex w-full flex-wrap justify-center gap-4 p-8 text-white">
-      {data.map((name, index) => (
-        <Loadout name={name} key={`${name}-${index}`} />
+      {data.map((loadout, index) => (
+        <Loadout loadout={loadout} key={`${loadout.name}-${index}`} />
       ))}
     </div>
   )

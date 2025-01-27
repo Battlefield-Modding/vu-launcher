@@ -14,13 +14,7 @@ import {
 } from '@/components/ui/sheet'
 import { AccountMultiSelectForm } from './AccountMultiSelectForm'
 
-export function ChooseAccountSheet({
-  name,
-  getServerPassword,
-}: {
-  name: string
-  getServerPassword: () => string
-}) {
+export function ChooseAccountSheet({ name, password }: { name: string; password: string }) {
   const [sheetOpen, setSheetOpen] = useState(false)
 
   const { isPending, isError, data, error } = useQuery({
@@ -52,7 +46,7 @@ export function ChooseAccountSheet({
     if (status) {
       toast('Started VU Server. Starting Client in 1 second...')
       setTimeout(() => {
-        playVUOnLocalServer(getServerPassword(), users)
+        playVUOnLocalServer(password, users)
       }, 1000)
     } else {
       toast(`Failed to start loadout: ${name}`)

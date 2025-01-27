@@ -122,7 +122,7 @@ export function CreateLoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any; m
     if (status) {
       toast(`Success! Created loadout: ${values.name}`)
       queryClient.invalidateQueries({
-        queryKey: [QueryKey.ServerLoadouts],
+        queryKey: [QueryKey.GetAllLoadoutJSON],
         refetchType: 'all',
       })
       setSheetOpen(() => false)

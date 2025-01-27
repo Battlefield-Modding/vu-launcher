@@ -31,7 +31,7 @@ export function DeleteLoadoutDialog({ name }: { name: string }) {
         element.click()
         toast('Deleted server loadout.')
         queryClient.invalidateQueries({
-          queryKey: [QueryKey.ServerLoadouts],
+          queryKey: [QueryKey.GetAllLoadoutJSON],
           refetchType: 'all',
         })
       }

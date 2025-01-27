@@ -215,8 +215,7 @@ export async function addServer({nickname, guid, password}: {nickname: string, g
   return status
 }
 
-export async function getAllLoadoutJson(){
-  const loadoutJson = await invoke(rust_fns.get_all_loadout_json);
-  console.log(loadoutJson);
+export async function getAllLoadoutJson(): Promise<LoadoutJSON[]>{
+  const loadoutJson = await invoke(rust_fns.get_all_loadout_json) as LoadoutJSON[];
   return loadoutJson
 }
