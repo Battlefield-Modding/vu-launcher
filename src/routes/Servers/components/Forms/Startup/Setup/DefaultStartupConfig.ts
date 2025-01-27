@@ -59,7 +59,22 @@ export const defaultStartupArguments: StartupArgs = {
     tempReservedSlotsRejoinTime: 180
   },
   vu: {
-    serverBanner: ""
+    ColorCorrectionEnabled: true,
+    DesertingAllowed: false,
+    DestructionEnabled: true,
+    HighPerformanceReplication: false,
+    ServerBanner: "",
+    SetTeamTicketCount: "",
+    SquadSize: 4,
+    SunFlareEnabled: true,
+    SuppressionMultiplier: 100,
+    FriendlyFireSuppression: false,
+    TimeScale: 1.0,
+    VehicleDisablingEnabled: true,
+    HttpAssetUrl: "",
+    DisablePreRound: false,
+    TeamActivatedMines: false,
+    CorpseDamageEnabled: false,
   },
   reservedSlots: {
     add: ""
@@ -127,7 +142,22 @@ export const StartupDescriptions = {
     battleCryLink:  "link to your battlecry JSON endpoint",
   },
   vu: {
-    serverBanner: "link to your server banner image"
+    ColorCorrectionEnabled: "Enable blue-tint filter",
+    DesertingAllowed: "Disable Out Of Bounds",
+    DestructionEnabled: "Enable Destruction",
+    HighPerformanceReplication: "Update far-away players at same rate as nearby players",
+    ServerBanner: "URL for 1378x162 .jpg that appears in server browser",
+    SetTeamTicketCount: "Sets team ticket count for a team. Ex: 1 100 would mean you set team1 tickets to 100",
+    SquadSize: "Set max players per squad",
+    SunFlareEnabled: "Enable sun flare",
+    SuppressionMultiplier: "Set suppression intensity [0, infinite]. 0 means disable suppression.",
+    FriendlyFireSuppression: "Enable suppression of allies",
+    TimeScale: "Slow down or speed up game [0.0, 2.0]. Default is 1.0",
+    VehicleDisablingEnabled: "Enable disabled state of vehicles (mobility down and burning)",
+    HttpAssetUrl: "A URL pointing to an external HTTP server hosting mod assets, or an empty string if assets should be sent directly from the game server. When this is set, any connecting clients will try to download any needed assets from that URL, following the file structure of the mod files. For example, if you have a mod called mymod and it has a WebUI container file (ui.vuic), and you set the URL to https://example.com/assets/, the client will try to download the file from https://example.com/assets/mymod/ui.vuic. If file downloads fail or their contents don't match what's on the game server, clients will be unable to join.",
+    DisablePreRound: "Disable time before round starts (waiting for players 1/10)",
+    TeamActivatedMines: "Enable mines killing allies",
+    CorpseDamageEnabled: "Enables corpse damage, preventing revival.(Tip: Tweak VeniceSoldierHealthModuleData.manDownStateHealthPoints with a mod.)",
   },
   reservedSlots: {
     add: "list of players to add to reserved slot separated by comma ,"

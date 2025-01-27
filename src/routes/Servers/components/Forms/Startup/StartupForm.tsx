@@ -73,7 +73,22 @@ const formSchema = z.object({
     })
     .optional(),
   vu: z.object({
-    serverBanner: z.string().optional(),
+    ColorCorrectionEnabled: z.boolean().optional(),
+    DesertingAllowed: z.boolean().optional(),
+    DestructionEnabled: z.boolean().optional(),
+    HighPerformanceReplication: z.boolean().optional(),
+    ServerBanner: z.string().optional(),
+    SetTeamTicketCount: z.string().optional(),
+    SquadSize: z.number().optional(),
+    SunFlareEnabled: z.boolean().optional(),
+    SuppressionMultiplier: z.number().optional(),
+    FriendlyFireSuppression: z.boolean().optional(),
+    TimeScale: z.number().optional(),
+    VehicleDisablingEnabled: z.boolean().optional(),
+    HttpAssetUrl: z.string().optional(),
+    DisablePreRound: z.boolean().optional(),
+    TeamActivatedMines: z.boolean().optional(),
+    CorpseDamageEnabled: z.boolean().optional(),
   }),
   reservedSlots: z.object({
     add: z.string(),

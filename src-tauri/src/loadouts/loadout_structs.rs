@@ -45,9 +45,9 @@ pub struct Vars {
     pub _3pCam: Option<bool>, // Set if allowing to toggle to third person vehicle cameras
     pub regenerateHealth: Option<bool>, // Set if health regeneration should be active
     pub teamKillCountForKick: Option<u32>, // Set number of teamkills allowed during a round
-    pub teamKillValueForKick: Option<u32>, // Set max kill-value allowed for a player before he/she is kicked
-    pub teamKillValuelncrease: Option<u32>, // Set kill-value increase for a teamkill
-    pub teamKillValueDecreasePerSecond: Option<u32>, // Set kill-value decrease per second
+    pub teamKillValueForKick: Option<f64>, // Set max kill-value allowed for a player before he/she is kicked
+    pub teamKillValuelncrease: Option<f64>, // Set kill-value increase for a teamkill
+    pub teamKillValueDecreasePerSecond: Option<f64>, // Set kill-value decrease per second
     pub teamKillKickForBan: Option<u32>, // Set number of team-kill kicks that will lead to permaban
     pub idleTimeout: Option<u32>,        // Set idle timeout
     pub idleBanRounds: Option<bool>,     // Set how many rounds idle timeout should ban (if at all)
@@ -96,7 +96,22 @@ pub struct RM_Commands {
 #[allow(non_snake_case)]
 #[derive(Serialize, Deserialize, Debug)]
 pub struct VU_Commands {
-    pub serverBanner: Option<String>, // link to your server banner image
+    pub ColorCorrectionEnabled: Option<bool>, // "Enable blue-tint filter",
+    pub DesertingAllowed: Option<bool>,       // "Disable Out Of Bounds",
+    pub DestructionEnabled: Option<bool>,     // "Enable Destruction",
+    pub HighPerformanceReplication: Option<bool>, // "Update far-away players at same rate as nearby players",
+    pub ServerBanner: Option<String>, // "URL for 1378x162 .jpg that appears in server browser",
+    pub SetTeamTicketCount: Option<Vec<u32>>, // "Sets team ticket count for a team. TeamId TicketCount",
+    pub SquadSize: Option<u32>,               // "Set max players per squad",
+    pub SunFlareEnabled: Option<bool>,        // "Enable sun flare",
+    pub SuppressionMultiplier: Option<u32>, // "Set suppression intensity [0, infinite]. 0 means disable suppression.",
+    pub FriendlyFireSuppression: Option<bool>, // "Enable suppression of allies",
+    pub TimeScale: Option<f64>, // "Slow down or speed up game [0.0, 2.0]. Default is 1.0",
+    pub VehicleDisablingEnabled: Option<bool>, // "Enable disabled state of vehicles (mobility down and burning)",
+    pub HttpAssetUrl: Option<String>, // "A URL pointing to an external HTTP server hosting mod assets, or an empty string if assets should be sent directly from the game server. When this is set, any connecting clients will try to download any needed assets from that URL, following the file structure of the mod files. For example, if you have a mod called mymod and it has a WebUI container file (ui.vuic), and you set the URL to https://example.com/assets/, the client will try to download the file from https://example.com/assets/mymod/ui.vuic. If file downloads fail or their contents don't match what's on the game server, clients will be unable to join.",
+    pub DisablePreRound: Option<bool>, // "Disable time before round starts (waiting for players 1/10)",
+    pub TeamActivatedMines: Option<bool>, // "Enable mines killing allies",
+    pub CorpseDamageEnabled: Option<bool>, // "Enables corpse damage, preventing revival.(Tip: Tweak VeniceSoldierHealthModuleData.manDownStateHealthPoints with a mod.)",
 }
 
 #[derive(Serialize, Deserialize, Debug)]
