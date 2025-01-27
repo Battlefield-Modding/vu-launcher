@@ -11,8 +11,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::Error;
 
 use crate::{
-    reg_functions,
-    servers::{get_loadouts_path, ServerLoadout}, CREATE_NO_WINDOW,
+    loadouts::loadout_structs::LoadoutJson, reg_functions, servers::{get_loadouts_path, ServerLoadout}, CREATE_NO_WINDOW
 };
 
 #[allow(non_snake_case)]
@@ -285,9 +284,9 @@ pub fn get_mod_names_in_loadout(name: String) -> Vec<String> {
     mod_names
 }
 
-pub fn install_mods(loadout: &ServerLoadout) -> Vec<String> {
+pub fn install_mods(loadout: &LoadoutJson) -> Vec<String> {
     let path_to_mods_folder = get_mod_path_for_loadout(&loadout.name);
-    let mods = &loadout.mods;
+    let mods = &loadout.modlist;
 
     let mut mod_names: Vec<String> = Vec::new();
     for mod_name in mods {

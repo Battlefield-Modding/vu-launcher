@@ -9,6 +9,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
     get_user_preferences_as_struct,
+    loadouts::{loadout_structs::LoadoutJson, write_to_txt_from_loadout},
     mods::{get_mod_names_in_loadout, install_mods, make_folder_names_same_as_mod_json_names},
     reg_functions, save_user_preferences, CREATE_NO_WINDOW,
 };
@@ -80,9 +81,11 @@ fn copy_server_key(path: &PathBuf) {
 }
 
 #[tauri::command]
-pub fn create_server_loadout(loadout: ServerLoadout) -> Result<bool, String> {
+pub fn create_server_loadout(mut loadout: LoadoutJson) -> Result<bool, String> {
     let mut loadout_path = get_loadouts_path();
     loadout_path.push(&loadout.name);
+    let mut loadout_json_path = loadout_path.clone();
+    loadout_json_path.push("loadout.json");
 
     loadout_path.push("Server");
     let server_path = loadout_path.clone();
@@ -103,61 +106,80 @@ pub fn create_server_loadout(loadout: ServerLoadout) -> Result<bool, String> {
     // move the server key over once folders are made
     copy_server_key(&server_path);
 
-    let mut startup_path = loadout_path.clone();
-    let _ = startup_path.push("startup.txt");
-    println!("{:?}", startup_path);
-    let mut maplist_path = loadout_path.clone();
-    let _ = maplist_path.push("maplist.txt");
-    println!("{:?}", maplist_path);
     let mut modlist_path = loadout_path.clone();
-    let _ = modlist_path.push("modlist.txt");
+    modlist_path.push("modlist.txt");
     println!("{:?}", modlist_path);
-    let mut banlist_path = loadout_path.clone();
-    let _ = banlist_path.push("banlist.txt");
-    println!("{:?}", banlist_path);
-    let mut mods_path = loadout_path.clone();
-    let _ = mods_path.push("Mods");
 
-    let _ = fs::create_dir(mods_path);
+    let mut mods_path = loadout_path.clone();
+    mods_path.push("Mods");
+
+    match fs::create_dir(mods_path) {
+        Ok(_) => {}
+        Err(err) => {
+            println!(
+                "Failed to create mods folder for loadout due to error:\n{:?}",
+                err
+            );
+            return Err(err.to_string());
+        }
+    };
     let mod_list = install_mods(&loadout);
 
-    let _ = write(startup_path, loadout.startup);
-    let _ = write(modlist_path, mod_list.join("\n"));
-    let _ = write(maplist_path, loadout.maplist);
-    let _ = write(banlist_path, loadout.banlist);
+    loadout.modlist = mod_list;
+    let str = serde_json::to_string(&loadout);
+    match fs::write(loadout_json_path, str.unwrap()) {
+        Ok(_) => {}
+        Err(err) => {
+            println!("Failed to create loadoutJSON due to error:\n{:?}", err);
+            return Err(err.to_string());
+        }
+    }
 
-    println!("{:?}", loadout.mods);
+    match write_to_txt_from_loadout(&loadout.name) {
+        Ok(_) => {
+            println!("Successfully updated Startup / Modlist / Maplist / Banlist");
+        }
+        Err(err) => {
+            println!(
+                "Failed to update Startup / Modlist / Maplist / Banlist due to error:\n{:?}",
+                err
+            );
+            return Err(err.to_string());
+        }
+    };
 
     Ok(true)
 }
 
 #[tauri::command]
-pub fn edit_server_loadout(loadout: ServerLoadout) -> Result<bool, String> {
-    let loadout_path = get_loadout_path(&loadout.name);
-
-    let mut startup_path = loadout_path.clone();
-    let _ = startup_path.push("startup.txt");
-    println!("{:?}", startup_path);
-    let mut maplist_path = loadout_path.clone();
-    let _ = maplist_path.push("maplist.txt");
-    println!("{:?}", maplist_path);
-    let mut modlist_path = loadout_path.clone();
-    let _ = modlist_path.push("modlist.txt");
-    println!("{:?}", modlist_path);
-    let mut banlist_path = loadout_path.clone();
-    let _ = banlist_path.push("banlist.txt");
-    println!("{:?}", banlist_path);
-    let mut mods_path = loadout_path.clone();
-    let _ = mods_path.push("Mods");
+pub fn edit_server_loadout(mut loadout: LoadoutJson) -> Result<bool, String> {
+    let mut loadout_json_path = get_loadout_admin_path(&loadout.name);
+    loadout_json_path.push("loadout.json");
 
     let mod_list = install_mods(&loadout);
 
-    let _ = write(startup_path, loadout.startup);
-    let _ = write(modlist_path, mod_list.join("\n"));
-    let _ = write(maplist_path, loadout.maplist);
-    let _ = write(banlist_path, loadout.banlist);
+    loadout.modlist = mod_list;
+    let str = serde_json::to_string(&loadout);
+    match fs::write(loadout_json_path, str.unwrap()) {
+        Ok(_) => {}
+        Err(err) => {
+            println!("Failed to update loadoutJSON due to error:\n{:?}", err);
+            return Err(err.to_string());
+        }
+    }
 
-    println!("{:?}", loadout.mods);
+    match write_to_txt_from_loadout(&loadout.name) {
+        Ok(_) => {
+            println!("Successfully updated Startup / Modlist / Maplist / Banlist");
+        }
+        Err(err) => {
+            println!(
+                "Failed to update Startup / Modlist / Maplist / Banlist due to error:\n{:?}",
+                err
+            );
+            return Err(err.to_string());
+        }
+    };
 
     Ok(true)
 }
@@ -358,13 +380,19 @@ pub fn get_loadouts_path() -> PathBuf {
     return loadouts_path;
 }
 
-pub fn get_loadout_path(name: &String) -> PathBuf {
+pub fn get_loadout_admin_path(name: &String) -> PathBuf {
     let mut loadout_path: PathBuf = get_loadouts_path();
     loadout_path.push(&name);
 
     loadout_path.push("Server");
     loadout_path.push("Admin");
     return loadout_path;
+}
+
+pub fn get_loadout_path(loadout_name: &String) -> PathBuf {
+    let mut loadout_path: PathBuf = get_loadouts_path();
+    loadout_path.push(&loadout_name);
+    loadout_path
 }
 
 #[tauri::command]
