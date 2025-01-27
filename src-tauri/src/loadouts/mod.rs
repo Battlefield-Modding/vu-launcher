@@ -1,10 +1,11 @@
 use std::{
+    f64,
     fs::{read_dir, read_to_string, write},
     io,
     path::PathBuf,
 };
 
-use loadout_structs::LoadoutJson;
+use loadout_structs::{Admin, LoadoutJson, StartupArgs, VU_Commands, Vars};
 use serde_json::Error;
 use serde_json::Value;
 
@@ -68,10 +69,296 @@ fn has_loadout_json(path: &PathBuf) -> bool {
     return server_path.exists();
 }
 
-fn make_loadout_json_for_loadout(loadout_name: String) {
+fn make_loadout_json_for_loadout(loadout_name: &String) {
+    // import startup_txt_into_loadout
+    // import modlist_txt_into_loadout
+    // import banlist_txt_into_loadout
+    // import maplist_txt_into_loadout
     // TODO: Read and parse Startup.txt | Modlist.txt | Maplist.txt | Banlist.txt
     // TODO: Store the values from parsed files into a LoadoutJSON struct
     // TODO: Write that LoadoutJSON to a file
+}
+
+fn import_startup_txt_into_loadout(loadout_name: &String) {
+    let mut startup_txt_path = get_loadout_admin_path(loadout_name);
+    startup_txt_path.push("startup.txt");
+
+    let vars: Vars = Vars {
+        ranked: None,
+        serverName: String::from(""),
+        gamePassword: None,
+        autoBalance: None,
+        roundStartPlayerCount: None,
+        roundRestartPlayerCount: None,
+        roundLockdownCountdown: None,
+        serverMessage: None,
+        friendlyFire: None,
+        maxPlayers: None,
+        serverDescription: None,
+        killCam: None,
+        miniMap: None,
+        hud: None,
+        crossHair: None,
+        _3dSpotting: None,
+        miniMapSpotting: None,
+        nameTag: None,
+        _3pCam: None,
+        regenerateHealth: None,
+        teamKillCountForKick: None,
+        teamKillValueForKick: None,
+        teamKillValuelncrease: None,
+        teamKillValueDecreasePerSecond: None,
+        teamKillKickForBan: None,
+        idleTimeout: None,
+        idleBanRounds: None,
+        vehicleSpawnAllowed: None,
+        vehicleSpawnDelay: None,
+        soldierHealth: None,
+        playerRespawnTime: None,
+        playerManDownTime: None,
+        bulletDamage: None,
+        gameModeCounter: None,
+        onlySquadLeaderSpawn: None,
+        unlockMode: None,
+        premiumStatus: None,
+    };
+
+    let admin = Admin {
+        password: String::from(""),
+    };
+
+    let vu = VU_Commands {
+        ColorCorrectionEnabled: None,
+        DesertingAllowed: None,
+        DestructionEnabled: None,
+        HighPerformanceReplication: None,
+        ServerBanner: None,
+        SetTeamTicketCount: None,
+        SquadSize: None,
+        SunFlareEnabled: None,
+        SuppressionMultiplier: None,
+        FriendlyFireSuppression: None,
+        TimeScale: None,
+        VehicleDisablingEnabled: None,
+        HttpAssetUrl: None,
+        DisablePreRound: None,
+        TeamActivatedMines: None,
+        CorpseDamageEnabled: None,
+    };
+
+    let mut startup: StartupArgs = StartupArgs {
+        admin,
+        vars,
+        RM: None,
+        vu: Some(vu),
+        reservedSlots: None,
+    };
+
+    let vu_initial = serde_json::to_value(startup.vu).unwrap();
+    let mut vu_object = vu_initial.as_object().unwrap().to_owned();
+    let admin_initial = serde_json::to_value(startup.admin).unwrap();
+    let mut admin_object = admin_initial.as_object().unwrap().to_owned();
+    let vars_initial = serde_json::to_value(startup.vars).unwrap();
+    let mut vars_object = vars_initial.as_object().unwrap().to_owned();
+
+    match read_to_string(startup_txt_path) {
+        Ok(info) => {
+            let string_vec = info.split("\n");
+            for string in string_vec.into_iter() {
+                if string.starts_with("#") {
+                    // this is a comment. DISREGARDING
+                } else if string.contains(".") {
+                    let splits: Vec<&str> = string.split(".").collect();
+                    let len = splits.len();
+                    if len == 2 {
+                        match splits.get(0) {
+                            Some(split_info) => {
+                                let test_split = String::from(split_info.to_owned());
+
+                                match splits.get(1) {
+                                    Some(split_val) => {
+                                        let second_split: Vec<&str> =
+                                            split_val.split(" ").collect();
+                                        match second_split.get(0) {
+                                            Some(key) => {
+                                                let owned_key = key.to_owned();
+
+                                                match second_split.get(1) {
+                                                    Some(value) => {
+                                                        let owned_value = value.to_owned();
+
+                                                        let test_num = owned_value;
+
+                                                        match test_num.parse::<u32>() {
+                                                            Ok(num) => {
+                                                                let owned_value_as_value =
+                                                                    serde_json::to_value(num)
+                                                                        .unwrap();
+                                                                if test_split.eq("vars") {
+                                                                    vars_object.insert(
+                                                                        String::from(owned_key),
+                                                                        owned_value_as_value,
+                                                                    );
+                                                                } else if test_split.eq("admin") {
+                                                                    admin_object.insert(
+                                                                        String::from(owned_key),
+                                                                        owned_value_as_value,
+                                                                    );
+                                                                } else if test_split.eq("vu") {
+                                                                    vu_object.insert(
+                                                                        String::from(owned_key),
+                                                                        owned_value_as_value,
+                                                                    );
+                                                                }
+                                                            }
+                                                            Err(_) => {
+                                                                match test_num.parse::<bool>() {
+                                                                    Ok(bool) => {
+                                                                        let owned_value_as_value =
+                                                                            serde_json::to_value(
+                                                                                bool,
+                                                                            )
+                                                                            .unwrap();
+
+                                                                        if test_split.eq("vars") {
+                                                                            vars_object.insert(
+                                                                                    String::from(owned_key),
+                                                                                    owned_value_as_value,
+                                                                                );
+                                                                        } else if test_split
+                                                                            .eq("admin")
+                                                                        {
+                                                                            admin_object.insert(
+                                                                                    String::from(owned_key),
+                                                                                    owned_value_as_value,
+                                                                                );
+                                                                        } else if test_split
+                                                                            .eq("vu")
+                                                                        {
+                                                                            vu_object.insert(
+                                                                                    String::from(owned_key),
+                                                                                    owned_value_as_value,
+                                                                                );
+                                                                        }
+                                                                    }
+                                                                    Err(_) => {
+                                                                        let owned_value_as_value =
+                                                                            serde_json::to_value(
+                                                                                owned_value,
+                                                                            )
+                                                                            .unwrap();
+
+                                                                        if test_split.eq("vars") {
+                                                                            vars_object.insert(
+                                                                                    String::from(owned_key),
+                                                                                    owned_value_as_value,
+                                                                                );
+                                                                        } else if test_split
+                                                                            .eq("admin")
+                                                                        {
+                                                                            admin_object.insert(
+                                                                                    String::from(owned_key),
+                                                                                    owned_value_as_value,
+                                                                                );
+                                                                        } else if test_split
+                                                                            .eq("vu")
+                                                                        {
+                                                                            vu_object.insert(
+                                                                                    String::from(owned_key),
+                                                                                    owned_value_as_value,
+                                                                                );
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    None => {}
+                                                };
+                                            }
+                                            None => {}
+                                        }
+                                    }
+                                    None => {}
+                                };
+                            }
+                            None => {}
+                        }
+
+                        // vars_object.insert(splits.get(0), splits.get(1));
+                    } else if len == 3 {
+                        // there is some decimal value?
+                        match splits.get(0) {
+                            Some(split_info) => {
+                                // let key = split_info.to_string();
+
+                                match splits.get(1) {
+                                    Some(split_val) => {
+                                        let second_split: Vec<&str> =
+                                            split_val.split(" ").collect();
+                                        match second_split.get(0) {
+                                            Some(key) => {
+                                                let owned_key = key.to_owned();
+
+                                                match second_split.get(1) {
+                                                    Some(value) => {
+                                                        let owned_value_part_one = value.to_owned();
+
+                                                        match splits.get(2) {
+                                                            Some(value_second_half) => {
+                                                                let owned_value_part_two =
+                                                                    value_second_half.to_owned();
+
+                                                                let mut combined_owned_value =
+                                                                    String::new();
+                                                                combined_owned_value
+                                                                    .push_str(owned_value_part_one);
+                                                                combined_owned_value.push_str(".");
+                                                                combined_owned_value
+                                                                    .push_str(owned_value_part_two);
+
+                                                                let decimal_value =
+                                                                    combined_owned_value
+                                                                        .parse::<f64>()
+                                                                        .unwrap();
+
+                                                                let owned_value_as_value =
+                                                                    serde_json::to_value(
+                                                                        decimal_value,
+                                                                    )
+                                                                    .unwrap();
+
+                                                                vars_object.insert(
+                                                                    String::from(owned_key),
+                                                                    owned_value_as_value,
+                                                                );
+                                                            }
+                                                            None => {}
+                                                        }
+                                                    }
+                                                    None => {}
+                                                };
+                                            }
+                                            None => {}
+                                        }
+                                    }
+                                    None => {}
+                                };
+                            }
+                            None => {}
+                        }
+                    }
+                }
+            }
+        }
+        Err(err) => {
+            println!("Failed to read startup.txt due to error:\n{:?}", err);
+        }
+    };
+
+    println!("{:?}", vars_object);
+    println!("{:?}", admin_object);
+    println!("{:?}", vu_object);
 }
 
 pub fn write_to_txt_from_loadout(loadout_name: &String) -> io::Result<bool> {
@@ -247,7 +534,7 @@ pub fn get_all_loadout_json() -> Vec<LoadoutJson> {
                                     }
                                 } else {
                                     println!("Did not find loadout.json for loadout {}. Creating one now...", &loadout_name);
-                                    make_loadout_json_for_loadout(loadout_name);
+                                    import_startup_txt_into_loadout(&loadout_name);
                                 }
                             }
                         }
