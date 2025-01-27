@@ -1,3 +1,5 @@
+import { StartupArgs } from "@/routes/Servers/components/Forms/Startup/Setup/StartupTypes"
+
 export const STALE =
 {
   default: 60 * 1000, // 60,
@@ -72,6 +74,21 @@ export type Loadout = {
   banlist: string,
   mods: string[]
 }
+
+export type Map = {
+  mapCode: string,
+  gameMode: string
+}
+
+export type LoadoutJSON = {
+  name: string,
+  startup: StartupArgs,
+  maplist: Map[],
+  banlist?: string[]
+  modlist?: string[]
+}
+
+export type LoadoutJSON_AndMods = LoadoutJSON & { mods?: string[] }
 
 export type DragDropEventTauri = {
   event: string,
