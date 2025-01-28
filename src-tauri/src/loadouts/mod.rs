@@ -79,7 +79,7 @@ fn make_loadout_json_for_loadout(loadout_name: &String) {
     // TODO: Write that LoadoutJSON to a file
 }
 
-fn import_startup_txt_into_loadout(loadout_name: &String) {
+fn import_startup_txt_into_loadout(loadout_name: &String) -> io::Result<StartupArgs> {
     let mut startup_txt_path = get_loadout_admin_path(loadout_name);
     startup_txt_path.push("startup.txt");
 
@@ -232,26 +232,35 @@ fn import_startup_txt_into_loadout(loadout_name: &String) {
             Err(_) => {}
         }
 
-        match serde_json::to_value(arg.value) {
-            Ok(val) => {
-                if arg.category.eq("vars") {
-                    vars_object.insert(arg.key, val);
-                } else if arg.category.eq("admin") {
-                    admin_object.insert(arg.key, val);
-                } else if arg.category.eq("vu") {
-                    vu_object.insert(arg.key, val);
-                }
-                continue;
-            }
-            Err(err) => {
-                println!("Failed to add key {} due to error:\n{:?}", arg.key, err)
-            }
-        };
+        let str_val = serde_json::to_value(arg.value)?;
+        if arg.category.eq("vars") {
+            vars_object.insert(arg.key, str_val);
+        } else if arg.category.eq("admin") {
+            admin_object.insert(arg.key, str_val);
+        } else if arg.category.eq("vu") {
+            vu_object.insert(arg.key, str_val);
+        }
+        continue;
     }
 
-    println!("{:?}", vars_object);
-    println!("{:?}", admin_object);
-    println!("{:?}", vu_object);
+    let vars_string = serde_json::to_string(&vars_object)?;
+    let vars_struct = serde_json::from_str::<Vars>(&vars_string)?;
+
+    let admin_string = serde_json::to_string(&admin_object)?;
+    let admin_struct = serde_json::from_str::<Admin>(&admin_string)?;
+
+    let vu_string = serde_json::to_string(&vu_object)?;
+    let vu_struct = serde_json::from_str::<VU_Commands>(&vu_string)?;
+
+    let final_struct = StartupArgs {
+        vars: vars_struct,
+        admin: admin_struct,
+        vu: Some(vu_struct),
+        RM: None,
+        reservedSlots: None,
+    };
+
+    Ok(final_struct)
 }
 
 pub fn write_to_txt_from_loadout(loadout_name: &String) -> io::Result<bool> {
@@ -427,7 +436,14 @@ pub fn get_all_loadout_json() -> Vec<LoadoutJson> {
                                     }
                                 } else {
                                     println!("Did not find loadout.json for loadout {}. Creating one now...", &loadout_name);
-                                    import_startup_txt_into_loadout(&loadout_name);
+                                    match import_startup_txt_into_loadout(&loadout_name){
+                                        Ok(loadout_json_struct) => {
+                                            println!("{:?}", &loadout_json_struct);
+                                        },
+                                        Err(err) => {
+                                            println!("{:?}", err);
+                                        }
+                                    };
                                 }
                             }
                         }
