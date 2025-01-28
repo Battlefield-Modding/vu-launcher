@@ -102,6 +102,8 @@ fn make_loadout_json_from_txt_files(loadout_name: &String) -> io::Result<bool> {
     // TODO: Store the values from parsed files into a LoadoutJSON struct
     // TODO: Write that LoadoutJSON to a file
 
+    write_to_txt_from_loadout(loadout_name)?;
+
     Ok(true)
 }
 
