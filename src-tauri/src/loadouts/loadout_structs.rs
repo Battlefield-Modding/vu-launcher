@@ -21,6 +21,14 @@ pub struct Admin {
     pub password: String, // This is RCON password for remote admin.
 }
 
+impl Admin {
+    pub fn default() -> Admin {
+        Admin {
+            password: String::from(""),
+        }
+    }
+}
+
 #[allow(non_snake_case)]
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Vars {
@@ -61,6 +69,50 @@ pub struct Vars {
     pub onlySquadLeaderSpawn: Option<bool>, // Set if players can only spawn on their squad leader
     pub unlockMode: Option<Vec<String>>, // Set weapons & gadgets to be available on an unranked server
     pub premiumStatus: Option<bool>,     // Set if the server should be exclusive to Premium Players
+}
+
+impl Vars {
+    pub fn default() -> Vars {
+        Vars {
+            ranked: None,
+            serverName: String::from(""),
+            gamePassword: None,
+            autoBalance: None,
+            roundStartPlayerCount: None,
+            roundRestartPlayerCount: None,
+            roundLockdownCountdown: None,
+            serverMessage: None,
+            friendlyFire: None,
+            maxPlayers: None,
+            serverDescription: None,
+            killCam: None,
+            miniMap: None,
+            hud: None,
+            crossHair: None,
+            _3dSpotting: None,
+            miniMapSpotting: None,
+            nameTag: None,
+            _3pCam: None,
+            regenerateHealth: None,
+            teamKillCountForKick: None,
+            teamKillValueForKick: None,
+            teamKillValuelncrease: None,
+            teamKillValueDecreasePerSecond: None,
+            teamKillKickForBan: None,
+            idleTimeout: None,
+            idleBanRounds: None,
+            vehicleSpawnAllowed: None,
+            vehicleSpawnDelay: None,
+            soldierHealth: None,
+            playerRespawnTime: None,
+            playerManDownTime: None,
+            bulletDamage: None,
+            gameModeCounter: None,
+            onlySquadLeaderSpawn: None,
+            unlockMode: None,
+            premiumStatus: None,
+        }
+    }
 }
 
 #[allow(non_snake_case)]
@@ -114,7 +166,49 @@ pub struct VU_Commands {
     pub CorpseDamageEnabled: Option<bool>, // "Enables corpse damage, preventing revival.(Tip: Tweak VeniceSoldierHealthModuleData.manDownStateHealthPoints with a mod.)",
 }
 
+impl VU_Commands {
+    pub fn default() -> VU_Commands {
+        VU_Commands {
+            ColorCorrectionEnabled: None,
+            DesertingAllowed: None,
+            DestructionEnabled: None,
+            HighPerformanceReplication: None,
+            ServerBanner: None,
+            SetTeamTicketCount: None,
+            SquadSize: None,
+            SunFlareEnabled: None,
+            SuppressionMultiplier: None,
+            FriendlyFireSuppression: None,
+            TimeScale: None,
+            VehicleDisablingEnabled: None,
+            HttpAssetUrl: None,
+            DisablePreRound: None,
+            TeamActivatedMines: None,
+            CorpseDamageEnabled: None,
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ReservedSlots {
     pub add: Vec<String>, // list of players to add to reserved slot
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct ParsedStartupTxtLine {
+    pub category: String, // what section of startup key belongs to
+    pub key: String,
+    pub value: String,
+}
+
+impl StartupArgs {
+    pub fn default() -> StartupArgs {
+        StartupArgs {
+            admin: Admin::default(),
+            vars: Vars::default(),
+            RM: None,
+            vu: Some(VU_Commands::default()),
+            reservedSlots: None,
+        }
+    }
 }
