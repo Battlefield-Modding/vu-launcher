@@ -143,7 +143,7 @@ fn import_startup_txt_into_loadout(loadout_name: &String) {
                         break;
                     } else {
                         // handle 3dSpotting -> _3dSpotting conversion
-                        if value.len() == 0 && temp_str.len() == 0 {
+                        if key.len() == 0 && temp_str.len() == 0 {
                             if character.to_string() == "3".to_string() {
                                 temp_str.push_str("_");
                             }
