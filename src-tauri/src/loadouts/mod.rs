@@ -5,7 +5,9 @@ use std::{
     path::PathBuf,
 };
 
-use loadout_structs::{Admin, LoadoutJson, ParsedStartupTxtLine, StartupArgs, VU_Commands, Vars};
+use loadout_structs::{
+    Admin, LoadoutJson, Map, ParsedStartupTxtLine, StartupArgs, VU_Commands, Vars,
+};
 use serde_json::Error;
 use serde_json::Value;
 
@@ -21,37 +23,20 @@ pub fn get_loadout_json_as_struct(loadout_name: &String) -> io::Result<LoadoutJs
     Ok(loadout_struct)
 }
 
-fn convert_loadout_json_to_string(loadout: &LoadoutJson) -> Result<String, String> {
-    let loadout_string = serde_json::to_string(loadout);
-    match loadout_string {
-        Ok(info) => return Ok(info),
-        Err(err) => return Err(err.to_string()),
-    };
+fn convert_loadout_json_to_string(loadout: &LoadoutJson) -> io::Result<String> {
+    let loadout_string = serde_json::to_string(loadout)?;
+    Ok(loadout_string)
 }
 
-fn write_loadout_json(loadout_name: String, loadout: LoadoutJson) {
-    let mut path_to_loadout_json = get_loadout_path(&loadout_name);
+fn write_loadout_json(loadout_name: &String, loadout: LoadoutJson) -> io::Result<bool> {
+    let mut path_to_loadout_json = get_loadout_path(loadout_name);
     path_to_loadout_json.push("loadout.json");
 
-    let loadout_json_string = match convert_loadout_json_to_string(&loadout) {
-        Ok(info) => info,
-        Err(err) => {
-            println!("{:?}", err);
-            return;
-        }
-    };
+    let loadout_json_string = convert_loadout_json_to_string(&loadout)?;
 
-    match write(&path_to_loadout_json, loadout_json_string) {
-        Ok(_) => {
-            println!("Successfully wrote to {:?}", &path_to_loadout_json)
-        }
-        Err(err) => {
-            println!(
-                "Failed to write to {:?} due to error: \n{:?}",
-                &path_to_loadout_json, err
-            );
-        }
-    }
+    write(&path_to_loadout_json, loadout_json_string)?;
+
+    Ok(true)
 }
 
 #[tauri::command]
@@ -69,7 +54,46 @@ fn has_loadout_json(path: &PathBuf) -> bool {
     return server_path.exists();
 }
 
-fn make_loadout_json_for_loadout(loadout_name: &String) {
+fn make_loadout_json_from_txt_files(loadout_name: &String) -> io::Result<bool> {
+    let startup_args = import_startup_txt_into_loadout(&loadout_name)?;
+    let maplist_args = match import_maplist_txt_into_loadout(&loadout_name) {
+        Ok(info) => info,
+        Err(_) => {
+            let empty_vec: Vec<Map> = Vec::new();
+            empty_vec
+        }
+    };
+    let banlist_args = match import_banlist_txt_into_loadout(&loadout_name) {
+        Ok(info) => info,
+        Err(_) => {
+            let empty_vec: Vec<String> = Vec::new();
+            empty_vec
+        }
+    };
+    let modlist_args = match import_modlist_txt_into_loadout(&loadout_name) {
+        Ok(info) => info,
+        Err(_) => {
+            let empty_vec: Vec<String> = Vec::new();
+            empty_vec
+        }
+    };
+
+    println!("{:?}", &startup_args);
+    println!("{:?}", &maplist_args);
+    println!("{:?}", &banlist_args);
+    println!("{:?}", &modlist_args);
+
+    let loadout_json = LoadoutJson {
+        name: String::from(loadout_name),
+        startup: startup_args,
+        maplist: maplist_args,
+        banlist: banlist_args,
+        modlist: modlist_args,
+    };
+
+    write_loadout_json(loadout_name, loadout_json)?;
+
+    // let modlist_args = import_maplist_txt_into_loadout(&loadout_name)?;
     // import startup_txt_into_loadout
     // import modlist_txt_into_loadout
     // import banlist_txt_into_loadout
@@ -77,6 +101,109 @@ fn make_loadout_json_for_loadout(loadout_name: &String) {
     // TODO: Read and parse Startup.txt | Modlist.txt | Maplist.txt | Banlist.txt
     // TODO: Store the values from parsed files into a LoadoutJSON struct
     // TODO: Write that LoadoutJSON to a file
+
+    Ok(true)
+}
+
+fn import_modlist_txt_into_loadout(loadout_name: &String) -> io::Result<Vec<String>> {
+    let mut modlist_txt_path = get_loadout_admin_path(loadout_name);
+    modlist_txt_path.push("modlist.txt");
+
+    let mut modlist_vec: Vec<String> = Vec::new();
+
+    match read_to_string(modlist_txt_path) {
+        Ok(info) => {
+            for item in info.split("\n") {
+                if item.starts_with("#") {
+                    continue;
+                }
+                modlist_vec.push(String::from(item.trim()));
+            }
+        }
+        Err(err) => {
+            println!("Failed to read modlist.txt due to error:\n{:?}", err);
+        }
+    };
+
+    Ok(modlist_vec)
+}
+
+fn import_banlist_txt_into_loadout(loadout_name: &String) -> io::Result<Vec<String>> {
+    let mut banlist_txt_path = get_loadout_admin_path(loadout_name);
+    banlist_txt_path.push("banlist.txt");
+
+    let mut banlist_vec: Vec<String> = Vec::new();
+
+    match read_to_string(banlist_txt_path) {
+        Ok(info) => {
+            for item in info.split("\n") {
+                if item.starts_with("#") {
+                    continue;
+                }
+                banlist_vec.push(String::from(item.trim()));
+            }
+        }
+        Err(err) => {
+            println!("Failed to read banlist.txt due to error:\n{:?}", err);
+        }
+    };
+
+    Ok(banlist_vec)
+}
+
+fn import_maplist_txt_into_loadout(loadout_name: &String) -> io::Result<Vec<Map>> {
+    let mut maplist_txt_path = get_loadout_admin_path(loadout_name);
+    maplist_txt_path.push("maplist.txt");
+
+    let mut maps_vec: Vec<Map> = Vec::new();
+
+    match read_to_string(maplist_txt_path) {
+        Ok(info) => {
+            let string_vec = info.split("\n");
+
+            for string in string_vec.into_iter() {
+                let mut characters = string.chars().peekable();
+
+                let mut is_first_char = true;
+                let mut temp_str = String::new();
+                let mut is_first_space = true;
+                let mut map_code = String::new();
+                let mut game_mode = String::new();
+
+                while let Some(character) = characters.next() {
+                    if is_first_char {
+                        // if invalid first character go to next string
+                        if character == '#' || character == '\n' || character == ' ' {
+                            break;
+                        }
+                        is_first_char = false;
+                    }
+                    if character == ' ' {
+                        if is_first_space {
+                            map_code.push_str(&temp_str);
+                            is_first_space = false;
+                            temp_str.clear();
+                        } else {
+                            game_mode.push_str(&temp_str);
+                            maps_vec.push(Map {
+                                mapCode: map_code,
+                                gameMode: game_mode,
+                            });
+                            break;
+                        }
+                    } else {
+                        temp_str.push(character);
+                    }
+                }
+            }
+        }
+
+        Err(err) => {
+            println!("Failed to read maplist.txt due to error:\n{:?}", err);
+        }
+    };
+
+    Ok(maps_vec)
 }
 
 fn import_startup_txt_into_loadout(loadout_name: &String) -> io::Result<StartupArgs> {
@@ -436,12 +563,23 @@ pub fn get_all_loadout_json() -> Vec<LoadoutJson> {
                                     }
                                 } else {
                                     println!("Did not find loadout.json for loadout {}. Creating one now...", &loadout_name);
-                                    match import_startup_txt_into_loadout(&loadout_name){
-                                        Ok(loadout_json_struct) => {
-                                            println!("{:?}", &loadout_json_struct);
+                                    match make_loadout_json_from_txt_files(&loadout_name){
+                                        Ok(_)=>{
+                                            println!("Successfully made loadout JSON from txt files.");
+
+                                            if has_loadout_json(&info.path()){
+                                                match get_loadout_json_as_struct(&loadout_name){
+                                                    Ok(loadout) => {
+                                                        loadouts.push(loadout);
+                                                    },
+                                                    Err(err) => {
+                                                        println!("Failed to get loadout json for {} due to error: \n{:?}", loadout_name, err);
+                                                    }
+                                                }
+                                            }
                                         },
                                         Err(err) => {
-                                            println!("{:?}", err);
+                                            println!("Failed to create loadout JSON from txt files due to error:\n{:?}", err);
                                         }
                                     };
                                 }
