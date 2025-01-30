@@ -28,7 +28,7 @@ export function CheckBoxComponent({
       name={`${sectionName}.${keyValue as keyof Vars}`}
       render={({ field }) => (
         <FormItem className="flex flex-wrap">
-          <FormLabel className="text-md rounded-md bg-sidebar-foreground p-1 pl-2 pr-2 leading-10 text-white">
+          <FormLabel className="text-md flex flex-col justify-center rounded-md leading-10">
             <code>{keyValue}</code>
           </FormLabel>
 
@@ -46,7 +46,7 @@ export function CheckBoxComponent({
             />
           </FormControl>
 
-          <FormDescription className="leading-9">{description}</FormDescription>
+          <FormDescription className="leading-8">{description}</FormDescription>
           <FormMessage />
         </FormItem>
       )}

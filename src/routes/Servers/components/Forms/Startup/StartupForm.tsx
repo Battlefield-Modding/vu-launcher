@@ -9,6 +9,7 @@ import { useState } from 'react'
 import { LoaderComponent } from '@/components/LoaderComponent'
 import { defaultStartupArguments } from './Setup/DefaultStartupConfig'
 import { FormBuilder } from './FormBuilder/FormBuilder'
+import debounce from 'lodash.debounce'
 
 const formSchema = z.object({
   admin: z.object({
@@ -98,6 +99,7 @@ const formSchema = z.object({
 export function StartupForm({ setSheetOpen, mods }: { setSheetOpen: any; mods: string[] }) {
   const queryClient = useQueryClient()
   const [submitLoading, setSubmitLoading] = useState(false)
+  const [filteredArgs, setFilteredArgs] = useState<{}>({ ...defaultStartupArguments })
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -108,14 +110,48 @@ export function StartupForm({ setSheetOpen, mods }: { setSheetOpen: any; mods: s
     console.log(values)
   }
 
+  const debouncedSearch = debounce((e) => {
+    const info = Object.keys(defaultStartupArguments).map((x) => {
+      // @ts-ignore
+      const filtered_fields = Object.keys(defaultStartupArguments[x])
+        .filter((key) => key.toLowerCase().includes(e.target.value))
+        .reduce((obj, key) => {
+          // @ts-ignore
+          obj[key] = defaultStartupArguments[x][key]
+          return obj
+        }, {})
+
+      return {
+        name: x,
+        values: filtered_fields,
+      }
+    })
+
+    const combinedObject = {}
+    info.forEach((x) => {
+      // @ts-ignore
+      combinedObject[x.name] = x.values
+    })
+
+    setFilteredArgs(() => combinedObject)
+  }, 300)
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormBuilder form={form} sectionName="admin" />
-        <FormBuilder form={form} sectionName="vars" />
-        {/* <FormBuilder form={form} sectionName="RM" /> */}
-        <FormBuilder form={form} sectionName="vu" />
-        <FormBuilder form={form} sectionName="reservedSlots" />
+        <input
+          type="text"
+          placeholder="filter"
+          className="text-primary"
+          onChange={debouncedSearch}
+        ></input>
+        <div className="flex flex-col gap-[2vw]">
+          <FormBuilder form={form} filteredArguments={filteredArgs} sectionName="admin" />
+          <FormBuilder form={form} filteredArguments={filteredArgs} sectionName="vars" />
+          {/* <FormBuilder form={form} sectionName="RM" /> */}
+          <FormBuilder form={form} filteredArguments={filteredArgs} sectionName="vu" />
+          <FormBuilder form={form} filteredArguments={filteredArgs} sectionName="reservedSlots" />
+        </div>
 
         {submitLoading && <LoaderComponent />}
         <Button variant="secondary" type="submit">

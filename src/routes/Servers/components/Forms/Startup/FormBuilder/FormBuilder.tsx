@@ -20,17 +20,28 @@ const TranslateTypeToField = {
   number: 'number',
   undefined: 'none',
 }
-export function FormBuilder({ form, sectionName }: { form: any; sectionName: keyof StartupArgs }) {
-  //@ts-expect-error
-  return Object.entries(defaultStartupArguments[sectionName]).map(([key, value]) => {
+export function FormBuilder({
+  form,
+  sectionName,
+  filteredArguments,
+}: {
+  form: any
+  sectionName: keyof StartupArgs
+  filteredArguments: any
+}) {
+  return Object.entries(filteredArguments[sectionName]).map(([key, value]) => {
     const fieldType = TranslateTypeToField[typeof value as keyof TranslateTypeToFieldType]
+    const fieldDescription =
+      // @ts-expect-error
+      StartupDescriptions[sectionName as keyof StartupArgs][
+        key.includes('_') ? (key.substring(1, key.length) as string) : (key as string)
+      ]
     if (fieldType === 'checkbox') {
       return (
         <CheckBoxComponent
-          defaultChecked={value}
+          defaultChecked={value as boolean}
           key={key}
-          //@ts-expect-error
-          description={StartupDescriptions[sectionName as keyof StartupArgs][key as string]}
+          description={fieldDescription}
           sectionName={sectionName}
           form={form}
           keyValue={key}
@@ -43,8 +54,7 @@ export function FormBuilder({ form, sectionName }: { form: any; sectionName: key
           key={key}
           defaultvalue={value}
           sectionName={sectionName}
-          //@ts-expect-error
-          description={StartupDescriptions[sectionName as keyof StartupArgs][key as string]}
+          description={fieldDescription}
           form={form}
           keyValue={key}
         />
@@ -60,18 +70,15 @@ export function FormBuilder({ form, sectionName }: { form: any; sectionName: key
         name={`${sectionName}.${key as keyof Vars}`}
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="text-md rounded-md bg-sidebar-foreground p-1 pl-2 pr-2 text-white">
-              <code>{key === 'password' ? 'RCON password' : key}</code>
+            <FormLabel className="text-md flex flex-col justify-center rounded-md leading-10 text-white">
+              <code>{key === 'password' ? 'password (RCON)' : key}</code>
             </FormLabel>
 
             <FormControl>
-              <Textarea placeholder={value} {...field} rows={2} className="w-1/2" />
+              <Textarea placeholder={value as string} {...field} rows={2} className="w-1/2" />
             </FormControl>
 
-            <FormDescription>
-              {/* @ts-expect-error*  */}
-              {StartupDescriptions[sectionName as keyof StartupArgs][key as string]}
-            </FormDescription>
+            <FormDescription>{fieldDescription}</FormDescription>
             <FormMessage />
           </FormItem>
         )}

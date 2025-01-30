@@ -28,7 +28,7 @@ export function NumberComponent({
       name={`${sectionName}.${keyValue as keyof Vars}`}
       render={({ field }) => (
         <FormItem className="flex gap-4">
-          <FormLabel className="text-md flex flex-col justify-center rounded-md bg-sidebar-foreground pl-2 pr-2 text-white">
+          <FormLabel className="text-md flex flex-col justify-center rounded-md leading-10 text-white">
             <code>{keyValue}</code>
           </FormLabel>
 
