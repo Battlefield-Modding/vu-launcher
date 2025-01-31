@@ -98,20 +98,18 @@ const formSchema = z.object({
 
 export function StartupForm({
   setSheetOpen,
-  mods,
   existingLoadout,
 }: {
   setSheetOpen: any
-  mods: string[]
   existingLoadout: LoadoutJSON
 }) {
   const queryClient = useQueryClient()
   const [submitLoading, setSubmitLoading] = useState(false)
-  const [filteredArgs, setFilteredArgs] = useState<{}>({ ...defaultStartupArguments })
+  const [filteredArgs, setFilteredArgs] = useState<{}>({ ...existingLoadout.startup })
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: defaultStartupArguments,
+    defaultValues: existingLoadout.startup,
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {

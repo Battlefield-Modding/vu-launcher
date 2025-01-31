@@ -7,7 +7,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { StartupArgs, Vars } from '../Setup/StartupTypes'
+import { StartupArgs } from '../Setup/StartupTypes'
 
 export function NumberComponent({
   form,
@@ -25,7 +25,7 @@ export function NumberComponent({
   return (
     <FormField
       control={form.control}
-      name={`${sectionName}.${keyValue as keyof Vars}`}
+      name={`${sectionName}.${keyValue}`}
       render={({ field }) => (
         <FormItem className="flex gap-4">
           <FormLabel className="text-md flex flex-col justify-center rounded-md leading-10 text-white">

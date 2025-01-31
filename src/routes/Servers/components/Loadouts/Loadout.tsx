@@ -12,6 +12,7 @@ import { ChooseAccountSheet } from '../Forms/AccountMultiSelect/AccountMultiSele
 import { ManageModsSheet } from '../ManageMods/ManageModsSheet'
 import { EditLoadoutSheet } from '../Forms/Loadouts/EditLoadout/EditLoadoutSheet'
 import { DeleteLoadoutDialog } from './DeleteLoadoutDialog'
+import { StartupSheet } from '../Forms/Startup/StartupSheet'
 
 export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
   // const { isPending, isError, data, error } = useQuery({
@@ -81,8 +82,9 @@ export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
       <h1 className="mb-8 flex justify-between gap-2 text-xl">
         {loadout.name.length >= 15 ? `${loadout.name.substring(0, 15)}...` : loadout.name}
         <div className="flex gap-4">
+          <StartupSheet existingLoadout={loadout} />
           <ManageModsSheet loadout={loadout} />
-          {/* <EditLoadoutSheet existingConfig={data} /> */}
+          <EditLoadoutSheet existingConfig={loadout} />
         </div>
       </h1>
 

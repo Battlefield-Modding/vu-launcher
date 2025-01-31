@@ -6,7 +6,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { StartupArgs, Vars } from '../Setup/StartupTypes'
+import { StartupArgs } from '../Setup/StartupTypes'
 import { Textarea } from '@/components/ui/textarea'
 
 export function TextAreaComponent({
@@ -26,7 +26,7 @@ export function TextAreaComponent({
     <FormField
       key={keyValue}
       control={form.control}
-      name={`${sectionName}.${keyValue as keyof Vars}`}
+      name={`${sectionName}.${keyValue}`}
       render={({ field }) => (
         <FormItem>
           <FormLabel className="text-md flex flex-col justify-center rounded-md leading-10 text-white">

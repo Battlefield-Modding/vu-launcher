@@ -16,7 +16,7 @@ export function FormBuilder({
 }) {
   return sectionNames.map((sectionName) => {
     // @ts-expect-error
-    return Object.entries(filteredArguments[sectionName]).map(([key, value]) => {
+    return Object.entries(filteredArguments[sectionName] ?? {}).map(([key, value]) => {
       // @ts-expect-error
       const fieldType = formBuilderInputTypes[sectionName][key]
 
