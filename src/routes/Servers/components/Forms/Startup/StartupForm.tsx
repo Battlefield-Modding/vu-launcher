@@ -9,7 +9,7 @@ import { useState } from 'react'
 import { LoaderComponent } from '@/components/LoaderComponent'
 import { defaultStartupArguments } from './Setup/DefaultStartupConfig'
 import { FormBuilder } from './FormBuilder/FormBuilder'
-import debounce from 'lodash.debounce'
+import { LoadoutJSON } from '@/config/config'
 
 const formSchema = z.object({
   admin: z.object({
@@ -96,7 +96,15 @@ const formSchema = z.object({
   }),
 })
 
-export function StartupForm({ setSheetOpen, mods }: { setSheetOpen: any; mods: string[] }) {
+export function StartupForm({
+  setSheetOpen,
+  mods,
+  existingLoadout,
+}: {
+  setSheetOpen: any
+  mods: string[]
+  existingLoadout: LoadoutJSON
+}) {
   const queryClient = useQueryClient()
   const [submitLoading, setSubmitLoading] = useState(false)
   const [filteredArgs, setFilteredArgs] = useState<{}>({ ...defaultStartupArguments })
@@ -110,7 +118,7 @@ export function StartupForm({ setSheetOpen, mods }: { setSheetOpen: any; mods: s
     console.log(values)
   }
 
-  const debouncedSearch = debounce((e) => {
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const info = Object.keys(defaultStartupArguments).map((x) => {
       // @ts-ignore
       const filtered_fields = Object.keys(defaultStartupArguments[x])
@@ -134,23 +142,19 @@ export function StartupForm({ setSheetOpen, mods }: { setSheetOpen: any; mods: s
     })
 
     setFilteredArgs(() => combinedObject)
-  }, 300)
+  }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <input
-          type="text"
-          placeholder="filter"
-          className="text-primary"
-          onChange={debouncedSearch}
-        ></input>
+        <input type="text" placeholder="filter" className="text-primary" onChange={handleChange} />
+
         <div className="flex flex-col gap-[2vw]">
-          <FormBuilder form={form} filteredArguments={filteredArgs} sectionName="admin" />
-          <FormBuilder form={form} filteredArguments={filteredArgs} sectionName="vars" />
-          {/* <FormBuilder form={form} sectionName="RM" /> */}
-          <FormBuilder form={form} filteredArguments={filteredArgs} sectionName="vu" />
-          <FormBuilder form={form} filteredArguments={filteredArgs} sectionName="reservedSlots" />
+          <FormBuilder
+            form={form}
+            filteredArguments={filteredArgs}
+            sectionNames={['admin', 'vars', 'vu', 'reservedSlots']}
+          />
         </div>
 
         {submitLoading && <LoaderComponent />}

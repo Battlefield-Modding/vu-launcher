@@ -16,7 +16,7 @@ import { toast } from 'sonner'
 import { editServerLoadout } from '@/api'
 import { useQueryClient } from '@tanstack/react-query'
 import { Textarea } from '@/components/ui/textarea'
-import { Loadout, QueryKey } from '@/config/config'
+import { LoadoutJSON, QueryKey } from '@/config/config'
 import { Checkbox } from '@/components/ui/checkbox'
 import { useState } from 'react'
 import { LoaderComponent } from '@/components/LoaderComponent'
@@ -34,7 +34,7 @@ export function EditLoadoutForm({
   modsInCache,
 }: {
   setSheetOpen: any
-  existingConfig: Loadout
+  existingConfig: LoadoutJSON
   modsInCache: string[]
 }) {
   const queryClient = useQueryClient()
@@ -48,7 +48,6 @@ export function EditLoadoutForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       ...existingConfig,
-      mods: {},
     },
   })
 
