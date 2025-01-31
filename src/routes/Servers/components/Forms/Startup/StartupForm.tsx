@@ -147,7 +147,13 @@ export function StartupForm({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <input type="text" placeholder="filter" className="text-primary" onChange={handleChange} />
+        <input
+          type="text"
+          placeholder="Search for setting..."
+          className="p-2 text-primary"
+          onChange={handleChange}
+          autoFocus={true}
+        />
 
         <div className="flex flex-col gap-[2vw]">
           <FormBuilder
