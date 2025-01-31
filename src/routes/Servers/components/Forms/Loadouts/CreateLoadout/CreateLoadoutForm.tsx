@@ -24,6 +24,8 @@ import { Banlist } from './components/Forms/Banlist'
 import { Maplist } from './components/Forms/Maplist'
 import { ModList } from './components/Forms/Modlist'
 import { Startup } from './components/Forms/Startup'
+import { defaultStartupArguments } from '../../Startup/Setup/DefaultStartupConfig'
+import { l } from 'node_modules/react-router/dist/development/fog-of-war-BkI3XFdx.d.mts'
 
 const formSchema = z.object({
   name: z
@@ -108,12 +110,17 @@ export function CreateLoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any; m
   async function onSubmit(values: z.infer<typeof formSchema>) {
     let correctedMods = onlyIncludeSelectedMods(values.modlist)
 
+    let correctedStartup = {
+      admin: { ...defaultStartupArguments.admin, ...values.startup.admin },
+      vars: { ...defaultStartupArguments.vars, ...values.startup.vars },
+      vu: defaultStartupArguments.vu,
+    }
+
     const loadout: LoadoutJSON = {
       ...values,
       modlist: correctedMods,
+      startup: correctedStartup,
     }
-
-    console.log(loadout)
 
     setSubmitLoading(() => true)
     const status = await createServerLoadout(loadout)

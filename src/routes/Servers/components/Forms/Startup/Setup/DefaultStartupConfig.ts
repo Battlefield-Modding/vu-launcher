@@ -91,7 +91,7 @@ export const defaultStartupArguments: StartupArgs = {
     autoBalance: false,
     bulletDamage: 1,
     crossHair: true,
-    friendlyFire: true,
+    friendlyFire: false,
     gameModeCounter: 1,
     gamePassword: "",
     hud: true,
