@@ -9,7 +9,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
     get_user_preferences_as_struct,
-    loadouts::{loadout_structs::LoadoutJson, write_to_txt_from_loadout},
+    loadouts::{loadout_structs::LoadoutJson, write_loadout_json, write_to_txt_from_loadout},
     mods::{get_mod_names_in_loadout, install_mods, make_folder_names_same_as_mod_json_names},
     reg_functions, save_user_preferences, CREATE_NO_WINDOW,
 };
@@ -126,8 +126,7 @@ pub fn create_server_loadout(mut loadout: LoadoutJson) -> Result<bool, String> {
     let mod_list = install_mods(&loadout);
 
     loadout.modlist = mod_list;
-    let str = serde_json::to_string(&loadout);
-    match fs::write(loadout_json_path, str.unwrap()) {
+    match write_loadout_json(&loadout) {
         Ok(_) => {}
         Err(err) => {
             println!("Failed to create loadoutJSON due to error:\n{:?}", err);
@@ -153,14 +152,12 @@ pub fn create_server_loadout(mut loadout: LoadoutJson) -> Result<bool, String> {
 
 #[tauri::command]
 pub fn edit_server_loadout(mut loadout: LoadoutJson) -> Result<bool, String> {
-    let mut loadout_json_path = get_loadout_admin_path(&loadout.name);
-    loadout_json_path.push("loadout.json");
-
     let mod_list = install_mods(&loadout);
 
     loadout.modlist = mod_list;
     let str = serde_json::to_string(&loadout);
-    match fs::write(loadout_json_path, str.unwrap()) {
+
+    match write_loadout_json(&loadout) {
         Ok(_) => {}
         Err(err) => {
             println!("Failed to update loadoutJSON due to error:\n{:?}", err);

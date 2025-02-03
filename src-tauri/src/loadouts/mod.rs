@@ -24,12 +24,12 @@ pub fn get_loadout_json_as_struct(loadout_name: &String) -> io::Result<LoadoutJs
 }
 
 fn convert_loadout_json_to_string(loadout: &LoadoutJson) -> io::Result<String> {
-    let loadout_string = serde_json::to_string(loadout)?;
+    let loadout_string = serde_json::to_string_pretty(loadout)?;
     Ok(loadout_string)
 }
 
-fn write_loadout_json(loadout_name: &String, loadout: LoadoutJson) -> io::Result<bool> {
-    let mut path_to_loadout_json = get_loadout_path(loadout_name);
+pub fn write_loadout_json(loadout: &LoadoutJson) -> io::Result<bool> {
+    let mut path_to_loadout_json = get_loadout_path(&loadout.name);
     path_to_loadout_json.push("loadout.json");
 
     let loadout_json_string = convert_loadout_json_to_string(&loadout)?;
@@ -78,11 +78,6 @@ fn make_loadout_json_from_txt_files(loadout_name: &String) -> io::Result<bool> {
         }
     };
 
-    println!("{:?}", &startup_args);
-    println!("{:?}", &maplist_args);
-    println!("{:?}", &banlist_args);
-    println!("{:?}", &modlist_args);
-
     let loadout_json = LoadoutJson {
         name: String::from(loadout_name),
         startup: startup_args,
@@ -91,17 +86,7 @@ fn make_loadout_json_from_txt_files(loadout_name: &String) -> io::Result<bool> {
         modlist: modlist_args,
     };
 
-    write_loadout_json(loadout_name, loadout_json)?;
-
-    // let modlist_args = import_maplist_txt_into_loadout(&loadout_name)?;
-    // import startup_txt_into_loadout
-    // import modlist_txt_into_loadout
-    // import banlist_txt_into_loadout
-    // import maplist_txt_into_loadout
-    // TODO: Read and parse Startup.txt | Modlist.txt | Maplist.txt | Banlist.txt
-    // TODO: Store the values from parsed files into a LoadoutJSON struct
-    // TODO: Write that LoadoutJSON to a file
-
+    write_loadout_json(&loadout_json)?;
     write_to_txt_from_loadout(loadout_name)?;
 
     Ok(true)
