@@ -45,10 +45,15 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <div className="ml-1 flex w-24 justify-start rounded-md border border-white bg-sidebar-foreground p-2">
-            <img src={vuIcon} alt="" className="" />
+          <div className="flex justify-center">
+            <img
+              src={vuIcon}
+              className="w-[max(6vw,8rem)] rounded-md border border-white bg-sidebar-foreground p-2"
+            />
           </div>
-          <SidebarGroupLabel>Unofficial VU Launcher</SidebarGroupLabel>
+          <SidebarGroupLabel className="flex w-full justify-center">
+            Unofficial VU Launcher
+          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
@@ -58,17 +63,17 @@ export function AppSidebar() {
                     isActive={pathname === item.url}
                     asChild
                     className={clsx(
-                      'flex min-h-[10vh] gap-[1vw] text-[2vw]',
+                      'flex h-[max(3vw,3rem)]',
                       pathname === item.url
                         ? 'border border-primary/30 opacity-70'
                         : 'border border-white',
                     )}
                   >
-                    <Link to={item.url}>
+                    <Link to={item.url} className="flex">
                       <div>
-                        <item.icon className="h-auto w-[2vw]" />
+                        <item.icon />
                       </div>
-                      <p>{item.title}</p>
+                      <p className="flex-1 text-[max(1vw,1.25rem)]">{item.title}</p>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
