@@ -9,7 +9,9 @@ import { useState } from 'react'
 import { LoaderComponent } from '@/components/LoaderComponent'
 import { defaultStartupArguments } from './Setup/DefaultStartupConfig'
 import { FormBuilder } from './FormBuilder/FormBuilder'
-import { LoadoutJSON } from '@/config/config'
+import { LoadoutJSON, QueryKey } from '@/config/config'
+import { editServerLoadout } from '@/api'
+import { toast } from 'sonner'
 
 const formSchema = z.object({
   admin: z.object({
@@ -54,25 +56,25 @@ const formSchema = z.object({
     unlockMode: z.any().optional(),
     premiumStatus: z.boolean().optional(),
   }),
-  RM: z
-    .object({
-      setDevelopers: z.string(),
-      setAdmins: z.string(),
-      setLightAdmins: z.string(),
-      serverInfo: z.string(),
-      serverLicenseKey: z.string(),
-      ingameBanner: z.string(),
-      pingLimitEnable: z.boolean(),
-      pingLimitInMs: z.number(),
-      autoPerfEnabled: z.boolean(),
-      autoPerfMaxPlayers: z.number(),
-      tempReservedSlotsEnabled: z.boolean(),
-      tempReservedSlotsRejoinTime: z.number(),
-      defaultPreRoundTime: z.number(),
-      setAutoBalancer: z.boolean(),
-      battleCryLink: z.string(),
-    })
-    .optional(),
+  // RM: z
+  //   .object({
+  //     setDevelopers: z.string(),
+  //     setAdmins: z.string(),
+  //     setLightAdmins: z.string(),
+  //     serverInfo: z.string(),
+  //     serverLicenseKey: z.string(),
+  //     ingameBanner: z.string(),
+  //     pingLimitEnable: z.boolean(),
+  //     pingLimitInMs: z.number(),
+  //     autoPerfEnabled: z.boolean(),
+  //     autoPerfMaxPlayers: z.number(),
+  //     tempReservedSlotsEnabled: z.boolean(),
+  //     tempReservedSlotsRejoinTime: z.number(),
+  //     defaultPreRoundTime: z.number(),
+  //     setAutoBalancer: z.boolean(),
+  //     battleCryLink: z.string(),
+  //   })
+  //   .optional(),
   vu: z.object({
     ColorCorrectionEnabled: z.boolean().optional(),
     DesertingAllowed: z.boolean().optional(),
@@ -91,9 +93,11 @@ const formSchema = z.object({
     TeamActivatedMines: z.boolean().optional(),
     CorpseDamageEnabled: z.boolean().optional(),
   }),
-  reservedSlots: z.object({
-    add: z.string(),
-  }),
+  // reservedSlots: z
+  //   .object({
+  //     add: z.string().optional(),
+  //   })
+  //   .optional(),
 })
 
 export function StartupForm({
@@ -113,7 +117,19 @@ export function StartupForm({
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
+    const payload = { ...existingLoadout, startup: values }
+
+    setSubmitLoading(() => true)
+    const status = await editServerLoadout(payload)
+    setSubmitLoading(() => false)
+
+    if (status) {
+      toast(`Successfully updated Startup for ${existingLoadout.name}`)
+      queryClient.invalidateQueries({ queryKey: [QueryKey.GetAllLoadoutJSON], refetchType: 'all' })
+      setSheetOpen(() => false)
+    } else {
+      toast(`Error. could not update Startup for ${existingLoadout.name}`)
+    }
   }
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -157,7 +173,7 @@ export function StartupForm({
           <FormBuilder
             form={form}
             filteredArguments={filteredArgs}
-            sectionNames={['admin', 'vars', 'vu', 'reservedSlots']}
+            sectionNames={['admin', 'vars', 'vu']}
           />
         </div>
 
