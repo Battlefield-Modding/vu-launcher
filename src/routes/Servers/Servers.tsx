@@ -41,26 +41,7 @@ export function Servers() {
 
   return (
     <div className="m-auto flex min-h-[100vh] flex-col justify-center">
-      <div className="m-auto mb-0 mt-0 flex w-full justify-center gap-4 rounded-md bg-primary p-8">
-        <CreateLoadoutSheet />
-        <UploadLoadoutSheet />
-      </div>
-      <div className="m-auto mt-0 w-full">
-        <StartupSheet />
-        <MaplistSheet />
-        <LoadoutContainer />
-
-        {/* TODO: Remove this test button */}
-        <Button
-          variant={'secondary'}
-          onClick={async () => {
-            const info = await getAllLoadoutJson()
-            console.log(info)
-          }}
-        >
-          GetAllLoadoutJSON
-        </Button>
-      </div>
+      <LoadoutContainer />
     </div>
   )
 }
