@@ -4,14 +4,15 @@ import { Book } from 'lucide-react'
 import { useState } from 'react'
 import { Mod } from './Mod'
 
-export function ManageModsSheet({ loadout }: { loadout: LoadoutJSON }) {
+export function ManageModsInServerSheet({ loadout }: { loadout: LoadoutJSON }) {
   const [sheetOpen, setSheetOpen] = useState(false)
 
   if (loadout.modlist && loadout.modlist.length > 0) {
     return (
       <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
         <SheetTrigger>
-          <div className="flex gap-2 rounded-md bg-secondary p-2 text-xl leading-6 text-primary hover:bg-secondary/80">
+          <div className="flex w-fit items-center gap-2 rounded-md bg-secondary p-2 text-xl text-primary hover:bg-secondary/80">
+            Mods
             <Book />
           </div>
         </SheetTrigger>
@@ -35,7 +36,8 @@ export function ManageModsSheet({ loadout }: { loadout: LoadoutJSON }) {
   return (
     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
       <SheetTrigger>
-        <div className="flex gap-2 rounded-md bg-secondary p-2 text-xl leading-6 text-primary hover:bg-secondary/80">
+        <div className="flex w-fit items-center gap-2 rounded-md bg-secondary p-2 text-xl text-primary hover:bg-secondary/80">
+          Mods
           <Book />
         </div>
       </SheetTrigger>
