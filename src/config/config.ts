@@ -57,7 +57,8 @@ export enum QueryKey {
   ServerList = "ServerList",
   PlayVUInformation = "PlayVUInformation",
   UserPreferences = "UserPreferences",
-  GetAllLoadoutJSON = "GetAllLoadoutJSON"
+  GetAllLoadoutJSON = "GetAllLoadoutJSON",
+  GetAllModNames = "GetAllModNames"
 }
 
 export enum routes {

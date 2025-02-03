@@ -25,13 +25,12 @@ import { Maplist } from './components/Forms/Maplist'
 import { ModList } from './components/Forms/Modlist'
 import { Startup } from './components/Forms/Startup'
 import { defaultStartupArguments } from '../../Startup/Setup/DefaultStartupConfig'
-import { l } from 'node_modules/react-router/dist/development/fog-of-war-BkI3XFdx.d.mts'
 
 const formSchema = z.object({
   name: z
     .string()
     .min(2)
-    .max(50)
+    .max(100)
     .refine(
       (value) =>
         /^[^\s^\x00-\x1f\\?*:"";<>|\/.][^\x00-\x1f\\?*:"";<>|\/]*[^\s^\x00-\x1f\\?*:"";<>|\/.]+$/g.test(

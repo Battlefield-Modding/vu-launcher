@@ -8,7 +8,6 @@ import {
 } from '@/components/ui/sheet'
 import { Loader, Upload } from 'lucide-react'
 import { useState } from 'react'
-import clsx from 'clsx'
 import { QueryKey, STALE } from '@/config/config'
 import { useQuery } from '@tanstack/react-query'
 import { getLoadoutNames } from '@/api'
@@ -44,12 +43,7 @@ export function UploadLoadoutSheet() {
   return (
     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
       <SheetTrigger>
-        <div
-          className={clsx(
-            'flex gap-2 rounded-md p-2 text-xl leading-6 hover:bg-secondary/80',
-            'bg-secondary',
-          )}
-        >
+        <div className="flex items-center justify-between gap-2 bg-gray-600 p-2 text-lg hover:bg-gray-600/80">
           Import loadout
           <Upload />
         </div>

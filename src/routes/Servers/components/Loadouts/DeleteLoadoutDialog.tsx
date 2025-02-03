@@ -9,13 +9,21 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { QueryKey } from '@/config/config'
+import { LoadoutJSON, QueryKey } from '@/config/config'
 import { useQueryClient } from '@tanstack/react-query'
 import { Trash, X } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { toast } from 'sonner'
 
-export function DeleteLoadoutDialog({ name }: { name: string }) {
+export function DeleteLoadoutDialog({
+  name,
+  setActiveLoadout,
+  shouldRefreshActiveLoadout,
+}: {
+  name: string
+  setActiveLoadout: (e: any) => void
+  shouldRefreshActiveLoadout: boolean
+}) {
   const queryClient = useQueryClient()
   const [submitLoading, setSubmitLoading] = useState(false)
   const dialogCloseRef = useRef(null)
@@ -34,6 +42,9 @@ export function DeleteLoadoutDialog({ name }: { name: string }) {
           queryKey: [QueryKey.GetAllLoadoutJSON],
           refetchType: 'all',
         })
+        if (shouldRefreshActiveLoadout) {
+          setActiveLoadout(() => null)
+        }
       }
     } else {
       toast(`Error. Failed to delete ${name}`)
@@ -43,7 +54,7 @@ export function DeleteLoadoutDialog({ name }: { name: string }) {
   return (
     <Dialog>
       <DialogTrigger>
-        <div className="rounded-md bg-red-500 p-1.5 hover:bg-red-500/80">
+        <div className="rounded-md p-1.5 hover:text-red-500">
           <Trash />
         </div>
       </DialogTrigger>

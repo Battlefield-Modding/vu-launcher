@@ -31,18 +31,19 @@ const formSchema = z.object({
 export function EditLoadoutForm({
   setSheetOpen,
   existingConfig,
-  modsInCache,
+  mods,
 }: {
   setSheetOpen: any
   existingConfig: LoadoutJSON
-  modsInCache: string[]
+  mods: { modsInCache: string[]; modsInLoadout: string[] }
 }) {
   const queryClient = useQueryClient()
   const [submitLoading, setSubmitLoading] = useState(false)
 
-  const activatedMods = existingConfig.modlist.split('\n')
-  const allModsInLoadout = existingConfig.mods
-  const installableMods = modsInCache
+  console.log(existingConfig)
+  const activatedMods = existingConfig.modlist
+  const allModsInLoadout = mods.modsInLoadout
+  const installableMods = mods.modsInCache
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

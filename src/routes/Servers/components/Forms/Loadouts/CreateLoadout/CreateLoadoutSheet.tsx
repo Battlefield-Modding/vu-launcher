@@ -1,7 +1,6 @@
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { Loader, Plus } from 'lucide-react'
 import { useState } from 'react'
-import clsx from 'clsx'
 import { CreateLoadoutForm } from './CreateLoadoutForm'
 import { QueryKey, STALE } from '@/config/config'
 import { useQuery } from '@tanstack/react-query'
@@ -37,12 +36,7 @@ export function CreateLoadoutSheet() {
   return (
     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
       <SheetTrigger>
-        <div
-          className={clsx(
-            'flex gap-2 rounded-md p-2 text-xl leading-6 text-secondary hover:bg-green-800/80',
-            'bg-green-800',
-          )}
-        >
+        <div className="flex items-center justify-between gap-2 bg-green-800 p-2 text-lg text-secondary hover:bg-green-800/80">
           Create Loadout
           <Plus />
         </div>
