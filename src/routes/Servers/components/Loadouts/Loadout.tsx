@@ -1,4 +1,4 @@
-import { Folder, Server, User } from 'lucide-react'
+import { Edit, Folder, Server, User } from 'lucide-react'
 import { openExplorerAtLoadout, playVUOnLocalServer, startServerLoadout } from '@/api'
 import { toast } from 'sonner'
 import { LoadoutJSON } from '@/config/config'
@@ -35,22 +35,10 @@ export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
   }
 
   return (
-    <div className="m-auto flex flex-col gap-8 p-4">
+    <div className="m-auto mt-8 flex flex-col gap-8 p-4">
       <h1 className="mb-4 text-2xl text-secondary underline">{loadout.name}</h1>
 
-      <div className="m-auto flex gap-16">
-        <div className="m-auto flex flex-col gap-4">
-          <div
-            className="flex w-fit items-center gap-2 rounded-md bg-secondary p-2 text-xl text-primary hover:cursor-pointer hover:bg-secondary/80"
-            onClick={handleOpenExplorer}
-          >
-            Explorer
-            <Folder />
-          </div>
-          <StartupSheet existingLoadout={loadout} />
-          <ManageModsInServerSheet loadout={loadout} />
-          <EditLoadoutSheet existingConfig={loadout} />
-        </div>
+      <div className="m-auto flex flex-col gap-16">
         <div className="flex flex-col justify-end gap-4">
           <div
             onClick={handleServer}
@@ -67,6 +55,19 @@ export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
             <Server />
             <User />
           </div>
+        </div>
+
+        <div className="m-auto flex w-fit flex-col items-center gap-4">
+          <div
+            className="flex items-center gap-2 rounded-md bg-secondary p-2 text-xl text-primary hover:cursor-pointer hover:bg-secondary/80"
+            onClick={handleOpenExplorer}
+          >
+            Explorer
+            <Folder />
+          </div>
+          <StartupSheet existingLoadout={loadout} />
+          <ManageModsInServerSheet loadout={loadout} />
+          {/* <EditLoadoutSheet existingConfig={loadout} /> */}
         </div>
       </div>
 
