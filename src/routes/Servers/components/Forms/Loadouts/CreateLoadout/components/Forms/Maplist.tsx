@@ -23,8 +23,7 @@ export function Maplist({ form }: { form: CreateLoadoutFormType }) {
   const fieldArray = useFieldArray({ name: 'maplist', control: form.control })
 
   function clearGamemode(index: number) {
-    // normal form.resetField DOES NOT UPDATE SELECT visually
-    form.setValue(`maplist.${index}.gameMode`, '')
+    form.resetField(`maplist.${index}.gameMode`)
   }
 
   return (
