@@ -11,7 +11,7 @@ export default function ManageModsSheet() {
   const [sheetOpen, setSheetOpen] = useState(false)
 
   const { isPending, isError, data, error } = useQuery({
-    queryKey: [QueryKey.GetModNamesInCache],
+    queryKey: [QueryKey.GetAllModNames],
     queryFn: async (): Promise<Array<{ name: string; mods: string[] }>> => {
       const modsArray = []
 
