@@ -6,6 +6,7 @@ import { ChooseAccountSheet } from '../Forms/AccountMultiSelect/AccountMultiSele
 import { EditLoadoutSheet } from '../Forms/Loadouts/EditLoadout/EditLoadoutSheet'
 import { StartupSheet } from '../Forms/Startup/StartupSheet'
 import { ManageModsInServerSheet } from '../ManageModsInServerSheet/ManageModsInServerSheet'
+import { MaplistSheet } from '../Forms/Maplist/MaplistSheet'
 
 export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
   async function handlePlay() {
@@ -59,12 +60,13 @@ export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
 
         <div className="m-auto flex w-fit flex-col items-center gap-4">
           <div
-            className="flex items-center gap-2 rounded-md bg-secondary p-2 text-xl text-primary hover:cursor-pointer hover:bg-secondary/80"
+            className="flex items-center gap-2 rounded-md bg-primary p-2 text-xl text-secondary hover:cursor-pointer hover:bg-primary/80"
             onClick={handleOpenExplorer}
           >
             Explorer
             <Folder />
           </div>
+          <MaplistSheet loadout={loadout} />
           <StartupSheet existingLoadout={loadout} />
           <ManageModsInServerSheet loadout={loadout} />
           {/* <EditLoadoutSheet existingConfig={loadout} /> */}
