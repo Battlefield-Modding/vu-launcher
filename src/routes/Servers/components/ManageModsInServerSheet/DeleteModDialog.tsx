@@ -16,9 +16,11 @@ import { toast } from 'sonner'
 export function DeleteModDialog({
   modName,
   loadoutName,
+  queryKey,
 }: {
   modName: string
   loadoutName: string
+  queryKey: string
 }) {
   const queryClient = useQueryClient()
 
@@ -27,7 +29,7 @@ export function DeleteModDialog({
     if (status) {
       toast(`Deleted ${modName} from ${loadoutName}.`)
       queryClient.invalidateQueries({
-        queryKey: [QueryKey.GetAllLoadoutJSON],
+        queryKey: [queryKey],
         refetchType: 'all',
       })
     } else {
