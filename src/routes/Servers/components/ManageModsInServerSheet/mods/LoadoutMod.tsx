@@ -1,8 +1,8 @@
 import VSCodeIcon from '@/assets/VSCodeIcon.svg'
-import { DeleteModDialog } from './DeleteModDialog'
+import { DeleteModDialog } from '../dialog/DeleteModDialog'
 import { toast } from 'sonner'
 import { editServerLoadout, openModWithVsCode } from '@/api'
-import { AddModDialog } from './AddModDialog'
+import { AddModDialog } from '../dialog/AddModDialog'
 import { Input } from '@/components/ui/input'
 import { LoadoutJSON, QueryKey } from '@/config/config'
 import { useQueryClient } from '@tanstack/react-query'
@@ -10,20 +10,18 @@ import { useQueryClient } from '@tanstack/react-query'
 export function LoadoutMod({
   loadout,
   modName,
-  loadoutName,
   isActive,
   queryKey,
 }: {
   loadout: LoadoutJSON
   modName: string
-  loadoutName: string
   isActive: boolean
   queryKey: string
 }) {
   const queryClient = useQueryClient()
 
   async function handleOpenInVSCode() {
-    const status = await openModWithVsCode({ name: loadoutName, modname: modName })
+    const status = await openModWithVsCode({ name: loadout.name, modname: modName })
     if (status) {
       toast(`Opened ${modName} in vscode`)
     } else {
@@ -71,19 +69,13 @@ export function LoadoutMod({
         <h1 className="">{modName.length >= 20 ? `${modName.substring(0, 20)}...` : modName}</h1>
       </div>
       <div className="flex justify-end">
-        {modName.includes('.zip') ? (
-          <AddModDialog loadoutName={loadoutName} modName={modName} />
-        ) : (
-          <>
-            <p
-              className="flex flex-1 rounded-md bg-sidebar-foreground p-1.5 hover:cursor-pointer hover:bg-sidebar-foreground/80"
-              onClick={handleOpenInVSCode}
-            >
-              <img src={VSCodeIcon} className="m-auto"></img>
-            </p>
-          </>
-        )}
-        <DeleteModDialog loadoutName={loadoutName} modName={modName} queryKey={queryKey} />
+        <p
+          className="flex flex-1 rounded-md bg-sidebar-foreground p-1.5 hover:cursor-pointer hover:bg-sidebar-foreground/80"
+          onClick={handleOpenInVSCode}
+        >
+          <img src={VSCodeIcon} className="m-auto"></img>
+        </p>
+        <DeleteModDialog loadoutName={loadout.name} modName={modName} queryKey={queryKey} />
       </div>
     </div>
   )

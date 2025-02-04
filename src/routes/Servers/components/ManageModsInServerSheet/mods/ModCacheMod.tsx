@@ -1,13 +1,14 @@
-import { DeleteModDialog } from './DeleteModDialog'
-import { AddModDialog } from './AddModDialog'
+import { DeleteModDialog } from '../dialog/DeleteModDialog'
+import { AddModDialog } from '../dialog/AddModDialog'
+import { LoadoutJSON } from '@/config/config'
 
 export function ModCacheMod({
   modName,
-  loadoutName,
+  loadout,
   queryKey,
 }: {
   modName: string
-  loadoutName: string
+  loadout: LoadoutJSON
   queryKey: string
 }) {
   return (
@@ -16,8 +17,8 @@ export function ModCacheMod({
         <h1 className="">{modName.length >= 20 ? `${modName.substring(0, 20)}...` : modName}</h1>
       </div>
       <div className="flex justify-end">
-        <AddModDialog loadoutName={loadoutName} modName={modName} />
-        <DeleteModDialog loadoutName={loadoutName} modName={modName} queryKey={queryKey} />
+        <AddModDialog loadout={loadout} modName={modName} queryKey={queryKey} />
+        <DeleteModDialog loadoutName={'mod-cache'} modName={modName} queryKey={queryKey} />
       </div>
     </div>
   )

@@ -32,6 +32,10 @@ export function DeleteModDialog({
         queryKey: [queryKey],
         refetchType: 'all',
       })
+      queryClient.invalidateQueries({
+        queryKey: [QueryKey.GetAllLoadoutJSON],
+        refetchType: 'all',
+      })
     } else {
       toast(`Error: Failed to delete ${modName}`)
     }

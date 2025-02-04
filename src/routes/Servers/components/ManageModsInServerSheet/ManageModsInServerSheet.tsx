@@ -5,8 +5,8 @@ import { useState } from 'react'
 import { getModNamesInCache, getModNamesInLoadout } from '@/api'
 import { useQuery } from '@tanstack/react-query'
 import clsx from 'clsx'
-import { LoadoutMod } from './LoadoutMod'
-import { ModCacheMod } from './ModCacheMod'
+import { LoadoutMod } from './mods/LoadoutMod'
+import { ModCacheMod } from './mods/ModCacheMod'
 
 export function ManageModsInServerSheet({ loadout }: { loadout: LoadoutJSON }) {
   const [sheetOpen, setSheetOpen] = useState(false)
@@ -95,7 +95,7 @@ export function ManageModsInServerSheet({ loadout }: { loadout: LoadoutJSON }) {
                 return (
                   <ModCacheMod
                     queryKey={`${QueryKey.GetAllModNames}-${loadout.name}`}
-                    loadoutName={'mod-cache'}
+                    loadout={loadout}
                     modName={x}
                     key={`${x}-mod`}
                   />
