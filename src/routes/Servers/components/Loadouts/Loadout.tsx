@@ -39,17 +39,17 @@ export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
       <h1 className="mb-4 text-2xl text-secondary underline">{loadout.name}</h1>
 
       <div className="m-auto flex flex-col gap-16">
-        <div className="flex flex-col justify-end gap-4">
+        <div className="flex justify-end gap-4">
           <div
             onClick={handleServer}
-            className="flex gap-2 rounded-md bg-green-800 p-1.5 text-secondary hover:cursor-pointer hover:bg-green-800/80"
+            className="flex w-fit gap-2 rounded-md bg-green-800 p-2 text-secondary hover:cursor-pointer hover:bg-green-800/80"
           >
             Start Server
             <Server />
           </div>
           <div
             onClick={handlePlay}
-            className="flex justify-between gap-2 rounded-md bg-green-600 p-1.5 text-secondary hover:cursor-pointer hover:bg-green-600/80"
+            className="flex w-fit justify-between gap-2 rounded-md bg-green-700 p-2 text-secondary hover:cursor-pointer hover:bg-green-700/80"
           >
             Start Server and Client
             <Server />
