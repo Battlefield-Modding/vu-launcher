@@ -155,7 +155,6 @@ pub fn edit_server_loadout(mut loadout: LoadoutJson) -> Result<bool, String> {
     let mod_list = install_mods(&loadout);
 
     loadout.modlist = mod_list;
-    let str = serde_json::to_string(&loadout);
 
     match write_loadout_json(&loadout) {
         Ok(_) => {}

@@ -11,7 +11,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::Error;
 
 use crate::{
-    loadouts::{get_loadout_json_as_struct, loadout_structs::LoadoutJson, write_to_txt_from_loadout}, reg_functions, servers::{get_loadout_path, get_loadouts_path, ServerLoadout}, CREATE_NO_WINDOW
+    loadouts::{get_loadout_json_as_struct, loadout_structs::LoadoutJson, write_loadout_json, write_to_txt_from_loadout}, reg_functions, servers::{get_loadout_path, get_loadouts_path, ServerLoadout}, CREATE_NO_WINDOW
 };
 
 #[allow(non_snake_case)]
@@ -438,22 +438,13 @@ fn remove_mod_from_modlist(loadout_name: &String, mod_name: &String) -> bool {
             let mut loadout_json_path = get_loadout_path(&loadout_name);
             loadout_json_path.push("loadout.json");
 
-            match serde_json::to_string(&info) {
-                Ok(str) => {
-                    match fs::write(loadout_json_path, str){
-                        Ok(_) => {},
-                        Err(err) => {
-                            println!("Failed to write loadoutJSON after deleting a mod due to error:\n{:?}", err);
-                            return false;
-                        }
-                    }
-        
-                },
+            match write_loadout_json(&info) {
+                Ok(_) => {},
                 Err(err) => {
-                    println!("Failed to convert loadoutJSON to string after deleting a mod due to error:\n{:?}", err);
+                    println!("Failed to write loadoutJSON after deleting a mod due to error:\n{:?}", err);
                     return false;
                 }
-            }
+            }        
 
         },  
         Err(err) => {
