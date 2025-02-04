@@ -85,7 +85,7 @@ export default function ManageModsSheet() {
                   )}
                   key={`mod-deletion-container_${loadout.name}`}
                 >
-                  <SheetTitle>
+                  <SheetTitle className="text-primary">
                     <p>Mods inside</p>
                     <code className="underline">{loadout.name}</code>
                   </SheetTitle>
