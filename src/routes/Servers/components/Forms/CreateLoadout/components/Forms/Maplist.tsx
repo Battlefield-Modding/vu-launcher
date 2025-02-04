@@ -15,7 +15,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useFieldArray } from 'react-hook-form'
-import { allMaps } from '../../../../Maplist/Setup/allMaps'
+import { allMaps } from '../../../Maplist/Setup/allMaps'
 import { Trash } from 'lucide-react'
 import { CreateLoadoutFormType } from '../../CreateLoadoutForm'
 

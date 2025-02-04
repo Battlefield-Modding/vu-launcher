@@ -5,8 +5,8 @@ import { Loader } from 'lucide-react'
 import { Loadout } from './Loadout'
 import { useState } from 'react'
 import { DeleteLoadoutDialog } from './DeleteLoadoutDialog'
-import { CreateLoadoutSheet } from '../Forms/Loadouts/CreateLoadout/CreateLoadoutSheet'
-import { UploadLoadoutSheet } from '../Forms/Loadouts/UploadLoadout/UploadLoadoutSheet'
+import { CreateLoadoutSheet } from '../Forms/CreateLoadout/CreateLoadoutSheet'
+import { UploadLoadoutSheet } from '../Forms/UploadLoadout/UploadLoadoutSheet'
 import clsx from 'clsx'
 
 export function LoadoutContainer() {

@@ -24,7 +24,7 @@ import { Banlist } from './components/Forms/Banlist'
 import { Maplist } from './components/Forms/Maplist'
 import { ModList } from './components/Forms/Modlist'
 import { Startup } from './components/Forms/Startup'
-import { defaultStartupArguments } from '../../Startup/Setup/DefaultStartupConfig'
+import { defaultStartupArguments } from '../Startup/Setup/DefaultStartupConfig'
 
 const formSchema = z.object({
   name: z
