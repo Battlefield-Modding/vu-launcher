@@ -66,7 +66,7 @@ export function UploadLoadoutForm({
     if (status) {
       toast(`Imported loadout ${values.name} successfully!`)
       queryClient.invalidateQueries({
-        queryKey: [QueryKey.ServerLoadouts],
+        queryKey: [QueryKey.GetAllLoadoutJSON],
         refetchType: 'all',
       })
       setSheetOpen(false)
