@@ -1,5 +1,5 @@
 use std::{
-    fs::{self, read_to_string, write},
+    fs::{self, read_to_string},
     os::windows::process::CommandExt,
     path::PathBuf,
     process::Command,
@@ -81,7 +81,7 @@ fn copy_server_key(path: &PathBuf) {
 }
 
 #[tauri::command]
-pub fn create_server_loadout(mut loadout: LoadoutJson) -> Result<bool, String> {
+pub async fn create_server_loadout(mut loadout: LoadoutJson) -> Result<bool, String> {
     let mut loadout_path = get_loadouts_path();
     loadout_path.push(&loadout.name);
     let mut loadout_json_path = loadout_path.clone();
@@ -151,7 +151,7 @@ pub fn create_server_loadout(mut loadout: LoadoutJson) -> Result<bool, String> {
 }
 
 #[tauri::command]
-pub fn edit_server_loadout(mut loadout: LoadoutJson) -> Result<bool, String> {
+pub async fn edit_server_loadout(mut loadout: LoadoutJson) -> Result<bool, String> {
     let mod_list = install_mods(&loadout);
 
     loadout.modlist = mod_list;
@@ -215,7 +215,7 @@ pub fn get_loadout_names() -> Vec<String> {
 }
 
 #[tauri::command]
-pub fn get_server_loadout(name: String) -> String {
+pub async fn get_server_loadout(name: String) -> String {
     let mut loadout_path: PathBuf = get_loadouts_path();
     loadout_path.push(&name);
 
@@ -278,7 +278,7 @@ pub fn get_server_loadout(name: String) -> String {
 }
 
 #[tauri::command]
-pub fn delete_server_loadout(name: String) -> bool {
+pub async fn delete_server_loadout(name: String) -> bool {
     // this function will return content from all server loadouts
     let mut loadout_path = get_loadouts_path();
     println!("{:?}", loadout_path);
@@ -392,7 +392,7 @@ pub fn get_loadout_path(loadout_name: &String) -> PathBuf {
 }
 
 #[tauri::command]
-pub fn import_loadout_from_path(name: String, path: String) -> bool {
+pub async fn import_loadout_from_path(name: String, path: String) -> bool {
     let mut target_path = get_loadouts_path();
     target_path.push(&name);
     target_path.push("Server");
