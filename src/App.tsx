@@ -24,7 +24,7 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <SidebarProvider>
           <AppSidebar />
-          <SidebarTrigger className="fixed bottom-0 left-0 z-10 bg-sidebar-border p-6" />
+          <SidebarTrigger className="fixed bottom-0 left-0 z-10 h-[max(2vw,2rem)] w-[max(2vw,2rem)]" />
           <main className="min-h-[100vh] w-full bg-sidebar-foreground">
             <Routes>
               <Route path={routes.HOME} element={<Home />} />
