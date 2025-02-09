@@ -6,6 +6,7 @@ import { ChooseAccountSheet } from '../Forms/AccountMultiSelect/AccountMultiSele
 import { StartupSheet } from '../Forms/Startup/StartupSheet'
 import { ManageModsInServerSheet } from '../ManageModsInServerSheet/ManageModsInServerSheet'
 import { MaplistSheet } from '../Forms/Maplist/MaplistSheet'
+import { BanlistSheet } from '../Forms/Banlist/BanlistSheet'
 
 export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
   async function handlePlay() {
@@ -57,16 +58,18 @@ export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
           </div>
         </div>
 
+        <div
+          className="m-auto flex w-fit items-center gap-2 rounded-md bg-gray-600 p-2 text-xl text-secondary hover:cursor-pointer hover:bg-gray-600/80"
+          onClick={handleOpenExplorer}
+        >
+          Explorer
+          <Folder />
+        </div>
+
         <div className="m-auto flex w-fit flex-col items-center gap-4">
-          <div
-            className="flex items-center gap-2 rounded-md bg-primary p-2 text-xl text-secondary hover:cursor-pointer hover:bg-primary/80"
-            onClick={handleOpenExplorer}
-          >
-            Explorer
-            <Folder />
-          </div>
-          <MaplistSheet loadout={loadout} />
           <StartupSheet existingLoadout={loadout} />
+          <MaplistSheet loadout={loadout} />
+          <BanlistSheet loadout={loadout} />
           <ManageModsInServerSheet loadout={loadout} />
           {/* <EditLoadoutSheet existingConfig={loadout} /> */}
         </div>

@@ -171,7 +171,7 @@ export function CreateLoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any; m
         <Startup form={form} />
         <ModList form={form} mods={mods} />
         <Maplist form={form} />
-        <Banlist form={form} />
+        <Banlist form={form} alwaysAutoFocus={false} />
         {submitLoading && <LoaderComponent />}
         <Button variant={'secondary'} type="submit">
           Submit

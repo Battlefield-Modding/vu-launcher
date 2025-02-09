@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input'
 import { Trash } from 'lucide-react'
 import { useFieldArray } from 'react-hook-form'
 
-export function Banlist({ form }: { form: any }) {
+export function Banlist({ form, alwaysAutoFocus }: { form: any; alwaysAutoFocus: boolean }) {
   const fieldArray = useFieldArray({ name: 'banlist', control: form.control })
 
   return (
@@ -45,7 +45,7 @@ export function Banlist({ form }: { form: any }) {
                   <FormItem>
                     <FormControl>
                       <Input
-                        autoFocus={index !== 0}
+                        autoFocus={index !== 0 || alwaysAutoFocus}
                         type={'text'}
                         placeholder={`Ent/Bksp Add/Remove`}
                         {...field}
