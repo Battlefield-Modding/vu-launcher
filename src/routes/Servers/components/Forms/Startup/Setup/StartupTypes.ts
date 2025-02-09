@@ -5,7 +5,7 @@ export type StartupArgs = {
   vars: Vars
   RM?: RM_Commands | undefined,
   vu?: VU_Commands,
-  reservedSlots?: ReservedSlots
+  reservedSlots?: Array<string>
 }
 
 export type Admin = {
@@ -87,8 +87,4 @@ export type VU_Commands = {
   DisablePreRound?: boolean // Accepts a single boolean argument (true or false). This has to be used before the level gets loaded. When set to true the preround will be disabled on the next level (re)load.
   TeamActivatedMines?: boolean // Allows you to control whether team members can trigger claymores and other mines. Accepts a single boolean argument, either true or false, to toggle the feature on or off.
   CorpseDamageEnabled?: boolean // Enables or disables the ability to deal damage to a corpse, preventing revival. Accepts a single boolean argument, either true or false, to control whether damage to a corpse is permitted or not. (Tip: Tweak VeniceSoldierHealthModuleData.manDownStateHealthPoints with a mod.)
-}
-
-export type ReservedSlots = {
-  add: string // list of players to add to reserved slot
 }

@@ -78,9 +78,7 @@ export const formBuilderInputTypes = {
     TeamActivatedMines: 'checkbox',
     CorpseDamageEnabled: 'checkbox',
   },
-  reservedSlots: {
-    add: 'textarea'
-  },
+  reservedSlots: 'reservedSlots' ,
 }
 
 export const defaultStartupArguments: StartupArgs = {
@@ -159,9 +157,7 @@ export const defaultStartupArguments: StartupArgs = {
     TeamActivatedMines: false,
     CorpseDamageEnabled: false,
   },
-  reservedSlots: {
-    add: ""
-  },
+  reservedSlots: [""],
 }
 
 export const StartupDescriptions = {

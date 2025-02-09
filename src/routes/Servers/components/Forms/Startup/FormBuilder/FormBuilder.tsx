@@ -4,6 +4,7 @@ import { CheckBoxComponent } from './CheckBoxComponent'
 import { NumberComponent } from './NumberComponent'
 import { LoadoutJSON } from '@/config/config'
 import { TextAreaComponent } from './TextAreaComponent'
+import { ReservedSlotsComponent } from './ReservedSlotsComponent'
 
 export function FormBuilder({
   form,
@@ -15,6 +16,10 @@ export function FormBuilder({
   filteredArguments: Partial<LoadoutJSON>
 }) {
   return sectionNames.map((sectionName) => {
+    if (sectionName === 'reservedSlots') {
+      return <ReservedSlotsComponent form={form} />
+    }
+
     // @ts-expect-error
     return Object.entries(filteredArguments[sectionName] ?? {}).map(([key, value]) => {
       // @ts-expect-error

@@ -93,11 +93,7 @@ const formSchema = z.object({
     TeamActivatedMines: z.boolean().optional(),
     CorpseDamageEnabled: z.boolean().optional(),
   }),
-  // reservedSlots: z
-  //   .object({
-  //     add: z.string().optional(),
-  //   })
-  //   .optional(),
+  reservedSlots: z.array(z.string().optional()).optional(),
 })
 
 export function StartupForm({
@@ -173,7 +169,7 @@ export function StartupForm({
           <FormBuilder
             form={form}
             filteredArguments={filteredArgs}
-            sectionNames={['admin', 'vars', 'vu']}
+            sectionNames={['admin', 'vars', 'vu', 'reservedSlots']}
           />
         </div>
 

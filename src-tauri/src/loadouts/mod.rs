@@ -481,7 +481,18 @@ fn make_txt_ready(res: Result<Value, Error>, prefix: String) -> Vec<String> {
                         }
                     }
                 }
-                None => {}
+                None => {
+                    if values.is_array() {
+                        if prefix.eq("reservedSlots") {
+                            for str in values.as_array().unwrap() {
+                                let parsed_string = str.as_str().unwrap();
+                                let mut final_str = String::from("reservedSlots.add ");
+                                final_str.push_str(parsed_string);
+                                string_vec.push(final_str);
+                            }
+                        }
+                    }
+                }
             };
         }
         Err(_) => {}
