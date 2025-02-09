@@ -205,6 +205,8 @@ fn import_startup_txt_into_loadout(loadout_name: &String) -> io::Result<StartupA
     let mut admin_object = admin_initial.as_object().unwrap().to_owned();
     let vars_initial = serde_json::to_value(startup.vars).unwrap();
     let mut vars_object = vars_initial.as_object().unwrap().to_owned();
+    let reserved_slots_initial = serde_json::to_value(startup.reservedSlots).unwrap();
+    let mut reserved_slots_object = reserved_slots_initial.as_array().unwrap().to_owned();
 
     let mut args_vec: Vec<ParsedStartupTxtLine> = Vec::new();
 
@@ -353,6 +355,8 @@ fn import_startup_txt_into_loadout(loadout_name: &String) -> io::Result<StartupA
             admin_object.insert(arg.key, str_val);
         } else if arg.category.eq("vu") {
             vu_object.insert(arg.key, str_val);
+        } else if arg.category.eq("reservedSlots") {
+            reserved_slots_object.push(str_val);
         }
         continue;
     }
@@ -366,12 +370,15 @@ fn import_startup_txt_into_loadout(loadout_name: &String) -> io::Result<StartupA
     let vu_string = serde_json::to_string(&vu_object)?;
     let vu_struct = serde_json::from_str::<VU_Commands>(&vu_string)?;
 
+    let reserved_slots_string = serde_json::to_string(&reserved_slots_object)?;
+    let reserved_slots_struct = serde_json::from_str::<Vec<String>>(&reserved_slots_string)?;
+
     let final_struct = StartupArgs {
         vars: vars_struct,
         admin: admin_struct,
         vu: Some(vu_struct),
         RM: None,
-        reservedSlots: None,
+        reservedSlots: Some(reserved_slots_struct),
     };
 
     Ok(final_struct)

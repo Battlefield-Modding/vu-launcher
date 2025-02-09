@@ -122,7 +122,7 @@ pub struct StartupArgs {
     pub vars: Vars,
     pub RM: Option<RM_Commands>,
     pub vu: Option<VU_Commands>,
-    pub reservedSlots: Option<ReservedSlots>,
+    pub reservedSlots: Option<Vec<String>>,
 }
 
 #[allow(non_snake_case)]
@@ -190,11 +190,6 @@ impl VU_Commands {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct ReservedSlots {
-    pub add: Vec<String>, // list of players to add to reserved slot
-}
-
-#[derive(Serialize, Deserialize, Debug)]
 pub struct ParsedStartupTxtLine {
     pub category: String, // what section of startup key belongs to
     pub key: String,
@@ -208,7 +203,7 @@ impl StartupArgs {
             vars: Vars::default(),
             RM: None,
             vu: Some(VU_Commands::default()),
-            reservedSlots: None,
+            reservedSlots: Some(Vec::new()),
         }
     }
 }
