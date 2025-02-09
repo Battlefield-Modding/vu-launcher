@@ -118,7 +118,7 @@ export const defaultStartupArguments: StartupArgs = {
     teamKillCountForKick: 0,
     teamKillKickForBan: 0,
     teamKillValueDecreasePerSecond: 0.01,
-    teamKillValueForKick: 2,
+    teamKillValueForKick: 2.0,
     teamKillValuelncrease: 0.525,
     unlockMode: undefined,
     vehicleSpawnAllowed: true,
