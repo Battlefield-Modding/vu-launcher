@@ -1,5 +1,10 @@
 import { Folder, Server, User } from 'lucide-react'
-import { openExplorerAtLoadout, playVUOnLocalServer, startServerLoadout } from '@/api'
+import {
+  openExplorerAtLoadout,
+  playVUOnLocalServer,
+  refreshLoadout,
+  startServerLoadout,
+} from '@/api'
 import { toast } from 'sonner'
 import { LoadoutJSON } from '@/config/config'
 import { ChooseAccountSheet } from '../Forms/AccountMultiSelect/AccountMultiSelectSheet'
@@ -7,6 +12,7 @@ import { StartupSheet } from '../Forms/Startup/StartupSheet'
 import { ManageModsInServerSheet } from '../ManageModsInServerSheet/ManageModsInServerSheet'
 import { MaplistSheet } from '../Forms/Maplist/MaplistSheet'
 import { BanlistSheet } from '../Forms/Banlist/BanlistSheet'
+import { RefreshLoadoutTooltip } from './RefreshLoadoutTooltip'
 
 export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
   async function handlePlay() {
@@ -35,9 +41,23 @@ export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
     await openExplorerAtLoadout(loadout.name)
   }
 
+  async function handleRefreshLoadout() {
+    const status = await refreshLoadout(loadout.name)
+    if (status) {
+      toast(`Updated Startup/Maplist/Modlist/Banlist from loadout.json for: ${loadout.name}`)
+    } else {
+      toast(`Failed to update txt files from loadout.json for: ${loadout.name}`)
+    }
+  }
+
   return (
     <div className="m-auto mt-8 flex flex-col gap-8 p-4">
-      <h1 className="mb-4 text-2xl text-secondary underline">{loadout.name}</h1>
+      <div className="mb-4 flex gap-2">
+        <h1 className="text-2xl text-secondary underline">{loadout.name} </h1>
+        <div onClick={handleRefreshLoadout} className="w-fit">
+          <RefreshLoadoutTooltip />
+        </div>
+      </div>
 
       <div className="m-auto flex flex-col gap-16">
         <div className="flex justify-end gap-4">
@@ -71,7 +91,6 @@ export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
           <MaplistSheet loadout={loadout} />
           <BanlistSheet loadout={loadout} />
           <ManageModsInServerSheet loadout={loadout} />
-          {/* <EditLoadoutSheet existingConfig={loadout} /> */}
         </div>
       </div>
 

@@ -40,7 +40,19 @@ pub fn write_loadout_json(loadout: &LoadoutJson) -> io::Result<bool> {
 }
 
 #[tauri::command]
-pub fn update_loadout_json(loadout_name: String, new_arguments: LoadoutJson) {}
+pub fn refresh_loadout(loadout_name: String) -> bool {
+    // this function will write loadout json again
+    match write_to_txt_from_loadout(&loadout_name) {
+        Ok(status) => return status,
+        Err(err) => {
+            println!(
+                "Failed to write to txt from loadout when refreshing due to error:\n{:?}",
+                err
+            );
+            return false;
+        }
+    };
+}
 
 fn is_loadout(path: &PathBuf) -> bool {
     let mut loadout_json_path = path.clone();

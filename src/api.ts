@@ -219,3 +219,8 @@ export async function getAllLoadoutJson(): Promise<LoadoutJSON[]>{
   const loadoutJson = await invoke(rust_fns.get_all_loadout_json) as LoadoutJSON[];
   return loadoutJson
 }
+
+export async function refreshLoadout(loadoutName: string){
+  const status = await invoke(rust_fns.refresh_loadout, {loadoutName: loadoutName})
+  return status
+}

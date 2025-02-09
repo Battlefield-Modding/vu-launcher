@@ -43,7 +43,8 @@ export enum rust_fns {
   remove_mod_from_loadout = "remove_mod_from_loadout",
   open_mod_with_vscode = "open_mod_with_vscode",
   play_vu_on_local_server = "play_vu_on_local_server",
-  get_all_loadout_json = "get_all_loadout_json"
+  get_all_loadout_json = "get_all_loadout_json",
+  refresh_loadout = "refresh_loadout"
 }
 
 export enum QueryKey {
