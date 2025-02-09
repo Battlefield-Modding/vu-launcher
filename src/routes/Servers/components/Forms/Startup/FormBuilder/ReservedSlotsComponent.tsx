@@ -30,7 +30,7 @@ export function ReservedSlotsComponent({ form }: { form: any }) {
           className="mb-4"
           onClick={(e) => {
             e.preventDefault()
-            fieldArray.append({ add: '' })
+            fieldArray.append('')
           }}
         >
           Add Player
