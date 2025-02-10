@@ -47,6 +47,10 @@ export default function ModUpload() {
               queryKey: [QueryKey.GetModNamesInCache],
               refetchType: 'all',
             })
+            queryClient.invalidateQueries({
+              queryKey: [QueryKey.GetAllModNames],
+              refetchType: 'all',
+            })
             toast(`Successfully imported mod from: ${info}`)
           } else {
             toast('Failed to import mod. May already exist?')
@@ -82,6 +86,10 @@ export default function ModUpload() {
           if (result) {
             queryClient.invalidateQueries({
               queryKey: [QueryKey.GetModNamesInCache],
+              refetchType: 'all',
+            })
+            queryClient.invalidateQueries({
+              queryKey: [QueryKey.GetAllModNames],
               refetchType: 'all',
             })
             toast(`Successfully imported mod from: ${installPath}`)

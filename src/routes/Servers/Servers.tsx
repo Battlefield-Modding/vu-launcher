@@ -1,13 +1,16 @@
 import { Loader } from 'lucide-react'
-import LoadoutSheet from './components/LoadoutSheet/LoadoutSheet'
-import LoadoutBrowser from './components/Loadouts/LoadoutContainer'
 import { QueryKey, STALE } from '@/config/config'
-import { serverKeyExists } from '@/api'
+import { getAllLoadoutJson, serverKeyExists } from '@/api'
 import { useQuery } from '@tanstack/react-query'
-import FirstTimeSetup from './components/FirstTimeSetup'
-import LoadoutUploadSheet from './components/LoadoutUploadSheet/LoadoutUploadSheet'
+import { FirstTimeSetup } from './components/Forms/FirstTimeSetup/FirstTimeSetup'
+import { CreateLoadoutSheet } from './components/Forms/Loadouts/CreateLoadout/CreateLoadoutSheet'
+import { UploadLoadoutSheet } from './components/Forms/UploadLoadout/UploadLoadoutSheet'
+import { StartupSheet } from './components/Forms/Startup/StartupSheet'
+import { LoadoutContainer } from './components/Loadouts/LoadoutContainer'
+import { Button } from '@/components/ui/button'
+import { MaplistSheet } from './components/Forms/Maplist/MaplistSheet'
 
-export default function Servers() {
+export function Servers() {
   const { isPending, isError, data, error } = useQuery({
     queryKey: [QueryKey.ServerKeyExists],
     queryFn: serverKeyExists,
@@ -38,13 +41,7 @@ export default function Servers() {
 
   return (
     <div className="m-auto flex min-h-[100vh] flex-col justify-center">
-      <div className="m-auto mb-0 mt-0 flex w-full justify-center gap-4 rounded-md bg-primary p-8">
-        <LoadoutSheet />
-        <LoadoutUploadSheet />
-      </div>
-      <div className="m-auto mt-0 w-full">
-        <LoadoutBrowser />
-      </div>
+      <LoadoutContainer />
     </div>
   )
 }

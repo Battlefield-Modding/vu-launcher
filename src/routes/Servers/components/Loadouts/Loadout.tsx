@@ -1,141 +1,100 @@
-import EditLoadoutSheet from '../EditLoadoutSheet/EditLoadoutSheet'
-import { Folder, Loader, Server, User } from 'lucide-react'
+import { Folder, Server, User } from 'lucide-react'
 import {
-  getServerLoadout,
   openExplorerAtLoadout,
   playVUOnLocalServer,
+  refreshLoadout,
   startServerLoadout,
 } from '@/api'
 import { toast } from 'sonner'
-import { useQuery } from '@tanstack/react-query'
-import { QueryKey, STALE } from '@/config/config'
-import ChooseAccountSheet from '../ChooseAccountSheet/ChooseAccountSheet'
-import ManageModsSheet from '../ManageModsSheet/ManageModsSheet'
-import DeleteLoadoutDialog from './DeleteLoadoutDialog'
+import { LoadoutJSON } from '@/config/config'
+import { ChooseAccountSheet } from '../Forms/AccountMultiSelect/AccountMultiSelectSheet'
+import { StartupSheet } from '../Forms/Startup/StartupSheet'
+import { ManageModsInServerSheet } from '../ManageModsInServerSheet/ManageModsInServerSheet'
+import { MaplistSheet } from '../Forms/Maplist/MaplistSheet'
+import { BanlistSheet } from '../Forms/Banlist/BanlistSheet'
+import { RefreshLoadoutTooltip } from './RefreshLoadoutTooltip'
 
-function Loadout({ name }: { name: string }) {
-  const { isPending, isError, data, error } = useQuery({
-    queryKey: [`${QueryKey.GetServerLoadout}-${name}`],
-    queryFn: async () => {
-      const data = await getServerLoadout(name)
-      return data
-    },
-    staleTime: STALE.never,
-  })
-
-  if (isPending) {
-    return (
-      <div>
-        <h1>Fetching Loadout {name}</h1>
-        <Loader />
-      </div>
-    )
-  }
-
-  if (isError) {
-    return (
-      <div className="rounded-md bg-destructive pl-2 pr-2 text-xl leading-9">
-        <h1>ERROR: No Loadouts Found</h1>
-        <p>{error.message}</p>
-      </div>
-    )
-  }
-
-  if (!data) {
-    return (
-      <div className="rounded-md bg-secondary pl-2 pr-2 text-xl leading-9 text-black">
-        <h1>No information found on loadout</h1>
-        <p>This should never happen?</p>
-      </div>
-    )
-  }
-
-  function getServerPassword() {
-    let finalPassword = ''
-    const startupFileContent = data.startup as string
-    const positionOfPassword = startupFileContent.indexOf('vars.gamePassword')
-
-    const passwordLine = startupFileContent
-      .substring(positionOfPassword, startupFileContent.length)
-      .split('\n')[0]
-
-    if (passwordLine.indexOf(' ') !== -1) {
-      const passwordWithQuotesMaybe = passwordLine.split(' ')[1]
-      finalPassword = passwordWithQuotesMaybe
-      if (passwordWithQuotesMaybe.indexOf('"') !== -1) {
-        const splitPassword = passwordWithQuotesMaybe.split('"')
-        finalPassword = splitPassword[1]
-      } else {
-        finalPassword = passwordWithQuotesMaybe
-      }
-    } else {
-      toast(`Password in [${name}] startup needs a space`)
-    }
-
-    return finalPassword
-  }
-
+export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
   async function handlePlay() {
-    let status = await startServerLoadout(name)
+    let status = await startServerLoadout(loadout.name)
     if (status) {
       toast('Started VU Server. Starting Client in 1 second...')
       setTimeout(() => {
-        playVUOnLocalServer(getServerPassword())
+        playVUOnLocalServer(loadout.startup.vars.gamePassword ?? '')
       }, 1000)
     } else {
-      toast(`Failed to start loadout: ${name}`)
+      toast(`Failed to start loadout: ${loadout.name}`)
     }
   }
 
   async function handleServer() {
-    let status = await startServerLoadout(name)
+    let status = await startServerLoadout(loadout.name)
     if (status) {
       toast('Started VU Server...')
     } else {
-      toast(`Failed to start loadout: ${name}`)
+      toast(`Failed to start loadout: ${loadout.name}`)
     }
   }
 
   async function handleOpenExplorer() {
-    toast(`Opened explorer for loadout: ${name}`)
-    await openExplorerAtLoadout(name)
+    toast(`Opened explorer for loadout: ${loadout.name}`)
+    await openExplorerAtLoadout(loadout.name)
+  }
+
+  async function handleRefreshLoadout() {
+    const status = await refreshLoadout(loadout.name)
+    if (status) {
+      toast(`Updated Startup/Maplist/Modlist/Banlist from loadout.json for: ${loadout.name}`)
+    } else {
+      toast(`Failed to update txt files from loadout.json for: ${loadout.name}`)
+    }
   }
 
   return (
-    <div className="max-w-96 rounded-md border border-black bg-black p-4">
-      <h1 className="mb-8 flex justify-between gap-2 text-xl">
-        {name.length >= 15 ? `${name.substring(0, 15)}...` : name}
-        <div className="flex gap-4">
-          <ManageModsSheet loadout={data} />
-          <EditLoadoutSheet existingConfig={data} />
+    <div className="m-auto mt-8 flex flex-col gap-8 p-4">
+      <div className="mb-4 flex gap-2">
+        <h1 className="text-2xl text-secondary underline">{loadout.name} </h1>
+        <div onClick={handleRefreshLoadout} className="w-fit">
+          <RefreshLoadoutTooltip />
         </div>
-      </h1>
+      </div>
 
-      <div className="flex justify-between gap-4">
-        <DeleteLoadoutDialog name={name} />
+      <div className="m-auto flex flex-col gap-16">
+        <div className="flex justify-end gap-4">
+          <div
+            onClick={handleServer}
+            className="flex w-fit gap-2 rounded-md bg-green-800 p-2 text-secondary hover:cursor-pointer hover:bg-green-800/80"
+          >
+            Start Server
+            <Server />
+          </div>
+          <div
+            onClick={handlePlay}
+            className="flex w-fit justify-between gap-2 rounded-md bg-green-700 p-2 text-secondary hover:cursor-pointer hover:bg-green-700/80"
+          >
+            Start Server and Client
+            <Server />
+            <User />
+          </div>
+        </div>
+
         <div
-          className="rounded-md bg-secondary p-1.5 text-primary hover:cursor-pointer hover:bg-secondary/80"
+          className="m-auto flex w-fit items-center gap-2 rounded-md bg-gray-600 p-2 text-xl text-secondary hover:cursor-pointer hover:bg-gray-600/80"
           onClick={handleOpenExplorer}
         >
+          Explorer
           <Folder />
         </div>
-        <div
-          onClick={handleServer}
-          className="flex rounded-md bg-green-800 p-1.5 hover:cursor-pointer hover:bg-green-800/80"
-        >
-          <Server />
+
+        <div className="m-auto flex w-fit flex-col items-center gap-4">
+          <StartupSheet existingLoadout={loadout} />
+          <MaplistSheet loadout={loadout} />
+          <BanlistSheet loadout={loadout} />
+          <ManageModsInServerSheet loadout={loadout} />
         </div>
-        <div
-          onClick={handlePlay}
-          className="flex rounded-md bg-green-600 p-1.5 hover:cursor-pointer hover:bg-green-600/80"
-        >
-          <Server />
-          <User />
-        </div>
-        <ChooseAccountSheet name={name} getServerPassword={getServerPassword} />
       </div>
+
+      {/* <ChooseAccountSheet name={loadout.name} password={loadout.startup.admin.password ?? ''} /> */}
     </div>
   )
 }
-
-export default Loadout

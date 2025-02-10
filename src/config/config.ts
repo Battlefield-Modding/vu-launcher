@@ -1,3 +1,5 @@
+import { StartupArgs } from "@/routes/Servers/components/Forms/Startup/Setup/StartupTypes"
+
 export const STALE =
 {
   default: 60 * 1000, // 60,
@@ -40,7 +42,9 @@ export enum rust_fns {
   get_mod_names_in_loadout = "get_mod_names_in_loadout",
   remove_mod_from_loadout = "remove_mod_from_loadout",
   open_mod_with_vscode = "open_mod_with_vscode",
-  play_vu_on_local_server = "play_vu_on_local_server"
+  play_vu_on_local_server = "play_vu_on_local_server",
+  get_all_loadout_json = "get_all_loadout_json",
+  refresh_loadout = "refresh_loadout"
 }
 
 export enum QueryKey {
@@ -53,7 +57,9 @@ export enum QueryKey {
   CredentialsExist = "CredentialsExist",
   ServerList = "ServerList",
   PlayVUInformation = "PlayVUInformation",
-  UserPreferences = "UserPreferences"
+  UserPreferences = "UserPreferences",
+  GetAllLoadoutJSON = "GetAllLoadoutJSON",
+  GetAllModNames = "GetAllModNames"
 }
 
 export enum routes {
@@ -71,6 +77,21 @@ export type Loadout = {
   banlist: string,
   mods: string[]
 }
+
+export type Map = {
+  mapCode: string,
+  gameMode: string
+}
+
+export type LoadoutJSON = {
+  name: string,
+  startup: StartupArgs,
+  maplist: Map[],
+  banlist?: string[]
+  modlist?: string[]
+}
+
+export type LoadoutJSON_AndMods = LoadoutJSON & { mods?: string[] }
 
 export type DragDropEventTauri = {
   event: string,

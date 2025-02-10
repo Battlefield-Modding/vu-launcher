@@ -24,6 +24,10 @@ function DeleteModDialog({ modName, loadoutName }: { modName: string; loadoutNam
         queryKey: [QueryKey.GetModNamesInCache],
         refetchType: 'all',
       })
+      queryClient.invalidateQueries({
+        queryKey: [QueryKey.GetAllModNames],
+        refetchType: 'all',
+      })
     } else {
       toast(`Error: Failed to delete ${modName}`)
     }

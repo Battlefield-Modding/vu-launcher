@@ -82,7 +82,9 @@ export default function PlayerCredentialsForm({ setSheetOpen }: { setSheetOpen: 
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button variant="secondary" type="submit">
+          Submit
+        </Button>
       </form>
     </Form>
   )

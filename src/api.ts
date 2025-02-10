@@ -1,5 +1,5 @@
 import {invoke} from "@tauri-apps/api/core"
-import { Loadout, rust_fns, SavedServer, UserCredential, UserPreferences } from "./config/config"
+import { Loadout, LoadoutJSON, rust_fns, SavedServer, UserCredential, UserPreferences } from "./config/config"
 
 export async function firstTimeSetup(){
   await invoke(rust_fns.first_time_setup)
@@ -77,12 +77,12 @@ export async function fetchVUDataDummy(){
   return info
 }
 
-export async function createServerLoadout(loadout: Loadout){
+export async function createServerLoadout(loadout: LoadoutJSON){
   const status = JSON.parse(await invoke(rust_fns.create_server_loadout, {loadout}))
   return status
 }
 
-export async function editServerLoadout(loadout: Loadout){
+export async function editServerLoadout(loadout: LoadoutJSON){
   const status = JSON.parse(await invoke(rust_fns.edit_server_loadout, {loadout}))
   return status
 }
@@ -212,5 +212,15 @@ export async function addServer({nickname, guid, password}: {nickname: string, g
   servers.push({nickname, guid, password})
   const newPreferences = {...preferences, servers}
   const status = await invoke(rust_fns.set_user_preferences, {newPreferences}) as boolean
+  return status
+}
+
+export async function getAllLoadoutJson(): Promise<LoadoutJSON[]>{
+  const loadoutJson = await invoke(rust_fns.get_all_loadout_json) as LoadoutJSON[];
+  return loadoutJson
+}
+
+export async function refreshLoadout(loadoutName: string){
+  const status = await invoke(rust_fns.refresh_loadout, {loadoutName: loadoutName})
   return status
 }
