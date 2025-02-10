@@ -5,6 +5,7 @@ import { NumberComponent } from './NumberComponent'
 import { LoadoutJSON } from '@/config/config'
 import { TextAreaComponent } from './TextAreaComponent'
 import { ReservedSlotsComponent } from './ReservedSlotsComponent'
+import { SetTeamTicketCountComponent } from './SetTeamTicketCountComponent'
 
 export function FormBuilder({
   form,
@@ -62,6 +63,9 @@ export function FormBuilder({
             keyValue={key}
           />
         )
+      }
+      if (fieldType === 'setTeamTicketCount') {
+        return <SetTeamTicketCountComponent form={form} />
       }
       if (fieldType === 'none') {
         return <div key={key}></div>

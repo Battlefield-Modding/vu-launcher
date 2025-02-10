@@ -81,7 +81,9 @@ const formSchema = z.object({
     DestructionEnabled: z.boolean().optional(),
     HighPerformanceReplication: z.boolean().optional(),
     ServerBanner: z.string().optional(),
-    SetTeamTicketCount: z.string().optional(),
+    SetTeamTicketCount: z.array(
+      z.object({ teamId: z.string(), ticketCount: z.number({ coerce: true }) }),
+    ),
     SquadSize: z.number().optional(),
     SunFlareEnabled: z.boolean().optional(),
     SuppressionMultiplier: z.number().optional(),

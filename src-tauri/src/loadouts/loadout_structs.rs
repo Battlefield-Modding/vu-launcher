@@ -153,9 +153,9 @@ pub struct VU_Commands {
     pub DestructionEnabled: Option<bool>,     // "Enable Destruction",
     pub HighPerformanceReplication: Option<bool>, // "Update far-away players at same rate as nearby players",
     pub ServerBanner: Option<String>, // "URL for 1378x162 .jpg that appears in server browser",
-    pub SetTeamTicketCount: Option<String>, // "Sets team ticket count for a team. TeamId TicketCount",
-    pub SquadSize: Option<u32>,             // "Set max players per squad",
-    pub SunFlareEnabled: Option<bool>,      // "Enable sun flare",
+    pub SetTeamTicketCount: Option<Vec<SetTeamTicketCount>>, // "Sets team ticket count for a team. TeamId TicketCount",
+    pub SquadSize: Option<u32>,                              // "Set max players per squad",
+    pub SunFlareEnabled: Option<bool>,                       // "Enable sun flare",
     pub SuppressionMultiplier: Option<u32>, // "Set suppression intensity [0, infinite]. 0 means disable suppression.",
     pub FriendlyFireSuppression: Option<bool>, // "Enable suppression of allies",
     pub TimeScale: Option<f64>, // "Slow down or speed up game [0.0, 2.0]. Default is 1.0",
@@ -166,6 +166,13 @@ pub struct VU_Commands {
     pub CorpseDamageEnabled: Option<bool>, // "Enables corpse damage, preventing revival.(Tip: Tweak VeniceSoldierHealthModuleData.manDownStateHealthPoints with a mod.)",
 }
 
+#[allow(non_snake_case)]
+#[derive(Serialize, Deserialize, Debug)]
+pub struct SetTeamTicketCount {
+    pub teamId: String,
+    pub ticketCount: u64,
+}
+
 impl VU_Commands {
     pub fn default() -> VU_Commands {
         VU_Commands {
@@ -174,7 +181,7 @@ impl VU_Commands {
             DestructionEnabled: Some(true),
             HighPerformanceReplication: Some(false),
             ServerBanner: Some(String::from("")),
-            SetTeamTicketCount: Some(String::from("")),
+            SetTeamTicketCount: Some(Vec::new()),
             SquadSize: Some(4),
             SunFlareEnabled: Some(true),
             SuppressionMultiplier: Some(100),

@@ -6,7 +6,8 @@ use std::{
 };
 
 use loadout_structs::{
-    Admin, LoadoutJson, Map, ParsedStartupTxtLine, StartupArgs, VU_Commands, Vars,
+    Admin, LoadoutJson, Map, ParsedStartupTxtLine, SetTeamTicketCount, StartupArgs, VU_Commands,
+    Vars,
 };
 use serde_json::Error;
 use serde_json::Value;
@@ -360,6 +361,42 @@ fn import_startup_txt_into_loadout(loadout_name: &String) -> io::Result<StartupA
             Err(_) => {}
         }
 
+        if arg.key.eq("SetTeamTicketCount") {
+            let mut team_id = String::from("");
+            let mut ticket_count = 0;
+            for value in arg.value.clone().split(" ") {
+                match value.parse::<u64>() {
+                    Ok(num) => {
+                        ticket_count = num;
+                    }
+                    Err(_) => {
+                        team_id = String::from(value);
+                    }
+                };
+            }
+            let team_ticket_object = SetTeamTicketCount {
+                teamId: team_id,
+                ticketCount: ticket_count,
+            };
+            match vu_object.get_key_value("SetTeamTicketCount") {
+                Some(team_ticket) => {
+                    let mut prior_value: Vec<SetTeamTicketCount> =
+                        serde_json::from_value(team_ticket.1.to_owned())?;
+                    prior_value.push(team_ticket_object);
+                    let ticket_val = serde_json::to_value(prior_value)?;
+                    vu_object.insert(arg.key, ticket_val);
+                    continue;
+                }
+                None => {
+                    let mut my_vec: Vec<SetTeamTicketCount> = Vec::new();
+                    my_vec.push(team_ticket_object);
+                    let ticket_val = serde_json::to_value(my_vec)?;
+                    vu_object.insert(arg.key, ticket_val);
+                    continue;
+                }
+            }
+        }
+
         let str_val = serde_json::to_value(arg.value)?;
         if arg.category.eq("vars") {
             vars_object.insert(arg.key, str_val);
@@ -489,6 +526,34 @@ fn make_txt_ready(res: Result<Value, Error>, prefix: String) -> Vec<String> {
                                 None => {}
                             }
                         } else if value.is_array() {
+                            if prefix.eq("vu") {
+                                println!("VU Array Argument found!");
+
+                                println!("{:?}", value);
+
+                                match value.as_array() {
+                                    Some(arr) => {
+                                        for obj in arr {
+                                            let parsed_object = obj.as_object().unwrap();
+                                            let mut final_str =
+                                                String::from("vu.SetTeamTicketCount ");
+                                            let team_id = parsed_object["teamId"].as_str().unwrap();
+                                            let ticket_count =
+                                                parsed_object["ticketCount"].as_u64().unwrap();
+                                            final_str.push_str(&team_id);
+                                            final_str.push_str(" ");
+                                            final_str.push_str(&ticket_count.to_string());
+                                            string_vec.push(final_str);
+                                        }
+                                    }
+                                    None => {
+                                        println!(
+                                            "Array was empty for VU array argument: {:?}",
+                                            &key
+                                        );
+                                    }
+                                }
+                            }
                             // TODO: handle the array for reservedSlots, setDevelopers, setAdmins, etc...
                         }
                     }
