@@ -1,4 +1,11 @@
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet'
 import { Hammer } from 'lucide-react'
 import { useState } from 'react'
 import { BanlistForm } from './BanlistForm'
@@ -16,6 +23,10 @@ export function BanlistSheet({ loadout }: { loadout: LoadoutJSON }) {
         </div>
       </SheetTrigger>
       <SheetContent className="overflow-y-scroll">
+        <SheetHeader className="hidden">
+          <SheetTitle>Banlist</SheetTitle>
+          <SheetDescription>Update list of prohibited players</SheetDescription>
+        </SheetHeader>
         <BanlistForm setSheetOpen={setSheetOpen} loadout={loadout} />
       </SheetContent>
     </Sheet>
