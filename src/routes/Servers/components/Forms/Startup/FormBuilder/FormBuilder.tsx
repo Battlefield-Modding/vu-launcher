@@ -18,7 +18,7 @@ export function FormBuilder({
 }) {
   return sectionNames.map((sectionName) => {
     if (sectionName === 'reservedSlots') {
-      return <ReservedSlotsComponent form={form} />
+      return <ReservedSlotsComponent key={`${sectionName}-key`} form={form} />
     }
 
     // @ts-expect-error
@@ -65,7 +65,7 @@ export function FormBuilder({
         )
       }
       if (fieldType === 'setTeamTicketCount') {
-        return <SetTeamTicketCountComponent form={form} />
+        return <SetTeamTicketCountComponent key={key} form={form} />
       }
       if (fieldType === 'none') {
         return <div key={key}></div>
