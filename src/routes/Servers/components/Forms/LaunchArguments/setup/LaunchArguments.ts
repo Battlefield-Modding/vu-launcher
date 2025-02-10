@@ -94,4 +94,94 @@ export const LaunchArgumentDescriptions = {
   }
 }
 
+export const defaultLaunchArguments: LaunchArguments = {
+  common: {
+    gamepath: undefined,
+    perftrace: false,
+    env: "prod",
+    updateBranch: "prod",
+    tracedc: false,
+    cacert: undefined,
+    activateWithOrigin: {email: "", password: ""},
+    activateWithLSX: false,
+    activateWithEaToken: undefined,
+    console: false,
+    debuglog: false,
+    trace: false,
+    vextdebug: undefined,
+    vexttrace: false,
+  },
+  client: {
+    dwebui: false,
+    serverJoinString: undefined,
+    serverSpectateString: undefined,
+    cefdebug: false,
+    credentials: {username: "", password: ""},
+    disableUiHwAcceleration: false,
+  },
+  server: {
+    requiredArgs: true,
+    high60: false,
+    high120: false,
+    headless: false,
+    serverInstancePath: undefined,
+    highResTerrain: false,
+    disableTerrainInterpolation: false,
+    skipChecksum: false,
+    listen: undefined,
+    mHarmonyPort: undefined,
+    remoteAdminPort: undefined,
+    unlisted: false,
+    joinaddr: undefined,
+    joinhost: undefined,
+    noUpdate: false,
+    maxPlayers: -1,
+  }
+}
+
+export const defaultLaunchArgumentInputTypes = {
+  common: {
+    gamepath: "textarea",
+    perftrace: "checkbox",
+    env: "select",
+    updateBranch: "select",
+    tracedc: "checkbox",
+    cacert: "textarea",
+    activateWithOrigin: "credentials",
+    activateWithLSX: "checkbox",
+    activateWithEaToken: "textarea",
+    console: "checkbox",
+    debuglog: "checkbox",
+    trace: "checkbox",
+    vextdebug: "textarea",
+    vexttrace: "checkbox",
+  },
+  client: {
+    dwebui: "checkbox",
+    serverJoinString: "textarea",
+    serverSpectateString: "textarea",
+    cefdebug: "checkbox",
+    credentials: "credentials",
+    disableUiHwAcceleration: "checkbox",
+  },
+  server: {
+    requiredArgs: "checkbox",
+    high60: "checkbox",
+    high120: "checkbox",
+    headless: "checkbox",
+    serverInstancePath: "textarea",
+    highResTerrain: "checkbox",
+    disableTerrainInterpolation: "checkbox",
+    skipChecksum: "checkbox",
+    listen: "textarea",
+    mHarmonyPort: "textarea",
+    remoteAdminPort: "textarea",
+    unlisted: "checkbox",
+    joinaddr: "textarea",
+    joinhost: "textarea",
+    noUpdate: "checkbox",
+    maxPlayers: "number",
+  }
+}
+
 

@@ -1,3 +1,4 @@
+import { LaunchArguments } from "@/routes/Servers/components/Forms/LaunchArguments/setup/LaunchArguments"
 import { StartupArgs } from "@/routes/Servers/components/Forms/Startup/Setup/StartupTypes"
 
 export const STALE =
@@ -89,6 +90,7 @@ export type LoadoutJSON = {
   maplist: Map[],
   banlist?: string[]
   modlist?: string[]
+  launchArgs: LaunchArguments
 }
 
 export type LoadoutJSON_AndMods = LoadoutJSON & { mods?: string[] }

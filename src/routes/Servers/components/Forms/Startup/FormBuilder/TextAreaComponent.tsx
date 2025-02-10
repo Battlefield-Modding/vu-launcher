@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/form'
 import { StartupArgs } from '../Setup/StartupTypes'
 import { Textarea } from '@/components/ui/textarea'
+import { LaunchArguments } from '../../LaunchArguments/setup/LaunchArguments'
 
 export function TextAreaComponent({
   form,
@@ -20,7 +21,7 @@ export function TextAreaComponent({
   keyValue: any
   defaultvalue: any
   description: string
-  sectionName: keyof StartupArgs
+  sectionName: keyof StartupArgs | keyof LaunchArguments
 }) {
   return (
     <FormField

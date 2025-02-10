@@ -13,6 +13,7 @@ import { ManageModsInServerSheet } from '../ManageModsInServerSheet/ManageModsIn
 import { MaplistSheet } from '../Forms/Maplist/MaplistSheet'
 import { BanlistSheet } from '../Forms/Banlist/BanlistSheet'
 import { RefreshLoadoutTooltip } from './RefreshLoadoutTooltip'
+import { LaunchArgumentSheet } from '../Forms/LaunchArguments/LaunchArgumentsSheet'
 
 export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
   async function handlePlay() {
@@ -88,6 +89,7 @@ export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
 
         <div className="m-auto flex w-fit flex-col items-center gap-4">
           <StartupSheet existingLoadout={loadout} />
+          <LaunchArgumentSheet existingLoadout={loadout} />
           <MaplistSheet loadout={loadout} />
           <BanlistSheet loadout={loadout} />
           <ManageModsInServerSheet loadout={loadout} />

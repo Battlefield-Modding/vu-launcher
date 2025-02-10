@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { StartupArgs } from '../Setup/StartupTypes'
+import { LaunchArguments } from '../../LaunchArguments/setup/LaunchArguments'
 
 export function NumberComponent({
   form,
@@ -20,7 +21,7 @@ export function NumberComponent({
   keyValue: any
   defaultvalue: any
   description: string
-  sectionName: keyof StartupArgs
+  sectionName: keyof StartupArgs | keyof LaunchArguments
 }) {
   return (
     <FormField
