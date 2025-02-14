@@ -22,9 +22,9 @@ const formSchema = z.object({
       updateBranch: z.string().optional(),
       tracedc: z.boolean().optional(),
       cacert: z.string().optional(),
-      activateWithOrigin: z.object({ email: z.string(), password: z.string() }).optional(),
-      activateWithLSX: z.boolean().optional(),
-      activateWithEaToken: z.string().optional(),
+      // activateWithOrigin: z.object({ email: z.string(), password: z.string() }).optional(),
+      // activateWithLSX: z.boolean().optional(),
+      // activateWithEaToken: z.string().optional(),
       console: z.boolean().optional(),
       debuglog: z.boolean().optional(),
       trace: z.boolean().optional(),
@@ -38,12 +38,12 @@ const formSchema = z.object({
       serverJoinString: z.string().optional(),
       serverSpectateString: z.string().optional(),
       cefdebug: z.boolean().optional(),
-      credentials: z.object({ username: z.string(), password: z.string() }).optional(),
+      // credentials: z.object({ username: z.string(), password: z.string() }).optional(),
       disableUiHwAcceleration: z.boolean().optional(),
     })
     .optional(),
   server: z.object({
-    requiredArg: z.boolean(),
+    requiredArgs: z.boolean(),
     high60: z.boolean().optional(),
     high120: z.boolean().optional(),
     headless: z.boolean().optional(),
@@ -71,29 +71,27 @@ export function LaunchArgumentForm({
 }) {
   const queryClient = useQueryClient()
   const [submitLoading, setSubmitLoading] = useState(false)
-  // const [filteredArgs, setFilteredArgs] = useState<{}>({ ...existingLoadout.launchArgs })
-  const [filteredArgs, setFilteredArgs] = useState<{}>(defaultLaunchArguments)
+  const [filteredArgs, setFilteredArgs] = useState<{}>({ ...existingLoadout.launch })
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    // defaultValues: existingLoadout.launchArgs,
-    defaultValues: defaultLaunchArguments,
+    defaultValues: existingLoadout.launch,
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const payload = { ...existingLoadout, launchArgs: values }
+    const payload = { ...existingLoadout, launch: values }
 
-    // setSubmitLoading(() => true)
-    // const status = await editServerLoadout(payload)
-    // setSubmitLoading(() => false)
+    setSubmitLoading(() => true)
+    const status = await editServerLoadout(payload)
+    setSubmitLoading(() => false)
 
-    // if (status) {
-    //   toast(`Successfully updated Startup for ${existingLoadout.name}`)
-    //   queryClient.invalidateQueries({ queryKey: [QueryKey.GetAllLoadoutJSON], refetchType: 'all' })
-    //   setSheetOpen(() => false)
-    // } else {
-    //   toast(`Error. could not update Startup for ${existingLoadout.name}`)
-    // }
+    if (status) {
+      toast(`Successfully updated Launch Arguments for ${existingLoadout.name}`)
+      queryClient.invalidateQueries({ queryKey: [QueryKey.GetAllLoadoutJSON], refetchType: 'all' })
+      setSheetOpen(() => false)
+    } else {
+      toast(`Error. Could not update Launch Arguments for ${existingLoadout.name}`)
+    }
   }
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {

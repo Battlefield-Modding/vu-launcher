@@ -7,13 +7,13 @@ export type LaunchArguments = {
 export type CommonLaunchArguments = {
   gamepath?: string
   perftrace?: boolean,
-  env?: "prod" | "dev",
-  updateBranch?: "prod" | "dev",
+  env?: string | "prod" | "dev",
+  updateBranch?: string | "prod" | "dev",
   tracedc?: boolean,
   cacert?: string,
-  activateWithOrigin?: {email: string, password: string}
-  activateWithLSX?: boolean,
-  activateWithEaToken?: string,
+  // activateWithOrigin?: {email: string, password: string}
+  // activateWithLSX?: boolean,
+  // activateWithEaToken?: string,
   console?: boolean,
   debuglog?: boolean,
   trace?: boolean,
@@ -26,7 +26,7 @@ export type ClientLaunchArguments = {
   serverJoinString?: string,
   serverSpectateString?: string,
   cefdebug?: boolean,
-  credentials?: {username: string, password: string},
+  // credentials?: {username: string, password: string},
   disableUiHwAcceleration?: boolean,
 }
 
@@ -102,9 +102,9 @@ export const defaultLaunchArguments: LaunchArguments = {
     updateBranch: "prod",
     tracedc: false,
     cacert: "",
-    activateWithOrigin: {email: "", password: ""},
-    activateWithLSX: false,
-    activateWithEaToken: "",
+    // activateWithOrigin: {email: "", password: ""},
+    // activateWithLSX: false,
+    // activateWithEaToken: "",
     console: false,
     debuglog: false,
     trace: false,
@@ -116,7 +116,7 @@ export const defaultLaunchArguments: LaunchArguments = {
     serverJoinString: "",
     serverSpectateString: "",
     cefdebug: false,
-    credentials: {username: "", password: ""},
+    // credentials: {username: "", password: ""},
     disableUiHwAcceleration: false,
   },
   server: {
@@ -147,9 +147,9 @@ export const defaultLaunchArgumentInputTypes = {
     updateBranch: "select",
     tracedc: "checkbox",
     cacert: "textarea",
-    activateWithOrigin: "credentials",
-    activateWithLSX: "checkbox",
-    activateWithEaToken: "textarea",
+    // activateWithOrigin: "credentials",
+    // activateWithLSX: "checkbox",
+    // activateWithEaToken: "textarea",
     console: "checkbox",
     debuglog: "checkbox",
     trace: "checkbox",
@@ -161,7 +161,7 @@ export const defaultLaunchArgumentInputTypes = {
     serverJoinString: "textarea",
     serverSpectateString: "textarea",
     cefdebug: "checkbox",
-    credentials: "credentials",
+    // credentials: "credentials",
     disableUiHwAcceleration: "checkbox",
   },
   server: {

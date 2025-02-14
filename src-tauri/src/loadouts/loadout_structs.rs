@@ -3,11 +3,11 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Debug)]
 pub struct LoadoutJson {
     pub name: String,
-    pub startup: StartupArgs,
-    pub launch: LaunchArguments,
     pub maplist: Vec<Map>,
     pub banlist: Vec<String>,
     pub modlist: Vec<String>,
+    pub startup: StartupArgs,
+    pub launch: LaunchArguments,
 }
 
 #[allow(non_snake_case)]
@@ -243,9 +243,9 @@ pub struct CommonLaunchArguments {
     pub updateBranch: Option<String>, //"prod" | "dev"
     pub tracedc: Option<bool>,
     pub cacert: Option<String>,
-    pub activateWithOrigin: Option<CredentialEmail>,
-    pub activateWithLSX: Option<bool>,
-    pub activateWithEaToken: Option<String>,
+    // pub activateWithOrigin: Option<CredentialEmail>,
+    // pub activateWithLSX: Option<bool>,
+    // pub activateWithEaToken: Option<String>,
     pub console: Option<bool>,
     pub debuglog: Option<bool>,
     pub trace: Option<bool>,
@@ -262,9 +262,9 @@ impl CommonLaunchArguments {
             updateBranch: Some(String::from("prod")),
             tracedc: Some(false),
             cacert: Some(String::from("")),
-            activateWithOrigin: Some(CredentialEmail::default()),
-            activateWithLSX: Some(false),
-            activateWithEaToken: Some(String::from("")),
+            // activateWithOrigin: Some(CredentialEmail::default()),
+            // activateWithLSX: Some(false),
+            // activateWithEaToken: Some(String::from("")),
             console: Some(false),
             debuglog: Some(false),
             trace: Some(false),
@@ -274,35 +274,35 @@ impl CommonLaunchArguments {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug)]
-pub struct CredentialEmail {
-    email: Option<String>,
-    password: Option<String>,
-}
+// #[derive(Serialize, Deserialize, Debug)]
+// pub struct CredentialEmail {
+//     email: Option<String>,
+//     password: Option<String>,
+// }
 
-impl CredentialEmail {
-    pub fn default() -> CredentialEmail {
-        return CredentialEmail {
-            email: Some(String::from("")),
-            password: Some(String::from("")),
-        };
-    }
-}
+// impl CredentialEmail {
+//     pub fn default() -> CredentialEmail {
+//         return CredentialEmail {
+//             email: Some(String::from("")),
+//             password: Some(String::from("")),
+//         };
+//     }
+// }
 
-#[derive(Serialize, Deserialize, Debug)]
-pub struct CredentialUsername {
-    username: Option<String>,
-    password: Option<String>,
-}
+// #[derive(Serialize, Deserialize, Debug)]
+// pub struct CredentialUsername {
+//     username: Option<String>,
+//     password: Option<String>,
+// }
 
-impl CredentialUsername {
-    pub fn default() -> CredentialUsername {
-        return CredentialUsername {
-            username: Some(String::from("")),
-            password: Some(String::from("")),
-        };
-    }
-}
+// impl CredentialUsername {
+//     pub fn default() -> CredentialUsername {
+//         return CredentialUsername {
+//             username: Some(String::from("")),
+//             password: Some(String::from("")),
+//         };
+//     }
+// }
 
 #[allow(non_snake_case)]
 #[derive(Serialize, Deserialize, Debug)]
@@ -311,7 +311,7 @@ pub struct ClientLaunchArguments {
     pub serverJoinString: Option<String>,
     pub serverSpectateString: Option<String>,
     pub cefdebug: Option<bool>,
-    pub credentials: Option<CredentialUsername>,
+    // pub credentials: Option<CredentialUsername>,
     pub disableUiHwAcceleration: Option<bool>,
 }
 
@@ -322,7 +322,7 @@ impl ClientLaunchArguments {
             serverJoinString: Some(String::from("")),
             serverSpectateString: Some(String::from("")),
             cefdebug: Some(false),
-            credentials: Some(CredentialUsername::default()),
+            // credentials: Some(CredentialUsername::default()),
             disableUiHwAcceleration: Some(false),
         };
     }
