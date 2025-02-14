@@ -19,11 +19,11 @@ export async function playVU({accountIndex, serverIndex}: {accountIndex: number,
   return status
 }
 
-export async function playVUOnLocalServer(serverPassword: string, users?: number[]){
+export async function playVUOnLocalServer(loadoutName: string, users?: number[]){
   if (users) {
-    invoke(rust_fns.play_vu_on_local_server, {serverPassword, users})
+    invoke(rust_fns.play_vu_on_local_server, {name: loadoutName, users})
   } else {
-    invoke(rust_fns.play_vu_on_local_server, {serverPassword, users: []})
+    invoke(rust_fns.play_vu_on_local_server, {name: loadoutName, users: []})
   }
 }
 

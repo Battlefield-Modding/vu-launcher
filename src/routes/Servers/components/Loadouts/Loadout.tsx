@@ -21,7 +21,7 @@ export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
     if (status) {
       toast('Started VU Server. Starting Client in 1 second...')
       setTimeout(() => {
-        playVUOnLocalServer(loadout.startup.vars.gamePassword ?? '')
+        playVUOnLocalServer(loadout.name)
       }, 1000)
     } else {
       toast(`Failed to start loadout: ${loadout.name}`)
@@ -96,7 +96,7 @@ export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
         </div>
       </div>
 
-      {/* <ChooseAccountSheet name={loadout.name} password={loadout.startup.admin.password ?? ''} /> */}
+      <ChooseAccountSheet loadoutName={loadout.name} />
     </div>
   )
 }
