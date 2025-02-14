@@ -1,8 +1,9 @@
 use std::{
-    fs, io,
+    fs,
+    io::{self, Write},
     os::windows::process::CommandExt,
     path::{self, Path, PathBuf},
-    process::Command,
+    process::{Command, Stdio},
 };
 
 use serde::{Deserialize, Serialize};
@@ -43,6 +44,7 @@ mod loadouts;
 use loadouts::{get_all_loadout_json, refresh_loadout};
 
 pub const CREATE_NO_WINDOW: u32 = 0x08000000;
+pub const CREATE_NEW_CONSOLE: u32 = 0x00000010;
 
 #[derive(Serialize, Deserialize, Debug)]
 struct Account {
@@ -95,7 +97,7 @@ fn set_default_preferences() {
 }
 
 fn save_user_preferences(preferences: UserPreferences) -> io::Result<()> {
-    let str = serde_json::to_string(&preferences);
+    let str = serde_json::to_string_pretty(&preferences);
 
     let path_string = get_settings_json_path_registry()?;
     let new_path = Path::new(&path_string);
@@ -399,6 +401,55 @@ fn is_vu_installed() -> bool {
     }
 }
 
+#[tauri::command]
+async fn activate_bf3_lsx() -> bool {
+    let preferences_prematch = get_user_preferences_as_struct();
+    let preferences = match preferences_prematch {
+        Ok(info) => info,
+        Err(_) => return false,
+    };
+
+    let mut args: Vec<&str> = Vec::new();
+    args.push("/C");
+    args.push(&preferences.venice_unleashed_shortcut_location);
+    args.push("-activate");
+    args.push("-lsx");
+    args.push("-wait");
+
+    Command::new("cmd")
+        .args(args)
+        .creation_flags(CREATE_NEW_CONSOLE)
+        .spawn()
+        .expect("failed to execute process");
+
+    true
+}
+
+#[tauri::command]
+async fn activate_bf3_ea_auth_token(token: String) -> bool {
+    let preferences_prematch = get_user_preferences_as_struct();
+    let preferences = match preferences_prematch {
+        Ok(info) => info,
+        Err(_) => return false,
+    };
+
+    let mut args: Vec<&str> = Vec::new();
+    args.push("/C");
+    args.push(&preferences.venice_unleashed_shortcut_location);
+    args.push("-activate");
+    args.push("-ea_token");
+    args.push(&token);
+    args.push("-wait");
+
+    Command::new("cmd")
+        .args(args)
+        .creation_flags(CREATE_NEW_CONSOLE)
+        .spawn()
+        .expect("failed to execute process");
+
+    true
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -434,7 +485,9 @@ pub fn run() {
             open_mod_with_vscode,
             play_vu_on_local_server,
             get_all_loadout_json,
-            refresh_loadout
+            refresh_loadout,
+            activate_bf3_lsx,
+            activate_bf3_ea_auth_token
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

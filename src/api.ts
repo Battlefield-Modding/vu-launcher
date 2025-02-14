@@ -224,3 +224,13 @@ export async function refreshLoadout(loadoutName: string){
   const status = await invoke(rust_fns.refresh_loadout, {loadoutName: loadoutName})
   return status
 }
+
+export async function activateBf3LSX(){
+  const status = await invoke(rust_fns.activate_bf3_lsx)
+  return status
+}
+
+export async function activateBf3EaAuthToken(token: string){
+  const status = await invoke(rust_fns.activate_bf3_ea_auth_token, {token})
+  return status
+}
