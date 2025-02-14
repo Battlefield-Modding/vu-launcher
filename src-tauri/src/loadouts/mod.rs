@@ -6,8 +6,8 @@ use std::{
 };
 
 use loadout_structs::{
-    Admin, LoadoutJson, Map, ParsedStartupTxtLine, SetTeamTicketCount, StartupArgs, VU_Commands,
-    Vars,
+    Admin, LaunchArguments, LoadoutJson, Map, ParsedStartupTxtLine, SetTeamTicketCount,
+    StartupArgs, VU_Commands, Vars,
 };
 use serde_json::Error;
 use serde_json::Value;
@@ -94,6 +94,7 @@ fn make_loadout_json_from_txt_files(loadout_name: &String) -> io::Result<bool> {
     let loadout_json = LoadoutJson {
         name: String::from(loadout_name),
         startup: startup_args,
+        launch: LaunchArguments::default(),
         maplist: maplist_args,
         banlist: banlist_args,
         modlist: modlist_args,

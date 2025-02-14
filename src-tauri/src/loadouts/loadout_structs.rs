@@ -4,6 +4,7 @@ use serde::{Deserialize, Serialize};
 pub struct LoadoutJson {
     pub name: String,
     pub startup: StartupArgs,
+    pub launch: LaunchArguments,
     pub maplist: Vec<Map>,
     pub banlist: Vec<String>,
     pub modlist: Vec<String>,
@@ -212,5 +213,161 @@ impl StartupArgs {
             vu: Some(VU_Commands::default()),
             reservedSlots: Some(Vec::new()),
         }
+    }
+}
+
+#[allow(non_snake_case)]
+#[derive(Serialize, Deserialize, Debug)]
+pub struct LaunchArguments {
+    pub common: CommonLaunchArguments,
+    pub client: ClientLaunchArguments,
+    pub server: ServerLaunchArguments,
+}
+
+impl LaunchArguments {
+    pub fn default() -> LaunchArguments {
+        return LaunchArguments {
+            common: CommonLaunchArguments::default(),
+            client: ClientLaunchArguments::default(),
+            server: ServerLaunchArguments::default(),
+        };
+    }
+}
+
+#[allow(non_snake_case)]
+#[derive(Serialize, Deserialize, Debug)]
+pub struct CommonLaunchArguments {
+    pub gamepath: Option<String>,
+    pub perftrace: Option<bool>,
+    pub env: Option<String>,          // "prod" | "dev"
+    pub updateBranch: Option<String>, //"prod" | "dev"
+    pub tracedc: Option<bool>,
+    pub cacert: Option<String>,
+    pub activateWithOrigin: Option<CredentialEmail>,
+    pub activateWithLSX: Option<bool>,
+    pub activateWithEaToken: Option<String>,
+    pub console: Option<bool>,
+    pub debuglog: Option<bool>,
+    pub trace: Option<bool>,
+    pub vextdebug: Option<String>,
+    pub vexttrace: Option<bool>,
+}
+
+impl CommonLaunchArguments {
+    pub fn default() -> CommonLaunchArguments {
+        return CommonLaunchArguments {
+            gamepath: Some(String::from("")),
+            perftrace: Some(false),
+            env: Some(String::from("prod")),
+            updateBranch: Some(String::from("prod")),
+            tracedc: Some(false),
+            cacert: Some(String::from("")),
+            activateWithOrigin: Some(CredentialEmail::default()),
+            activateWithLSX: Some(false),
+            activateWithEaToken: Some(String::from("")),
+            console: Some(false),
+            debuglog: Some(false),
+            trace: Some(false),
+            vextdebug: Some(String::from("")),
+            vexttrace: Some(false),
+        };
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct CredentialEmail {
+    email: Option<String>,
+    password: Option<String>,
+}
+
+impl CredentialEmail {
+    pub fn default() -> CredentialEmail {
+        return CredentialEmail {
+            email: Some(String::from("")),
+            password: Some(String::from("")),
+        };
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct CredentialUsername {
+    username: Option<String>,
+    password: Option<String>,
+}
+
+impl CredentialUsername {
+    pub fn default() -> CredentialUsername {
+        return CredentialUsername {
+            username: Some(String::from("")),
+            password: Some(String::from("")),
+        };
+    }
+}
+
+#[allow(non_snake_case)]
+#[derive(Serialize, Deserialize, Debug)]
+pub struct ClientLaunchArguments {
+    pub dwebui: Option<bool>,
+    pub serverJoinString: Option<String>,
+    pub serverSpectateString: Option<String>,
+    pub cefdebug: Option<bool>,
+    pub credentials: Option<CredentialUsername>,
+    pub disableUiHwAcceleration: Option<bool>,
+}
+
+impl ClientLaunchArguments {
+    pub fn default() -> ClientLaunchArguments {
+        return ClientLaunchArguments {
+            dwebui: Some(false),
+            serverJoinString: Some(String::from("")),
+            serverSpectateString: Some(String::from("")),
+            cefdebug: Some(false),
+            credentials: Some(CredentialUsername::default()),
+            disableUiHwAcceleration: Some(false),
+        };
+    }
+}
+
+#[allow(non_snake_case)]
+#[derive(Serialize, Deserialize, Debug)]
+pub struct ServerLaunchArguments {
+    pub requiredArgs: bool, // true
+    pub high60: Option<bool>,
+    pub high120: Option<bool>,
+    pub headless: Option<bool>,
+    pub serverInstancePath: Option<String>,
+    pub highResTerrain: Option<bool>,
+    pub disableTerrainInterpolation: Option<bool>,
+    pub skipChecksum: Option<bool>,
+    pub listen: Option<String>,
+    pub mHarmonyPort: Option<String>,
+    pub remoteAdminPort: Option<String>,
+    pub unlisted: Option<bool>,
+    pub joinaddr: Option<String>,
+    pub joinhost: Option<String>,
+    pub noUpdate: Option<bool>,
+    pub maxPlayers: Option<u32>,
+}
+
+impl ServerLaunchArguments {
+    pub fn default() -> ServerLaunchArguments {
+        return ServerLaunchArguments {
+            requiredArgs: true,
+            high60: Some(false),
+            high120: Some(false),
+            headless: Some(false),
+            serverInstancePath: Some(String::from("")),
+            highResTerrain: Some(false),
+            disableTerrainInterpolation: Some(false),
+            skipChecksum: Some(false),
+            listen: Some(String::from("")),
+            mHarmonyPort: Some(String::from("")),
+            remoteAdminPort: Some(String::from("")),
+            unlisted: Some(false),
+            joinaddr: Some(String::from("")),
+            joinhost: Some(String::from("")),
+            noUpdate: Some(false),
+            maxPlayers: Some(0),
+        };
     }
 }

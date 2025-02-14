@@ -89,10 +89,10 @@ export type Map = {
 export type LoadoutJSON = {
   name: string,
   startup: StartupArgs,
+  launch: LaunchArguments,
   maplist: Map[],
   banlist?: string[]
   modlist?: string[]
-  launchArgs: LaunchArguments
 }
 
 export type LoadoutJSON_AndMods = LoadoutJSON & { mods?: string[] }
