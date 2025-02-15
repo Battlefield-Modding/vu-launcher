@@ -31,7 +31,6 @@ export type ClientLaunchArguments = {
 }
 
 export type ServerLaunchArguments = {
-  requiredArgs: true,
   high60?: boolean,
   high120?: boolean,
   headless?: boolean,
@@ -75,7 +74,6 @@ export const LaunchArgumentDescriptions = {
     disableUiHwAcceleration: "[CLIENT ARGUMENT] -disableUiHwAcceleration Force hardware acceleration for the WebUI off, falling back to software rendering. You can try this if you get a black loading screen when launching VU. Keep in mind that this will degrade your experience and your performance. This is enabled by default on unsupported operating systems."
   },
   server: {
-    requiredArgs: "[SERVER ARGUMENT] -server -dedicated The two required arguments for running a VU server.",
     high60: "[SERVER ARGUMENT] -high60 Sets the VU server frequency to 60Hz.",
     high120: "[SERVER ARGUMENT] -high120 Sets the VU server frequency to 120Hz.",
     headless: "[SERVER ARGUMENT] -headless Runs the VU server in headless mode (without creating any windows).",
@@ -120,7 +118,6 @@ export const defaultLaunchArguments: LaunchArguments = {
     disableUiHwAcceleration: false,
   },
   server: {
-    requiredArgs: true,
     high60: false,
     high120: false,
     headless: false,
@@ -165,7 +162,6 @@ export const defaultLaunchArgumentInputTypes = {
     disableUiHwAcceleration: "checkbox",
   },
   server: {
-    requiredArgs: "checkbox",
     high60: "checkbox",
     high120: "checkbox",
     headless: "checkbox",

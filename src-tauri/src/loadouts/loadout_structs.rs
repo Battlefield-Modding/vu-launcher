@@ -331,7 +331,6 @@ impl ClientLaunchArguments {
 #[allow(non_snake_case)]
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ServerLaunchArguments {
-    pub requiredArgs: bool, // true
     pub high60: Option<bool>,
     pub high120: Option<bool>,
     pub headless: Option<bool>,
@@ -352,7 +351,6 @@ pub struct ServerLaunchArguments {
 impl ServerLaunchArguments {
     pub fn default() -> ServerLaunchArguments {
         return ServerLaunchArguments {
-            requiredArgs: true,
             high60: Some(false),
             high120: Some(false),
             headless: Some(false),

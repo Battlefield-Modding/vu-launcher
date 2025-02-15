@@ -43,7 +43,6 @@ const formSchema = z.object({
     })
     .optional(),
   server: z.object({
-    requiredArgs: z.boolean(),
     high60: z.boolean().optional(),
     high120: z.boolean().optional(),
     headless: z.boolean().optional(),
