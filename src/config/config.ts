@@ -115,6 +115,7 @@ export type UserPreferences = {
   accounts: UserCredential[],
   servers: SavedServer[],
   server_guid: string,
+  show_multiple_account_join: boolean
 }
 
 export type SavedServer = {

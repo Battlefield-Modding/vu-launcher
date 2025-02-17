@@ -1,12 +1,13 @@
-import { Folder, Server, User } from 'lucide-react'
+import { Folder, Loader, Server, User } from 'lucide-react'
 import {
+  getUserPreferences,
   openExplorerAtLoadout,
   playVUOnLocalServer,
   refreshLoadout,
   startServerLoadout,
 } from '@/api'
 import { toast } from 'sonner'
-import { LoadoutJSON } from '@/config/config'
+import { LoadoutJSON, QueryKey, STALE } from '@/config/config'
 import { ChooseAccountSheet } from '../Forms/AccountMultiSelect/AccountMultiSelectSheet'
 import { StartupSheet } from '../Forms/Startup/StartupSheet'
 import { ManageModsInServerSheet } from '../ManageModsInServerSheet/ManageModsInServerSheet'
@@ -14,8 +15,33 @@ import { MaplistSheet } from '../Forms/Maplist/MaplistSheet'
 import { BanlistSheet } from '../Forms/Banlist/BanlistSheet'
 import { RefreshLoadoutTooltip } from './RefreshLoadoutTooltip'
 import { LaunchArgumentSheet } from '../Forms/LaunchArguments/LaunchArgumentsSheet'
+import { useQuery } from '@tanstack/react-query'
 
 export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
+  const { isPending, isError, data, error } = useQuery({
+    queryKey: [QueryKey.UserPreferences],
+    queryFn: getUserPreferences,
+    staleTime: STALE.never,
+  })
+
+  if (isPending) {
+    return (
+      <div>
+        <h1>Fetching User Preferences</h1>
+        <Loader />
+      </div>
+    )
+  }
+
+  if (isError) {
+    return (
+      <div className="rounded-md bg-destructive pl-2 pr-2 text-xl leading-9">
+        <h1>ERROR: No User Preferences</h1>
+        <p>{error.message}</p>
+      </div>
+    )
+  }
+
   async function handlePlay() {
     let status = await startServerLoadout(loadout.name)
     if (status) {
@@ -77,6 +103,8 @@ export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
             <Server />
             <User />
           </div>
+
+          {data.show_multiple_account_join && <ChooseAccountSheet loadoutName={loadout.name} />}
         </div>
 
         <div
@@ -97,8 +125,6 @@ export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
           <ManageModsInServerSheet loadout={loadout} />
         </div>
       </div>
-
-      {/* <ChooseAccountSheet loadoutName={loadout.name} /> */}
     </div>
   )
 }

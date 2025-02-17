@@ -1,7 +1,7 @@
 export type LaunchArguments = {
   common?: CommonLaunchArguments,
   client?: ClientLaunchArguments,
-  server: ServerLaunchArguments
+  server?: ServerLaunchArguments
 }
 
 export type CommonLaunchArguments = {

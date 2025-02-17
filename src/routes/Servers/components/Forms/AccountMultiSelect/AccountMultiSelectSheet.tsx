@@ -67,7 +67,7 @@ export function ChooseAccountSheet({ loadoutName }: { loadoutName: string }) {
     return (
       <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
         <SheetTrigger>
-          <div className="m-auto flex justify-between gap-1 rounded-md bg-green-600 p-1.5 hover:bg-green-600/80">
+          <div className="flex w-fit justify-between gap-2 rounded-md bg-green-800 p-2 text-secondary hover:cursor-pointer hover:bg-green-800/80">
             Start Server and Multiple Clients
             <Server />
             <UserCheck />

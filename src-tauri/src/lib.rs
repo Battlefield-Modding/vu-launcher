@@ -69,6 +69,7 @@ struct UserPreferences {
     accounts: Vec<Account>,
     servers: Vec<Server>,
     server_guid: String,
+    show_multiple_account_join: bool,
 }
 
 fn set_default_preferences() {
@@ -88,7 +89,9 @@ fn set_default_preferences() {
         accounts: Vec::new(),
         servers: Vec::new(),
         server_guid: String::from(""),
+        show_multiple_account_join: false,
     };
+
     match save_user_preferences(sample_preferences) {
         Ok(_) => {
             println!("Successfully saved user preferences!");

@@ -24,8 +24,8 @@ export function LaunchArgumentSheet({ existingLoadout }: { existingLoadout: Load
       </SheetTrigger>
       <SheetContent className="overflow-y-scroll">
         <SheetHeader>
-          <SheetTitle>Manage Startup.txt</SheetTitle>
-          <SheetDescription>Takes Startup.txt arguments and stores them</SheetDescription>
+          <SheetTitle>Manage Launch Arguments</SheetTitle>
+          <SheetDescription>Toggle / edit launch argument values</SheetDescription>
         </SheetHeader>
         <br />
 

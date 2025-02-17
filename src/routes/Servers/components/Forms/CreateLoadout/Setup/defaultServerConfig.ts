@@ -1,5 +1,5 @@
 import { LoadoutJSON } from "@/config/config"
-import { StartupArgs } from "../../../Startup/Setup/StartupTypes"
+import { StartupArgs } from "../../Startup/Setup/StartupTypes"
 
 export type ServerConfig = {
   name: string,
@@ -29,4 +29,5 @@ export const defaultServerConfig: LoadoutJSON = {
   }],
   banlist: ["player0"],
   modlist: [],
+  launch: {}
 }

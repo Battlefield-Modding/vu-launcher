@@ -1,8 +1,13 @@
 import {invoke} from "@tauri-apps/api/core"
-import { Loadout, LoadoutJSON, rust_fns, SavedServer, UserCredential, UserPreferences } from "./config/config"
+import { LoadoutJSON, rust_fns, SavedServer, UserCredential, UserPreferences } from "./config/config"
 
 export async function firstTimeSetup(){
   await invoke(rust_fns.first_time_setup)
+}
+
+export async function saveUserPreferences(newPreferences: UserPreferences){
+  const status = await invoke(rust_fns.set_user_preferences, {newPreferences});
+  return status
 }
 
 export async function saveUserCredentials({username, password}: {username: string, password:string}){
