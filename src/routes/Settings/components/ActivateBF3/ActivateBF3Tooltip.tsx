@@ -1,6 +1,5 @@
-import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-import { RefreshCcw, Wrench } from 'lucide-react'
+import { Wrench } from 'lucide-react'
 
 export function ActivateBF3Tooltip() {
   return (

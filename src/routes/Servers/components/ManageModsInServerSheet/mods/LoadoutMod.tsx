@@ -2,7 +2,6 @@ import VSCodeIcon from '@/assets/VSCodeIcon.svg'
 import { DeleteModDialog } from '../dialog/DeleteModDialog'
 import { toast } from 'sonner'
 import { editServerLoadout, openModWithVsCode } from '@/api'
-import { AddModDialog } from '../dialog/AddModDialog'
 import { Input } from '@/components/ui/input'
 import { LoadoutJSON, QueryKey } from '@/config/config'
 import { useQueryClient } from '@tanstack/react-query'
@@ -32,7 +31,7 @@ export function LoadoutMod({
   async function handleToggleMod(e: React.ChangeEvent<HTMLInputElement>) {
     const target = e.target as HTMLInputElement
     const value = target.checked
-    let tempModList = [...loadout.modlist]
+    let tempModList = [...(loadout.modlist as string[])]
     let message = `Activated ${modName}`
     if (value) {
       if (!tempModList.includes(modName)) {

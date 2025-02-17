@@ -1,7 +1,6 @@
 import { Button } from '@/components/ui/button'
 import {
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -18,7 +17,6 @@ import {
 import { useFieldArray, useForm } from 'react-hook-form'
 import { allMaps } from './Setup/allMaps'
 import { Trash } from 'lucide-react'
-import { CreateLoadoutFormType } from '../Loadouts/CreateLoadout/CreateLoadoutForm'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { LoadoutJSON, QueryKey } from '@/config/config'

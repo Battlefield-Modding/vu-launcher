@@ -75,9 +75,8 @@ export function ManageModsInServerSheet({ loadout }: { loadout: LoadoutJSON }) {
                   <LoadoutMod
                     loadout={loadout}
                     modName={x}
-                    loadoutName={loadout.name}
                     queryKey={`${QueryKey.GetAllModNames}-${loadout.name}`}
-                    isActive={loadout.modlist?.includes(x)}
+                    isActive={loadout.modlist?.includes(x) || false}
                     key={`${x}-mod`}
                   />
                 )

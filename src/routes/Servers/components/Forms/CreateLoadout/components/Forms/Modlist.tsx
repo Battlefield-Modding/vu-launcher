@@ -17,7 +17,7 @@ export function ModList({ form, mods }: { form: CreateLoadoutFormType; mods: str
           <FormField
             control={form.control}
             name={`modlist.${nameWithoutDots}`}
-            key={`serverMods-${nameOfMod}`}
+            key={`serverMods-${nameOfMod}-${index}`}
             render={({ field }) => (
               <FormItem className="flex gap-4">
                 <FormLabel className="mt-1 text-xl">{nameOfMod}</FormLabel>

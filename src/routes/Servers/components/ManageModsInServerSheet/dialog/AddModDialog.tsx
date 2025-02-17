@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dialog'
 import { LoadoutJSON, QueryKey } from '@/config/config'
 import { useQueryClient } from '@tanstack/react-query'
-import { Download, Plus, Trash, X } from 'lucide-react'
+import { Plus, X } from 'lucide-react'
 import { toast } from 'sonner'
 
 export function AddModDialog({
@@ -25,7 +25,7 @@ export function AddModDialog({
   const queryClient = useQueryClient()
 
   async function handleClick() {
-    let tempModList = [...loadout.modlist]
+    let tempModList = [...(loadout.modlist as string[])]
     tempModList.push(modName)
     const finalLoadout = { ...loadout, modlist: tempModList }
 

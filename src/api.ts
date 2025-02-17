@@ -87,7 +87,7 @@ export async function createServerLoadout(loadout: LoadoutJSON){
   return status
 }
 
-export async function editServerLoadout(loadout: LoadoutJSON){
+export async function editServerLoadout(loadout: any){
   const status = JSON.parse(await invoke(rust_fns.edit_server_loadout, {loadout}))
   return status
 }

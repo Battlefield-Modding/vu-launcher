@@ -9,7 +9,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { LoadoutJSON, QueryKey } from '@/config/config'
+import { QueryKey } from '@/config/config'
 import { useQueryClient } from '@tanstack/react-query'
 import { Trash, X } from 'lucide-react'
 import { useRef, useState } from 'react'
