@@ -57,7 +57,7 @@ const formSchema = z.object({
     joinaddr: z.string().optional(),
     joinhost: z.string().optional(),
     noUpdate: z.boolean().optional(),
-    maxPlayers: z.number().optional(),
+    maxPlayers: z.number({ coerce: true }).optional(),
   }),
 })
 
