@@ -10,8 +10,9 @@ use serde::{Deserialize, Serialize};
 use crate::{
     get_user_preferences_as_struct,
     loadouts::{
-        get_loadout_json_as_struct, loadout_server_launch_args_to_vec,
-        loadout_structs::LoadoutJson, write_loadout_json, write_to_txt_from_loadout,
+        get_loadout_json_as_struct, loadout_common_launch_args_to_vec,
+        loadout_server_launch_args_to_vec, loadout_structs::LoadoutJson, write_loadout_json,
+        write_to_txt_from_loadout,
     },
     mods::{get_mod_names_in_loadout, install_mods, make_folder_names_same_as_mod_json_names},
     reg_functions, save_user_preferences, CREATE_NO_WINDOW,
@@ -338,6 +339,8 @@ pub async fn start_server_loadout(name: String) -> bool {
 
     let mut server = loadout_server_launch_args_to_vec(&loadout.launch.server);
     args.append(&mut server);
+    let mut common = loadout_common_launch_args_to_vec(&loadout.launch.common);
+    args.append(&mut common);
 
     Command::new(&preferences.venice_unleashed_shortcut_location)
         .args(args)

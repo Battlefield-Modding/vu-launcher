@@ -713,7 +713,6 @@ pub fn loadout_common_launch_args_to_vec(common: &CommonLaunchArguments) -> Vec<
         Some(info) => {
             if info {
                 args.push("-console");
-                args.push("true");
             }
         }
         None => {}
@@ -722,7 +721,6 @@ pub fn loadout_common_launch_args_to_vec(common: &CommonLaunchArguments) -> Vec<
         Some(info) => {
             if info {
                 args.push("-debuglog");
-                args.push("true");
             }
         }
         None => {}
@@ -750,7 +748,6 @@ pub fn loadout_common_launch_args_to_vec(common: &CommonLaunchArguments) -> Vec<
         Some(info) => {
             if info {
                 args.push("-perftrace");
-                args.push("true");
             }
         }
         None => {}
@@ -759,7 +756,6 @@ pub fn loadout_common_launch_args_to_vec(common: &CommonLaunchArguments) -> Vec<
         Some(info) => {
             if info {
                 args.push("-trace");
-                args.push("true");
             }
         }
         None => {}
@@ -768,7 +764,6 @@ pub fn loadout_common_launch_args_to_vec(common: &CommonLaunchArguments) -> Vec<
         Some(info) => {
             if info {
                 args.push("-tracedc");
-                args.push("true");
             }
         }
         None => {}
@@ -795,7 +790,6 @@ pub fn loadout_common_launch_args_to_vec(common: &CommonLaunchArguments) -> Vec<
         Some(info) => {
             if info {
                 args.push("-vexttrace");
-                args.push("true");
             }
         }
         None => {}
@@ -811,7 +805,6 @@ pub fn loadout_client_launch_args_to_vec(client: &ClientLaunchArguments) -> Vec<
         Some(info) => {
             if info {
                 args.push("-cefdebug");
-                args.push("true");
             }
         }
         None => {}
@@ -820,7 +813,6 @@ pub fn loadout_client_launch_args_to_vec(client: &ClientLaunchArguments) -> Vec<
         Some(info) => {
             if info {
                 args.push("-disableUiHwAcceleration");
-                args.push("true");
             }
         }
         None => {}
@@ -829,7 +821,6 @@ pub fn loadout_client_launch_args_to_vec(client: &ClientLaunchArguments) -> Vec<
         Some(info) => {
             if info {
                 args.push("-dwebui");
-                args.push("true");
             }
         }
         None => {}
@@ -861,7 +852,6 @@ pub fn loadout_server_launch_args_to_vec(server: &ServerLaunchArguments) -> Vec<
         Some(info) => {
             if info {
                 args.push("-disableTerrainInterpolation");
-                args.push("true");
             }
         }
         None => {}
@@ -870,7 +860,6 @@ pub fn loadout_server_launch_args_to_vec(server: &ServerLaunchArguments) -> Vec<
         Some(info) => {
             if info {
                 args.push("-headless");
-                args.push("true");
             }
         }
         None => {}
@@ -879,7 +868,6 @@ pub fn loadout_server_launch_args_to_vec(server: &ServerLaunchArguments) -> Vec<
         Some(info) => {
             if info {
                 args.push("-high120");
-                args.push("true");
             }
         }
         None => {}
@@ -888,7 +876,6 @@ pub fn loadout_server_launch_args_to_vec(server: &ServerLaunchArguments) -> Vec<
         Some(info) => {
             if info {
                 args.push("-high60");
-                args.push("true");
             }
         }
         None => {}
@@ -897,7 +884,6 @@ pub fn loadout_server_launch_args_to_vec(server: &ServerLaunchArguments) -> Vec<
         Some(info) => {
             if info {
                 args.push("-highResTerrain");
-                args.push("true");
             }
         }
         None => {}
@@ -952,7 +938,6 @@ pub fn loadout_server_launch_args_to_vec(server: &ServerLaunchArguments) -> Vec<
         Some(info) => {
             if info {
                 args.push("-noUpdate");
-                args.push("true");
             }
         }
         None => {}
@@ -979,7 +964,6 @@ pub fn loadout_server_launch_args_to_vec(server: &ServerLaunchArguments) -> Vec<
         Some(info) => {
             if info {
                 args.push("-skipChecksum");
-                args.push("true");
             }
         }
         None => {}
@@ -988,7 +972,6 @@ pub fn loadout_server_launch_args_to_vec(server: &ServerLaunchArguments) -> Vec<
         Some(info) => {
             if info {
                 args.push("-unlisted");
-                args.push("true");
             }
         }
         None => {}
