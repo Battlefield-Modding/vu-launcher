@@ -61,7 +61,11 @@ export default function Settings() {
               const status = await saveUserPreferences(preferences)
 
               if (status) {
-                toast('Updated show multi-account join')
+                if (target.checked) {
+                  toast('Enabled loadout multi-account join')
+                } else {
+                  toast('Disabled loadout multi-account join')
+                }
                 queryClient.invalidateQueries({
                   queryKey: [QueryKey.UserPreferences],
                   refetchType: 'all',
