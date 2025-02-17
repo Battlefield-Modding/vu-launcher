@@ -1,26 +1,17 @@
 # Unofficial VU Launcher
 ![image](https://github.com/user-attachments/assets/b5bec60c-8693-4bce-a454-bed41ec6ca50)
 ## What?
-A launcher for Battlefield 3: Venice Unleashed, made with Tauri.
+A WIP launcher for Battlefield 3: Venice Unleashed. Mostly useful if playing VU locally or developing mods.
 ### Features:
 - Install VU
-- Install mods to `mod-cache` folder thru drag n drop of zip folders
-- Easier first-time server setup
+- Guided server setup
 - Server Loadouts
-  - Example: loadout1 is setup for mapediting on karkand. loadout2 is setup for funbots on sharqi.
-  - Server config is done through a form.
-  - Mods are installed from `mod-cache` by clicking checkboxes
-  - Mods automatically rename their folders using `mod.json` when installing to a loadout
-  - `modlist.txt` updates based on selected mods
-  - Loadouts buttons for
-    - Loadout edit / delete / view in explorer
-    - Start server / server + account0 / server + selected accounts
-    - View mods in loadout
-- Mods have an "open in vscode" button, which prioritizes workspaces.
-- Show links to github/forums/discord to find mods
-- Import server loadouts
-- Store VU credentials for auto-login (plaintext currently)
-- Store VU server GUID / password for auto-join
+  - Quickly swap between different server configurations (startup/maplist/modlist/banlist).
+  - Change parts of the loadout with guided forms, instead of manually typing in a `.txt` file.
+  - Import an existing server configuration. This will copy everything and rename the mod folders.
+  - Buttons for common actions like starting server / server + client.
+- Import zipped mod folders which can then be added to any loadout.
+- Activate BF3
 ## Why?
 Trying to learn Tauri/React and I want to make it easier to use Venice Unleashed.
 Some QoL improvements that I wanted:
