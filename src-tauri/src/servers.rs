@@ -9,7 +9,10 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
     get_user_preferences_as_struct,
-    loadouts::{loadout_structs::LoadoutJson, write_loadout_json, write_to_txt_from_loadout},
+    loadouts::{
+        get_loadout_json_as_struct, loadout_server_launch_args_to_vec,
+        loadout_structs::LoadoutJson, write_loadout_json, write_to_txt_from_loadout,
+    },
     mods::{get_mod_names_in_loadout, install_mods, make_folder_names_same_as_mod_json_names},
     reg_functions, save_user_preferences, CREATE_NO_WINDOW,
 };
@@ -124,6 +127,8 @@ pub async fn create_server_loadout(mut loadout: LoadoutJson) -> Result<bool, Str
         }
     };
     let mod_list = install_mods(&loadout);
+
+    loadout.launch.server.serverInstancePath = Some(String::from(server_path.to_str().unwrap()));
 
     loadout.modlist = mod_list;
     match write_loadout_json(&loadout) {
@@ -309,9 +314,18 @@ pub async fn delete_server_loadout(name: String) -> bool {
 
 #[tauri::command]
 pub async fn start_server_loadout(name: String) -> bool {
-    let mut loadout_path = get_loadouts_path();
-    loadout_path.push(&name);
-    loadout_path.push("Server");
+    let mut args: Vec<&str> = Vec::new();
+
+    let loadout = match get_loadout_json_as_struct(&name) {
+        Ok(info) => info,
+        Err(err) => {
+            println!(
+                "Failed to loadoutJSON when starting server due to error: \n{:?}",
+                err
+            );
+            return false;
+        }
+    };
 
     let preferences_prematch = get_user_preferences_as_struct();
     let preferences = match preferences_prematch {
@@ -319,18 +333,14 @@ pub async fn start_server_loadout(name: String) -> bool {
         Err(_) => return false,
     };
 
-    let loadout_path_as_str = loadout_path.to_str().unwrap();
-    println!("{:?}", loadout_path_as_str);
+    args.push("-server");
+    args.push("-dedicated");
 
-    Command::new("cmd")
-        .args([
-            "/C",
-            &preferences.venice_unleashed_shortcut_location,
-            "-server",
-            "-dedicated",
-            "-serverInstancePath",
-            loadout_path_as_str,
-        ])
+    let mut server = loadout_server_launch_args_to_vec(&loadout.launch.server);
+    args.append(&mut server);
+
+    Command::new(&preferences.venice_unleashed_shortcut_location)
+        .args(args)
         .creation_flags(CREATE_NO_WINDOW)
         .spawn()
         .expect("failed to execute process");

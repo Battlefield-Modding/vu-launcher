@@ -1,3 +1,4 @@
+import { LaunchArguments } from "@/routes/Servers/components/Forms/LaunchArguments/setup/LaunchArguments"
 import { StartupArgs } from "@/routes/Servers/components/Forms/Startup/Setup/StartupTypes"
 
 export const STALE =
@@ -44,7 +45,9 @@ export enum rust_fns {
   open_mod_with_vscode = "open_mod_with_vscode",
   play_vu_on_local_server = "play_vu_on_local_server",
   get_all_loadout_json = "get_all_loadout_json",
-  refresh_loadout = "refresh_loadout"
+  refresh_loadout = "refresh_loadout",
+  activate_bf3_lsx = "activate_bf3_lsx",
+  activate_bf3_ea_auth_token = "activate_bf3_ea_auth_token",
 }
 
 export enum QueryKey {
@@ -86,6 +89,7 @@ export type Map = {
 export type LoadoutJSON = {
   name: string,
   startup: StartupArgs,
+  launch: LaunchArguments,
   maplist: Map[],
   banlist?: string[]
   modlist?: string[]

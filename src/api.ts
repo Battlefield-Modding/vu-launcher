@@ -19,11 +19,11 @@ export async function playVU({accountIndex, serverIndex}: {accountIndex: number,
   return status
 }
 
-export async function playVUOnLocalServer(serverPassword: string, users?: number[]){
+export async function playVUOnLocalServer(loadoutName: string, users?: number[]){
   if (users) {
-    invoke(rust_fns.play_vu_on_local_server, {serverPassword, users})
+    invoke(rust_fns.play_vu_on_local_server, {name: loadoutName, users})
   } else {
-    invoke(rust_fns.play_vu_on_local_server, {serverPassword, users: []})
+    invoke(rust_fns.play_vu_on_local_server, {name: loadoutName, users: []})
   }
 }
 
@@ -222,5 +222,15 @@ export async function getAllLoadoutJson(): Promise<LoadoutJSON[]>{
 
 export async function refreshLoadout(loadoutName: string){
   const status = await invoke(rust_fns.refresh_loadout, {loadoutName: loadoutName})
+  return status
+}
+
+export async function activateBf3LSX(){
+  const status = await invoke(rust_fns.activate_bf3_lsx)
+  return status
+}
+
+export async function activateBf3EaAuthToken(token: string){
+  const status = await invoke(rust_fns.activate_bf3_ea_auth_token, {token})
   return status
 }

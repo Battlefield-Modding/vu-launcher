@@ -6,13 +6,17 @@ use std::{
 };
 
 use loadout_structs::{
-    Admin, LoadoutJson, Map, ParsedStartupTxtLine, SetTeamTicketCount, StartupArgs, VU_Commands,
+    Admin, ClientLaunchArguments, CommonLaunchArguments, LaunchArguments, LoadoutJson, Map,
+    ParsedStartupTxtLine, ServerLaunchArguments, SetTeamTicketCount, StartupArgs, VU_Commands,
     Vars,
 };
 use serde_json::Error;
 use serde_json::Value;
 
-use crate::servers::{get_loadout_admin_path, get_loadout_path, get_loadouts_path};
+use crate::{
+    get_user_preferences_as_struct,
+    servers::{get_loadout_admin_path, get_loadout_path, get_loadouts_path},
+};
 
 pub mod loadout_structs;
 
@@ -91,9 +95,18 @@ fn make_loadout_json_from_txt_files(loadout_name: &String) -> io::Result<bool> {
         }
     };
 
+    let mut loadout_path = get_loadouts_path();
+    loadout_path.push(&loadout_name);
+    loadout_path.push("Server");
+
+    let mut launch_args = LaunchArguments::default();
+
+    launch_args.server.serverInstancePath = Some(String::from(loadout_path.to_str().unwrap()));
+
     let loadout_json = LoadoutJson {
         name: String::from(loadout_name),
         startup: startup_args,
+        launch: launch_args,
         maplist: maplist_args,
         banlist: banlist_args,
         modlist: modlist_args,
@@ -682,4 +695,304 @@ pub fn get_all_loadout_json() -> Vec<LoadoutJson> {
         }
     };
     loadouts
+}
+
+pub fn loadout_common_launch_args_to_vec(common: &CommonLaunchArguments) -> Vec<&str> {
+    let mut args = Vec::new();
+
+    match &common.cacert {
+        Some(info) => {
+            if !info.eq("") {
+                args.push("-cacert");
+                args.push(info);
+            }
+        }
+        None => {}
+    };
+    match common.console {
+        Some(info) => {
+            if info {
+                args.push("-console");
+                args.push("true");
+            }
+        }
+        None => {}
+    };
+    match common.debuglog {
+        Some(info) => {
+            if info {
+                args.push("-debuglog");
+                args.push("true");
+            }
+        }
+        None => {}
+    };
+    match &common.env {
+        Some(info) => {
+            if !info.eq("") {
+                args.push("-env");
+                args.push(info);
+            }
+        }
+        None => {}
+    };
+    match &common.gamepath {
+        Some(info) => {
+            if !info.eq("") {
+                args.push("-gamepath");
+                args.push(info);
+            }
+            println!("{:?}", info)
+        }
+        None => {}
+    };
+    match common.perftrace {
+        Some(info) => {
+            if info {
+                args.push("-perftrace");
+                args.push("true");
+            }
+        }
+        None => {}
+    };
+    match common.trace {
+        Some(info) => {
+            if info {
+                args.push("-trace");
+                args.push("true");
+            }
+        }
+        None => {}
+    };
+    match common.tracedc {
+        Some(info) => {
+            if info {
+                args.push("-tracedc");
+                args.push("true");
+            }
+        }
+        None => {}
+    };
+    match &common.updateBranch {
+        Some(info) => {
+            if !info.eq("") {
+                args.push("-updateBranch");
+                args.push(info);
+            }
+        }
+        None => {}
+    };
+    match &common.vextdebug {
+        Some(info) => {
+            if !info.eq("") {
+                args.push("-vextdebug");
+                args.push(info);
+            }
+        }
+        None => {}
+    };
+    match common.vexttrace {
+        Some(info) => {
+            if info {
+                args.push("-vexttrace");
+                args.push("true");
+            }
+        }
+        None => {}
+    };
+
+    args
+}
+
+pub fn loadout_client_launch_args_to_vec(client: &ClientLaunchArguments) -> Vec<&str> {
+    let mut args: Vec<&str> = Vec::new();
+
+    match client.cefdebug {
+        Some(info) => {
+            if info {
+                args.push("-cefdebug");
+                args.push("true");
+            }
+        }
+        None => {}
+    };
+    match client.disableUiHwAcceleration {
+        Some(info) => {
+            if info {
+                args.push("-disableUiHwAcceleration");
+                args.push("true");
+            }
+        }
+        None => {}
+    };
+    match client.dwebui {
+        Some(info) => {
+            if info {
+                args.push("-dwebui");
+                args.push("true");
+            }
+        }
+        None => {}
+    };
+    match &client.serverJoinString {
+        Some(info) => {
+            if !info.eq("") {
+                args.push(info);
+            }
+        }
+        None => {}
+    };
+    match &client.serverSpectateString {
+        Some(info) => {
+            if !info.eq("") {
+                args.push(info);
+            }
+        }
+        None => {}
+    };
+
+    args
+}
+
+pub fn loadout_server_launch_args_to_vec(server: &ServerLaunchArguments) -> Vec<&str> {
+    let mut args: Vec<&str> = Vec::new();
+
+    match server.disableTerrainInterpolation {
+        Some(info) => {
+            if info {
+                args.push("-disableTerrainInterpolation");
+                args.push("true");
+            }
+        }
+        None => {}
+    };
+    match server.headless {
+        Some(info) => {
+            if info {
+                args.push("-headless");
+                args.push("true");
+            }
+        }
+        None => {}
+    };
+    match server.high120 {
+        Some(info) => {
+            if info {
+                args.push("-high120");
+                args.push("true");
+            }
+        }
+        None => {}
+    };
+    match server.high60 {
+        Some(info) => {
+            if info {
+                args.push("-high60");
+                args.push("true");
+            }
+        }
+        None => {}
+    };
+    match server.highResTerrain {
+        Some(info) => {
+            if info {
+                args.push("-highResTerrain");
+                args.push("true");
+            }
+        }
+        None => {}
+    };
+    match &server.joinaddr {
+        Some(info) => {
+            if !info.eq("") {
+                args.push("-joinaddr");
+                args.push(&info)
+            }
+        }
+        None => {}
+    };
+    match &server.joinhost {
+        Some(info) => {
+            if !info.eq("") {
+                args.push("-joinhost");
+                args.push(info)
+            }
+        }
+        None => {}
+    };
+    match &server.listen {
+        Some(info) => {
+            if !info.eq("") {
+                args.push("-listen");
+                args.push(info)
+            }
+        }
+        None => {}
+    };
+    match &server.mHarmonyPort {
+        Some(info) => {
+            if !info.eq("") {
+                args.push("-mHarmonyPort");
+                args.push(info)
+            }
+        }
+        None => {}
+    };
+    // match server.maxPlayers {
+    //     Some(info) => {
+    //         if info > 0 {
+    //             args.push("-maxPlayers");
+    //             args.push(info);
+    //         }
+    //         println!("{:?}", info)
+    //     }
+    //     None => {}
+    // };
+    match server.noUpdate {
+        Some(info) => {
+            if info {
+                args.push("-noUpdate");
+                args.push("true");
+            }
+        }
+        None => {}
+    };
+    match &server.remoteAdminPort {
+        Some(info) => {
+            if !info.eq("") {
+                args.push("-remoteAdminPort");
+                args.push(info)
+            }
+        }
+        None => {}
+    };
+    match &server.serverInstancePath {
+        Some(info) => {
+            if !info.eq("") {
+                args.push("-serverInstancePath");
+                args.push(info)
+            }
+        }
+        None => {}
+    };
+    match server.skipChecksum {
+        Some(info) => {
+            if info {
+                args.push("-skipChecksum");
+                args.push("true");
+            }
+        }
+        None => {}
+    };
+    match server.unlisted {
+        Some(info) => {
+            if info {
+                args.push("-unlisted");
+                args.push("true");
+            }
+        }
+        None => {}
+    };
+
+    args
 }

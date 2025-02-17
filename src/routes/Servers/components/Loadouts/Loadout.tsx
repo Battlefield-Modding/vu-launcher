@@ -13,6 +13,7 @@ import { ManageModsInServerSheet } from '../ManageModsInServerSheet/ManageModsIn
 import { MaplistSheet } from '../Forms/Maplist/MaplistSheet'
 import { BanlistSheet } from '../Forms/Banlist/BanlistSheet'
 import { RefreshLoadoutTooltip } from './RefreshLoadoutTooltip'
+import { LaunchArgumentSheet } from '../Forms/LaunchArguments/LaunchArgumentsSheet'
 
 export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
   async function handlePlay() {
@@ -20,7 +21,7 @@ export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
     if (status) {
       toast('Started VU Server. Starting Client in 1 second...')
       setTimeout(() => {
-        playVUOnLocalServer(loadout.startup.vars.gamePassword ?? '')
+        playVUOnLocalServer(loadout.name)
       }, 1000)
     } else {
       toast(`Failed to start loadout: ${loadout.name}`)
@@ -51,7 +52,7 @@ export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
   }
 
   return (
-    <div className="m-auto mt-8 flex flex-col gap-8 p-4">
+    <div className="m-auto flex flex-col p-4">
       <div className="mb-4 flex gap-2">
         <h1 className="text-2xl text-secondary underline">{loadout.name} </h1>
         <div onClick={handleRefreshLoadout} className="w-fit">
@@ -59,7 +60,7 @@ export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
         </div>
       </div>
 
-      <div className="m-auto flex flex-col gap-16">
+      <div className="m-auto flex flex-col gap-12">
         <div className="flex justify-end gap-4">
           <div
             onClick={handleServer}
@@ -87,14 +88,17 @@ export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
         </div>
 
         <div className="m-auto flex w-fit flex-col items-center gap-4">
-          <StartupSheet existingLoadout={loadout} />
+          <div>
+            <StartupSheet existingLoadout={loadout} />
+            <LaunchArgumentSheet existingLoadout={loadout} />
+          </div>
           <MaplistSheet loadout={loadout} />
           <BanlistSheet loadout={loadout} />
           <ManageModsInServerSheet loadout={loadout} />
         </div>
       </div>
 
-      {/* <ChooseAccountSheet name={loadout.name} password={loadout.startup.admin.password ?? ''} /> */}
+      {/* <ChooseAccountSheet loadoutName={loadout.name} /> */}
     </div>
   )
 }

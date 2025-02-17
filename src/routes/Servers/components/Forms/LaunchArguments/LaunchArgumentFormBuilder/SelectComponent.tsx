@@ -6,22 +6,26 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { StartupArgs } from '../Setup/StartupTypes'
 import { Textarea } from '@/components/ui/textarea'
 import { LaunchArguments } from '../../LaunchArguments/setup/LaunchArguments'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
-export function TextAreaComponent({
+export function SelectComponent({
   form,
   keyValue,
-  defaultvalue,
   description,
   sectionName,
 }: {
   form: any
   keyValue: any
-  defaultvalue: any
   description: string
-  sectionName: keyof StartupArgs | keyof LaunchArguments
+  sectionName: keyof LaunchArguments
 }) {
   return (
     <FormField
@@ -31,12 +35,20 @@ export function TextAreaComponent({
       render={({ field }) => (
         <FormItem>
           <FormLabel className="text-md flex flex-col justify-center rounded-md leading-10 text-white">
-            <code>{keyValue === 'password' ? 'password (RCON)' : keyValue}</code>
+            <code>{keyValue}</code>
           </FormLabel>
 
-          <FormControl>
-            <Textarea placeholder={defaultvalue as string} {...field} rows={2} className="w-1/2" />
-          </FormControl>
+          <Select onValueChange={field.onChange} defaultValue={field.value}>
+            <FormControl className="w-32">
+              <SelectTrigger>
+                <SelectValue placeholder="Select env" />
+              </SelectTrigger>
+            </FormControl>
+            <SelectContent>
+              <SelectItem value="prod">prod</SelectItem>
+              <SelectItem value="dev">dev</SelectItem>
+            </SelectContent>
+          </Select>
 
           <FormDescription>{description}</FormDescription>
           <FormMessage />

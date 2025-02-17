@@ -1,8 +1,9 @@
 use std::{
-    fs, io,
+    fs,
+    io::{self, Write},
     os::windows::process::CommandExt,
     path::{self, Path, PathBuf},
-    process::Command,
+    process::{Command, Stdio},
 };
 
 use serde::{Deserialize, Serialize};
@@ -40,9 +41,13 @@ use mods::{
 mod speed_calc;
 
 mod loadouts;
-use loadouts::{get_all_loadout_json, refresh_loadout};
+use loadouts::{
+    get_all_loadout_json, get_loadout_json_as_struct, loadout_client_launch_args_to_vec,
+    loadout_common_launch_args_to_vec, refresh_loadout,
+};
 
 pub const CREATE_NO_WINDOW: u32 = 0x08000000;
+pub const CREATE_NEW_CONSOLE: u32 = 0x00000010;
 
 #[derive(Serialize, Deserialize, Debug)]
 struct Account {
@@ -95,7 +100,7 @@ fn set_default_preferences() {
 }
 
 fn save_user_preferences(preferences: UserPreferences) -> io::Result<()> {
-    let str = serde_json::to_string(&preferences);
+    let str = serde_json::to_string_pretty(&preferences);
 
     let path_string = get_settings_json_path_registry()?;
     let new_path = Path::new(&path_string);
@@ -295,46 +300,48 @@ async fn play_vu(account_index: usize, server_index: usize) -> bool {
 }
 
 #[tauri::command]
-async fn play_vu_on_local_server(server_password: String, users: Vec<usize>) -> bool {
-    let preferences_prematch = get_user_preferences_as_struct();
-    let preferences = match preferences_prematch {
+async fn play_vu_on_local_server(name: String, users: Vec<usize>) -> bool {
+    let preferences = match get_user_preferences_as_struct() {
         Ok(info) => info,
-        Err(_) => return false,
+        Err(err) => {
+            println!(
+                "Failed to get user preferences in start_vu_client {:?}",
+                err
+            );
+            return false;
+        }
     };
 
-    let mut args: Vec<&str> = Vec::new();
-    args.push("/C");
-    args.push(&preferences.venice_unleashed_shortcut_location);
+    let loadout = match get_loadout_json_as_struct(&name) {
+        Ok(info) => info,
+        Err(err) => {
+            println!("Failed to get loadoutJSON in start_vu_client {:?}", err);
+            return false;
+        }
+    };
+
+    let mut common = loadout_common_launch_args_to_vec(&loadout.launch.common);
+    let mut client = loadout_client_launch_args_to_vec(&loadout.launch.client);
 
     let mut server_join_string = String::from("vu://join/");
 
-    match preferences.server_guid.len() {
-        0 => {
-            println!("No server GUID supplied.")
-        }
-        _ => {
-            server_join_string.push_str(&preferences.server_guid);
-            server_join_string.push_str("/");
-
-            match server_password.len() {
+    if &loadout.launch.client.serverSpectateString.clone().unwrap() == "" {
+        if &loadout.launch.client.serverJoinString.clone().unwrap() == "" {
+            match preferences.server_guid.len() {
                 0 => {
-                    println!("No server password supplied")
+                    println!("No server GUID supplied.")
                 }
                 _ => {
-                    server_join_string.push_str(&server_password);
+                    server_join_string.push_str(&preferences.server_guid);
+                    server_join_string.push_str("/");
+                    server_join_string.push_str(&loadout.startup.vars.gamePassword.unwrap());
+                    client.push(&server_join_string);
                 }
             };
         }
-    };
+    }
 
-    match server_join_string.len() {
-        10 => {
-            println!("Server join string is empty.")
-        }
-        _ => {
-            args.push(&server_join_string);
-        }
-    };
+    client.append(&mut common);
 
     match users.len() {
         0 => {
@@ -343,13 +350,13 @@ async fn play_vu_on_local_server(server_password: String, users: Vec<usize>) -> 
                     println!("No user credentials found.")
                 }
                 _ => {
-                    args.push("-username");
-                    args.push(&preferences.accounts[0].username);
-                    args.push("-password");
-                    args.push(&preferences.accounts[0].password);
+                    client.push("-username");
+                    client.push(&preferences.accounts[0].username);
+                    client.push("-password");
+                    client.push(&preferences.accounts[0].password);
 
-                    Command::new("cmd")
-                        .args(args)
+                    Command::new(&preferences.venice_unleashed_shortcut_location)
+                        .args(client)
                         .creation_flags(CREATE_NO_WINDOW)
                         .spawn()
                         .expect("failed to execute process");
@@ -358,14 +365,14 @@ async fn play_vu_on_local_server(server_password: String, users: Vec<usize>) -> 
         }
         _ => {
             for index in users {
-                let mut copied_args: Vec<&str> = args.clone();
+                let mut copied_args: Vec<&str> = client.clone();
 
                 copied_args.push("-username");
                 copied_args.push(&preferences.accounts[index].username);
                 copied_args.push("-password");
                 copied_args.push(&preferences.accounts[index].password);
 
-                Command::new("cmd")
+                Command::new(&preferences.venice_unleashed_shortcut_location)
                     .args(copied_args)
                     .creation_flags(CREATE_NO_WINDOW)
                     .spawn()
@@ -374,7 +381,7 @@ async fn play_vu_on_local_server(server_password: String, users: Vec<usize>) -> 
         }
     };
 
-    return true;
+    true
 }
 
 #[tauri::command]
@@ -397,6 +404,55 @@ fn is_vu_installed() -> bool {
         Ok(_) => return true,
         Err(_) => return false,
     }
+}
+
+#[tauri::command]
+async fn activate_bf3_lsx() -> bool {
+    let preferences_prematch = get_user_preferences_as_struct();
+    let preferences = match preferences_prematch {
+        Ok(info) => info,
+        Err(_) => return false,
+    };
+
+    let mut args: Vec<&str> = Vec::new();
+    args.push("/C");
+    args.push(&preferences.venice_unleashed_shortcut_location);
+    args.push("-activate");
+    args.push("-lsx");
+    args.push("-wait");
+
+    Command::new("cmd")
+        .args(args)
+        .creation_flags(CREATE_NEW_CONSOLE)
+        .spawn()
+        .expect("failed to execute process");
+
+    true
+}
+
+#[tauri::command]
+async fn activate_bf3_ea_auth_token(token: String) -> bool {
+    let preferences_prematch = get_user_preferences_as_struct();
+    let preferences = match preferences_prematch {
+        Ok(info) => info,
+        Err(_) => return false,
+    };
+
+    let mut args: Vec<&str> = Vec::new();
+    args.push("/C");
+    args.push(&preferences.venice_unleashed_shortcut_location);
+    args.push("-activate");
+    args.push("-ea_token");
+    args.push(&token);
+    args.push("-wait");
+
+    Command::new("cmd")
+        .args(args)
+        .creation_flags(CREATE_NEW_CONSOLE)
+        .spawn()
+        .expect("failed to execute process");
+
+    true
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -434,7 +490,9 @@ pub fn run() {
             open_mod_with_vscode,
             play_vu_on_local_server,
             get_all_loadout_json,
-            refresh_loadout
+            refresh_loadout,
+            activate_bf3_lsx,
+            activate_bf3_ea_auth_token,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

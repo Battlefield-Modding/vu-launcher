@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/sheet'
 import { AccountMultiSelectForm } from './AccountMultiSelectForm'
 
-export function ChooseAccountSheet({ name, password }: { name: string; password: string }) {
+export function ChooseAccountSheet({ loadoutName }: { loadoutName: string }) {
   const [sheetOpen, setSheetOpen] = useState(false)
 
   const { isPending, isError, data, error } = useQuery({
@@ -42,14 +42,14 @@ export function ChooseAccountSheet({ name, password }: { name: string; password:
   }
 
   async function handlePlay(users: number[]) {
-    let status = await startServerLoadout(name)
+    let status = await startServerLoadout(loadoutName)
     if (status) {
       toast('Started VU Server. Starting Client in 1 second...')
       setTimeout(() => {
-        playVUOnLocalServer(password, users)
+        playVUOnLocalServer(loadoutName, users)
       }, 1000)
     } else {
-      toast(`Failed to start loadout: ${name}`)
+      toast(`Failed to start loadout: ${loadoutName}`)
     }
   }
 
@@ -76,10 +76,11 @@ export function ChooseAccountSheet({ name, password }: { name: string; password:
         <SheetContent>
           <SheetHeader className="m-auto w-96">
             <SheetTitle>
-              Join <code>{name}</code> with what account(s)?
+              Join <code>{loadoutName}</code> with what account(s)?
             </SheetTitle>
             <SheetDescription>
-              Choose which VU accounts to join with when your server <code>{name}</code> starts.
+              Choose which VU accounts to join with when your server <code>{loadoutName}</code>{' '}
+              starts.
             </SheetDescription>
           </SheetHeader>
           <br />

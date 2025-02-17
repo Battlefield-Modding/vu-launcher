@@ -25,6 +25,7 @@ import { Maplist } from './components/Forms/Maplist'
 import { ModList } from './components/Forms/Modlist'
 import { Startup } from './components/Forms/Startup'
 import { defaultStartupArguments } from '../Startup/Setup/DefaultStartupConfig'
+import { defaultLaunchArguments } from '../LaunchArguments/setup/LaunchArguments'
 
 const formSchema = z.object({
   name: z
@@ -117,6 +118,7 @@ export function CreateLoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any; m
 
     const loadout: LoadoutJSON = {
       ...values,
+      launch: defaultLaunchArguments,
       modlist: correctedMods,
       startup: correctedStartup,
     }

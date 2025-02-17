@@ -33,11 +33,10 @@ export function LoadoutMod({
     const target = e.target as HTMLInputElement
     const value = target.checked
     let tempModList = [...loadout.modlist]
-    let message
+    let message = `Activated ${modName}`
     if (value) {
       if (!tempModList.includes(modName)) {
         tempModList.push(modName)
-        message = `Activated ${modName}`
       }
     } else {
       tempModList = tempModList.filter((x) => x !== modName)
