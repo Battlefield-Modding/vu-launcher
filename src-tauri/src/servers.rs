@@ -128,6 +128,8 @@ pub async fn create_server_loadout(mut loadout: LoadoutJson) -> Result<bool, Str
     };
     let mod_list = install_mods(&loadout);
 
+    loadout.launch.server.serverInstancePath = Some(String::from(server_path.to_str().unwrap()));
+
     loadout.modlist = mod_list;
     match write_loadout_json(&loadout) {
         Ok(_) => {}
