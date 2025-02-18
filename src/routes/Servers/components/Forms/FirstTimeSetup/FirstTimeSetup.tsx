@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import serverKeyImage from '@/assets/server-key-info.png'
 import { ServerGuidForm } from './ServerGuidForm'
+import { ServerKeyUpload } from './ServerKeyUpload'
 
 export function FirstTimeSetup() {
   const [isGuidSaved, setIsGuidSaved] = useState(false)
@@ -39,7 +40,7 @@ export function FirstTimeSetup() {
 
       {isGuidSaved && (
         <div className="flex min-h-[30vh] flex-1 flex-col">
-          <ServerGuidForm handleGuid={handleGuid} />
+          <ServerKeyUpload />
         </div>
       )}
     </div>
