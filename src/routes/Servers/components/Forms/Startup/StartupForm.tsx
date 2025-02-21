@@ -53,7 +53,7 @@ const formSchema = z.object({
     bulletDamage: z.number().optional(),
     gameModeCounter: z.number().optional(),
     onlySquadLeaderSpawn: z.boolean().optional(),
-    unlockMode: z.any().optional(),
+    // unlockMode: z.any().optional(),
     premiumStatus: z.boolean().optional(),
   }),
   // RM: z
