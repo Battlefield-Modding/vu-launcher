@@ -28,10 +28,10 @@ export function NumberComponent({
       control={form.control}
       name={`${sectionName}.${keyValue}`}
       render={({ field }) => (
-        <FormItem className="flex gap-4">
-          <FormLabel className="text-md flex flex-col justify-center rounded-md leading-10 text-white">
-            <code>{keyValue}</code>
-          </FormLabel>
+        <FormItem>
+          <FormLabel className="text-lg">{keyValue}</FormLabel>
+
+          <FormDescription>{description}</FormDescription>
 
           <FormControl>
             <Input
@@ -47,7 +47,6 @@ export function NumberComponent({
             />
           </FormControl>
 
-          <FormDescription className="leading-10">{description}</FormDescription>
           <FormMessage />
         </FormItem>
       )}

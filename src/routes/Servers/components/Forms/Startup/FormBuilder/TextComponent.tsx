@@ -7,10 +7,10 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { StartupArgs } from '../Setup/StartupTypes'
-import { Textarea } from '@/components/ui/textarea'
 import { LaunchArguments } from '../../LaunchArguments/setup/LaunchArguments'
+import { Input } from '@/components/ui/input'
 
-export function TextAreaComponent({
+export function TextComponent({
   form,
   keyValue,
   defaultvalue,
@@ -37,11 +37,11 @@ export function TextAreaComponent({
           <FormDescription>{description}</FormDescription>
 
           <FormControl>
-            <Textarea
+            <Input
+              type="text"
               placeholder={defaultvalue as string}
               {...field}
-              rows={2}
-              className="max-w-screen-md"
+              className="max-w-sm"
             />
           </FormControl>
 

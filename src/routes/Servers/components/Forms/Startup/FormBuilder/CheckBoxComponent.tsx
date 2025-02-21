@@ -28,26 +28,26 @@ export function CheckBoxComponent({
       control={form.control}
       name={`${sectionName}.${keyValue}`}
       render={({ field }) => (
-        <FormItem className="flex flex-wrap">
-          <FormLabel className="text-md flex flex-col justify-center rounded-md leading-10">
-            <code>{keyValue}</code>
-          </FormLabel>
+        <FormItem>
+          <FormLabel className="text-lg">{keyValue}</FormLabel>
 
-          <FormControl>
-            <Input
-              type={'checkbox'}
-              className="max-w-16"
-              defaultChecked={defaultChecked}
-              {...field}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault()
-                }
-              }}
-            />
-          </FormControl>
+          <div className="flex items-center gap-2">
+            <FormControl>
+              <Input
+                type={'checkbox'}
+                className="max-w-5 bg-red-500"
+                defaultChecked={defaultChecked}
+                {...field}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault()
+                  }
+                }}
+              />
+            </FormControl>
 
-          <FormDescription className="leading-8">{description}</FormDescription>
+            <FormDescription className="">{description}</FormDescription>
+          </div>
           <FormMessage />
         </FormItem>
       )}

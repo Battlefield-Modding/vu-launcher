@@ -23,9 +23,7 @@ export function SetTeamTicketCountComponent({ form }: { form: any }) {
 
   return (
     <div>
-      <FormLabel className="text-md rounded-md bg-sidebar-foreground p-1 pl-2 pr-2 leading-10 text-white">
-        <code>TeamTicketCount</code>
-      </FormLabel>
+      <FormLabel className="text-lg">TeamTicketCount</FormLabel>
       <FormDescription className="leading-9">Manually set tickets per team</FormDescription>
 
       {fieldArray.fields.length === 0 && (

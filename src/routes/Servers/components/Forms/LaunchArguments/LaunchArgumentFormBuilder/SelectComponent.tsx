@@ -33,9 +33,8 @@ export function SelectComponent({
       name={`${sectionName}.${keyValue}`}
       render={({ field }) => (
         <FormItem>
-          <FormLabel className="text-md flex flex-col justify-center rounded-md leading-10 text-white">
-            <code>{keyValue}</code>
-          </FormLabel>
+          <FormLabel className="text-lg">{keyValue}</FormLabel>
+          <FormDescription>{description}</FormDescription>
 
           <Select onValueChange={field.onChange} defaultValue={field.value}>
             <FormControl className="w-32">
@@ -49,7 +48,6 @@ export function SelectComponent({
             </SelectContent>
           </Select>
 
-          <FormDescription>{description}</FormDescription>
           <FormMessage />
         </FormItem>
       )}

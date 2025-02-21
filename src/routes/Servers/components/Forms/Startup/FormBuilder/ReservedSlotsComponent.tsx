@@ -18,10 +18,8 @@ export function ReservedSlotsComponent({ form }: { form: any }) {
 
   return (
     <div>
-      <FormLabel className="text-md rounded-md bg-sidebar-foreground p-1 pl-2 pr-2 leading-10 text-white">
-        <code>Reserved Slots</code>
-      </FormLabel>
-      <FormDescription className="leading-9">
+      <FormLabel className="text-lg">Reserved Slots</FormLabel>
+      <FormDescription>
         List of players who have priority connecting to your server.
       </FormDescription>
       {fieldArray.fields.length === 0 && (
