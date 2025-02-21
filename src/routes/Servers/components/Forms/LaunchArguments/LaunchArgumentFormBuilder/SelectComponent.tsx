@@ -17,27 +17,29 @@ import {
 
 export function SelectComponent({
   form,
-  keyValue,
-  description,
+  keyName,
+  label,
   sectionName,
 }: {
   form: any
-  keyValue: any
-  description: string
+  keyName: any
+  label: string
   sectionName: keyof LaunchArguments
 }) {
   return (
     <FormField
-      key={keyValue}
+      key={keyName}
       control={form.control}
-      name={`${sectionName}.${keyValue}`}
+      name={`${sectionName}.${keyName}`}
       render={({ field }) => (
         <FormItem>
-          <FormLabel className="text-lg">{keyValue}</FormLabel>
-          <FormDescription>{description}</FormDescription>
+          <FormLabel className="text-lg">{label}</FormLabel>
+          <FormDescription>
+            {sectionName}.{keyName}
+          </FormDescription>
 
           <Select onValueChange={field.onChange} defaultValue={field.value}>
-            <FormControl className="w-32">
+            <FormControl className="ml-auto mr-0 w-32">
               <SelectTrigger>
                 <SelectValue placeholder="Select env" />
               </SelectTrigger>

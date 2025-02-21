@@ -12,28 +12,30 @@ import { LaunchArguments } from '../../LaunchArguments/setup/LaunchArguments'
 
 export function NumberComponent({
   form,
-  keyValue,
+  keyName,
   defaultvalue,
-  description,
+  label,
   sectionName,
 }: {
   form: any
-  keyValue: any
+  keyName: any
   defaultvalue: any
-  description: string
+  label: string
   sectionName: keyof StartupArgs | keyof LaunchArguments
 }) {
   return (
     <FormField
       control={form.control}
-      name={`${sectionName}.${keyValue}`}
+      name={`${sectionName}.${keyName}`}
       render={({ field }) => (
         <FormItem>
-          <FormLabel className="text-lg">{keyValue}</FormLabel>
+          <FormLabel className="text-lg">{label}</FormLabel>
 
-          <FormDescription>{description}</FormDescription>
+          <FormDescription>
+            {sectionName}.{keyName}
+          </FormDescription>
 
-          <FormControl>
+          <FormControl className="ml-auto mr-0">
             <Input
               type={'text'}
               className="max-w-16"

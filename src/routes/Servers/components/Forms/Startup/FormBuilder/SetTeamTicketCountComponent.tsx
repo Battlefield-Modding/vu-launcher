@@ -22,14 +22,14 @@ export function SetTeamTicketCountComponent({ form }: { form: any }) {
   const fieldArray = useFieldArray({ name: 'vu.SetTeamTicketCount', control: form.control })
 
   return (
-    <div>
-      <FormLabel className="text-lg">TeamTicketCount</FormLabel>
-      <FormDescription className="leading-9">Manually set tickets per team</FormDescription>
+    <div className="flex flex-col">
+      <FormLabel className="text-lg">Set tickets per team</FormLabel>
+      <FormDescription className="leading-9">vu.SetTeamTicketCount</FormDescription>
 
       {fieldArray.fields.length === 0 && (
         <Button
           variant={'constructive'}
-          className="mb-4"
+          className="mb-4 ml-auto mr-0"
           onClick={(e) => {
             e.preventDefault()
             fieldArray.append({ teamId: 'team1', ticketCount: 100 })
@@ -42,14 +42,24 @@ export function SetTeamTicketCountComponent({ form }: { form: any }) {
       <div className="flex flex-col gap-4">
         {fieldArray.fields.map((x, index) => {
           return (
-            <div className="flex gap-4" key={`teamTicketCount-${index}`}>
-              <FormLabel className="mb-auto mt-auto text-xl">{index + 1}.&#41;</FormLabel>
+            <div className="ml-auto mr-0 flex gap-4" key={`teamTicketCount-${index}`}>
+              {index === fieldArray.fields.length - 1 && (
+                <Button
+                  variant={'constructive'}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    fieldArray.append({ teamId: `team${index + 2}`, ticketCount: 100 })
+                  }}
+                >
+                  Set other team's tickets
+                </Button>
+              )}
               <FormField
                 control={form.control}
                 name={`vu.SetTeamTicketCount.${index}.teamId`}
                 key={`${x.id}-ticketCount-teamId`}
                 render={({ field }) => (
-                  <FormItem className="w-64">
+                  <FormItem className="w-32">
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger>
@@ -101,18 +111,6 @@ export function SetTeamTicketCountComponent({ form }: { form: any }) {
               >
                 <Trash className="m-auto" />
               </div>
-
-              {index === fieldArray.fields.length - 1 && (
-                <Button
-                  variant={'constructive'}
-                  onClick={(e) => {
-                    e.preventDefault()
-                    fieldArray.append({ teamId: `team${index + 2}`, ticketCount: 100 })
-                  }}
-                >
-                  Set other team's tickets
-                </Button>
-              )}
             </div>
           )
         })}

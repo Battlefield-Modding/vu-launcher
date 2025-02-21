@@ -12,30 +12,36 @@ import { LaunchArguments } from '../../LaunchArguments/setup/LaunchArguments'
 
 export function CheckBoxComponent({
   form,
-  keyValue,
-  description,
+  label,
+  keyName,
   defaultChecked,
   sectionName,
 }: {
   form: any
-  keyValue: any
-  description: string
+  label: any
+  keyName: string
   defaultChecked: boolean
   sectionName: keyof StartupArgs | keyof LaunchArguments
 }) {
   return (
     <FormField
       control={form.control}
-      name={`${sectionName}.${keyValue}`}
+      name={`${sectionName}.${keyName}`}
       render={({ field }) => (
         <FormItem>
-          <FormLabel className="text-lg">{keyValue}</FormLabel>
+          <FormLabel className="text-lg">{label}</FormLabel>
+          <FormDescription>
+            {sectionName}.{keyName}
+          </FormDescription>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center justify-end gap-2">
+            <FormDescription>
+              {sectionName}.{keyName}
+            </FormDescription>
             <FormControl>
               <Input
                 type={'checkbox'}
-                className="max-w-5 bg-red-500"
+                className="w-5"
                 defaultChecked={defaultChecked}
                 {...field}
                 onKeyDown={(e) => {
@@ -45,8 +51,6 @@ export function CheckBoxComponent({
                 }}
               />
             </FormControl>
-
-            <FormDescription className="">{description}</FormDescription>
           </div>
           <FormMessage />
         </FormItem>

@@ -124,7 +124,7 @@ export function LaunchArgumentForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="m-auto max-w-screen-xl">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="m-auto max-w-screen-md">
         <input
           type="text"
           placeholder={`Search Launch Arguments     [CTRL + F]`}
@@ -133,7 +133,7 @@ export function LaunchArgumentForm({
           ref={searchRef}
         />
 
-        <div className="flex flex-col gap-12 pt-12">
+        <div className="flex flex-col gap-24 pt-12">
           <LaunchArgumentFormBuilder
             form={form}
             filteredArguments={filteredArgs}

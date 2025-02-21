@@ -28,16 +28,16 @@ export function FormBuilder({
       const fieldType = formBuilderInputTypes[sectionName][key]
 
       // @ts-expect-error
-      const fieldDescription = StartupDescriptions[sectionName as keyof StartupArgs][key]
+      const label = StartupDescriptions[sectionName as keyof StartupArgs][key]
       if (fieldType === 'checkbox') {
         return (
           <CheckBoxComponent
             defaultChecked={value as boolean}
             key={key}
-            description={fieldDescription}
+            label={label}
             sectionName={sectionName}
             form={form}
-            keyValue={key}
+            keyName={key}
           />
         )
       }
@@ -47,9 +47,9 @@ export function FormBuilder({
             key={key}
             defaultvalue={value}
             sectionName={sectionName}
-            description={fieldDescription}
+            label={label}
             form={form}
-            keyValue={key}
+            keyName={key}
           />
         )
       }
@@ -59,9 +59,9 @@ export function FormBuilder({
             key={key}
             defaultvalue={value}
             sectionName={sectionName}
-            description={fieldDescription}
+            label={label}
             form={form}
-            keyValue={key}
+            keyName={key}
           />
         )
       }
@@ -71,9 +71,9 @@ export function FormBuilder({
             key={key}
             defaultvalue={value}
             sectionName={sectionName}
-            description={fieldDescription}
+            label={label}
             form={form}
-            keyValue={key}
+            keyName={key}
           />
         )
       }

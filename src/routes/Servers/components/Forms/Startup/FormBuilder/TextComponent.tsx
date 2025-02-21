@@ -12,37 +12,32 @@ import { Input } from '@/components/ui/input'
 
 export function TextComponent({
   form,
-  keyValue,
+  keyName,
   defaultvalue,
-  description,
+  label,
   sectionName,
 }: {
   form: any
-  keyValue: any
+  keyName: any
   defaultvalue: any
-  description: string
+  label: string
   sectionName: keyof StartupArgs | keyof LaunchArguments
 }) {
   return (
     <FormField
-      key={keyValue}
+      key={keyName}
       control={form.control}
-      name={`${sectionName}.${keyValue}`}
+      name={`${sectionName}.${keyName}`}
       render={({ field }) => (
         <FormItem>
-          <FormLabel className="text-lg">
-            {keyValue === 'password' ? 'password (RCON)' : keyValue}
-          </FormLabel>
+          <FormLabel className="text-lg">{label}</FormLabel>
 
-          <FormDescription>{description}</FormDescription>
+          <FormDescription className="mr-0">
+            {sectionName}.{keyName}
+          </FormDescription>
 
-          <FormControl>
-            <Input
-              type="text"
-              placeholder={defaultvalue as string}
-              {...field}
-              className="max-w-lg"
-            />
+          <FormControl className="ml-auto mr-0">
+            <Input type="text" placeholder={defaultvalue as string} {...field} className="w-1/2" />
           </FormControl>
 
           <FormMessage />

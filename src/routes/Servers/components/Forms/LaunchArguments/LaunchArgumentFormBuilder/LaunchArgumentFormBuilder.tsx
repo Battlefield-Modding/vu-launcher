@@ -26,16 +26,16 @@ export function LaunchArgumentFormBuilder({
       const fieldType = defaultLaunchArgumentInputTypes[sectionName][key]
 
       // @ts-expect-error
-      const fieldDescription = LaunchArgumentDescriptions[sectionName as keyof LaunchArguments][key]
+      const label = LaunchArgumentDescriptions[sectionName as keyof LaunchArguments][key]
       if (fieldType === 'checkbox') {
         return (
           <CheckBoxComponent
             defaultChecked={value as boolean}
             key={key}
-            description={fieldDescription}
+            label={label}
             sectionName={sectionName}
             form={form}
-            keyValue={key}
+            keyName={key}
           />
         )
       }
@@ -45,9 +45,9 @@ export function LaunchArgumentFormBuilder({
             key={key}
             defaultvalue={value}
             sectionName={sectionName}
-            description={fieldDescription}
+            label={label}
             form={form}
-            keyValue={key}
+            keyName={key}
           />
         )
       }
@@ -57,9 +57,9 @@ export function LaunchArgumentFormBuilder({
             key={key}
             defaultvalue={value}
             sectionName={sectionName}
-            description={fieldDescription}
+            label={label}
             form={form}
-            keyValue={key}
+            keyName={key}
           />
         )
       }
@@ -69,9 +69,9 @@ export function LaunchArgumentFormBuilder({
             key={key}
             defaultvalue={value}
             sectionName={sectionName}
-            description={fieldDescription}
+            label={label}
             form={form}
-            keyValue={key}
+            keyName={key}
           />
         )
       }
@@ -80,9 +80,9 @@ export function LaunchArgumentFormBuilder({
           <SelectComponent
             key={key}
             sectionName={sectionName}
-            description={fieldDescription}
+            label={label}
             form={form}
-            keyValue={key}
+            keyName={key}
           />
         )
       }

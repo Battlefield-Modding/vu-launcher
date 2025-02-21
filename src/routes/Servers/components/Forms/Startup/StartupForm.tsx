@@ -160,7 +160,7 @@ export function StartupForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="m-auto max-w-screen-xl">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="m-auto max-w-screen-md">
         <input
           type="text"
           placeholder={`Search Startup Config     [CTRL + F]`}
@@ -169,7 +169,7 @@ export function StartupForm({
           ref={searchRef}
         />
 
-        <div className="flex flex-col gap-12 pt-12">
+        <div className="flex flex-col gap-24 pt-12">
           <FormBuilder
             form={form}
             filteredArguments={filteredArgs}
