@@ -162,19 +162,19 @@ export const defaultStartupArguments: StartupArgs = {
 
 export const StartupDescriptions = {
   admin: {
-    password: "Password used for connecting to server with PROCON"
+    password: "Set RCON Password for Procon"
   },
   vars: {
-    ranked:  "Change the server between ranked/unranked mode",
-    serverName:  "Set the server name",
-    gamePassword:  "Set the game password for the server",
-    autoBalance:  "Set if the server should autobalance",
+    ranked:  "Set if ranked is enabled",
+    serverName:  "Set server name",
+    gamePassword:  "Set password for joining server",
+    autoBalance:  "Set if autobalance is enabled",
     roundStartPlayerCount:  "Set minimum numbers of players to go from warm-up to pre-round/in-round",
     roundRestartPlayerCount:  "Set minimum numbers of players to go from in-round to warm-up",
     roundLockdownCountdown:  "Set the duration of pre-round",
     serverMessage:  "Set the server welcome message",
     friendlyFire:  "Set if the server should allow team damage",
-    maxPlayers:  "Set desired maximum number of players",
+    maxPlayers:  "Set maximum number of players",
     serverDescription:  "Set server description",
     killCam:  "Set if killcam is enabled",
     miniMap:  "Set if minimap is enabled",
@@ -225,18 +225,18 @@ export const StartupDescriptions = {
     DesertingAllowed: "Disable Out Of Bounds",
     DestructionEnabled: "Enable Destruction",
     HighPerformanceReplication: "Update far-away players at same rate as nearby players",
-    ServerBanner: "URL for 1378x162 .jpg that appears in server browser",
-    SetTeamTicketCount: "Sets team ticket count for a team. Ex: 1 100 would mean you set team1 tickets to 100",
+    ServerBanner: "Set URL for server browser banner. Must be a 1378x162 jpg file.",
+    SetTeamTicketCount: "Set team ticket count for a team.",
     SquadSize: "Set max players per squad",
     SunFlareEnabled: "Enable sun flare",
     SuppressionMultiplier: "Set suppression intensity [0, infinite]. 0 means disable suppression.",
     FriendlyFireSuppression: "Enable suppression of allies",
     TimeScale: "Slow down or speed up game [0.0, 2.0]. Default is 1.0",
     VehicleDisablingEnabled: "Enable disabled state of vehicles (mobility down and burning)",
-    HttpAssetUrl: "A URL pointing to an external HTTP server hosting mod assets, or an empty string if assets should be sent directly from the game server. When this is set, any connecting clients will try to download any needed assets from that URL, following the file structure of the mod files. For example, if you have a mod called mymod and it has a WebUI container file (ui.vuic), and you set the URL to https://example.com/assets/, the client will try to download the file from https://example.com/assets/mymod/ui.vuic. If file downloads fail or their contents don't match what's on the game server, clients will be unable to join.",
+    HttpAssetUrl: "Set URL pointing to an external HTTP server hosting mod assets, or an empty string if assets should be sent directly from the game server. When this is set, any connecting clients will try to download any needed assets from that URL, following the file structure of the mod files. For example, if you have a mod called mymod and it has a WebUI container file (ui.vuic), and you set the URL to https://example.com/assets/, the client will try to download the file from https://example.com/assets/mymod/ui.vuic. If file downloads fail or their contents don't match what's on the game server, clients will be unable to join.",
     DisablePreRound: "Disable time before round starts (waiting for players 1/10)",
     TeamActivatedMines: "Enable mines killing allies",
-    CorpseDamageEnabled: "Enables corpse damage, preventing revival.(Tip: Tweak VeniceSoldierHealthModuleData.manDownStateHealthPoints with a mod.)",
+    CorpseDamageEnabled: "Enables corpse damage, preventing revival",
   },
   reservedSlots: {
     add: "list of players to add to reserved slot separated by comma ,"
