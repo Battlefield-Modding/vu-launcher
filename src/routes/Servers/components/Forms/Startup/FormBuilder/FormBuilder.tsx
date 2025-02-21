@@ -6,6 +6,7 @@ import { LoadoutJSON } from '@/config/config'
 import { TextAreaComponent } from './TextAreaComponent'
 import { ReservedSlotsComponent } from './ReservedSlotsComponent'
 import { SetTeamTicketCountComponent } from './SetTeamTicketCountComponent'
+import { TextComponent } from './TextComponent'
 
 export function FormBuilder({
   form,
@@ -55,6 +56,18 @@ export function FormBuilder({
       if (fieldType === 'textarea') {
         return (
           <TextAreaComponent
+            key={key}
+            defaultvalue={value}
+            sectionName={sectionName}
+            description={fieldDescription}
+            form={form}
+            keyValue={key}
+          />
+        )
+      }
+      if (fieldType === 'text') {
+        return (
+          <TextComponent
             key={key}
             defaultvalue={value}
             sectionName={sectionName}

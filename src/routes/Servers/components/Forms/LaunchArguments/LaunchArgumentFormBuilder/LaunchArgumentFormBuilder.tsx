@@ -8,6 +8,7 @@ import { CheckBoxComponent } from '../../Startup/FormBuilder/CheckBoxComponent'
 import { NumberComponent } from '../../Startup/FormBuilder/NumberComponent'
 import { TextAreaComponent } from '../../Startup/FormBuilder/TextAreaComponent'
 import { SelectComponent } from './SelectComponent'
+import { TextComponent } from '../../Startup/FormBuilder/TextComponent'
 
 export function LaunchArgumentFormBuilder({
   form,
@@ -53,6 +54,18 @@ export function LaunchArgumentFormBuilder({
       if (fieldType === 'textarea') {
         return (
           <TextAreaComponent
+            key={key}
+            defaultvalue={value}
+            sectionName={sectionName}
+            description={fieldDescription}
+            form={form}
+            keyValue={key}
+          />
+        )
+      }
+      if (fieldType === 'text') {
+        return (
+          <TextComponent
             key={key}
             defaultvalue={value}
             sectionName={sectionName}
