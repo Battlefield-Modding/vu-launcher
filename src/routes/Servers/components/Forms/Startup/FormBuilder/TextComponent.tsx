@@ -37,7 +37,7 @@ export function TextComponent({
           </FormDescription>
 
           <FormControl className="ml-auto mr-0">
-            <Input type="text" placeholder={defaultvalue as string} {...field} className="w-1/2" />
+            <Input type="text" placeholder={keyName as string} {...field} className="w-1/2" />
           </FormControl>
 
           <FormMessage />

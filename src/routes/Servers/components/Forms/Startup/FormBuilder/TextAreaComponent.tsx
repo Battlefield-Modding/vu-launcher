@@ -37,12 +37,7 @@ export function TextAreaComponent({
           </FormDescription>
 
           <FormControl className="ml-auto mr-0">
-            <Textarea
-              placeholder={defaultvalue as string}
-              {...field}
-              rows={2}
-              className="max-w-full"
-            />
+            <Textarea placeholder={keyName as string} {...field} rows={2} className="max-w-full" />
           </FormControl>
 
           <FormMessage />
