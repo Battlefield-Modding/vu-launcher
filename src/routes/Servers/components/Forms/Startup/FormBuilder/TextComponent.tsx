@@ -41,7 +41,7 @@ export function TextComponent({
               type="text"
               placeholder={defaultvalue as string}
               {...field}
-              className="max-w-sm"
+              className="max-w-lg"
             />
           </FormControl>
 
