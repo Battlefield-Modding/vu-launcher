@@ -12,6 +12,7 @@ import { editServerLoadout } from '@/api'
 import { toast } from 'sonner'
 import { defaultLaunchArguments } from './setup/LaunchArguments'
 import { LaunchArgumentFormBuilder } from './LaunchArgumentFormBuilder/LaunchArgumentFormBuilder'
+import { Command } from 'lucide-react'
 
 const formSchema = z.object({
   common: z
@@ -64,9 +65,11 @@ const formSchema = z.object({
 export function LaunchArgumentForm({
   setSheetOpen,
   existingLoadout,
+  searchRef,
 }: {
   setSheetOpen: any
   existingLoadout: LoadoutJSON
+  searchRef: any
 }) {
   const queryClient = useQueryClient()
   const [submitLoading, setSubmitLoading] = useState(false)
@@ -121,16 +124,16 @@ export function LaunchArgumentForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="m-auto max-w-screen-xl">
         <input
           type="text"
-          placeholder="Search for setting..."
-          className="p-2 text-primary"
+          placeholder={`Search Launch Arguments     [CTRL + F]`}
+          className="fixed top-0 w-[720px] rounded-md border border-gray-500 bg-black p-2 text-secondary focus:border-cyan-300 focus:outline-none focus:ring-0"
           onChange={handleChange}
-          autoFocus={true}
+          ref={searchRef}
         />
 
-        <div className="flex flex-col gap-[2vw]">
+        <div className="flex flex-col gap-12 pt-12">
           <LaunchArgumentFormBuilder
             form={form}
             filteredArguments={filteredArgs}
@@ -139,7 +142,7 @@ export function LaunchArgumentForm({
         </div>
 
         {submitLoading && <LoaderComponent />}
-        <Button variant="secondary" type="submit">
+        <Button variant="secondary" type="submit" className="mt-8">
           Submit
         </Button>
       </form>
