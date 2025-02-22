@@ -96,7 +96,7 @@ export function ServerKeyUpload() {
     <div
       className={clsx(
         'flex flex-1 flex-col justify-center border-2 border-dashed border-secondary bg-sidebar-foreground text-center text-white',
-        isDraggingOver && 'bg-green-400/50',
+        isDraggingOver && 'bg-[#16a34a]',
       )}
       onClick={handleClick}
     >
