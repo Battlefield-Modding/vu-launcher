@@ -62,7 +62,7 @@ export const LaunchArgumentDescriptions = {
     console: "[COMMON] Enable external console window for debug logging.",
     debuglog: "[COMMON] Enable logging. Server logs are in server instance directory. Clients logs are in the VU AppData installation folder.",
     trace: "[COMMON] Enable verbose logging.",
-    vextdebug: "[COMMON] Enable VEXT remote debugging, connecting to the debugger at the specified host:port (this does not currently work). It also prevents the server / client connections from timing out and makes it so compiled VEXT modules sent to the client contain debug symbols.",
+    vextdebug: "[COMMON] Set VEXT remote debugging host:port (this does not currently work). It also prevents the server / client connections from timing out and makes it so compiled VEXT modules sent to the client contain debug symbols.",
     vexttrace: "[COMMON] Enable VEXT execution tracing. When tracing is enabled and VU crashes, the last executed line of each loaded VEXT mod will be available from the crash dialog and in the submitted crash details. Keep in mind that this could adversely affect performance.",
   },
   client: {
