@@ -11,20 +11,19 @@ export function FirstTimeSetup() {
   }
 
   return (
-    <div className="flex min-h-[100vh] flex-col">
-      <div className="bg-destructive pl-2 pr-2 text-center text-xl font-bold leading-9">
-        <h1 className="p-4">Server Key Not Found</h1>
-      </div>
-      <div className="flex flex-col gap-8 bg-destructive-foreground p-8">
+    <div className="flex min-h-[100vh] flex-col bg-primary">
+      <div className="m-auto flex max-w-screen-lg flex-col gap-8 p-8 text-secondary">
         <div>
           <h1 className="text-2xl font-bold">1.) Download server.key from:</h1>
           <a
             href="https://veniceunleashed.net/keys"
             target="_blank"
-            className="ml-9 text-blue-800 underline hover:bg-blue-100 hover:opacity-80"
+            className="ml-9 text-blue-500 underline hover:bg-blue-100 hover:opacity-80"
           >
             https://veniceunleashed.net/keys
-            {!isGuidSaved && <img src={serverKeyImage} alt="" className="" />}
+            {!isGuidSaved && (
+              <img src={serverKeyImage} alt="" className="ml-9 w-1/2 border-2 border-cyan-300" />
+            )}
           </a>
         </div>
 
