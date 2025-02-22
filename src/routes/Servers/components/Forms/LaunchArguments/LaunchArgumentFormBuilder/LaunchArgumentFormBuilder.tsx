@@ -4,7 +4,7 @@ import {
   LaunchArgumentDescriptions,
   LaunchArguments,
 } from '../setup/LaunchArguments'
-import { CheckBoxComponent } from '../../Startup/FormBuilder/CheckBoxComponent'
+import { SwitchComponent } from '../../Startup/FormBuilder/SwitchComponent'
 import { NumberComponent } from '../../Startup/FormBuilder/NumberComponent'
 import { TextAreaComponent } from '../../Startup/FormBuilder/TextAreaComponent'
 import { SelectComponent } from './SelectComponent'
@@ -29,7 +29,7 @@ export function LaunchArgumentFormBuilder({
       const label = LaunchArgumentDescriptions[sectionName as keyof LaunchArguments][key]
       if (fieldType === 'checkbox') {
         return (
-          <CheckBoxComponent
+          <SwitchComponent
             defaultChecked={value as boolean}
             key={key}
             label={label}
@@ -55,7 +55,6 @@ export function LaunchArgumentFormBuilder({
         return (
           <TextAreaComponent
             key={key}
-            defaultvalue={value}
             sectionName={sectionName}
             label={label}
             form={form}
@@ -67,7 +66,6 @@ export function LaunchArgumentFormBuilder({
         return (
           <TextComponent
             key={key}
-            defaultvalue={value}
             sectionName={sectionName}
             label={label}
             form={form}

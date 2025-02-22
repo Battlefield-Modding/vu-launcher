@@ -13,13 +13,11 @@ import { LaunchArguments } from '../../LaunchArguments/setup/LaunchArguments'
 export function TextAreaComponent({
   form,
   keyName,
-  defaultvalue,
   label,
   sectionName,
 }: {
   form: any
   keyName: any
-  defaultvalue: any
   label: string
   sectionName: keyof StartupArgs | keyof LaunchArguments
 }) {

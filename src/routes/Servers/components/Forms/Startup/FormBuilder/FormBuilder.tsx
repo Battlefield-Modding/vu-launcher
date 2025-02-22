@@ -1,6 +1,6 @@
 import { formBuilderInputTypes, StartupDescriptions } from '../Setup/DefaultStartupConfig'
 import { StartupArgs } from '../Setup/StartupTypes'
-import { CheckBoxComponent } from './CheckBoxComponent'
+import { SwitchComponent } from './SwitchComponent'
 import { NumberComponent } from './NumberComponent'
 import { LoadoutJSON } from '@/config/config'
 import { TextAreaComponent } from './TextAreaComponent'
@@ -31,7 +31,7 @@ export function FormBuilder({
       const label = StartupDescriptions[sectionName as keyof StartupArgs][key]
       if (fieldType === 'checkbox') {
         return (
-          <CheckBoxComponent
+          <SwitchComponent
             defaultChecked={value as boolean}
             key={key}
             label={label}
@@ -57,7 +57,6 @@ export function FormBuilder({
         return (
           <TextAreaComponent
             key={key}
-            defaultvalue={value}
             sectionName={sectionName}
             label={label}
             form={form}
@@ -69,7 +68,6 @@ export function FormBuilder({
         return (
           <TextComponent
             key={key}
-            defaultvalue={value}
             sectionName={sectionName}
             label={label}
             form={form}

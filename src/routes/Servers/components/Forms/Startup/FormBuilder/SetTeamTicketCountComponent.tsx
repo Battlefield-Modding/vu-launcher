@@ -22,9 +22,11 @@ export function SetTeamTicketCountComponent({ form }: { form: any }) {
   const fieldArray = useFieldArray({ name: 'vu.SetTeamTicketCount', control: form.control })
 
   return (
-    <div className="flex flex-col">
-      <FormLabel className="text-lg">Set tickets per team</FormLabel>
-      <FormDescription className="leading-9">vu.SetTeamTicketCount</FormDescription>
+    <div className="flex">
+      <div className="flex-1">
+        <FormLabel className="text-lg">Set tickets per team</FormLabel>
+        <FormDescription className="leading-9">vu.SetTeamTicketCount</FormDescription>
+      </div>
 
       {fieldArray.fields.length === 0 && (
         <Button

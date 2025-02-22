@@ -28,12 +28,14 @@ export function NumberComponent({
       control={form.control}
       name={`${sectionName}.${keyName}`}
       render={({ field }) => (
-        <FormItem>
-          <FormLabel className="text-lg">{label}</FormLabel>
+        <FormItem className="flex gap-16">
+          <div className="flex-1">
+            <FormLabel className="text-lg">{label}</FormLabel>
 
-          <FormDescription>
-            {sectionName}.{keyName}
-          </FormDescription>
+            <FormDescription>
+              {sectionName}.{keyName}
+            </FormDescription>
+          </div>
 
           <FormControl className="ml-auto mr-0">
             <Input

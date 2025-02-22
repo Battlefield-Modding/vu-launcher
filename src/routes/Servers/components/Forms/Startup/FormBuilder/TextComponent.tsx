@@ -13,13 +13,11 @@ import { Input } from '@/components/ui/input'
 export function TextComponent({
   form,
   keyName,
-  defaultvalue,
   label,
   sectionName,
 }: {
   form: any
   keyName: any
-  defaultvalue: any
   label: string
   sectionName: keyof StartupArgs | keyof LaunchArguments
 }) {

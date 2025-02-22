@@ -17,9 +17,11 @@ export function ReservedSlotsComponent({ form }: { form: any }) {
   const [autoFocusIndex, setAutoFocusIndex] = useState(-1)
 
   return (
-    <div>
-      <FormLabel className="text-lg">Add Players to Reserved Slots</FormLabel>
-      <FormDescription>reservedSlots.add</FormDescription>
+    <div className="flex">
+      <div className="flex-1">
+        <FormLabel className="text-lg">Add Players to Reserved Slots</FormLabel>
+        <FormDescription>reservedSlots.add</FormDescription>
+      </div>
 
       {fieldArray.fields.length === 0 && (
         <Button

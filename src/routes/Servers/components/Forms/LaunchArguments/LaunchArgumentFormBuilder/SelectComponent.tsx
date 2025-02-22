@@ -32,11 +32,13 @@ export function SelectComponent({
       control={form.control}
       name={`${sectionName}.${keyName}`}
       render={({ field }) => (
-        <FormItem>
-          <FormLabel className="text-lg">{label}</FormLabel>
-          <FormDescription>
-            {sectionName}.{keyName}
-          </FormDescription>
+        <FormItem className="flex">
+          <div className="flex-1">
+            <FormLabel className="text-lg">{label}</FormLabel>
+            <FormDescription>
+              {sectionName}.{keyName}
+            </FormDescription>
+          </div>
 
           <Select onValueChange={field.onChange} defaultValue={field.value}>
             <FormControl className="ml-auto mr-0 w-32">

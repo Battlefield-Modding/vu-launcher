@@ -9,8 +9,9 @@ import {
 import { Input } from '@/components/ui/input'
 import { StartupArgs } from '../Setup/StartupTypes'
 import { LaunchArguments } from '../../LaunchArguments/setup/LaunchArguments'
+import { Switch } from '@/components/ui/switch'
 
-export function CheckBoxComponent({
+export function SwitchComponent({
   form,
   label,
   keyName,
@@ -28,30 +29,17 @@ export function CheckBoxComponent({
       control={form.control}
       name={`${sectionName}.${keyName}`}
       render={({ field }) => (
-        <FormItem>
-          <FormLabel className="text-lg">{label}</FormLabel>
-          <FormDescription>
-            {sectionName}.{keyName}
-          </FormDescription>
-
-          <div className="flex items-center justify-end gap-2">
+        <FormItem className="flex gap-16">
+          <div className="flex-1">
+            <FormLabel className="text-lg">{label}</FormLabel>
             <FormDescription>
               {sectionName}.{keyName}
             </FormDescription>
-            <FormControl>
-              <Input
-                type={'checkbox'}
-                className="w-5"
-                defaultChecked={defaultChecked}
-                {...field}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    e.preventDefault()
-                  }
-                }}
-              />
-            </FormControl>
           </div>
+
+          <FormControl>
+            <Switch {...field} checked={field.value} onCheckedChange={field.onChange} />
+          </FormControl>
           <FormMessage />
         </FormItem>
       )}
