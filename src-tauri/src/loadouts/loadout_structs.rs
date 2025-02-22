@@ -68,8 +68,7 @@ pub struct Vars {
     pub bulletDamage: Option<u32>,       // Set bullet damage scale factor
     pub gameModeCounter: Option<u32>,    // Set scale factor for number of tickets to end round
     pub onlySquadLeaderSpawn: Option<bool>, // Set if players can only spawn on their squad leader
-    // pub unlockMode: Option<Vec<String>>, // Set weapons & gadgets to be available on an unranked server
-    pub premiumStatus: Option<bool>, // Set if the server should be exclusive to Premium Players
+                                         // pub unlockMode: Option<Vec<String>>, // Set weapons & gadgets to be available on an unranked server
 }
 
 impl Vars {
@@ -111,7 +110,6 @@ impl Vars {
             gameModeCounter: Some(1),
             onlySquadLeaderSpawn: Some(false),
             // unlockMode: None,
-            premiumStatus: Some(false),
         }
     }
 }

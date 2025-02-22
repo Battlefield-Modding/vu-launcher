@@ -54,7 +54,6 @@ const formSchema = z.object({
     gameModeCounter: z.number().optional(),
     onlySquadLeaderSpawn: z.boolean().optional(),
     // unlockMode: z.any().optional(),
-    premiumStatus: z.boolean().optional(),
   }),
   // RM: z
   //   .object({
