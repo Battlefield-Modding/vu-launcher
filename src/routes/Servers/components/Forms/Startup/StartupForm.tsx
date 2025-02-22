@@ -168,7 +168,7 @@ export function StartupForm({
           ref={searchRef}
         />
 
-        <div className="flex flex-col gap-24 pt-12">
+        <div className="flex flex-col gap-6 pt-12">
           <FormBuilder
             form={form}
             filteredArguments={filteredArgs}

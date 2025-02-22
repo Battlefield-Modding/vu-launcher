@@ -143,7 +143,7 @@ export function CreateLoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any; m
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="m-auto flex max-w-screen-md flex-col gap-16 pt-12"
+        className="m-auto flex max-w-screen-md flex-col gap-6"
       >
         <FormField
           control={form.control}
@@ -180,7 +180,7 @@ export function CreateLoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any; m
         <Maplist form={form} />
         <Banlist form={form} alwaysAutoFocus={false} />
         {submitLoading && <LoaderComponent />}
-        <Button variant={'secondary'} type="submit" className="m-auto w-fit">
+        <Button variant={'secondary'} type="submit" className="m-auto mt-6 w-fit">
           Submit
         </Button>
       </form>

@@ -133,7 +133,7 @@ export function LaunchArgumentForm({
           ref={searchRef}
         />
 
-        <div className="flex flex-col gap-24 pt-12">
+        <div className="flex flex-col gap-6 pt-12">
           <LaunchArgumentFormBuilder
             form={form}
             filteredArguments={filteredArgs}
