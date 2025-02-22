@@ -141,18 +141,27 @@ export function CreateLoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any; m
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="m-auto flex max-w-screen-md flex-col gap-16 pt-12"
+      >
         <FormField
           control={form.control}
           name="name"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-2xl underline">Loadout Name</FormLabel>
-              <FormControl>
+            <FormItem className="flex">
+              <div className="flex-1">
+                <FormLabel className="text-xl">Set loadout nickname</FormLabel>
+                <FormDescription>
+                  Forbidden Characters: \ / : * ? " {'<'} {'>'} | '
+                </FormDescription>
+              </div>
+              <FormControl className="ml-auto mr-0">
                 <Input
                   type="text"
                   placeholder="name"
                   autoFocus={true}
+                  className="w-1/2"
                   {...field}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') {
@@ -161,10 +170,6 @@ export function CreateLoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any; m
                   }}
                 />
               </FormControl>
-              <FormDescription>
-                The nickname for this server loadout. Can't contain any of the following characters:
-                \ / : * ? " {'<'} {'>'} | '
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -175,7 +180,7 @@ export function CreateLoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any; m
         <Maplist form={form} />
         <Banlist form={form} alwaysAutoFocus={false} />
         {submitLoading && <LoaderComponent />}
-        <Button variant={'secondary'} type="submit">
+        <Button variant={'secondary'} type="submit" className="m-auto w-fit">
           Submit
         </Button>
       </form>

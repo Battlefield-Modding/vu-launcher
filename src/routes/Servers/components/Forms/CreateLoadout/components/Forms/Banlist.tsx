@@ -16,12 +16,8 @@ export function Banlist({ form, alwaysAutoFocus }: { form: any; alwaysAutoFocus:
 
   return (
     <div>
-      <FormLabel className="text-md rounded-md bg-sidebar-foreground p-1 pl-2 pr-2 leading-10 text-white">
-        <code>Banlist</code>
-      </FormLabel>
-      <FormDescription className="leading-9">
-        List of players who cannot connect to your server.
-      </FormDescription>
+      <FormLabel className="text-xl">Set banned players</FormLabel>
+      <FormDescription className="mb-8">banlist.add</FormDescription>
       {fieldArray.fields.length === 0 && (
         <Button
           variant={'constructive'}
