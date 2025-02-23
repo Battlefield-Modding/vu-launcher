@@ -81,11 +81,11 @@ export function MaplistForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="m-auto flex max-w-screen-md flex-col">
         {fieldArray.fields.length === 0 && (
           <Button
             variant={'constructive'}
-            className="mb-4"
+            className="m-auto w-fit"
             onClick={(e) => {
               e.preventDefault()
               fieldArray.append({ mapCode: '', gameMode: '' })
@@ -94,87 +94,91 @@ export function MaplistForm({
             Add Map
           </Button>
         )}
-        <div className="flex flex-col gap-4">
+        <div className="flex w-fit flex-col items-end gap-4">
           {fieldArray.fields.map((x, index) => {
             return (
-              <div className="flex gap-4" key={`maplist-${index}`}>
-                <FormLabel className="mb-auto mt-auto text-xl">{index + 1}.&#41;</FormLabel>
-                <FormField
-                  control={form.control}
-                  name={`maplist.${index}.mapCode`}
-                  key={`${x.id}-mapCode`}
-                  render={({ field }) => (
-                    <FormItem className="w-64">
-                      <Select
-                        onValueChange={(e) => {
-                          clearGamemode(index)
-                          console.log('Chosen Map Changed!')
-                          field.onChange(e)
-                        }}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a map" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {allMaps.map((x, index) => {
-                            return (
-                              <SelectItem value={x.mapCode} key={`chosen-map-${index}`}>
-                                [{x.mapCode}]: {x.displayName}
-                              </SelectItem>
-                            )
-                          })}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name={`maplist.${index}.gameMode`}
-                  key={`${x.id}-gameMode`}
-                  render={({ field }) => (
-                    <FormItem className="w-64">
-                      <Select onValueChange={field.onChange} value={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a gamemode" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {allMaps
-                            .filter(
-                              (x) => x.mapCode === form.getValues(`maplist.${index}.mapCode`),
-                            )[0]
-                            ?.gameModes.map((x, index) => {
+              <div className="flex flex-col gap-4" key={`maplist-${index}`}>
+                <div className="flex gap-4">
+                  <FormLabel className="mb-auto mt-auto text-xl">{index + 1}.&#41;</FormLabel>
+
+                  <FormField
+                    control={form.control}
+                    name={`maplist.${index}.mapCode`}
+                    key={`${x.id}-mapCode`}
+                    render={({ field }) => (
+                      <FormItem className="w-64">
+                        <Select
+                          onValueChange={(e) => {
+                            clearGamemode(index)
+                            console.log('Chosen Map Changed!')
+                            field.onChange(e)
+                          }}
+                          defaultValue={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select a map" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {allMaps.map((x, index) => {
                               return (
-                                <SelectItem key={`chosen-gamemode-${index}`} value={x}>
-                                  {x}
+                                <SelectItem value={x.mapCode} key={`chosen-map-${index}`}>
+                                  [{x.mapCode}]: {x.displayName}
                                 </SelectItem>
                               )
                             })}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name={`maplist.${index}.gameMode`}
+                    key={`${x.id}-gameMode`}
+                    render={({ field }) => (
+                      <FormItem className="w-64">
+                        <Select onValueChange={field.onChange} value={field.value}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select a gamemode" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {allMaps
+                              .filter(
+                                (x) => x.mapCode === form.getValues(`maplist.${index}.mapCode`),
+                              )[0]
+                              ?.gameModes.map((x, index) => {
+                                return (
+                                  <SelectItem key={`chosen-gamemode-${index}`} value={x}>
+                                    {x}
+                                  </SelectItem>
+                                )
+                              })}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-                <div
-                  className="flex hover:cursor-pointer hover:text-red-500"
-                  onClick={() => {
-                    fieldArray.remove(index)
-                  }}
-                >
-                  <Trash className="m-auto" />
+                  <div
+                    className="flex hover:cursor-pointer hover:text-red-500"
+                    onClick={() => {
+                      fieldArray.remove(index)
+                    }}
+                  >
+                    <Trash className="m-auto" />
+                  </div>
                 </div>
 
                 {index === fieldArray.fields.length - 1 && (
                   <Button
                     variant={'constructive'}
+                    className="ml-auto mr-0 w-fit"
                     onClick={(e) => {
                       e.preventDefault()
                       fieldArray.append({ mapCode: '', gameMode: '' })
@@ -188,9 +192,11 @@ export function MaplistForm({
           })}
         </div>
         {submitLoading && <LoaderComponent />}
-        <Button type="submit" variant={'secondary'}>
-          Submit
-        </Button>
+        <div className="mt-8 flex justify-center">
+          <Button type="submit" variant={'secondary'}>
+            Submit
+          </Button>
+        </div>
       </form>
     </Form>
   )
