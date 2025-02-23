@@ -149,11 +149,33 @@ fn import_banlist_txt_into_loadout(loadout_name: &String) -> io::Result<Vec<Stri
 
     match read_to_string(banlist_txt_path) {
         Ok(info) => {
-            for item in info.split("\n") {
-                if item.starts_with("#") {
-                    continue;
+            for string in info.split("\n") {
+                let mut characters = string.chars().peekable();
+
+                let mut is_first_char = true;
+                let mut temp_str = String::new();
+
+                while let Some(character) = characters.next() {
+                    if is_first_char {
+                        // if invalid first character go to next string
+                        if character == '#' || character == '\n' || character == ' ' {
+                            break;
+                        }
+                        is_first_char = false;
+                    }
+                    if character == '#' {
+                        banlist_vec.push(temp_str.trim().to_owned());
+                        break;
+                    } else if character == '\"' {
+                        // do nothing with quotes for now?
+                    } else {
+                        temp_str.push(character);
+                    }
+                    if characters.peek().is_none() {
+                        banlist_vec.push(temp_str.trim().to_owned());
+                        break;
+                    }
                 }
-                banlist_vec.push(String::from(item.trim()));
             }
         }
         Err(err) => {
