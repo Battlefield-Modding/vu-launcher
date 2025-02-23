@@ -63,9 +63,9 @@ export function ManageModsInServerSheet({ loadout }: { loadout: LoadoutJSON }) {
         </div>
       </SheetTrigger>
       <SheetContent className="overflow-y-scroll">
-        <div className="m-auto flex max-w-screen-lg flex-col gap-8 text-primary">
-          <div className={clsx('rounded-md bg-gray-300 p-4')}>
-            <SheetTitle className="text-primary">
+        <div className="m-auto flex max-w-screen-lg flex-col gap-8">
+          <div className={clsx('rounded-md bg-black p-4')}>
+            <SheetTitle>
               <p>Mods inside</p>
               <code className="underline">{loadout.name}</code>
             </SheetTitle>
@@ -84,10 +84,11 @@ export function ManageModsInServerSheet({ loadout }: { loadout: LoadoutJSON }) {
             </div>
           </div>
 
-          <div className={clsx('rounded-md bg-gray-300 p-4')}>
-            <SheetTitle className="text-primary">
-              <p>Mods inside</p>
-              <code className="underline">mod-cache</code>
+          <div className={clsx('rounded-md bg-black p-4')}>
+            <SheetTitle>
+              <p>
+                Mods inside <code className="underline">mod-cache</code>
+              </p>
             </SheetTitle>
             <div className="flex flex-wrap gap-4">
               {data.modsInCache.map((x) => {

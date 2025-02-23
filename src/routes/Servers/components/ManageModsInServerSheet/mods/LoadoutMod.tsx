@@ -56,7 +56,7 @@ export function LoadoutMod({
   }
 
   return (
-    <div className="mt-4 flex flex-col gap-4 rounded-md bg-secondary p-4">
+    <div className="mt-4 flex flex-col gap-4 rounded-md bg-primary p-4">
       <div className="flex flex-col items-center">
         <Input
           type="checkbox"
