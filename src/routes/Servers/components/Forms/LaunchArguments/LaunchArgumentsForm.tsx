@@ -12,7 +12,6 @@ import { editServerLoadout } from '@/api'
 import { toast } from 'sonner'
 import { defaultLaunchArguments } from './setup/LaunchArguments'
 import { LaunchArgumentFormBuilder } from './LaunchArgumentFormBuilder/LaunchArgumentFormBuilder'
-import { Command } from 'lucide-react'
 
 const formSchema = z.object({
   common: z

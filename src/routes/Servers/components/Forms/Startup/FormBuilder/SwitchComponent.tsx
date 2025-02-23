@@ -6,7 +6,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
 import { StartupArgs } from '../Setup/StartupTypes'
 import { LaunchArguments } from '../../LaunchArguments/setup/LaunchArguments'
 import { Switch } from '@/components/ui/switch'
@@ -15,13 +14,11 @@ export function SwitchComponent({
   form,
   label,
   keyName,
-  defaultChecked,
   sectionName,
 }: {
   form: any
   label: any
   keyName: string
-  defaultChecked: boolean
   sectionName: keyof StartupArgs | keyof LaunchArguments
 }) {
   return (

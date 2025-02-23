@@ -32,7 +32,6 @@ export function FormBuilder({
       if (fieldType === 'checkbox') {
         return (
           <SwitchComponent
-            defaultChecked={value as boolean}
             key={key}
             label={label}
             sectionName={sectionName}
