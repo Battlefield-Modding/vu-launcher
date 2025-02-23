@@ -63,7 +63,7 @@ export function ManageModsInServerSheet({ loadout }: { loadout: LoadoutJSON }) {
         </div>
       </SheetTrigger>
       <SheetContent className="overflow-y-scroll">
-        <div className="flex flex-col gap-8 text-primary">
+        <div className="m-auto flex max-w-screen-lg flex-col gap-8 text-primary">
           <div className={clsx('rounded-md bg-gray-300 p-4')}>
             <SheetTitle className="text-primary">
               <p>Mods inside</p>

@@ -44,7 +44,7 @@ export function DeleteModDialog({
   return (
     <Dialog>
       <DialogTrigger>
-        <div className="rounded-md bg-red-500 p-2.5 hover:bg-red-500/80">
+        <div className="rounded-md bg-red-500 p-2.5 text-secondary hover:bg-red-500/80">
           <Trash />
         </div>
       </DialogTrigger>
