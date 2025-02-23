@@ -283,6 +283,8 @@ fn import_startup_txt_into_loadout(loadout_name: &String) -> io::Result<StartupA
                             value,
                         });
                         break;
+                    } else if character == '\"' {
+                        // do nothing with quotes for now?
                     } else {
                         // handle 3dSpotting -> _3dSpotting conversion
                         if key.len() == 0 && temp_str.len() == 0 {
@@ -530,11 +532,10 @@ fn make_txt_ready(res: Result<Value, Error>, prefix: String) -> Vec<String> {
                         } else if value.is_string() {
                             match value.as_str() {
                                 Some(str) => {
-                                    string_vec.push(build_string(
-                                        &prefix,
-                                        &parsed_key,
-                                        &str.to_string(),
-                                    ));
+                                    let mut final_val = String::from("\"");
+                                    final_val.push_str(&str);
+                                    final_val.push_str("\"");
+                                    string_vec.push(build_string(&prefix, &parsed_key, &final_val));
                                 }
                                 None => {}
                             }
@@ -577,7 +578,9 @@ fn make_txt_ready(res: Result<Value, Error>, prefix: String) -> Vec<String> {
                             for str in values.as_array().unwrap() {
                                 let parsed_string = str.as_str().unwrap();
                                 let mut final_str = String::from("reservedSlots.add ");
+                                final_str.push_str("\"");
                                 final_str.push_str(parsed_string);
+                                final_str.push_str("\"");
                                 string_vec.push(final_str);
                             }
                         }
