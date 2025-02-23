@@ -28,15 +28,13 @@ export function Maplist({ form }: { form: CreateLoadoutFormType }) {
 
   return (
     <div>
-      <FormLabel className="text-md rounded-md bg-sidebar-foreground p-1 pl-2 pr-2 leading-10 text-white">
-        <code>Maplist</code>
-      </FormLabel>
-      <FormDescription className="leading-9">List of maps for your server to run</FormDescription>
+      <FormLabel className="text-xl">Set maps and gamemodes</FormLabel>
+      <FormDescription className="mb-8">maplist.add</FormDescription>
 
       {fieldArray.fields.length === 0 && (
         <Button
           variant={'constructive'}
-          className="mb-4"
+          className="mb-4 ml-auto mr-0"
           onClick={(e) => {
             e.preventDefault()
             fieldArray.append({ mapCode: '', gameMode: '' })

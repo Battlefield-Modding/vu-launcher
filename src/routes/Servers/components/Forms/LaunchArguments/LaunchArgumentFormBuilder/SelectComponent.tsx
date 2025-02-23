@@ -17,28 +17,31 @@ import {
 
 export function SelectComponent({
   form,
-  keyValue,
-  description,
+  keyName,
+  label,
   sectionName,
 }: {
   form: any
-  keyValue: any
-  description: string
+  keyName: any
+  label: string
   sectionName: keyof LaunchArguments
 }) {
   return (
     <FormField
-      key={keyValue}
+      key={keyName}
       control={form.control}
-      name={`${sectionName}.${keyValue}`}
+      name={`${sectionName}.${keyName}`}
       render={({ field }) => (
-        <FormItem>
-          <FormLabel className="text-md flex flex-col justify-center rounded-md leading-10 text-white">
-            <code>{keyValue}</code>
-          </FormLabel>
+        <FormItem className="flex">
+          <div className="flex-1">
+            <FormLabel className="text-lg">{label}</FormLabel>
+            <FormDescription>
+              {sectionName}.{keyName}
+            </FormDescription>
+          </div>
 
           <Select onValueChange={field.onChange} defaultValue={field.value}>
-            <FormControl className="w-32">
+            <FormControl className="ml-auto mr-0 w-32">
               <SelectTrigger>
                 <SelectValue placeholder="Select env" />
               </SelectTrigger>
@@ -49,7 +52,6 @@ export function SelectComponent({
             </SelectContent>
           </Select>
 
-          <FormDescription>{description}</FormDescription>
           <FormMessage />
         </FormItem>
       )}

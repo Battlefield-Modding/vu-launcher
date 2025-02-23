@@ -7,10 +7,10 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { StartupArgs } from '../Setup/StartupTypes'
-import { Textarea } from '@/components/ui/textarea'
 import { LaunchArguments } from '../../LaunchArguments/setup/LaunchArguments'
+import { Input } from '@/components/ui/input'
 
-export function TextAreaComponent({
+export function TextComponent({
   form,
   keyName,
   label,
@@ -30,12 +30,12 @@ export function TextAreaComponent({
         <FormItem>
           <FormLabel className="text-lg">{label}</FormLabel>
 
-          <FormDescription>
+          <FormDescription className="mr-0">
             {sectionName}.{keyName}
           </FormDescription>
 
           <FormControl className="ml-auto mr-0">
-            <Textarea placeholder={keyName as string} {...field} rows={2} className="max-w-full" />
+            <Input type="text" placeholder={keyName as string} {...field} className="w-1/2" />
           </FormControl>
 
           <FormMessage />

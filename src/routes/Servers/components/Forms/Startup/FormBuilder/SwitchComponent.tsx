@@ -9,18 +9,19 @@ import {
 import { Input } from '@/components/ui/input'
 import { StartupArgs } from '../Setup/StartupTypes'
 import { LaunchArguments } from '../../LaunchArguments/setup/LaunchArguments'
+import { Switch } from '@/components/ui/switch'
 
-export function NumberComponent({
+export function SwitchComponent({
   form,
-  keyName,
-  defaultvalue,
   label,
+  keyName,
+  defaultChecked,
   sectionName,
 }: {
   form: any
-  keyName: any
-  defaultvalue: any
-  label: string
+  label: any
+  keyName: string
+  defaultChecked: boolean
   sectionName: keyof StartupArgs | keyof LaunchArguments
 }) {
   return (
@@ -31,26 +32,14 @@ export function NumberComponent({
         <FormItem className="flex gap-16">
           <div className="flex-1">
             <FormLabel className="text-lg">{label}</FormLabel>
-
             <FormDescription>
               {sectionName}.{keyName}
             </FormDescription>
           </div>
 
-          <FormControl className="ml-auto mr-0">
-            <Input
-              type={'text'}
-              className="max-w-16"
-              placeholder={defaultvalue}
-              {...field}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault()
-                }
-              }}
-            />
+          <FormControl>
+            <Switch {...field} checked={field.value} onCheckedChange={field.onChange} />
           </FormControl>
-
           <FormMessage />
         </FormItem>
       )}

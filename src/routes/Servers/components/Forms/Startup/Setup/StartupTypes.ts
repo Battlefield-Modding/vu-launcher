@@ -48,8 +48,7 @@ export type Vars = {
   bulletDamage?: number | undefined,            // Set bullet damage scale factor
   gameModeCounter?: number | undefined,         // Set scale factor for number of tickets to end round
   onlySquadLeaderSpawn?: boolean | undefined,              // Set if players can only spawn on their squad leader
-  unlockMode?: any | undefined,                           // Set weapons & gadgets to be available on an unranked server
-  premiumStatus?: boolean | undefined,                     // Set if the server should be exclusive to Premium Players
+  // unlockMode?: any | undefined,                           // Set weapons & gadgets to be available on an unranked server
 }
 
 export type RM_Commands = {

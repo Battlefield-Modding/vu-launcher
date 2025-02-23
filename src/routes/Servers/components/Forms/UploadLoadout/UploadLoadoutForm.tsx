@@ -76,25 +76,33 @@ export function UploadLoadoutForm({
   }
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex h-full flex-col gap-8">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="m-auto flex max-w-screen-md flex-col gap-8"
+      >
         <FormField
           control={form.control}
           name="name"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-2xl underline">Loadout Name?</FormLabel>
-              <FormDescription>
-                The nickname for this server loadout. Can't contain any of the following characters:
-                \ / : * ? " {'<'} {'>'} | '
-              </FormDescription>
-              <FormControl>
+            <FormItem className="flex">
+              <div className="flex-1">
+                <FormLabel className="text-xl">Set loadout name</FormLabel>
+                <FormDescription>
+                  Forbidden characters: \ / : * ? " {'<'} {'>'} | '
+                </FormDescription>
+              </div>
+
+              <FormControl className="ml-auto mr-0 w-1/2">
                 <Input type="text" placeholder="name" {...field} autoFocus={true} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <LoadoutDragDrop setPath={setPath} />
+        <div>
+          <h2 className="mb-4 text-xl">Set path to import from</h2>
+          <LoadoutDragDrop setPath={setPath} />
+        </div>
         {path && <FormLabel>Will copy from: {path}</FormLabel>}
 
         {submitLoading && <LoaderComponent />}
@@ -102,7 +110,11 @@ export function UploadLoadoutForm({
         <Button
           type="submit"
           disabled={!path}
-          className={clsx('m-auto w-1/2', path && 'bg-green-600 hover:bg-green-600/80')}
+          variant={'secondary'}
+          className={clsx(
+            'm-auto w-fit',
+            path && 'bg-green-600 text-secondary hover:bg-green-600/80',
+          )}
         >
           Submit
         </Button>

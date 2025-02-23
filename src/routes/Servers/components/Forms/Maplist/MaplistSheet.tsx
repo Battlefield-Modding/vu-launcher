@@ -24,8 +24,8 @@ export function MaplistSheet({ loadout }: { loadout: LoadoutJSON }) {
       </SheetTrigger>
       <SheetContent className="overflow-y-scroll">
         <SheetHeader>
-          <SheetTitle>Manage Maplist.txt</SheetTitle>
-          <SheetDescription>Updates your Maplist</SheetDescription>
+          <SheetTitle className="m-auto text-xl">Manage Maplist</SheetTitle>
+          <SheetDescription></SheetDescription>
         </SheetHeader>
         <br />
         <MaplistForm setSheetOpen={setSheetOpen} loadout={loadout} />

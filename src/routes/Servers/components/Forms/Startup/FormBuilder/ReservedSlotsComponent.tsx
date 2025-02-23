@@ -17,17 +17,16 @@ export function ReservedSlotsComponent({ form }: { form: any }) {
   const [autoFocusIndex, setAutoFocusIndex] = useState(-1)
 
   return (
-    <div>
-      <FormLabel className="text-md rounded-md bg-sidebar-foreground p-1 pl-2 pr-2 leading-10 text-white">
-        <code>Reserved Slots</code>
-      </FormLabel>
-      <FormDescription className="leading-9">
-        List of players who have priority connecting to your server.
-      </FormDescription>
+    <div className="flex">
+      <div className="flex-1">
+        <FormLabel className="text-lg">Add Players to Reserved Slots</FormLabel>
+        <FormDescription>reservedSlots.add</FormDescription>
+      </div>
+
       {fieldArray.fields.length === 0 && (
         <Button
           variant={'constructive'}
-          className="mb-4"
+          className="mb-4 ml-auto mr-0 flex"
           onClick={(e) => {
             e.preventDefault()
             fieldArray.append('')
@@ -36,10 +35,21 @@ export function ReservedSlotsComponent({ form }: { form: any }) {
           Add Player
         </Button>
       )}
-      <div className="flex flex-col gap-4">
+      <div className="ml-auto mr-0 flex flex-col gap-4">
         {fieldArray.fields.map((x, index) => {
           return (
-            <div className="flex gap-4" key={`${x.id}`}>
+            <div className="ml-auto mr-0 flex gap-4" key={`${x.id}`}>
+              {index === fieldArray.fields.length - 1 && (
+                <Button
+                  variant={'constructive'}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    fieldArray.append('')
+                  }}
+                >
+                  Add Player
+                </Button>
+              )}
               <FormField
                 control={form.control}
                 name={`reservedSlots.${index}`}
@@ -77,18 +87,6 @@ export function ReservedSlotsComponent({ form }: { form: any }) {
               >
                 <Trash className="m-auto" />
               </div>
-
-              {index === fieldArray.fields.length - 1 && (
-                <Button
-                  variant={'constructive'}
-                  onClick={(e) => {
-                    e.preventDefault()
-                    fieldArray.append('')
-                  }}
-                >
-                  Add Player
-                </Button>
-              )}
             </div>
           )
         })}

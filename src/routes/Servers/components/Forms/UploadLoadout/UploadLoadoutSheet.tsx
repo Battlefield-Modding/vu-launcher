@@ -48,12 +48,10 @@ export function UploadLoadoutSheet() {
           <Upload />
         </div>
       </SheetTrigger>
-      <SheetContent className="flex flex-col overflow-y-scroll">
+      <SheetContent>
         <SheetHeader>
-          <SheetTitle>Import Loadout</SheetTitle>
-          <SheetDescription>
-            Have an existing loadout somewhere? Drag n Drop it here!
-          </SheetDescription>
+          <SheetTitle className="text-center text-2xl">Import Loadout</SheetTitle>
+          <SheetDescription></SheetDescription>
         </SheetHeader>
         <br />
         <UploadLoadoutForm existingLoadoutNames={data} setSheetOpen={setSheetOpen} />

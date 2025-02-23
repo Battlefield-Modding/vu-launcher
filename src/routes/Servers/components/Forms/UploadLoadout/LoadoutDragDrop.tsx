@@ -69,8 +69,8 @@ export function LoadoutDragDrop({ setPath }: { setPath: (state: string) => void 
   return (
     <div
       className={clsx(
-        'flex flex-1 flex-col justify-center border-2 border-dashed border-secondary bg-sidebar-foreground text-center text-white',
-        isDraggingOver && 'bg-green-400/50',
+        'flex h-64 max-h-40 flex-1 flex-col justify-center border-2 border-dashed border-secondary bg-sidebar-foreground text-center text-white',
+        isDraggingOver && 'bg-[#16a34a]',
       )}
       onClick={handleClick}
     >

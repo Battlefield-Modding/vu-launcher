@@ -15,6 +15,7 @@ import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
 import { saveServerGUID } from '@/api'
 import { useState } from 'react'
+import clsx from 'clsx'
 
 const formSchema = z.object({
   guid: z.string().min(2).max(50),
@@ -41,12 +42,12 @@ export function ServerGuidForm({ handleGuid }: { handleGuid: (val: boolean) => v
   }
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-1/2">
+      <form onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
           name="guid"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className={clsx('ml-9 w-1/2', savedGUID && 'hidden')}>
               <FormControl>
                 <Input type="text" placeholder="guid" {...field} disabled={savedGUID} />
               </FormControl>
@@ -55,9 +56,15 @@ export function ServerGuidForm({ handleGuid }: { handleGuid: (val: boolean) => v
             </FormItem>
           )}
         />
-        <Button type="submit" disabled={savedGUID}>
+        <Button
+          type="submit"
+          className={clsx('ml-9', savedGUID && 'hidden')}
+          variant={'secondary'}
+          disabled={savedGUID}
+        >
           Submit
         </Button>
+        <h3 className={clsx(savedGUID ? 'visible ml-9 text-secondary/70' : 'hidden')}>Complete!</h3>
       </form>
     </Form>
   )

@@ -7,12 +7,14 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet'
 import { Wrench } from 'lucide-react'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { StartupForm } from './StartupForm'
 import { LoadoutJSON } from '@/config/config'
 
 export function StartupSheet({ existingLoadout }: { existingLoadout: LoadoutJSON }) {
   const [sheetOpen, setSheetOpen] = useState(false)
+  const [prevKeys, setPrevKeys] = useState<Array<String>>([])
+  const searchRef = useRef<HTMLInputElement>(null)
 
   return (
     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
@@ -22,14 +24,37 @@ export function StartupSheet({ existingLoadout }: { existingLoadout: LoadoutJSON
           <Wrench />
         </div>
       </SheetTrigger>
-      <SheetContent className="overflow-y-scroll">
-        <SheetHeader>
+      <SheetContent
+        className="overflow-y-scroll"
+        onKeyDown={(e) => {
+          if (prevKeys[prevKeys.length - 1] === 'Control') {
+            if (e.key === 'f') {
+              searchRef.current?.focus()
+              e.preventDefault()
+            }
+          }
+          let tempArr = [...prevKeys]
+          tempArr.push(e.key)
+          setPrevKeys(() => tempArr)
+        }}
+        onKeyUp={() => {
+          if (prevKeys.length > 0) {
+            let tempArr = [...prevKeys]
+            tempArr.pop()
+            setPrevKeys(() => tempArr)
+          }
+        }}
+      >
+        <SheetHeader className="hidden">
           <SheetTitle>Manage Startup.txt</SheetTitle>
           <SheetDescription>Takes Startup.txt arguments and stores them</SheetDescription>
         </SheetHeader>
-        <br />
 
-        <StartupForm setSheetOpen={setSheetOpen} existingLoadout={existingLoadout} />
+        <StartupForm
+          setSheetOpen={setSheetOpen}
+          existingLoadout={existingLoadout}
+          searchRef={searchRef}
+        />
       </SheetContent>
     </Sheet>
   )

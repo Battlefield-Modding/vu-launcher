@@ -43,7 +43,7 @@ export function CreateLoadoutSheet() {
       </SheetTrigger>
       <SheetContent className="overflow-y-scroll">
         <SheetHeader>
-          <SheetTitle className="text-4xl">Create Loadout</SheetTitle>
+          <SheetTitle className="text-center text-2xl">Create Loadout</SheetTitle>
         </SheetHeader>
         <br />
         <CreateLoadoutForm setSheetOpen={setSheetOpen} mods={data} />

@@ -1,11 +1,12 @@
 import { formBuilderInputTypes, StartupDescriptions } from '../Setup/DefaultStartupConfig'
 import { StartupArgs } from '../Setup/StartupTypes'
-import { CheckBoxComponent } from './CheckBoxComponent'
+import { SwitchComponent } from './SwitchComponent'
 import { NumberComponent } from './NumberComponent'
 import { LoadoutJSON } from '@/config/config'
 import { TextAreaComponent } from './TextAreaComponent'
 import { ReservedSlotsComponent } from './ReservedSlotsComponent'
 import { SetTeamTicketCountComponent } from './SetTeamTicketCountComponent'
+import { TextComponent } from './TextComponent'
 
 export function FormBuilder({
   form,
@@ -27,16 +28,16 @@ export function FormBuilder({
       const fieldType = formBuilderInputTypes[sectionName][key]
 
       // @ts-expect-error
-      const fieldDescription = StartupDescriptions[sectionName as keyof StartupArgs][key]
+      const label = StartupDescriptions[sectionName as keyof StartupArgs][key]
       if (fieldType === 'checkbox') {
         return (
-          <CheckBoxComponent
+          <SwitchComponent
             defaultChecked={value as boolean}
             key={key}
-            description={fieldDescription}
+            label={label}
             sectionName={sectionName}
             form={form}
-            keyValue={key}
+            keyName={key}
           />
         )
       }
@@ -46,9 +47,9 @@ export function FormBuilder({
             key={key}
             defaultvalue={value}
             sectionName={sectionName}
-            description={fieldDescription}
+            label={label}
             form={form}
-            keyValue={key}
+            keyName={key}
           />
         )
       }
@@ -56,11 +57,21 @@ export function FormBuilder({
         return (
           <TextAreaComponent
             key={key}
-            defaultvalue={value}
             sectionName={sectionName}
-            description={fieldDescription}
+            label={label}
             form={form}
-            keyValue={key}
+            keyName={key}
+          />
+        )
+      }
+      if (fieldType === 'text') {
+        return (
+          <TextComponent
+            key={key}
+            sectionName={sectionName}
+            label={label}
+            form={form}
+            keyName={key}
           />
         )
       }

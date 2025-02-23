@@ -16,12 +16,16 @@ export function Startup({ form }: { form: CreateLoadoutFormType }) {
         control={form.control}
         name="startup.vars.serverName"
         render={({ field }) => (
-          <FormItem>
-            <FormLabel className="text-2xl underline">Server Name</FormLabel>
-            <FormControl>
+          <FormItem className="flex">
+            <div className="flex-1">
+              <FormLabel className="text-xl">Set name showed in Server Browser</FormLabel>
+              <FormDescription>vars.serverName</FormDescription>
+            </div>
+            <FormControl className="ml-auto mr-0">
               <Input
                 type="text"
                 placeholder="[Country][Main Mod] Clan"
+                className="w-1/2"
                 {...field}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
@@ -30,9 +34,6 @@ export function Startup({ form }: { form: CreateLoadoutFormType }) {
                 }}
               />
             </FormControl>
-            <FormDescription>
-              Name showed in Server Browser. For Example: [US East][Funbots] ClanName
-            </FormDescription>
             <FormMessage />
           </FormItem>
         )}
@@ -42,12 +43,16 @@ export function Startup({ form }: { form: CreateLoadoutFormType }) {
         control={form.control}
         name="startup.vars.gamePassword"
         render={({ field }) => (
-          <FormItem>
-            <FormLabel className="text-2xl underline">Game Password</FormLabel>
-            <FormControl>
+          <FormItem className="flex">
+            <div className="flex-1">
+              <FormLabel className="text-xl">Set server password</FormLabel>
+              <FormDescription>vars.gamePassword</FormDescription>
+            </div>
+            <FormControl className="ml-auto mr-0">
               <Input
                 type="text"
                 placeholder="Game Password"
+                className="w-1/2"
                 {...field}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
@@ -56,7 +61,6 @@ export function Startup({ form }: { form: CreateLoadoutFormType }) {
                 }}
               />
             </FormControl>
-            <FormDescription>Used by users to connect to your server.</FormDescription>
             <FormMessage />
           </FormItem>
         )}
@@ -66,12 +70,16 @@ export function Startup({ form }: { form: CreateLoadoutFormType }) {
         control={form.control}
         name="startup.admin.password"
         render={({ field }) => (
-          <FormItem>
-            <FormLabel className="text-2xl underline">RCON Password</FormLabel>
-            <FormControl>
+          <FormItem className="flex">
+            <div className="flex-1">
+              <FormLabel className="text-xl">Set RCON password for Procon</FormLabel>
+              <FormDescription>admin.password</FormDescription>
+            </div>
+            <FormControl className="ml-auto mr-0">
               <Input
                 type="text"
-                placeholder="name"
+                placeholder="RCON password"
+                className="w-1/2"
                 {...field}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
@@ -80,7 +88,6 @@ export function Startup({ form }: { form: CreateLoadoutFormType }) {
                 }}
               />
             </FormControl>
-            <FormDescription>For connecting to server through PROCON.</FormDescription>
             <FormMessage />
           </FormItem>
         )}
@@ -90,12 +97,13 @@ export function Startup({ form }: { form: CreateLoadoutFormType }) {
         control={form.control}
         name={'startup.vars.maxPlayers'}
         render={({ field }) => (
-          <FormItem className="flex gap-4">
-            <FormLabel className="text-md flex flex-col justify-center rounded-md bg-sidebar-foreground pl-2 pr-2 text-white">
-              <code>Max Players</code>
-            </FormLabel>
+          <FormItem className="flex">
+            <div className="flex-1">
+              <FormLabel className="text-xl">Set max playercount</FormLabel>
+              <FormDescription>vars.maxPlayers</FormDescription>
+            </div>
 
-            <FormControl>
+            <FormControl className="ml-auto mr-0">
               <Input
                 type={'text'}
                 className="max-w-16"
@@ -109,7 +117,6 @@ export function Startup({ form }: { form: CreateLoadoutFormType }) {
               />
             </FormControl>
 
-            <FormDescription className="leading-10">Max playercount on server</FormDescription>
             <FormMessage />
           </FormItem>
         )}

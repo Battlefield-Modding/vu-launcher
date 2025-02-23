@@ -4,10 +4,11 @@ import {
   LaunchArgumentDescriptions,
   LaunchArguments,
 } from '../setup/LaunchArguments'
-import { CheckBoxComponent } from '../../Startup/FormBuilder/CheckBoxComponent'
+import { SwitchComponent } from '../../Startup/FormBuilder/SwitchComponent'
 import { NumberComponent } from '../../Startup/FormBuilder/NumberComponent'
 import { TextAreaComponent } from '../../Startup/FormBuilder/TextAreaComponent'
 import { SelectComponent } from './SelectComponent'
+import { TextComponent } from '../../Startup/FormBuilder/TextComponent'
 
 export function LaunchArgumentFormBuilder({
   form,
@@ -25,16 +26,16 @@ export function LaunchArgumentFormBuilder({
       const fieldType = defaultLaunchArgumentInputTypes[sectionName][key]
 
       // @ts-expect-error
-      const fieldDescription = LaunchArgumentDescriptions[sectionName as keyof LaunchArguments][key]
+      const label = LaunchArgumentDescriptions[sectionName as keyof LaunchArguments][key]
       if (fieldType === 'checkbox') {
         return (
-          <CheckBoxComponent
+          <SwitchComponent
             defaultChecked={value as boolean}
             key={key}
-            description={fieldDescription}
+            label={label}
             sectionName={sectionName}
             form={form}
-            keyValue={key}
+            keyName={key}
           />
         )
       }
@@ -44,9 +45,9 @@ export function LaunchArgumentFormBuilder({
             key={key}
             defaultvalue={value}
             sectionName={sectionName}
-            description={fieldDescription}
+            label={label}
             form={form}
-            keyValue={key}
+            keyName={key}
           />
         )
       }
@@ -54,11 +55,21 @@ export function LaunchArgumentFormBuilder({
         return (
           <TextAreaComponent
             key={key}
-            defaultvalue={value}
             sectionName={sectionName}
-            description={fieldDescription}
+            label={label}
             form={form}
-            keyValue={key}
+            keyName={key}
+          />
+        )
+      }
+      if (fieldType === 'text') {
+        return (
+          <TextComponent
+            key={key}
+            sectionName={sectionName}
+            label={label}
+            form={form}
+            keyName={key}
           />
         )
       }
@@ -67,9 +78,9 @@ export function LaunchArgumentFormBuilder({
           <SelectComponent
             key={key}
             sectionName={sectionName}
-            description={fieldDescription}
+            label={label}
             form={form}
-            keyValue={key}
+            keyName={key}
           />
         )
       }
