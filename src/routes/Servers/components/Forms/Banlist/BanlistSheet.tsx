@@ -23,9 +23,9 @@ export function BanlistSheet({ loadout }: { loadout: LoadoutJSON }) {
         </div>
       </SheetTrigger>
       <SheetContent className="overflow-y-scroll">
-        <SheetHeader className="hidden">
-          <SheetTitle>Banlist</SheetTitle>
-          <SheetDescription>Update list of prohibited players</SheetDescription>
+        <SheetHeader>
+          <SheetTitle className="m-auto">Banlist</SheetTitle>
+          <SheetDescription></SheetDescription>
         </SheetHeader>
         <BanlistForm setSheetOpen={setSheetOpen} loadout={loadout} />
       </SheetContent>

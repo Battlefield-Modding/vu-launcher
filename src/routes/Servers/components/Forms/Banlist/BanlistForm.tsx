@@ -58,10 +58,13 @@ export function BanlistForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="m-auto mt-8 flex max-w-screen-md flex-col items-center"
+      >
         <Banlist form={form} alwaysAutoFocus={true} />
         {submitLoading && <LoaderComponent />}
-        <Button type="submit" variant={'secondary'}>
+        <Button type="submit" variant={'secondary'} className="m-auto mt-8">
           Submit
         </Button>
       </form>
