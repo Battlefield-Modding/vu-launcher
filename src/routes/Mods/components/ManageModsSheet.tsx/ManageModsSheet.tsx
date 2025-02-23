@@ -70,22 +70,19 @@ export default function ManageModsSheet() {
         </div>
       </SheetTrigger>
       <SheetContent className="overflow-y-scroll">
-        <SheetHeader>
+        <SheetHeader className="hidden">
           <SheetTitle>Installed Mods Appear Here</SheetTitle>
         </SheetHeader>
 
-        <div className="flex flex-col gap-8">
+        <div className="m-auto flex max-w-screen-lg flex-col gap-8">
           {data.map((loadout, outerIndex) => {
             if (loadout.mods?.length > 0) {
               return (
                 <div
-                  className={clsx(
-                    'rounded-md',
-                    loadout.name === 'mod-cache' ? 'bg-red-300 p-4' : 'bg-gray-300 p-4',
-                  )}
+                  className={clsx('rounded-md bg-black p-4')}
                   key={`mod-deletion-container_${loadout.name}`}
                 >
-                  <SheetTitle className="text-primary">
+                  <SheetTitle>
                     <p>Mods inside</p>
                     <code className="underline">{loadout.name}</code>
                   </SheetTitle>
