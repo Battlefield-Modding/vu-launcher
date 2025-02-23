@@ -110,7 +110,11 @@ export function UploadLoadoutForm({
         <Button
           type="submit"
           disabled={!path}
-          className={clsx('m-auto w-1/2', path && 'bg-green-600 hover:bg-green-600/80')}
+          variant={'secondary'}
+          className={clsx(
+            'm-auto w-fit',
+            path && 'bg-green-600 text-secondary hover:bg-green-600/80',
+          )}
         >
           Submit
         </Button>
