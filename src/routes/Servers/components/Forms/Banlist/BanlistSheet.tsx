@@ -23,7 +23,7 @@ export function BanlistSheet({ loadout }: { loadout: LoadoutJSON }) {
         </div>
       </SheetTrigger>
       <SheetContent className="overflow-y-scroll">
-        <SheetHeader>
+        <SheetHeader className="hidden">
           <SheetTitle className="m-auto">Banlist</SheetTitle>
           <SheetDescription></SheetDescription>
         </SheetHeader>

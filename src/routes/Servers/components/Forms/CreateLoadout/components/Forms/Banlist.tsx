@@ -16,8 +16,8 @@ export function Banlist({ form, alwaysAutoFocus }: { form: any; alwaysAutoFocus:
 
   return (
     <div>
-      {/* <FormLabel className="text-xl">Set banned players</FormLabel>
-      <FormDescription className="mb-8">banlist.add</FormDescription> */}
+      <FormLabel className="text-xl">Set banned players</FormLabel>
+      <FormDescription className="mb-8">banlist.add</FormDescription>
       {fieldArray.fields.length === 0 && (
         <Button
           variant={'constructive'}
