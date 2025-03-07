@@ -46,10 +46,7 @@ export function AppSidebar() {
       <SidebarContent>
         <SidebarGroup>
           <div className="flex justify-center">
-            <img
-              src={vuIcon}
-              className="w-[max(6vw,8rem)] rounded-md border border-white bg-sidebar-foreground p-2"
-            />
+            <img src={vuIcon} className="w-[max(6vw,8rem)] rounded-md border p-2" />
           </div>
           <SidebarGroupLabel className="flex w-full justify-center">
             Unofficial VU Launcher
@@ -59,14 +56,11 @@ export function AppSidebar() {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
-                    variant={'outline'}
                     isActive={pathname === item.url}
                     asChild
                     className={clsx(
                       'flex h-[max(3vw,3rem)]',
-                      pathname === item.url
-                        ? 'border border-primary/30 opacity-70'
-                        : 'border border-white',
+                      pathname === item.url ? 'opacity-70' : 'opacity-100',
                     )}
                   >
                     <Link to={item.url} className="flex">
