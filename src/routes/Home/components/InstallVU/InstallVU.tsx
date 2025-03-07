@@ -147,13 +147,13 @@ function InstallVU() {
   }
 
   return (
-    <div className="m-auto flex max-h-[500px] max-w-[500px] flex-col justify-between gap-8 rounded-md bg-primary p-8">
+    <div className="m-auto flex max-h-[500px] max-w-[500px] flex-col justify-between gap-8 rounded-md bg-black p-8">
       {!gameDownloadUpdateInstalling && (
         <>
-          <div className="flex flex-1 justify-center gap-4 align-middle text-3xl leading-9 text-white">
+          <div className="flex flex-1 justify-center gap-4 align-middle text-3xl leading-9">
             <h1>VU not found!</h1>
           </div>
-          <div className="flex flex-1 justify-center gap-4 align-middle text-xl leading-9 text-white">
+          <div className="flex flex-1 justify-center gap-4 align-middle text-xl leading-9">
             <h1 className="flex-1">VU already installed?</h1>
             <Button variant={'secondary'} onClick={handleSetVUInstallLocation}>
               <Search /> Find VU
