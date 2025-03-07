@@ -11,11 +11,13 @@ import { firstTimeSetup } from './api'
 import { routes } from './config/config'
 import Mods from './routes/Mods/Mods'
 import { Servers } from './routes/Servers/Servers'
+import { invoke } from '@tauri-apps/api/core'
 
 const queryClient = new QueryClient()
 
 function App() {
   useEffect(() => {
+    invoke("show_window");
     firstTimeSetup()
   }, [])
 

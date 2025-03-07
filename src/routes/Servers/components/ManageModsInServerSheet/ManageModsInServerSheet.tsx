@@ -4,7 +4,6 @@ import { Book, Loader } from 'lucide-react'
 import { useState } from 'react'
 import { getModNamesInCache, getModNamesInLoadout } from '@/api'
 import { useQuery } from '@tanstack/react-query'
-import clsx from 'clsx'
 import { LoadoutMod } from './mods/LoadoutMod'
 import { ModCacheMod } from './mods/ModCacheMod'
 
