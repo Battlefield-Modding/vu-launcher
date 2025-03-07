@@ -102,9 +102,7 @@ export default function ServerForm({ setSheetOpen }: { setSheetOpen: any }) {
             </FormItem>
           )}
         />
-        <Button variant="secondary" type="submit">
-          Submit
-        </Button>
+        <Button type="submit">Submit</Button>
       </form>
     </Form>
   )
