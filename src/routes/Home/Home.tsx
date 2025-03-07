@@ -36,7 +36,7 @@ export default function Home() {
 
   if (vuInstalled) {
     return (
-      <div className="m-auto flex min-h-[100vh] flex-col justify-center">
+      <div className="m-auto flex min-h-[100vh] flex-col justify-center bg-[url(assets/home_background.png)] bg-cover">
         <div className="m-auto flex max-w-96 flex-col justify-between gap-8 rounded-md bg-primary p-8 text-white">
           <div className="flex justify-between">
             <PlayerCredentialsSheet />
