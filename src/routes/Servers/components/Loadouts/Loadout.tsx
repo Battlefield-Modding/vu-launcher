@@ -80,7 +80,7 @@ export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
   return (
     <div className="m-auto flex flex-col p-4">
       <div className="mb-4 flex gap-2">
-        <h1 className="text-2xl text-secondary underline">{loadout.name} </h1>
+        <h1 className="text-2xl text-primary underline">{loadout.name} </h1>
         <div onClick={handleRefreshLoadout} className="w-fit">
           <RefreshLoadoutTooltip />
         </div>
@@ -90,14 +90,14 @@ export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
         <div className="flex justify-end gap-4">
           <div
             onClick={handleServer}
-            className="flex w-fit gap-2 rounded-md bg-green-800 p-2 text-secondary hover:cursor-pointer hover:bg-green-800/80"
+            className="flex w-fit gap-2 rounded-md bg-green-800 p-2 text-primary hover:cursor-pointer hover:bg-green-800/80"
           >
             Start Server
             <Server />
           </div>
           <div
             onClick={handlePlay}
-            className="flex w-fit justify-between gap-2 rounded-md bg-green-700 p-2 text-secondary hover:cursor-pointer hover:bg-green-700/80"
+            className="flex w-fit justify-between gap-2 rounded-md bg-green-700 p-2 text-primary hover:cursor-pointer hover:bg-green-700/80"
           >
             Start Server and Client
             <Server />
@@ -108,7 +108,7 @@ export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
         </div>
 
         <div
-          className="m-auto flex w-fit items-center gap-2 rounded-md bg-gray-600 p-2 text-xl text-secondary hover:cursor-pointer hover:bg-gray-600/80"
+          className="m-auto flex w-fit items-center gap-2 rounded-md bg-gray-600 p-2 text-xl text-primary hover:cursor-pointer hover:bg-gray-600/80"
           onClick={handleOpenExplorer}
         >
           Explorer

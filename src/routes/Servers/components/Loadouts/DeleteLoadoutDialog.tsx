@@ -73,7 +73,7 @@ export function DeleteLoadoutDialog({
         </DialogHeader>
         <div className="flex justify-center gap-8">
           <DialogClose>
-            <p className="flex gap-2 rounded-md bg-primary p-2 text-white hover:bg-primary/80">
+            <p className="flex gap-2 rounded-md bg-secondary p-2 hover:bg-secondary/80">
               <X />
               Cancel
             </p>

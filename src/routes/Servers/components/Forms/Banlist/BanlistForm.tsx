@@ -64,7 +64,7 @@ export function BanlistForm({
       >
         <Banlist form={form} alwaysAutoFocus={true} />
         {submitLoading && <LoaderComponent />}
-        <Button type="submit" variant={'secondary'} className="m-auto mt-8">
+        <Button type="submit" className="m-auto mt-8">
           Submit
         </Button>
       </form>

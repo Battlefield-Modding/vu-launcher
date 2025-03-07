@@ -180,7 +180,7 @@ export function CreateLoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any; m
         <Maplist form={form} />
         <Banlist form={form} alwaysAutoFocus={false} />
         {submitLoading && <LoaderComponent />}
-        <Button variant={'secondary'} type="submit" className="m-auto mt-6 w-fit">
+        <Button type="submit" className="m-auto mt-6 w-fit">
           Submit
         </Button>
       </form>

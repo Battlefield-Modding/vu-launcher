@@ -47,16 +47,16 @@ export function LoadoutContainer() {
 
   if (data.length > 0) {
     return (
-      <div className="m-auto mt-0 flex w-full flex-1">
-        <div className="flex w-64 flex-col border border-b-0 border-l-0 border-primary bg-sidebar-foreground text-white">
+      <div className="m-auto mt-0 flex w-full flex-1 bg-sidebar">
+        <div className="flex w-64 flex-col border border-b-0 border-l-0 border-secondary bg-secondary">
           {data.map((loadout, index) => (
             <div
               key={`${loadout.name}-${index}`}
               className={clsx(
-                'flex items-center justify-between bg-primary hover:cursor-pointer hover:bg-primary/80',
+                'flex items-center justify-between bg-secondary hover:cursor-pointer hover:bg-black/80',
                 (activeLoadout?.name === loadout.name ||
                   (!activeLoadout && data[0].name === loadout.name)) &&
-                  'bg-primary/60',
+                  'bg-black/60',
               )}
             >
               <div

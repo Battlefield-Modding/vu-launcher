@@ -141,7 +141,7 @@ export function LaunchArgumentForm({
         </div>
 
         {submitLoading && <LoaderComponent />}
-        <Button variant="secondary" type="submit" className="mt-8">
+        <Button type="submit" className="mt-8">
           Submit
         </Button>
       </form>

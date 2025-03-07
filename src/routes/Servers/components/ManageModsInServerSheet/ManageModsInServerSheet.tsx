@@ -64,7 +64,7 @@ export function ManageModsInServerSheet({ loadout }: { loadout: LoadoutJSON }) {
       </SheetTrigger>
       <SheetContent className="overflow-y-scroll">
         <div className="m-auto flex max-w-screen-lg flex-col gap-8">
-          <div className={clsx('rounded-md bg-black p-4')}>
+          <div>
             <SheetTitle>
               <p>Mods inside</p>
               <code className="underline">{loadout.name}</code>
@@ -84,7 +84,7 @@ export function ManageModsInServerSheet({ loadout }: { loadout: LoadoutJSON }) {
             </div>
           </div>
 
-          <div className={clsx('rounded-md bg-black p-4')}>
+          <div>
             <SheetTitle>
               <p>
                 Mods inside <code className="underline">mod-cache</code>

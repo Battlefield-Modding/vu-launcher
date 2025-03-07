@@ -49,7 +49,7 @@ export function AddModDialog({
   return (
     <Dialog>
       <DialogTrigger>
-        <div className="rounded-md bg-green-600 p-2.5 text-secondary hover:bg-green-600/80">
+        <div className="rounded-md bg-green-600 p-2.5 hover:bg-green-600/80">
           <Plus />
         </div>
       </DialogTrigger>

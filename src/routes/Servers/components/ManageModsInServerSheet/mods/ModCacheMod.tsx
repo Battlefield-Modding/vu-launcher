@@ -12,7 +12,7 @@ export function ModCacheMod({
   queryKey: string
 }) {
   return (
-    <div className="mt-4 flex flex-col gap-4 rounded-md bg-primary p-4">
+    <div className="mt-4 flex flex-col gap-4 rounded-md bg-secondary p-4">
       <div className="flex flex-col items-center">
         <h1 className="">{modName.length >= 20 ? `${modName.substring(0, 20)}...` : modName}</h1>
       </div>

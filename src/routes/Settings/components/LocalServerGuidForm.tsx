@@ -58,9 +58,7 @@ export default function LocalServerGuidForm({ guid }: { guid: string }) {
             </FormItem>
           )}
         />
-        <Button variant={'secondary'} type="submit">
-          Submit
-        </Button>
+        <Button type="submit">Submit</Button>
       </form>
     </Form>
   )

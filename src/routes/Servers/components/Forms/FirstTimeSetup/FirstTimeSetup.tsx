@@ -11,8 +11,8 @@ export function FirstTimeSetup() {
   }
 
   return (
-    <div className="flex min-h-[100vh] flex-col bg-primary">
-      <div className="m-auto flex max-w-screen-lg flex-col gap-8 p-8 text-secondary">
+    <div className="flex min-h-[100vh] flex-col bg-black">
+      <div className="m-auto flex max-w-screen-lg flex-col gap-8 p-8">
         <div>
           <h1 className="text-2xl font-bold">1.) Download server.key from:</h1>
           <a
