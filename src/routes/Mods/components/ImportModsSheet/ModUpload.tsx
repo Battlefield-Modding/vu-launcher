@@ -106,7 +106,7 @@ export default function ModUpload() {
   return (
     <div
       className={clsx(
-        'flex flex-1 flex-col justify-center border-2 border-dashed border-secondary bg-sidebar-foreground text-center text-white',
+        'flex flex-1 flex-col justify-center border-2 border-dashed border-primary bg-secondary text-center text-white',
         isDraggingOver && 'bg-green-600/80',
       )}
       onClick={handleClick}
@@ -120,7 +120,7 @@ export default function ModUpload() {
           <div className="flex gap-4">
             <p>
               Drag n Drop your mod's{' '}
-              <code className="rounded-md bg-primary p-1 text-white"> .zip folder</code> here
+              <code className="rounded-md bg-black p-1 text-white"> .zip folder</code> here
             </p>
             <Upload />
           </div>
