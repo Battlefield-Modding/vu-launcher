@@ -47,7 +47,7 @@ export function LoadoutContainer() {
 
   if (data.length > 0) {
     return (
-      <div className="m-auto mt-0 flex w-full flex-1 bg-sidebar">
+      <div className="m-auto mt-0 flex w-full flex-1">
         <div className="flex w-64 flex-col border border-b-0 border-l-0 border-secondary bg-secondary">
           {data.map((loadout, index) => (
             <div

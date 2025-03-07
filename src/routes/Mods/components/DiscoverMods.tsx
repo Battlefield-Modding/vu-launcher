@@ -6,7 +6,7 @@ import { Globe } from 'lucide-react'
 
 function DiscoverMods() {
   return (
-    <div className="ml-auto mr-auto flex w-fit flex-col gap-8 rounded-md bg-secondary p-8">
+    <div className="ml-auto mr-auto flex w-fit flex-col gap-8 rounded-md p-8">
       <h1 className="text-center text-4xl">Discover Mods</h1>
       <div className="flex flex-col gap-8">
         <a href="https://github.com/topics/venice-unleashed" target="_blank" className="flex">

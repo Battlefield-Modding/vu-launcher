@@ -35,7 +35,7 @@ export default function Settings() {
   }
 
   return (
-    <div className="flex min-h-[100vh] flex-col bg-black">
+    <div className="flex min-h-[100vh] flex-col">
       <div className="flex flex-col gap-16 rounded-md p-8 text-white">
         <h1 className="text-center text-4xl">Settings</h1>
         <div>
