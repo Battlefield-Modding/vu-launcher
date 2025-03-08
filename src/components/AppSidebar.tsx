@@ -1,5 +1,5 @@
 import { Book, Home, Server, Settings } from 'lucide-react'
-import vuIcon from '@/assets/VUIcon.svg'
+import vuIconRed from '@/assets/vu-icon-red.svg'
 
 import {
   Sidebar,
@@ -45,22 +45,22 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarContent >
         <SidebarGroup className='p-0'>
-          <div className="flex justify-center p-2">
-            <img src={vuIcon} className="w-[max(6vw,8rem)] rounded-md border p-2" />
-          </div>
+          <div className="flex justify-center p-4 flex-col items-center">
+            <img src={vuIconRed} className="w-16 lg:w-24" />
           <SidebarGroupLabel className="flex w-full justify-center">
             Unofficial VU Launcher
           </SidebarGroupLabel>
+          </div>
           <SidebarGroupContent >
             <SidebarMenu >
               {items.map((item) => (
-                <SidebarMenuItem key={item.title} className='bg-[#343434]'>
+                <SidebarMenuItem key={item.title} className=''>
                   <SidebarMenuButton
                     isActive={pathname === item.url}
                     asChild
                     className={clsx(
                       'flex h-[max(3vw,3rem)] rounded-none',
-                      pathname === item.url ? 'opacity-50' : 'opacity-100',
+                      pathname === item.url ? 'opacity-70' : 'opacity-100',
                     )}
                   >
                     <Link to={item.url} className="flex">
