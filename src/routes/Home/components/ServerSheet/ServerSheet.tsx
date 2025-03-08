@@ -28,9 +28,8 @@ export default function ServerSheet() {
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Add a Server to Auto-Join</SheetTitle>
-          <SheetDescription>
-            You will need a GUID that looks like: <code>5ccbc53a-6266-4b83-b782-c98cc49da88f</code>
+          <SheetTitle className='text-center'>Add a quick-join server</SheetTitle>
+          <SheetDescription className='text-center'>
           </SheetDescription>
         </SheetHeader>
         <br />

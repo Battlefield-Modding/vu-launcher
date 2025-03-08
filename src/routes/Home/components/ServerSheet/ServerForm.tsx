@@ -57,17 +57,16 @@ export default function ServerForm({ setSheetOpen }: { setSheetOpen: any }) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="m-auto max-w-screen-md flex flex-col gap-8">
         <FormField
           control={form.control}
           name="nickname"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Server Nickname</FormLabel>
+              <FormLabel>Nickname</FormLabel>
               <FormControl>
-                <Input type="text" placeholder="nickname" {...field} autoFocus />
+                <Input type="text" placeholder="My Favorite Server" {...field} autoFocus />
               </FormControl>
-              <FormDescription>A way to remember what server this GUID belongs to.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -79,11 +78,8 @@ export default function ServerForm({ setSheetOpen }: { setSheetOpen: any }) {
             <FormItem>
               <FormLabel>Server Guid</FormLabel>
               <FormControl>
-                <Input type="text" placeholder="guid" {...field} />
+                <Input type="text" placeholder="5ccbc53a-6266-4b83-b782-c98cc49da88f" {...field} />
               </FormControl>
-              <FormDescription>
-                This looks something like <code>5ccbc53a-6266-4b83-b782-c98cc49da88f</code>
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -97,12 +93,11 @@ export default function ServerForm({ setSheetOpen }: { setSheetOpen: any }) {
               <FormControl>
                 <Input type="text" placeholder="password - Leave blank if no password" {...field} />
               </FormControl>
-              <FormDescription>If the server requires a password put it here</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button className="w-fit m-auto" type="submit">Submit</Button>
       </form>
     </Form>
   )
