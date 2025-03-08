@@ -23,7 +23,7 @@ const items = [
     icon: Home,
   },
   {
-    title: 'Servers',
+    title: 'Loadouts',
     url: routes.SERVERS,
     icon: Server,
   },
