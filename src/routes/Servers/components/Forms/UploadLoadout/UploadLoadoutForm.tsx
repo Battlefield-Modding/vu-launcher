@@ -113,7 +113,7 @@ export function UploadLoadoutForm({
           variant={'secondary'}
           className={clsx(
             'm-auto w-fit',
-            path && 'bg-green-600 text-secondary hover:bg-green-600/80',
+            path && 'bg-green-500 text-primary hover:bg-green-500/80',
           )}
         >
           Submit

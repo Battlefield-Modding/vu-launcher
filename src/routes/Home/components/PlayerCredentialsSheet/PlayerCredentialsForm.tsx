@@ -49,18 +49,18 @@ export default function PlayerCredentialsForm({ setSheetOpen }: { setSheetOpen: 
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="m-auto max-w-screen-md flex flex-col gap-8">
         <FormField
           control={form.control}
           name="username"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Username</FormLabel>
+              <FormLabel>VU Username</FormLabel>
               <FormControl>
                 <Input type="text" placeholder="username" {...field} autoFocus />
               </FormControl>
               <FormDescription>
-                Your VU Username. This will be stored in plaintext in a local JSON file.
+                Stored in plaintext in launcher folder (settings.json)
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -71,20 +71,18 @@ export default function PlayerCredentialsForm({ setSheetOpen }: { setSheetOpen: 
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>VU Password</FormLabel>
               <FormControl>
                 <Input type="password" placeholder="password" {...field} />
               </FormControl>
               <FormDescription>
-                Your VU Password. This will be stored in plaintext in a local JSON file.
+              Stored in plaintext in launcher folder (settings.json)
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button variant="secondary" type="submit">
-          Submit
-        </Button>
+        <Button className='w-fit m-auto' type="submit">Submit</Button>
       </form>
     </Form>
   )

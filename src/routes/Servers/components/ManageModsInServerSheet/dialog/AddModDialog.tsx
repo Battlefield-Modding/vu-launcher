@@ -49,7 +49,7 @@ export function AddModDialog({
   return (
     <Dialog>
       <DialogTrigger>
-        <div className="rounded-md bg-green-600 p-2.5 text-secondary hover:bg-green-600/80">
+        <div className="rounded-md bg-green-600 p-2.5 hover:bg-green-600/80">
           <Plus />
         </div>
       </DialogTrigger>
@@ -57,7 +57,7 @@ export function AddModDialog({
         <DialogHeader>
           <DialogTitle className="pb-4">
             Install mod:{' '}
-            <code className="text-md rounded-md bg-gray-800 p-1 pl-2 pr-2 text-secondary">
+            <code className="text-md rounded-md bg-gray-800 p-1 pl-2 pr-2 ">
               {modName.length >= 20 ? `${modName.substring(0, 20)}...` : modName}
             </code>
           </DialogTitle>
@@ -67,13 +67,13 @@ export function AddModDialog({
         </DialogHeader>
         <div className="flex justify-center gap-8">
           <DialogClose>
-            <p className="flex gap-2 rounded-md bg-primary p-2 text-secondary hover:bg-primary/80">
+            <p className="flex gap-2 rounded-md bg-secondary p-2 hover:bg-secondary/80">
               <X />
               Cancel
             </p>
           </DialogClose>
           <DialogClose onClick={handleClick}>
-            <p className="flex gap-4 rounded-md bg-green-600 p-2 text-secondary hover:bg-green-600/80">
+            <p className="flex gap-4 rounded-md bg-green-600 p-2 hover:bg-green-600/80">
               <Plus /> Install: {modName.length >= 20 ? `${modName.substring(0, 20)}...` : modName}
             </p>
           </DialogClose>

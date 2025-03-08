@@ -95,7 +95,7 @@ export function ServerKeyUpload() {
   return (
     <div
       className={clsx(
-        'flex flex-1 flex-col justify-center border-2 border-dashed border-secondary bg-sidebar-foreground text-center text-white',
+        'flex flex-1 flex-col justify-center border-2 border-dashed border-primary bg-secondary text-white',
         isDraggingOver && 'bg-[#16a34a]',
       )}
       onClick={handleClick}
@@ -109,7 +109,7 @@ export function ServerKeyUpload() {
           <div className="flex gap-4">
             <p>
               Drag n Drop your{' '}
-              <code className="rounded-md bg-primary p-1 text-white">server.key</code> here
+              <code className="rounded-md bg-black p-1 text-white">server.key</code> here
             </p>
             <Upload />
           </div>

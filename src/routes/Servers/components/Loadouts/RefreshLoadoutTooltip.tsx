@@ -7,7 +7,7 @@ export function RefreshLoadoutTooltip() {
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button variant="outline">
+          <Button>
             <RefreshCcw />
           </Button>
         </TooltipTrigger>

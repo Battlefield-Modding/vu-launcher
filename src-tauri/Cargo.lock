@@ -4188,6 +4188,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "tauri-plugin-window-state"
+version = "2.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "35e344b512b0d99d9d06225f235d87d6c66d89496a3bf323d9b578d940596e6c"
+dependencies = [
+ "bitflags 2.6.0",
+ "log",
+ "serde",
+ "serde_json",
+ "tauri",
+ "tauri-plugin",
+ "thiserror 2.0.6",
+]
+
+[[package]]
 name = "tauri-runtime"
 version = "2.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4763,6 +4778,7 @@ dependencies = [
  "tauri-plugin-dialog",
  "tauri-plugin-positioner",
  "tauri-plugin-shell",
+ "tauri-plugin-window-state",
  "tokio",
  "walkdir",
  "winreg",

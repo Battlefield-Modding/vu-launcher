@@ -127,7 +127,7 @@ export function LaunchArgumentForm({
         <input
           type="text"
           placeholder={`Search Launch Arguments     [CTRL + F]`}
-          className="fixed top-0 w-[720px] rounded-md border border-gray-500 bg-black p-2 text-secondary focus:border-cyan-300 focus:outline-none focus:ring-0"
+          className="fixed top-0 w-[720px] rounded-md border border-gray-500 bg-black p-2 focus:border-cyan-300 focus:outline-none focus:ring-0"
           onChange={handleChange}
           ref={searchRef}
         />
@@ -141,7 +141,7 @@ export function LaunchArgumentForm({
         </div>
 
         {submitLoading && <LoaderComponent />}
-        <Button variant="secondary" type="submit" className="mt-8">
+        <Button type="submit" className="mt-8">
           Submit
         </Button>
       </form>

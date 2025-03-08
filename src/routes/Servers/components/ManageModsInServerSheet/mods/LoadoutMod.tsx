@@ -56,7 +56,7 @@ export function LoadoutMod({
   }
 
   return (
-    <div className="mt-4 flex flex-col gap-4 rounded-md bg-primary p-4">
+    <div className="mt-4 flex flex-col gap-4 rounded-md bg-secondary p-4">
       <div className="flex flex-col items-center">
         <Input
           type="checkbox"
@@ -68,7 +68,7 @@ export function LoadoutMod({
       </div>
       <div className="flex justify-end">
         <p
-          className="flex flex-1 rounded-md bg-sidebar-foreground p-1.5 hover:cursor-pointer hover:bg-sidebar-foreground/80"
+          className="flex flex-1 rounded-md bg-sidebar p-1.5 hover:cursor-pointer hover:bg-sidebar/50"
           onClick={handleOpenInVSCode}
         >
           <img src={VSCodeIcon} className="m-auto"></img>

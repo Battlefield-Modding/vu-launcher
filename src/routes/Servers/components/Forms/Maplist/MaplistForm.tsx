@@ -193,9 +193,7 @@ export function MaplistForm({
         </div>
         {submitLoading && <LoaderComponent />}
         <div className="mt-8 flex justify-center">
-          <Button type="submit" variant={'secondary'}>
-            Submit
-          </Button>
+          <Button type="submit">Submit</Button>
         </div>
       </form>
     </Form>

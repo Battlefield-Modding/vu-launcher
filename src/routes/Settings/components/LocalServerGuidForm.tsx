@@ -53,14 +53,12 @@ export default function LocalServerGuidForm({ guid }: { guid: string }) {
               <FormControl>
                 <Input type="text" placeholder="guid" {...field} />
               </FormControl>
-              <FormDescription>This will be used to auto-join your local server.</FormDescription>
+              <FormDescription>This will be used to Quick-Join your local server.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button variant={'secondary'} type="submit">
-          Submit
-        </Button>
+        <Button type="submit">Submit</Button>
       </form>
     </Form>
   )

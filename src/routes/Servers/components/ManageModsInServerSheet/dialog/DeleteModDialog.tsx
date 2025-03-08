@@ -44,7 +44,7 @@ export function DeleteModDialog({
   return (
     <Dialog>
       <DialogTrigger>
-        <div className="rounded-md bg-red-500 p-2.5 text-secondary hover:bg-red-500/80">
+        <div className="rounded-md bg-red-500 p-2.5 text-primary hover:bg-red-500/80">
           <Trash />
         </div>
       </DialogTrigger>
@@ -62,7 +62,7 @@ export function DeleteModDialog({
         </DialogHeader>
         <div className="flex justify-center gap-8">
           <DialogClose>
-            <p className="flex gap-2 rounded-md bg-primary p-2 text-white hover:bg-primary/80">
+            <p className="flex gap-2 rounded-md bg-secondary p-2 text-white hover:bg-secondary/80">
               <X />
               Cancel
             </p>

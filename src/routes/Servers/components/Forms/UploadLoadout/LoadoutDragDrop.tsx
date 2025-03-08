@@ -69,7 +69,7 @@ export function LoadoutDragDrop({ setPath }: { setPath: (state: string) => void 
   return (
     <div
       className={clsx(
-        'flex h-64 max-h-40 flex-1 flex-col justify-center border-2 border-dashed border-secondary bg-sidebar-foreground text-center text-white',
+        'flex h-64 max-h-40 flex-1 flex-col justify-center border-2 border-dashed border-primary bg-secondary text-center text-white',
         isDraggingOver && 'bg-[#16a34a]',
       )}
       onClick={handleClick}
@@ -82,7 +82,7 @@ export function LoadoutDragDrop({ setPath }: { setPath: (state: string) => void 
         <div className="text-md m-auto flex flex-col gap-8">
           <div className="flex gap-4">
             <p>
-              Drag n Drop <code className="rounded-md bg-primary p-1 text-white">\Server</code> here
+              Drag n Drop <code className="rounded-md bg-black p-1">\Server</code> here
             </p>
             <Upload />
           </div>

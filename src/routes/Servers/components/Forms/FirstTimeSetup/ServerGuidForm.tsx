@@ -51,20 +51,15 @@ export function ServerGuidForm({ handleGuid }: { handleGuid: (val: boolean) => v
               <FormControl>
                 <Input type="text" placeholder="guid" {...field} disabled={savedGUID} />
               </FormControl>
-              <FormDescription>This will be used to auto-join your local server.</FormDescription>
+              <FormDescription>This will be used to Quick-Join your local server.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button
-          type="submit"
-          className={clsx('ml-9', savedGUID && 'hidden')}
-          variant={'secondary'}
-          disabled={savedGUID}
-        >
+        <Button type="submit" className={clsx('ml-9', savedGUID && 'hidden')} disabled={savedGUID}>
           Submit
         </Button>
-        <h3 className={clsx(savedGUID ? 'visible ml-9 text-secondary/70' : 'hidden')}>Complete!</h3>
+        <h3 className={clsx(savedGUID ? 'visible ml-9 text-primary/70' : 'hidden')}>Done!</h3>
       </form>
     </Form>
   )

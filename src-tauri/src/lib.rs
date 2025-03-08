@@ -6,6 +6,8 @@ use std::{
     process::{Command, Stdio},
 };
 
+use tauri_plugin_window_state::StateFlags;
+
 use serde::{Deserialize, Serialize};
 use serde_json;
 
@@ -253,7 +255,7 @@ async fn play_vu(account_index: usize, server_index: usize) -> bool {
         }
         _ => match server_index {
             9001 => {
-                println!("Continuing without an auto-join.");
+                println!("Continuing without an Quick-Join.");
             }
             _ => {
                 let server = &preferences.servers[server_index];
@@ -456,9 +458,23 @@ async fn activate_bf3_ea_auth_token(token: String) -> bool {
     true
 }
 
+// Ugly HACK! Remove when possible see:
+// https://github.com/tauri-apps/tauri/issues/1564
+// https://github.com/tauri-apps/tauri/issues/5170
+#[tauri::command]
+fn show_window(app: tauri::AppHandle) {
+    println!("Attempting to show window after dom loaded!");
+    app.get_webview_window("main").unwrap().show().unwrap();
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(
+            tauri_plugin_window_state::Builder::default()
+                .with_state_flags(StateFlags::all() & !StateFlags::VISIBLE)
+                .build(),
+        )
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_shell::init())
         .invoke_handler(tauri::generate_handler![
@@ -494,6 +510,7 @@ pub fn run() {
             refresh_loadout,
             activate_bf3_lsx,
             activate_bf3_ea_auth_token,
+            show_window
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

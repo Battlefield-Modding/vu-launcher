@@ -23,7 +23,7 @@ const items = [
     icon: Home,
   },
   {
-    title: 'Servers',
+    title: 'Loadouts',
     url: routes.SERVERS,
     icon: Server,
   },
@@ -43,30 +43,24 @@ export function AppSidebar() {
   const { pathname } = useLocation()
   return (
     <Sidebar>
-      <SidebarContent>
-        <SidebarGroup>
-          <div className="flex justify-center">
-            <img
-              src={vuIcon}
-              className="w-[max(6vw,8rem)] rounded-md border border-white bg-sidebar-foreground p-2"
-            />
+      <SidebarContent >
+        <SidebarGroup className='p-0'>
+          <div className="flex justify-center p-2">
+            <img src={vuIcon} className="w-[max(6vw,8rem)] rounded-md border p-2" />
           </div>
           <SidebarGroupLabel className="flex w-full justify-center">
             Unofficial VU Launcher
           </SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
+          <SidebarGroupContent >
+            <SidebarMenu >
               {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
+                <SidebarMenuItem key={item.title} className='bg-[#343434]'>
                   <SidebarMenuButton
-                    variant={'outline'}
                     isActive={pathname === item.url}
                     asChild
                     className={clsx(
-                      'flex h-[max(3vw,3rem)]',
-                      pathname === item.url
-                        ? 'border border-primary/30 opacity-70'
-                        : 'border border-white',
+                      'flex h-[max(3vw,3rem)] rounded-none',
+                      pathname === item.url ? 'opacity-50' : 'opacity-100',
                     )}
                   >
                     <Link to={item.url} className="flex">

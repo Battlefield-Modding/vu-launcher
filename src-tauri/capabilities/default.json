@@ -10,6 +10,7 @@
     "shell:allow-open",
     "core:window:allow-minimize",
     "core:app:allow-set-app-theme",
-    "dialog:default"
+    "dialog:default",
+    "window-state:default"
   ]
 }

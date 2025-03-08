@@ -56,12 +56,12 @@ export default function PlayerCredentialsSheet() {
         </div>
       </SheetTrigger>
       <SheetContent>
-        <SheetHeader>
-          <SheetTitle>Save VU Credentials</SheetTitle>
-          <SheetDescription>
+        <SheetHeader >
+          <SheetTitle className='text-center'>Save VU Credentials</SheetTitle>
+          <SheetDescription className='text-center'>
             No account? Sign up here:
             <a
-              className="text-blue-800 underline"
+              className="text-blue-500 underline ml-1"
               href="https://veniceunleashed.net/signup"
               target="_blank"
             >
