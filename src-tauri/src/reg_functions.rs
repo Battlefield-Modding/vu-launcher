@@ -7,15 +7,24 @@ pub fn get_settings_json_path_registry() -> io::Result<String> {
     install_path
 }
 
-pub fn set_settings_json_path_registry() {
+pub fn set_settings_json_path_registry() -> bool {
     let path_to_folder = get_install_path_registry();
     let mut path_to_settings_json = match path_to_folder {
         Ok(path) => path,
-        Err(_) => return,
+        Err(_) => return false,
     };
     path_to_settings_json.push_str("\\settings.json");
 
-    set_reg_value("SettingsJson", &OsString::from(path_to_settings_json));
+    match set_reg_value("SettingsJson", &OsString::from(path_to_settings_json)) {
+        Ok(_) => return true,
+        Err(err) => {
+            println!(
+                "Failed to set SettingsJSON reg value due to error:\n{:?}",
+                err
+            );
+            return false;
+        }
+    }
 }
 
 pub fn get_install_path_registry() -> io::Result<String> {

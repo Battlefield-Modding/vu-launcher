@@ -74,13 +74,13 @@ struct UserPreferences {
     show_multiple_account_join: bool,
 }
 
-fn set_default_preferences() {
+fn set_default_preferences() -> bool {
     let path_prematch = get_reg_vu_install_location();
     let path = match path_prematch {
         Ok(info) => info,
         Err(_) => {
             println!("Could not find VU install location. Aborting creation of Preferences File.");
-            return;
+            return false;
         }
     };
     let path_to_vu_client = String::from(Path::new(&path).join("vu.exe").to_str().unwrap());
@@ -97,9 +97,11 @@ fn set_default_preferences() {
     match save_user_preferences(sample_preferences) {
         Ok(_) => {
             println!("Successfully saved user preferences!");
+            return true;
         }
         Err(err) => {
             println!("Failed to save user preferences due to reason:\n{:?}", err);
+            return false;
         }
     };
 }
@@ -131,15 +133,19 @@ fn settings_json_exists() -> bool {
 }
 
 #[tauri::command]
-fn first_time_setup() {
+fn first_time_setup() -> bool {
     match settings_json_exists() {
         true => {
-            println!("Settings JSON already exists.")
+            println!("Settings JSON already exists.");
+            return false;
         }
         false => {
             println!("Settings JSON does not exist. Doing first time setup now...");
-            set_settings_json_path_registry();
-            set_default_preferences();
+            if set_settings_json_path_registry() && set_default_preferences() {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 }
