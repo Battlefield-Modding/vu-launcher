@@ -43,24 +43,24 @@ export function AppSidebar() {
   const { pathname } = useLocation()
   return (
     <Sidebar>
-      <SidebarContent>
-        <SidebarGroup>
-          <div className="flex justify-center">
+      <SidebarContent >
+        <SidebarGroup className='p-0'>
+          <div className="flex justify-center p-2">
             <img src={vuIcon} className="w-[max(6vw,8rem)] rounded-md border p-2" />
           </div>
           <SidebarGroupLabel className="flex w-full justify-center">
             Unofficial VU Launcher
           </SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
+          <SidebarGroupContent >
+            <SidebarMenu >
               {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
+                <SidebarMenuItem key={item.title} className='bg-[#343434]'>
                   <SidebarMenuButton
                     isActive={pathname === item.url}
                     asChild
                     className={clsx(
-                      'flex h-[max(3vw,3rem)]',
-                      pathname === item.url ? 'opacity-70' : 'opacity-100',
+                      'flex h-[max(3vw,3rem)] rounded-none',
+                      pathname === item.url ? 'opacity-50' : 'opacity-100',
                     )}
                   >
                     <Link to={item.url} className="flex">
