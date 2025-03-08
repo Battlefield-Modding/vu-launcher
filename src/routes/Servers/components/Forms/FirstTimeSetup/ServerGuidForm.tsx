@@ -51,7 +51,7 @@ export function ServerGuidForm({ handleGuid }: { handleGuid: (val: boolean) => v
               <FormControl>
                 <Input type="text" placeholder="guid" {...field} disabled={savedGUID} />
               </FormControl>
-              <FormDescription>This will be used to auto-join your local server.</FormDescription>
+              <FormDescription>This will be used to Quick-Join your local server.</FormDescription>
               <FormMessage />
             </FormItem>
           )}

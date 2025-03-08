@@ -138,7 +138,7 @@ export default function PlayVUForm() {
           name="serverIndex"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Auto-Join Server</FormLabel>
+              <FormLabel>Quick-Join Server</FormLabel>
               <Select onValueChange={field.onChange}>
                 <FormControl>
                   <SelectTrigger>

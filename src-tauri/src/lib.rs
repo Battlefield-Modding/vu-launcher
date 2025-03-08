@@ -255,7 +255,7 @@ async fn play_vu(account_index: usize, server_index: usize) -> bool {
         }
         _ => match server_index {
             9001 => {
-                println!("Continuing without an auto-join.");
+                println!("Continuing without an Quick-Join.");
             }
             _ => {
                 let server = &preferences.servers[server_index];

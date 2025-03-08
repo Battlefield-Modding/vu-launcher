@@ -30,6 +30,7 @@ export default function ServerSheet() {
         <SheetHeader>
           <SheetTitle className='text-center'>Add a quick-join server</SheetTitle>
           <SheetDescription className='text-center'>
+            Lets you join a server after selecting a soldier, skipping the server browser.
           </SheetDescription>
         </SheetHeader>
         <br />

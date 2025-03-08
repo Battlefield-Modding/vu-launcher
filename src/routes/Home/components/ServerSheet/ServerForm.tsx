@@ -46,7 +46,7 @@ export default function ServerForm({ setSheetOpen }: { setSheetOpen: any }) {
     const status = await addServer(temp)
 
     if (status) {
-      toast(`Success! Added ${values.nickname} to auto-join servers!`)
+      toast(`Success! Added ${values.nickname} to Quick-Join servers!`)
       queryClient.invalidateQueries({ queryKey: [QueryKey.ServerList], refetchType: 'all' })
       queryClient.invalidateQueries({ queryKey: [QueryKey.PlayVUInformation], refetchType: 'all' })
       setSheetOpen(() => false)

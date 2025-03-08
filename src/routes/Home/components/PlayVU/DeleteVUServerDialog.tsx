@@ -24,9 +24,9 @@ function DeleteVUServerDialog({ server }: { server: SavedServer }) {
         refetchType: 'all',
       })
       queryClient.invalidateQueries({ queryKey: [QueryKey.PlayVUInformation], refetchType: 'all' })
-      toast(`Success! Deleted saved auto-join server ${server.nickname}`)
+      toast(`Success! Deleted saved Quick-Join server ${server.nickname}`)
     } else {
-      toast(`Failed to delete auto-join server ${server.nickname}`)
+      toast(`Failed to delete Quick-Join server ${server.nickname}`)
     }
   }
 
