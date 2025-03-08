@@ -80,6 +80,7 @@ export default function ServerForm({ setSheetOpen }: { setSheetOpen: any }) {
               <FormControl>
                 <Input type="text" placeholder="5ccbc53a-6266-4b83-b782-c98cc49da88f" {...field} />
               </FormControl>
+              <FormDescription>Server's Public ID with or without dashes. Can be found in join string (vu://join/TheGuidInQuestion/PasswordIfAny)</FormDescription>
               <FormMessage />
             </FormItem>
           )}
