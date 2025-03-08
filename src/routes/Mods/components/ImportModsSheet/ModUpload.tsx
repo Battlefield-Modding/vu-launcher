@@ -107,7 +107,7 @@ export default function ModUpload() {
     <div
       className={clsx(
         'flex flex-1 flex-col justify-center border-2 border-dashed border-primary bg-secondary text-center text-white',
-        isDraggingOver && 'bg-green-600/80',
+        isDraggingOver && 'bg-green-500/80',
       )}
       onClick={handleClick}
     >
