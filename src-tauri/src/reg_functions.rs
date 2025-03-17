@@ -2,6 +2,8 @@ use std::{ffi::OsString, io};
 
 use winreg::{enums::HKEY_CURRENT_USER, RegKey};
 
+use crate::{get_user_preferences_as_struct, update_vu_shortcut_preference};
+
 pub fn get_settings_json_path_registry() -> io::Result<String> {
     let install_path = get_reg_value("SettingsJson");
     install_path
@@ -92,7 +94,15 @@ pub fn set_vu_install_location_registry(installdir: String) -> Result<bool, Stri
     match set_key_result {
         Ok(_) => {
             println!("Set VU Key");
-            return Ok(true);
+            match update_vu_shortcut_preference() {
+                true => {
+                    return Ok(true);
+                }
+                false => {
+                    println!("Failed to update VU shortcut preference");
+                    return Err(String::from("Failed to update VU shortcut preference"));
+                }
+            }
         }
         Err(err) => {
             println!("{:?}", err);
@@ -118,7 +128,15 @@ pub fn set_vu_dev_branch_install_location_registry(installdir: String) -> Result
     match set_key_result {
         Ok(_) => {
             println!("Set VU Key");
-            return Ok(true);
+            match update_vu_shortcut_preference() {
+                true => {
+                    return Ok(true);
+                }
+                false => {
+                    println!("Failed to update VU shortcut preference");
+                    return Err(String::from("Failed to update VU shortcut preference"));
+                }
+            }
         }
         Err(err) => {
             println!("{:?}", err);

@@ -69,30 +69,34 @@ struct Server {
 struct UserPreferences {
     is_sidebar_enabled: bool,
     venice_unleashed_shortcut_location: String,
+    dev_venice_unleashed_shortcut_location: String,
     accounts: Vec<Account>,
     servers: Vec<Server>,
     server_guid: String,
     show_multiple_account_join: bool,
+    is_onboarded: bool,
 }
 
 fn set_default_preferences() -> bool {
-    let path_prematch = get_reg_vu_install_location();
-    let path = match path_prematch {
-        Ok(info) => info,
-        Err(_) => {
-            println!("Could not find VU install location. Aborting creation of Preferences File.");
-            return false;
-        }
+    let path_to_vu_client = match get_reg_vu_install_location() {
+        Ok(info) => String::from(Path::new(&info).join("vu.exe").to_str().unwrap()),
+        Err(_) => String::from(""),
     };
-    let path_to_vu_client = String::from(Path::new(&path).join("vu.exe").to_str().unwrap());
+
+    let path_to_vu_dev_client = match get_reg_vu_dev_branch_install_location() {
+        Ok(info) => String::from(Path::new(&info).join("vu.exe").to_str().unwrap()),
+        Err(_) => String::from(""),
+    };
 
     let sample_preferences = UserPreferences {
         is_sidebar_enabled: false,
         venice_unleashed_shortcut_location: path_to_vu_client,
+        dev_venice_unleashed_shortcut_location: path_to_vu_dev_client,
         accounts: Vec::new(),
         servers: Vec::new(),
         server_guid: String::from(""),
         show_multiple_account_join: false,
+        is_onboarded: false,
     };
 
     match save_user_preferences(sample_preferences) {
@@ -105,6 +109,82 @@ fn set_default_preferences() -> bool {
             return false;
         }
     };
+}
+
+pub fn update_vu_shortcut_preference() -> bool {
+    match get_user_preferences_as_struct() {
+        Ok(mut preferences) => {
+            let path_prematch = get_reg_vu_install_location();
+            let path = match path_prematch {
+                Ok(info) => info,
+                Err(err) => {
+                    println!(
+                        "Failed to update VU Dev shortcute due to reason:\n{:?}",
+                        err
+                    );
+                    return false;
+                }
+            };
+            let path_to_vu_client = String::from(Path::new(&path).join("vu.exe").to_str().unwrap());
+            preferences.venice_unleashed_shortcut_location = path_to_vu_client;
+
+            match save_user_preferences(preferences) {
+                Ok(_) => {
+                    println!("Successfully saved user preferences!");
+                    return true;
+                }
+                Err(err) => {
+                    println!("Failed to save user preferences due to reason:\n{:?}", err);
+                    return false;
+                }
+            };
+        }
+        Err(err) => {
+            println!(
+                "Failed to update VU shortcut preference due to error:\n{:?}",
+                err
+            );
+            return false;
+        }
+    }
+}
+
+pub fn update_vu_dev_shortcut_preference() -> bool {
+    match get_user_preferences_as_struct() {
+        Ok(mut preferences) => {
+            let path_prematch = get_reg_vu_dev_branch_install_location();
+            let path = match path_prematch {
+                Ok(info) => info,
+                Err(err) => {
+                    println!(
+                        "Failed to update VU Dev shortcute due to reason:\n{:?}",
+                        err
+                    );
+                    return false;
+                }
+            };
+            let path_to_vu_client = String::from(Path::new(&path).join("vu.exe").to_str().unwrap());
+            preferences.dev_venice_unleashed_shortcut_location = path_to_vu_client;
+
+            match save_user_preferences(preferences) {
+                Ok(_) => {
+                    println!("Successfully saved user preferences!");
+                    return true;
+                }
+                Err(err) => {
+                    println!("Failed to save user preferences due to reason:\n{:?}", err);
+                    return false;
+                }
+            };
+        }
+        Err(err) => {
+            println!(
+                "Failed to update VU shortcut preference due to error:\n{:?}",
+                err
+            );
+            return false;
+        }
+    }
 }
 
 fn save_user_preferences(preferences: UserPreferences) -> io::Result<()> {
@@ -157,8 +237,19 @@ fn get_user_preferences_as_struct() -> io::Result<UserPreferences> {
     let settings_path = Path::new(&settings_string);
 
     let info = fs::read_to_string(settings_path)?;
-    let info_for_rust = serde_json::from_str(&info)?;
-    Ok(info_for_rust)
+    let info_for_rust = serde_json::from_str(&info);
+    match info_for_rust {
+        Ok(clean_info) => return Ok(clean_info),
+        Err(_) => {
+            // nuke the preferences to save user the trouble of going in and deleting it themselves
+            println!("Resetting user preferences. Invalid data structure was detected");
+            set_default_preferences();
+            let info_attempt = fs::read_to_string(settings_path)?;
+            let info_for_rust_attempt = serde_json::from_str(&info_attempt)?;
+
+            return Ok(info_for_rust_attempt);
+        }
+    }
 }
 
 fn get_user_preferences_as_string() -> io::Result<String> {
@@ -166,7 +257,35 @@ fn get_user_preferences_as_string() -> io::Result<String> {
     let settings_path = Path::new(&settings_string);
 
     let info = fs::read_to_string(settings_path)?;
-    Ok(info)
+    let info_for_rust: Result<UserPreferences, serde_json::Error> = serde_json::from_str(&info);
+    match info_for_rust {
+        Ok(clean_info) => {
+            let final_string = serde_json::to_string(&clean_info)?;
+            return Ok(final_string);
+        }
+        Err(_) => {
+            // nuke the preferences to save user the trouble of going in and deleting it themselves
+            println!("Resetting user preferences. Invalid data structure was detected");
+            set_default_preferences();
+            let info_attempt: String = fs::read_to_string(settings_path)?;
+            let info_for_rust_attempt: Result<UserPreferences, serde_json::Error> =
+                serde_json::from_str(&info_attempt);
+
+            match info_for_rust_attempt {
+                Ok(data) => {
+                    let final_string = serde_json::to_string(&data)?;
+                    return Ok(final_string);
+                }
+                Err(err) => {
+                    println!(
+                        "Failed to get user preferences as string due to error:\n{:?}",
+                        err
+                    );
+                }
+            }
+        }
+    }
+    Ok(String::from("Failed to get user preferences."))
 }
 
 #[tauri::command]
