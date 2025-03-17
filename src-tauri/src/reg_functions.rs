@@ -65,6 +65,16 @@ pub fn get_reg_vu_install_location() -> io::Result<String> {
     Ok(reg_value)
 }
 
+pub fn get_reg_vu_dev_branch_install_location() -> io::Result<String> {
+    let hklm = RegKey::predef(HKEY_CURRENT_USER);
+    let path = r"SOFTWARE\Venice Unleashed";
+
+    let key = hklm.open_subkey(path)?;
+    let reg_value = key.get_value("InstallPathDev")?;
+
+    Ok(reg_value)
+}
+
 #[tauri::command]
 pub fn set_vu_install_location_registry(installdir: String) -> Result<bool, String> {
     let hklm = RegKey::predef(HKEY_CURRENT_USER);
@@ -79,6 +89,32 @@ pub fn set_vu_install_location_registry(installdir: String) -> Result<bool, Stri
     println!("Fetched Venice Unleashed Key.");
 
     let set_key_result = key.set_value("InstallPath", &installdir);
+    match set_key_result {
+        Ok(_) => {
+            println!("Set VU Key");
+            return Ok(true);
+        }
+        Err(err) => {
+            println!("{:?}", err);
+            return Err(err.to_string());
+        }
+    }
+}
+
+#[tauri::command]
+pub fn set_vu_dev_branch_install_location_registry(installdir: String) -> Result<bool, String> {
+    let hklm = RegKey::predef(HKEY_CURRENT_USER);
+    let path = r"SOFTWARE\Venice Unleashed";
+
+    // incase this path does not exist
+    let create_key_result = hklm.create_subkey(path);
+    let (key, _disp) = match create_key_result {
+        Ok(info) => info,
+        Err(err) => return Err(err.to_string()),
+    };
+    println!("Fetched Venice Unleashed Key.");
+
+    let set_key_result = key.set_value("InstallPathDev", &installdir);
     match set_key_result {
         Ok(_) => {
             println!("Set VU Key");

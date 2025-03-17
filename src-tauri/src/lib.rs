@@ -20,8 +20,9 @@ use dirs_next;
 
 mod reg_functions;
 use reg_functions::{
-    get_install_path_registry, get_reg_vu_install_location, get_settings_json_path_registry,
-    set_settings_json_path_registry, set_vu_install_location_registry,
+    get_install_path_registry, get_reg_vu_dev_branch_install_location, get_reg_vu_install_location,
+    get_settings_json_path_registry, set_settings_json_path_registry,
+    set_vu_dev_branch_install_location_registry, set_vu_install_location_registry,
 };
 
 mod web;
@@ -144,6 +145,7 @@ fn first_time_setup() -> bool {
             if set_settings_json_path_registry() && set_default_preferences() {
                 return true;
             } else {
+                println!("Failed to complete first time setup.");
                 return false;
             }
         }
@@ -416,6 +418,14 @@ fn is_vu_installed() -> bool {
 }
 
 #[tauri::command]
+fn is_vu_dev_installed() -> bool {
+    match get_reg_vu_dev_branch_install_location() {
+        Ok(_) => return true,
+        Err(_) => return false,
+    }
+}
+
+#[tauri::command]
 async fn activate_bf3_lsx() -> bool {
     let preferences_prematch = get_user_preferences_as_struct();
     let preferences = match preferences_prematch {
@@ -462,6 +472,58 @@ async fn activate_bf3_ea_auth_token(token: String) -> bool {
         .expect("failed to execute process");
 
     true
+}
+
+#[tauri::command]
+async fn copy_vu_prod_to_folder(mut path: String) -> bool {
+    path.push_str("\\VeniceUnleashedDev");
+
+    let vu_install_path_result = get_reg_vu_install_location();
+    match vu_install_path_result {
+        Ok(vu_path) => {
+            let vu_pathbuf = PathBuf::from(&vu_path);
+            let target_pathbuf = PathBuf::from(&path);
+
+            if !target_pathbuf.exists() {
+                match fs::create_dir_all(&target_pathbuf) {
+                    Ok(_) => match dircpy::copy_dir(vu_pathbuf, target_pathbuf) {
+                        Ok(_) => {
+                            println!("Successfully copied over loadout!");
+                            match set_vu_dev_branch_install_location_registry(path) {
+                                Ok(_) => return true,
+                                Err(err) => {
+                                    println!(
+                                            "Failed to update VU Dev regKey after copying due to error:\n{:?}",
+                                            err
+                                        );
+                                    return false;
+                                }
+                            }
+                        }
+                        Err(err) => {
+                            println!(
+                                "Failed to copy VU PROD -> VU Dev folder due to error:\n{:?}",
+                                err
+                            );
+                            return false;
+                        }
+                    },
+                    Err(err) => {
+                        println!(
+                            "Failed to create all dirs for VeniceUnleashedDev due to error:\n{:?}",
+                            err
+                        );
+                        return false;
+                    }
+                }
+            }
+            return false;
+        }
+        Err(err) => {
+            println!("Failed to find VU install path to error:\n{:?}", err);
+            return false;
+        }
+    }
 }
 
 // Ugly HACK! Remove when possible see:
@@ -516,7 +578,10 @@ pub fn run() {
             refresh_loadout,
             activate_bf3_lsx,
             activate_bf3_ea_auth_token,
-            show_window
+            show_window,
+            is_vu_dev_installed,
+            set_vu_dev_branch_install_location_registry,
+            copy_vu_prod_to_folder
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

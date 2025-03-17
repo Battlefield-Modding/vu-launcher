@@ -33,7 +33,7 @@ interface LauncherUpdateStatusEventPayload {
   error: string
 }
 
-function InstallVU() {
+export function InstallVUDev() {
   const queryClient = useQueryClient()
   const [gameDownloadUpdateInstalling, setGameDownloadUpdateInstalling] = useState(false)
   const [gameDownloadUpdateProgress, setGameDownloadUpdateProgress] = useState(0)
@@ -150,9 +150,6 @@ function InstallVU() {
     <div className="m-auto flex max-h-[500px] max-w-[500px] flex-col justify-between gap-8 rounded-md bg-black p-8">
       {!gameDownloadUpdateInstalling && (
         <>
-          <div className="flex flex-1 justify-center gap-4 align-middle text-3xl leading-9">
-            <h1>VU not found!</h1>
-          </div>
           <div className="flex flex-1 justify-center gap-4 align-middle text-xl leading-9">
             <h1 className="flex-1">VU already installed?</h1>
             <Button variant={'secondary'} onClick={handleSetVUInstallLocation}>
@@ -205,5 +202,3 @@ function InstallVU() {
     </div>
   )
 }
-
-export default InstallVU

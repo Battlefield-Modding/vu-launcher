@@ -62,8 +62,14 @@ export async function getUsers(): Promise<UserCredential[]>{
   return accounts
 }
 
-export async function vuIsInstalled(): Promise<boolean> {
+export async function vuProdIsInstalled(): Promise<boolean> {
   const info = JSON.parse(await invoke(rust_fns.is_vu_installed))
+  return info
+}
+
+export async function vuDevIsInstalled(): Promise<boolean> {
+  const info = JSON.parse(await invoke(rust_fns.is_vu_dev_installed))
+  console.log(`VU Dev installation status: ${info}`)
   return info
 }
 
@@ -131,6 +137,11 @@ export async function getServerLoadout(name: string){
 
 export async function setVUInstallLocation(installdir: string){
   const info = await invoke(rust_fns.set_vu_install_location_registry, {installdir})
+  return info
+}
+
+export async function setVUDevInstallLocation(installdir: string){
+  const info = await invoke(rust_fns.set_vu_dev_branch_install_location_registry, {installdir})
   return info
 }
 
