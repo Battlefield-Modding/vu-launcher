@@ -7,7 +7,7 @@ import Settings from './routes/Settings/Settings'
 import { Toaster } from 'sonner'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
-import { getUserPreferences } from './api'
+import { firstTimeSetup, getUserPreferences } from './api'
 import { routes } from './config/config'
 import Mods from './routes/Mods/Mods'
 import { Servers } from './routes/Servers/Servers'
@@ -21,6 +21,7 @@ function App() {
 
   useEffect(() => {
     async function handleOnboarding() {
+      await firstTimeSetup()
       const preferences = await getUserPreferences()
       if (!preferences.is_onboarded) {
         setOnboarding(() => true)
