@@ -1,15 +1,17 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Progress } from '@/components/ui/progress'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, ArrowRight, Download, Loader } from 'lucide-react'
-import { vuDevIsInstalled, vuProdIsInstalled } from '@/api'
+import { Download, Loader } from 'lucide-react'
+import { activateBf3LSX, finishOnboarding, vuDevIsInstalled, vuProdIsInstalled } from '@/api'
 import { useQuery } from '@tanstack/react-query'
 import { QueryKey, STALE } from '@/config/config'
-import { InstallVUProd } from '@/routes/Home/components/InstallVU/InstallVUProd'
+import { InstallVU } from '@/routes/Home/components/InstallVU/InstallVU'
 import { open } from '@tauri-apps/plugin-dialog'
 import { InstallVuDevDialog } from './InstallVuDevDialog'
+import { toast } from 'sonner'
+import PlayerCredentialsSheet from '@/routes/Home/components/PlayerCredentialsSheet/PlayerCredentialsSheet'
 
-export function Onboarding() {
+export function Onboarding({ setOnboarding }: { setOnboarding: (t: () => boolean) => void }) {
   const [progress, setProgress] = useState(0)
   const [vuDevInstallPath, setVuDevInstallPath] = useState('')
   const dialogRef = useRef(null)
@@ -22,24 +24,24 @@ export function Onboarding() {
         vuDevelopment: await vuDevIsInstalled(),
       }
 
-      console.log(
-        `Response object: ${responseObject.vuProduction}, ${responseObject.vuDevelopment}`,
-      )
-
       return responseObject
     },
     staleTime: STALE.never,
   })
 
+  useEffect(() => {
+    if (data) {
+      if (progress == 0) {
+        if (data.vuDevelopment && data.vuProduction) {
+          setProgress(() => 50)
+        }
+      }
+    }
+  }, [data, progress])
+
   function increaseProgress() {
     if (progress < 100) {
-      setProgress((prev) => prev + 25)
-    }
-  }
-
-  function decreaseProgress() {
-    if (progress > 0) {
-      setProgress((prev) => prev - 25)
+      setProgress((prev) => prev + 50)
     }
   }
 
@@ -55,6 +57,11 @@ export function Onboarding() {
         element.click()
       }
     }
+  }
+
+  function handleActivateLSX() {
+    toast('Activating BF3 (LSX)')
+    activateBf3LSX()
   }
 
   if (isPending) {
@@ -81,7 +88,61 @@ export function Onboarding() {
     <form className="m-auto flex max-w-screen-md flex-col items-center gap-8 p-8">
       <h1 className="text-4xl">First Time Setup</h1>
 
-      {vuProduction && !vuDevelopment && (
+      {progress == 100 && (
+        <div className="m-auto flex max-h-[500px] max-w-[500px] flex-col justify-between gap-8 rounded-md bg-black p-8">
+          <>
+            <h1 className="text-xl">Add a VU account</h1>
+            <PlayerCredentialsSheet />
+            <Button
+              variant={'outline'}
+              onClick={async (e) => {
+                e.preventDefault()
+                const status = await finishOnboarding()
+                setOnboarding(() => status)
+              }}
+            >
+              Skip / Complete Onboarding
+            </Button>
+          </>
+        </div>
+      )}
+
+      {progress >= 50 && progress < 100 && (
+        <div className="m-auto flex max-h-[500px] max-w-[500px] flex-col justify-between gap-8 rounded-md bg-black p-8">
+          <div className="flex flex-col items-center gap-8">
+            <div className="flex flex-col items-center">
+              <h1 className="text-xl">Activate BF3 with EA App / Origin</h1>
+              <ul className="m-4 ml-8 list-disc">
+                <li>Please launch your EA App / Origin and sign in.</li>
+                <li>Once signed-in click on the Activate BF3 button: </li>
+                <li>After it succeeds click continue.</li>
+              </ul>
+              <Button
+                variant={'constructive'}
+                onClick={(e) => {
+                  e.preventDefault()
+                  handleActivateLSX()
+                }}
+              >
+                Activate BF3
+              </Button>
+            </div>
+            <Button
+              variant={'outline'}
+              onClick={(e) => {
+                e.preventDefault()
+                increaseProgress()
+              }}
+            >
+              Skip / Continue
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {!vuProduction && <InstallVU />}
+
+      {vuProduction && !vuDevelopment && progress < 50 && (
         <div className="m-auto flex max-h-[500px] max-w-[500px] flex-col justify-between gap-8 rounded-md bg-black p-8">
           <>
             <h1 className="text-xl">Found VU Prod. Install VU Dev also?</h1>
@@ -95,36 +156,22 @@ export function Onboarding() {
               <Download size={'10px'} />
               <p>Choose Install Location</p>
             </Button>
-            <Button variant={'outline'}>No thanks</Button>
+            <Button
+              variant={'outline'}
+              onClick={(e) => {
+                e.preventDefault()
+                increaseProgress()
+              }}
+            >
+              Skip / Continue
+            </Button>
             <InstallVuDevDialog dialogRef={dialogRef} vuDevInstallPath={vuDevInstallPath} />
           </>
         </div>
       )}
 
-      {!vuProduction && <InstallVUProd />}
-
       <div className="flex w-full items-center justify-center gap-4">
-        <Button
-          onClick={(e) => {
-            e.preventDefault()
-            decreaseProgress()
-          }}
-          variant={'secondary'}
-        >
-          <ArrowLeft />
-        </Button>
-
         <Progress className="w-96 bg-secondary" value={progress} />
-
-        <Button
-          onClick={(e) => {
-            e.preventDefault()
-            increaseProgress()
-          }}
-          variant={'secondary'}
-        >
-          <ArrowRight />
-        </Button>
       </div>
     </form>
   )

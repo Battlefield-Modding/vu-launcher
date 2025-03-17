@@ -13,6 +13,7 @@ import { invoke } from '@tauri-apps/api/core'
 import { Check, X } from 'lucide-react'
 import { useState } from 'react'
 import { LoaderComponent } from '../LoaderComponent'
+import { toast } from 'sonner'
 
 export function InstallVuDevDialog({
   vuDevInstallPath,
@@ -29,6 +30,7 @@ export function InstallVuDevDialog({
     await invoke(rust_fns.copy_vu_prod_to_folder, { path: vuDevInstallPath })
     setSubmitLoading(() => false)
     queryClient.invalidateQueries({ queryKey: [QueryKey.IsVuInstalled], refetchType: 'all' })
+    toast('Copied VU Prod to dev folder')
   }
 
   return (
@@ -38,7 +40,7 @@ export function InstallVuDevDialog({
         <DialogHeader>
           <DialogTitle className="flex flex-col items-center pb-4">
             <p className="mb-4">Install VU Dev to:</p>
-            <code className="text-md rounded-md bg-gray-800 p-1 pl-2 pr-2 text-white">
+            <code className="text-md text-nowrap rounded-md bg-gray-800 p-1 pl-2 pr-2 text-white">
               {`${vuDevInstallPath}\\VeniceUnleashedDev`}
             </code>
           </DialogTitle>

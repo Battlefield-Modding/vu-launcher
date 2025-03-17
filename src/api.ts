@@ -6,8 +6,8 @@ export async function firstTimeSetup(): Promise<boolean>{
   return status
 }
 
-export async function saveUserPreferences(newPreferences: UserPreferences){
-  const status = await invoke(rust_fns.set_user_preferences, {newPreferences});
+export async function saveUserPreferences(newPreferences: UserPreferences): Promise<boolean> {
+  const status = await invoke(rust_fns.set_user_preferences, {newPreferences}) as boolean
   return status
 }
 
@@ -250,4 +250,15 @@ export async function activateBf3LSX(){
 export async function activateBf3EaAuthToken(token: string){
   const status = await invoke(rust_fns.activate_bf3_ea_auth_token, {token})
   return status
+}
+
+export async function finishOnboarding(): Promise<boolean>{
+  const preferences = await getUserPreferences();
+  preferences.is_onboarded = true
+  const status = await saveUserPreferences(preferences)
+  if (status) {
+    return false // done with onboarding
+  } else {
+    return true // something went wrong
+  }
 }

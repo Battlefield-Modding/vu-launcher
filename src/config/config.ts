@@ -115,10 +115,12 @@ export type DragDropEventTauri = {
 export type UserPreferences = {
   is_sidebar_enabled: boolean,
   venice_unleashed_shortcut_location: string,
+  dev_venice_unleashed_shortcut_location: string,
   accounts: UserCredential[],
   servers: SavedServer[],
   server_guid: string,
-  show_multiple_account_join: boolean
+  show_multiple_account_join: boolean,
+  is_onboarded: boolean,
 }
 
 export type SavedServer = {
