@@ -76,6 +76,8 @@ struct UserPreferences {
     show_multiple_account_join: bool,
     is_onboarded: bool,
     use_dev_branch: bool,
+    preferred_player_index: i32,
+    preferred_server_index: i32,
 }
 
 fn set_default_preferences() -> bool {
@@ -99,6 +101,8 @@ fn set_default_preferences() -> bool {
         show_multiple_account_join: false,
         is_onboarded: false,
         use_dev_branch: false,
+        preferred_player_index: 9001,
+        preferred_server_index: 9001,
     };
 
     match save_user_preferences(sample_preferences) {

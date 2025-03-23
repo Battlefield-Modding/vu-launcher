@@ -273,3 +273,25 @@ export async function toggleDevBranch(state: boolean): Promise<boolean>{
     return true // something went wrong
   }
 }
+
+export async function setPreferredPlayer(index: number): Promise<boolean>{
+  const preferences = await getUserPreferences();
+  preferences.preferred_player_index = index
+  const status = await saveUserPreferences(preferences)
+  if (status) {
+    return false // done with onboarding
+  } else {
+    return true // something went wrong
+  }
+}
+
+export async function setPreferredServer(index: number): Promise<boolean>{
+  const preferences = await getUserPreferences();
+  preferences.preferred_server_index = index
+  const status = await saveUserPreferences(preferences)
+  if (status) {
+    return false // done with onboarding
+  } else {
+    return true // something went wrong
+  }
+}

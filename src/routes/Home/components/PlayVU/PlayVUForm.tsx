@@ -22,7 +22,13 @@ import {
 import { toast } from 'sonner'
 import { QueryKey, STALE, UserPreferences } from '@/config/config'
 import { useQuery } from '@tanstack/react-query'
-import { getServersAndAccounts, playVU, toggleDevBranch } from '@/api'
+import {
+  getServersAndAccounts,
+  playVU,
+  setPreferredPlayer,
+  setPreferredServer,
+  toggleDevBranch,
+} from '@/api'
 import { Loader, Play } from 'lucide-react'
 import DeleteVUCredentialDialog from './DeleteVUCredentialDialog'
 import DeleteVUServerDialog from './DeleteVUServerDialog'
@@ -40,8 +46,8 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      accountIndex: '0',
-      serverIndex: '0',
+      accountIndex: `${preferences.preferred_player_index === 90001 ? 0 : preferences.preferred_player_index}`,
+      serverIndex: `${preferences.preferred_player_index === 9001 ? 0 : preferences.preferred_player_index}`,
       useDevBranch: preferences.use_dev_branch,
     },
   })
@@ -121,13 +127,22 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
           render={({ field }) => (
             <FormItem>
               <FormLabel>VU Account</FormLabel>
-              <Select onValueChange={field.onChange}>
+              <Select
+                onValueChange={async (e) => {
+                  await setPreferredPlayer(parseInt(e))
+                  field.onChange(e)
+                }}
+              >
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder={data.accounts[0].username} />
+                    <SelectValue
+                      placeholder={data.accounts[preferences.preferred_player_index].username}
+                    />
                   </SelectTrigger>
                 </FormControl>
-                <SelectContent defaultValue={data.accounts[0].username}>
+                <SelectContent
+                  defaultValue={data.accounts[preferences.preferred_player_index].username}
+                >
                   {data.accounts.map((x, index) => {
                     return (
                       <div className="flex" key={x.username}>
@@ -149,13 +164,30 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
           render={({ field }) => (
             <FormItem>
               <FormLabel>Quick-Join Server</FormLabel>
-              <Select onValueChange={field.onChange}>
+              <Select
+                onValueChange={async (e) => {
+                  await setPreferredServer(parseInt(e))
+                  field.onChange(e)
+                }}
+              >
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="None" />
+                    <SelectValue
+                      placeholder={
+                        data.servers[preferences.preferred_server_index]
+                          ? data.servers[preferences.preferred_server_index].nickname
+                          : 'None'
+                      }
+                    />
                   </SelectTrigger>
                 </FormControl>
-                <SelectContent defaultValue="None">
+                <SelectContent
+                  defaultValue={
+                    data.servers[preferences.preferred_server_index]
+                      ? data.servers[preferences.preferred_server_index].nickname
+                      : 'None'
+                  }
+                >
                   {data.servers.map((x, index) => {
                     return (
                       <div className="flex" key={x.nickname}>
@@ -164,6 +196,9 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
                       </div>
                     )
                   })}
+                  <div className="flex">
+                    <SelectItem value={`${9001}`}>None</SelectItem>
+                  </div>
                 </SelectContent>
               </Select>
               <FormDescription></FormDescription>
