@@ -49,7 +49,10 @@ export default function PlayerCredentialsForm({ setSheetOpen }: { setSheetOpen: 
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="m-auto max-w-screen-md flex flex-col gap-8">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="m-auto flex max-w-screen-md flex-col gap-8"
+      >
         <FormField
           control={form.control}
           name="username"
@@ -60,7 +63,14 @@ export default function PlayerCredentialsForm({ setSheetOpen }: { setSheetOpen: 
                 <Input type="text" placeholder="username" {...field} autoFocus />
               </FormControl>
               <FormDescription>
-                Stored in plaintext in launcher folder (settings.json)
+                Stored using your Operating System's native credential manager.
+                <a
+                  className="ml-1 text-blue-500 underline"
+                  href="https://docs.rs/keyring/latest/keyring/"
+                  target="_blank"
+                >
+                  https://docs.rs/keyring/latest/keyring/
+                </a>
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -76,13 +86,22 @@ export default function PlayerCredentialsForm({ setSheetOpen }: { setSheetOpen: 
                 <Input type="password" placeholder="password" {...field} />
               </FormControl>
               <FormDescription>
-              Stored in plaintext in launcher folder (settings.json)
+                Stored using your Operating System's native credential manager.
+                <a
+                  className="ml-1 text-blue-500 underline"
+                  href="https://docs.rs/keyring/latest/keyring/"
+                  target="_blank"
+                >
+                  https://docs.rs/keyring/latest/keyring/
+                </a>
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button className='w-fit m-auto' type="submit">Submit</Button>
+        <Button className="m-auto w-fit" type="submit">
+          Submit
+        </Button>
       </form>
     </Form>
   )

@@ -33,6 +33,7 @@ tokio = { version = "1.42.0"}
 futures-util = "0.3.31"
 tauri-plugin-positioner = "2.2.0"
 dircpy = "0.3.19"
+keyring = { version = "3.6.2", features = ["windows-native"] }
 
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
 tauri-plugin-window-state = "2"

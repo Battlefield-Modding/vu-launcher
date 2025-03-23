@@ -49,14 +49,11 @@ use loadouts::{
     loadout_common_launch_args_to_vec, refresh_loadout,
 };
 
+use keyring::Entry;
+use std::error::Error;
+
 pub const CREATE_NO_WINDOW: u32 = 0x08000000;
 pub const CREATE_NEW_CONSOLE: u32 = 0x00000010;
-
-#[derive(Serialize, Deserialize, Debug)]
-struct Account {
-    username: String,
-    password: String,
-}
 
 #[derive(Serialize, Deserialize, Debug)]
 struct Server {
@@ -70,7 +67,7 @@ struct UserPreferences {
     is_sidebar_enabled: bool,
     venice_unleashed_shortcut_location: String,
     dev_venice_unleashed_shortcut_location: String,
-    accounts: Vec<Account>,
+    usernames: Vec<String>,
     servers: Vec<Server>,
     server_guid: String,
     show_multiple_account_join: bool,
@@ -95,7 +92,7 @@ fn set_default_preferences() -> bool {
         is_sidebar_enabled: false,
         venice_unleashed_shortcut_location: path_to_vu_client,
         dev_venice_unleashed_shortcut_location: path_to_vu_dev_client,
-        accounts: Vec::new(),
+        usernames: Vec::new(),
         servers: Vec::new(),
         server_guid: String::from(""),
         show_multiple_account_join: false,
@@ -432,15 +429,28 @@ async fn play_vu(account_index: usize, server_index: usize, use_dev_branch: bool
         }
     };
 
-    match preferences.accounts.len() {
+    let mut password = String::from("");
+    match preferences.usernames.len() {
         0 => {
             println!("No user credentials found.")
         }
         _ => {
             args.push("-username");
-            args.push(&preferences.accounts[account_index].username);
-            args.push("-password");
-            args.push(&preferences.accounts[account_index].password);
+            args.push(&preferences.usernames[account_index]);
+
+            let username = String::from(&preferences.usernames[account_index]);
+
+            match get_vu_account_password(username) {
+                Ok(pw) => {
+                    password = pw.clone();
+                    args.push("-password");
+                    args.push(&password);
+                }
+                Err(err) => {
+                    println!("Failed to fetch user password due to error:\n{:?}", err);
+                    return false;
+                }
+            }
         }
     };
 
@@ -497,17 +507,30 @@ async fn play_vu_on_local_server(name: String, users: Vec<usize>) -> bool {
 
     client.append(&mut common);
 
+    let mut password = String::from("");
     match users.len() {
         0 => {
-            match preferences.accounts.len() {
+            match preferences.usernames.len() {
                 0 => {
                     println!("No user credentials found.")
                 }
                 _ => {
                     client.push("-username");
-                    client.push(&preferences.accounts[0].username);
-                    client.push("-password");
-                    client.push(&preferences.accounts[0].password);
+                    client.push(&preferences.usernames[0]);
+
+                    let username = String::from(&preferences.usernames[0]);
+
+                    match get_vu_account_password(username) {
+                        Ok(pw) => {
+                            password = pw.clone();
+                            client.push("-password");
+                            client.push(&password);
+                        }
+                        Err(err) => {
+                            println!("Failed to fetch user password due to error:\n{:?}", err);
+                            return false;
+                        }
+                    }
 
                     Command::new(&preferences.venice_unleashed_shortcut_location)
                         .args(client)
@@ -522,9 +545,21 @@ async fn play_vu_on_local_server(name: String, users: Vec<usize>) -> bool {
                 let mut copied_args: Vec<&str> = client.clone();
 
                 copied_args.push("-username");
-                copied_args.push(&preferences.accounts[index].username);
-                copied_args.push("-password");
-                copied_args.push(&preferences.accounts[index].password);
+                copied_args.push(&preferences.usernames[index]);
+
+                let username = String::from(preferences.usernames[index].clone());
+
+                match get_vu_account_password(username) {
+                    Ok(pw) => {
+                        password = pw.clone();
+                        copied_args.push("-password");
+                        copied_args.push(&password);
+                    }
+                    Err(err) => {
+                        println!("Failed to fetch user password due to error:\n{:?}", err);
+                        return false;
+                    }
+                }
 
                 Command::new(&preferences.venice_unleashed_shortcut_location)
                     .args(copied_args)
@@ -676,6 +711,63 @@ fn show_window(app: tauri::AppHandle) {
     app.get_webview_window("main").unwrap().show().unwrap();
 }
 
+fn store_vu_account_password(username: String, password: String) -> Result<(), Box<dyn Error>> {
+    let service_name = "venice_unleashed_launcher";
+
+    let keyring_entry = Entry::new(service_name, &username)?;
+
+    keyring_entry.set_password(&password)?;
+
+    let retrieved_password = keyring_entry.get_password()?;
+    println!("Retrieved password: {}", retrieved_password);
+
+    Ok(())
+}
+
+fn remove_vu_account_password(username: String) -> Result<(), Box<dyn Error>> {
+    let service_name = "venice_unleashed_launcher";
+
+    let keyring_entry = Entry::new(service_name, &username)?;
+
+    keyring_entry.delete_credential()?;
+
+    println!("Deleted Credentials for: {}", &username);
+
+    Ok(())
+}
+
+fn get_vu_account_password(username: String) -> Result<String, Box<dyn Error>> {
+    let service_name = "venice_unleashed_launcher";
+
+    let keyring_entry = Entry::new(service_name, &username)?;
+
+    let password = keyring_entry.get_password()?;
+
+    Ok(password)
+}
+
+#[tauri::command]
+async fn add_vu_credentials(username: String, password: String) -> bool {
+    match store_vu_account_password(username, password) {
+        Ok(_) => return true,
+        Err(err) => {
+            println!("Failed to add VU credentials due to reason:\n{:?}", err);
+            return false;
+        }
+    }
+}
+
+#[tauri::command]
+async fn remove_vu_credentials(username: String) -> bool {
+    match remove_vu_account_password(username) {
+        Ok(_) => return true,
+        Err(err) => {
+            println!("Failed to delete VU credentials due to reason:\n{:?}", err);
+            return false;
+        }
+    }
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -722,7 +814,9 @@ pub fn run() {
             show_window,
             is_vu_dev_installed,
             set_vu_dev_branch_install_location_registry,
-            copy_vu_prod_to_folder
+            copy_vu_prod_to_folder,
+            add_vu_credentials,
+            remove_vu_credentials
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

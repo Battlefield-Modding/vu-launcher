@@ -83,7 +83,7 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
     let useDevBranch = formData.useDevBranch
 
     if (formData.accountIndex === undefined) {
-      if (data && data.accounts.length > 0) {
+      if (data && data.usernames.length > 0) {
         accountIndex = 0
       }
     } else {
@@ -124,29 +124,22 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue
-                      placeholder={
-                        data.accounts[preferences.preferred_player_index]
-                          ? data.accounts[preferences.preferred_player_index].username
-                          : 'None'
-                      }
+                      placeholder={data.usernames[preferences.preferred_player_index] || 'None'}
                     />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent
-                  defaultValue={
-                    data.accounts[preferences.preferred_player_index]
-                      ? data.accounts[preferences.preferred_player_index].username
-                      : 'None'
-                  }
+                  defaultValue={data.usernames[preferences.preferred_player_index] || 'None'}
                 >
-                  {data.accounts.map((x, index) => {
-                    return (
-                      <div className="flex" key={x.username}>
-                        <SelectItem value={`${index}`}>{x.username}</SelectItem>
-                        <DeleteVUCredentialDialog username={x.username} />
-                      </div>
-                    )
-                  })}
+                  {data.usernames &&
+                    data.usernames.map((x, index) => {
+                      return (
+                        <div className="flex" key={x}>
+                          <SelectItem value={`${index}`}>{x}</SelectItem>
+                          <DeleteVUCredentialDialog username={x} />
+                        </div>
+                      )
+                    })}
                 </SelectContent>
               </Select>
               <FormDescription></FormDescription>
