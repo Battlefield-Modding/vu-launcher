@@ -86,7 +86,7 @@ export function ChooseAccountSheet({ loadoutName }: { loadoutName: string }) {
           <br />
           <AccountMultiSelectForm
             setSheetOpen={setSheetOpen}
-            users={data}
+            usernames={data}
             updateUsers={updateUsers}
           />
         </SheetContent>

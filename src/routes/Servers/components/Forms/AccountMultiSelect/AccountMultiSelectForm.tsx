@@ -4,7 +4,6 @@ import { useForm } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form'
-import { UserCredential } from '@/config/config'
 import { Input } from '@/components/ui/input'
 
 const formSchema = z.object({
@@ -15,11 +14,11 @@ const formSchema = z.object({
 })
 
 export function AccountMultiSelectForm({
-  users,
+  usernames,
   setSheetOpen,
   updateUsers,
 }: {
-  users: UserCredential[]
+  usernames: string[]
   setSheetOpen: (state: boolean) => void
   updateUsers: (info: number[]) => void
 }) {
@@ -55,14 +54,14 @@ export function AccountMultiSelectForm({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-8">
-        {users.map((x, index) => (
+        {usernames.map((x, index) => (
           <FormField
             control={form.control}
             name={`account${index}` as 'account0' | 'account1' | 'account2' | 'account3'}
-            key={`serverStartupAccounts-${x.username}`}
+            key={`serverStartupAccounts-${x}`}
             render={({ field }) => (
               <FormItem className="m-auto flex w-96 justify-between">
-                <FormLabel className="text-2xl leading-10">{x.username}</FormLabel>
+                <FormLabel className="text-2xl leading-10">{x}</FormLabel>
                 <FormControl className="h-10 w-1/6">
                   {/* @ts-expect-error */}
                   <Input

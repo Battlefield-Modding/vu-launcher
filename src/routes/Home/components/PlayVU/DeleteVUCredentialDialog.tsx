@@ -46,8 +46,7 @@ function DeleteVUCredentialDialog({ username }: { username: string }) {
             </code>
           </DialogTitle>
           <DialogDescription>
-            This action cannot be undone. This will permanently delete {username} from local list of
-            accounts.
+            This will permanently delete {username} from your Operating System's credential manager.
           </DialogDescription>
         </DialogHeader>
         <div className="flex justify-center gap-8">

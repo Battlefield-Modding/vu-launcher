@@ -50,7 +50,9 @@ export enum rust_fns {
   refresh_loadout = "refresh_loadout",
   activate_bf3_lsx = "activate_bf3_lsx",
   activate_bf3_ea_auth_token = "activate_bf3_ea_auth_token",
-  copy_vu_prod_to_folder = "copy_vu_prod_to_folder"
+  copy_vu_prod_to_folder = "copy_vu_prod_to_folder",
+  add_vu_credentials = "add_vu_credentials",
+  remove_vu_credentials = "remove_vu_credentials"
 }
 
 export enum QueryKey {
@@ -116,7 +118,7 @@ export type UserPreferences = {
   is_sidebar_enabled: boolean,
   venice_unleashed_shortcut_location: string,
   dev_venice_unleashed_shortcut_location: string,
-  accounts: UserCredential[],
+  usernames: string[],
   servers: SavedServer[],
   server_guid: string,
   show_multiple_account_join: boolean,
