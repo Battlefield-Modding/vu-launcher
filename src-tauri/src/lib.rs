@@ -484,6 +484,26 @@ async fn play_vu_on_local_server(name: String, users: Vec<usize>) -> bool {
         }
     };
 
+    let mut args = Vec::new();
+    args.push("/C");
+
+    if &loadout.launch.common.gamepath == &Some(String::from("")) {
+        println!("Gamepath arg was empty!");
+        if preferences.use_dev_branch {
+            if preferences.dev_venice_unleashed_shortcut_location.len() > 1 {
+                args.push(&preferences.dev_venice_unleashed_shortcut_location);
+                args.push("-updateBranch");
+                args.push("dev");
+            } else {
+                args.push(&preferences.venice_unleashed_shortcut_location);
+                args.push("-updateBranch");
+                args.push("dev");
+            }
+        } else {
+            args.push(&preferences.venice_unleashed_shortcut_location)
+        }
+    }
+
     let mut common = loadout_common_launch_args_to_vec(&loadout.launch.common);
     let mut client = loadout_client_launch_args_to_vec(&loadout.launch.client);
 
@@ -506,6 +526,7 @@ async fn play_vu_on_local_server(name: String, users: Vec<usize>) -> bool {
     }
 
     client.append(&mut common);
+    args.append(&mut client);
 
     let mut password = String::from("");
     match users.len() {
@@ -515,16 +536,16 @@ async fn play_vu_on_local_server(name: String, users: Vec<usize>) -> bool {
                     println!("No user credentials found.")
                 }
                 _ => {
-                    client.push("-username");
-                    client.push(&preferences.usernames[0]);
+                    args.push("-username");
+                    args.push(&preferences.usernames[0]);
 
                     let username = String::from(&preferences.usernames[0]);
 
                     match get_vu_account_password(username) {
                         Ok(pw) => {
                             password = pw.clone();
-                            client.push("-password");
-                            client.push(&password);
+                            args.push("-password");
+                            args.push(&password);
                         }
                         Err(err) => {
                             println!("Failed to fetch user password due to error:\n{:?}", err);
@@ -532,8 +553,8 @@ async fn play_vu_on_local_server(name: String, users: Vec<usize>) -> bool {
                         }
                     }
 
-                    Command::new(&preferences.venice_unleashed_shortcut_location)
-                        .args(client)
+                    Command::new("cmd")
+                        .args(args)
                         .creation_flags(CREATE_NO_WINDOW)
                         .spawn()
                         .expect("failed to execute process");
@@ -542,7 +563,7 @@ async fn play_vu_on_local_server(name: String, users: Vec<usize>) -> bool {
         }
         _ => {
             for index in users {
-                let mut copied_args: Vec<&str> = client.clone();
+                let mut copied_args: Vec<&str> = args.clone();
 
                 copied_args.push("-username");
                 copied_args.push(&preferences.usernames[index]);
@@ -561,7 +582,7 @@ async fn play_vu_on_local_server(name: String, users: Vec<usize>) -> bool {
                     }
                 }
 
-                Command::new(&preferences.venice_unleashed_shortcut_location)
+                Command::new("cmd")
                     .args(copied_args)
                     .creation_flags(CREATE_NO_WINDOW)
                     .spawn()

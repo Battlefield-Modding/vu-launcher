@@ -21,7 +21,7 @@ import {
 } from '@/components/ui/select'
 import { toast } from 'sonner'
 import { QueryKey, STALE, UserPreferences } from '@/config/config'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   getServersAndAccounts,
   playVU,
@@ -43,6 +43,7 @@ const FormSchema = z.object({
 })
 
 export default function PlayVUForm({ preferences }: { preferences: UserPreferences }) {
+  const queryClient = useQueryClient()
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -212,7 +213,11 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
                   {...field}
                   checked={field.value}
                   onCheckedChange={async (e) => {
-                    toggleDevBranch(e)
+                    await toggleDevBranch(e)
+                    queryClient.invalidateQueries({
+                      queryKey: [QueryKey.UserPreferences],
+                      refetchType: 'all',
+                    })
                     field.onChange(e)
                   }}
                 />

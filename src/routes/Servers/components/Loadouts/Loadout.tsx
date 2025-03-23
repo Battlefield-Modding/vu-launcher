@@ -5,6 +5,7 @@ import {
   playVUOnLocalServer,
   refreshLoadout,
   startServerLoadout,
+  toggleDevBranch,
 } from '@/api'
 import { toast } from 'sonner'
 import { LoadoutJSON, QueryKey, STALE } from '@/config/config'
@@ -15,9 +16,13 @@ import { MaplistSheet } from '../Forms/Maplist/MaplistSheet'
 import { BanlistSheet } from '../Forms/Banlist/BanlistSheet'
 import { RefreshLoadoutTooltip } from './RefreshLoadoutTooltip'
 import { LaunchArgumentSheet } from '../Forms/LaunchArguments/LaunchArgumentsSheet'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { Switch } from '@/components/ui/switch'
+import clsx from 'clsx'
 
 export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
+  const queryClient = useQueryClient()
+
   const { isPending, isError, data, error } = useQuery({
     queryKey: [QueryKey.UserPreferences],
     queryFn: getUserPreferences,
@@ -83,6 +88,27 @@ export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
         <h1 className="text-2xl text-primary underline">{loadout.name} </h1>
         <div onClick={handleRefreshLoadout} className="w-fit">
           <RefreshLoadoutTooltip />
+        </div>
+      </div>
+
+      <div className="m-auto mb-8 mt-8">
+        <div
+          className={clsx(
+            'flex gap-8 rounded-md rounded-l-none border-b border-secondary',
+            data.use_dev_branch && 'border-green-500 text-green-500 opacity-100',
+          )}
+        >
+          <h1>Use dev branch?</h1>
+          <Switch
+            defaultChecked={data.use_dev_branch}
+            onCheckedChange={async (e) => {
+              await toggleDevBranch(e)
+              queryClient.invalidateQueries({
+                queryKey: [QueryKey.UserPreferences],
+                refetchType: 'all',
+              })
+            }}
+          />
         </div>
       </div>
 
