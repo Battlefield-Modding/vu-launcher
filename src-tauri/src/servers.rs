@@ -351,6 +351,9 @@ pub async fn start_server_loadout(name: String) -> bool {
         } else {
             args.push(&preferences.venice_unleashed_shortcut_location)
         }
+    } else {
+        // if there is a gamepath specified, make sure to give a valid vu.exe to pass the gamepath arg to
+        args.push(&preferences.venice_unleashed_shortcut_location)
     }
 
     args.push("-server");

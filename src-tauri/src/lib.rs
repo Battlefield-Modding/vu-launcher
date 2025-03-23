@@ -502,6 +502,9 @@ async fn play_vu_on_local_server(name: String, users: Vec<usize>) -> bool {
         } else {
             args.push(&preferences.venice_unleashed_shortcut_location)
         }
+    } else {
+        // if there is a gamepath specified, make sure to give a valid vu.exe to pass the gamepath arg to
+        args.push(&preferences.venice_unleashed_shortcut_location)
     }
 
     let mut common = loadout_common_launch_args_to_vec(&loadout.launch.common);
