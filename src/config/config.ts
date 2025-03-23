@@ -121,6 +121,7 @@ export type UserPreferences = {
   server_guid: string,
   show_multiple_account_join: boolean,
   is_onboarded: boolean,
+  use_dev_branch: boolean
 }
 
 export type SavedServer = {

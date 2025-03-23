@@ -20,8 +20,8 @@ export async function saveUserCredentials({username, password}: {username: strin
   return status
 }
 
-export async function playVU({accountIndex, serverIndex}: {accountIndex: number, serverIndex: number}): Promise<boolean> {
-  const status = await invoke(rust_fns.play_vu, {accountIndex, serverIndex}) as boolean
+export async function playVU({accountIndex, serverIndex, useDevBranch}: {accountIndex: number, serverIndex: number, useDevBranch: boolean}): Promise<boolean> {
+  const status = await invoke(rust_fns.play_vu, {accountIndex, serverIndex, useDevBranch}) as boolean
   return status
 }
 
@@ -255,6 +255,17 @@ export async function activateBf3EaAuthToken(token: string){
 export async function finishOnboarding(): Promise<boolean>{
   const preferences = await getUserPreferences();
   preferences.is_onboarded = true
+  const status = await saveUserPreferences(preferences)
+  if (status) {
+    return false // done with onboarding
+  } else {
+    return true // something went wrong
+  }
+}
+
+export async function toggleDevBranch(state: boolean): Promise<boolean>{
+  const preferences = await getUserPreferences();
+  preferences.use_dev_branch = state
   const status = await saveUserPreferences(preferences)
   if (status) {
     return false // done with onboarding

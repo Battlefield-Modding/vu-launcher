@@ -20,22 +20,30 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { toast } from 'sonner'
-import { QueryKey, STALE } from '@/config/config'
+import { QueryKey, STALE, UserPreferences } from '@/config/config'
 import { useQuery } from '@tanstack/react-query'
-import { getServersAndAccounts, playVU } from '@/api'
+import { getServersAndAccounts, playVU, toggleDevBranch } from '@/api'
 import { Loader, Play } from 'lucide-react'
 import DeleteVUCredentialDialog from './DeleteVUCredentialDialog'
 import DeleteVUServerDialog from './DeleteVUServerDialog'
 import { getCurrentWindow } from '@tauri-apps/api/window'
+import clsx from 'clsx'
+import { Switch } from '@/components/ui/switch'
 
 const FormSchema = z.object({
   accountIndex: z.string().optional(),
   serverIndex: z.string().optional(),
+  useDevBranch: z.boolean(),
 })
 
-export default function PlayVUForm() {
+export default function PlayVUForm({ preferences }: { preferences: UserPreferences }) {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
+    defaultValues: {
+      accountIndex: '0',
+      serverIndex: '0',
+      useDevBranch: preferences.use_dev_branch,
+    },
   })
 
   const { isPending, isError, data, error } = useQuery({
@@ -63,8 +71,10 @@ export default function PlayVUForm() {
   }
 
   async function onSubmit(formData: z.infer<typeof FormSchema>) {
+    console.log(formData)
     let accountIndex = 9001
     let serverIndex = 9001
+    let useDevBranch = formData.useDevBranch
 
     if (formData.accountIndex === undefined) {
       if (data && data.accounts.length > 0) {
@@ -78,7 +88,7 @@ export default function PlayVUForm() {
       serverIndex = parseInt(formData.serverIndex)
     }
 
-    const status = await playVU({ accountIndex, serverIndex })
+    const status = await playVU({ accountIndex, serverIndex, useDevBranch })
 
     if (status) {
       toast('Starting VU...')
@@ -104,7 +114,7 @@ export default function PlayVUForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex w-64 flex-col gap-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex w-64 flex-col gap-4">
         <FormField
           control={form.control}
           name="accountIndex"
@@ -161,7 +171,32 @@ export default function PlayVUForm() {
             </FormItem>
           )}
         />
-        <Button variant={'constructive'} className="p-8 text-2xl" type="submit">
+        <FormField
+          control={form.control}
+          name={`useDevBranch`}
+          render={({ field }) => (
+            <FormItem
+              className={clsx(
+                'flex justify-between rounded-md rounded-l-none border-b border-secondary',
+                field.value && 'border-green-500 text-green-500 opacity-100',
+              )}
+            >
+              <FormLabel className="mt-1">Use Dev Branch</FormLabel>
+              <FormControl>
+                {/* @ts-ignore */}
+                <Switch
+                  {...field}
+                  checked={field.value}
+                  onCheckedChange={async (e) => {
+                    toggleDevBranch(e)
+                    field.onChange(e)
+                  }}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        <Button variant={'constructive'} className="mt-4 p-8 text-2xl" type="submit">
           <Play />
           PLAY
         </Button>

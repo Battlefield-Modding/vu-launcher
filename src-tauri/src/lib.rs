@@ -75,6 +75,7 @@ struct UserPreferences {
     server_guid: String,
     show_multiple_account_join: bool,
     is_onboarded: bool,
+    use_dev_branch: bool,
 }
 
 fn set_default_preferences() -> bool {
@@ -97,6 +98,7 @@ fn set_default_preferences() -> bool {
         server_guid: String::from(""),
         show_multiple_account_join: false,
         is_onboarded: false,
+        use_dev_branch: false,
     };
 
     match save_user_preferences(sample_preferences) {
@@ -363,7 +365,7 @@ async fn get_vu_data() -> String {
 }
 
 #[tauri::command]
-async fn play_vu(account_index: usize, server_index: usize) -> bool {
+async fn play_vu(account_index: usize, server_index: usize, use_dev_branch: bool) -> bool {
     let preferences_prematch = get_user_preferences_as_struct();
     let preferences = match preferences_prematch {
         Ok(info) => info,
@@ -371,8 +373,24 @@ async fn play_vu(account_index: usize, server_index: usize) -> bool {
     };
 
     let mut args: Vec<&str> = Vec::new();
+
     args.push("/C");
-    args.push(&preferences.venice_unleashed_shortcut_location);
+
+    if use_dev_branch {
+        if preferences.dev_venice_unleashed_shortcut_location.len() > 1 {
+            args.push(&preferences.dev_venice_unleashed_shortcut_location);
+            args.push("-updateBranch");
+            args.push("dev");
+        } else {
+            args.push(&preferences.venice_unleashed_shortcut_location);
+            args.push("-updateBranch");
+            args.push("dev");
+        }
+    } else {
+        args.push(&preferences.venice_unleashed_shortcut_location);
+        args.push("-updateBranch");
+        args.push("prod");
+    }
 
     let mut server_join_string = String::from("vu://join/");
 
