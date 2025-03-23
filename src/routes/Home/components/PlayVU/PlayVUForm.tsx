@@ -106,18 +106,6 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
     }
   }
 
-  if (!data || typeof data !== 'object' || !data.accounts[0]) {
-    return (
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex w-64 flex-col gap-8">
-        <h1>No accounts Found</h1>
-        <Button variant={'constructive'} className="p-8 text-2xl" type="submit">
-          <Play />
-          PLAY
-        </Button>
-      </form>
-    )
-  }
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="flex w-64 flex-col gap-4">
@@ -136,12 +124,20 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue
-                      placeholder={data.accounts[preferences.preferred_player_index].username}
+                      placeholder={
+                        data.accounts[preferences.preferred_player_index]
+                          ? data.accounts[preferences.preferred_player_index].username
+                          : 'None'
+                      }
                     />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent
-                  defaultValue={data.accounts[preferences.preferred_player_index].username}
+                  defaultValue={
+                    data.accounts[preferences.preferred_player_index]
+                      ? data.accounts[preferences.preferred_player_index].username
+                      : 'None'
+                  }
                 >
                   {data.accounts.map((x, index) => {
                     return (
