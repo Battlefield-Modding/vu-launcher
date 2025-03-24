@@ -1,14 +1,21 @@
 import { Loader } from 'lucide-react'
 import { QueryKey, STALE } from '@/config/config'
-import { serverKeyExists } from '@/api'
+import { getUserPreferences, serverKeyExists } from '@/api'
 import { useQuery } from '@tanstack/react-query'
 import { FirstTimeSetup } from './components/Forms/FirstTimeSetup/FirstTimeSetup'
 import { LoadoutContainer } from './components/Loadouts/LoadoutContainer'
+import LocalServerGuidForm from '../Settings/components/LocalServerGuidForm'
 
 export function Servers() {
   const { isPending, isError, data, error } = useQuery({
     queryKey: [QueryKey.ServerKeyExists],
-    queryFn: serverKeyExists,
+    queryFn: async (): Promise<{ serverKeyFileExists: boolean; serverGuidExists: boolean }> => {
+      const serverKeyFileExists = await serverKeyExists()
+      const preferences = await getUserPreferences()
+      const serverGuidExists = preferences.server_guid.length > 0
+
+      return { serverKeyFileExists, serverGuidExists }
+    },
     staleTime: STALE.never,
   })
 
@@ -30,8 +37,17 @@ export function Servers() {
     )
   }
 
-  if (!data) {
+  if (!data.serverKeyFileExists) {
     return <FirstTimeSetup />
+  }
+
+  if (!data.serverGuidExists) {
+    return (
+      <div className="m-auto flex h-full max-w-screen-md flex-col items-center justify-center gap-8">
+        <h1 className="text-2xl">Please re-enter your server GUID:</h1>
+        <LocalServerGuidForm guid={''} />
+      </div>
+    )
   }
 
   return (

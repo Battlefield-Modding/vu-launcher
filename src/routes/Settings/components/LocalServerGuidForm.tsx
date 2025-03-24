@@ -37,6 +37,7 @@ export default function LocalServerGuidForm({ guid }: { guid: string }) {
     if (status) {
       toast('Updated Server GUID Successfully!')
       queryClient.invalidateQueries({ queryKey: [QueryKey.UserPreferences], refetchType: 'all' })
+      queryClient.invalidateQueries({ queryKey: [QueryKey.ServerKeyExists], refetchType: 'all' })
     } else {
       toast('Something went wrong.')
     }

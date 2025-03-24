@@ -105,8 +105,8 @@ export async function deleteServerLoadout(name: string): Promise<boolean>{
   return info
 }
 
-export async function serverKeyExists(){
-  const info = await invoke(rust_fns.server_key_exists)
+export async function serverKeyExists(): Promise<boolean>{
+  const info = await invoke(rust_fns.server_key_exists) as boolean
   return info
 }
 
