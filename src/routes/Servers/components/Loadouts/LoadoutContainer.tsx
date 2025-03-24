@@ -89,13 +89,13 @@ export function LoadoutContainer() {
   } else {
     return (
       <div className="m-auto mt-0 flex w-full flex-1">
-        <div className="flex w-64 flex-col bg-sidebar-foreground text-white">
+        <div className="flex w-64 flex-col border border-b-0 border-l-0 border-secondary bg-secondary">
           <div className="mb-0 mt-auto flex">
             <CreateLoadoutSheet />
             <UploadLoadoutSheet />
           </div>
         </div>
-        <div className="flex w-full flex-col justify-center bg-primary text-center text-secondary">
+        <div className="flex w-full flex-col items-center justify-center">
           <p>No loadouts Found</p>
         </div>
       </div>
