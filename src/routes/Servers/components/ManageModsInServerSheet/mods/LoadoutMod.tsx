@@ -48,7 +48,7 @@ export function LoadoutMod({
 
     if (status) {
       toast(message)
-      queryClient.invalidateQueries({ queryKey, refetchType: 'all' })
+      queryClient.invalidateQueries({ queryKey: [queryKey], refetchType: 'all' })
       queryClient.invalidateQueries({ queryKey: [QueryKey.GetAllLoadoutJSON], refetchType: 'all' })
     } else {
       toast('Error. Failed to update mod status')

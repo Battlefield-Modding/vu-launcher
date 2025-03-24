@@ -1,5 +1,5 @@
 import {invoke} from "@tauri-apps/api/core"
-import { LoadoutJSON, rust_fns, SavedServer, UserCredential, UserPreferences } from "./config/config"
+import { LoadoutJSON, rust_fns, SavedServer, UserPreferences } from "./config/config"
 
 export async function firstTimeSetup(): Promise<boolean>{
   const status = await invoke(rust_fns.first_time_setup) as boolean
