@@ -7,26 +7,42 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { rust_fns } from '@/config/config'
+import { QueryKey, rust_fns } from '@/config/config'
+import { useQueryClient } from '@tanstack/react-query'
 import { invoke } from '@tauri-apps/api/core'
 import { Check, X } from 'lucide-react'
-import { useState } from 'react'
-import { LoaderComponent } from '../../../../components/LoaderComponent'
 
 export function InstallVuProdDialog({
   vuProdInstallPath,
   setGameDownloadUpdateInstalling,
   dialogRef,
+  gameDownloadUpdateInstalling,
+  gameDownloadUpdateExtracting,
 }: {
   vuProdInstallPath: string
   setGameDownloadUpdateInstalling: (t: () => boolean) => void
   dialogRef: any
+  gameDownloadUpdateInstalling: boolean
+  gameDownloadUpdateExtracting: boolean
 }) {
-  const [submitLoading, setSubmitLoading] = useState(false)
-
+  const queryClient = useQueryClient()
   async function InstallVuProdToPath() {
     setGameDownloadUpdateInstalling(() => true)
     await invoke(rust_fns.download_game, { installPath: vuProdInstallPath })
+  }
+
+  async function InstallVuProdAndDevToPath() {
+    setGameDownloadUpdateInstalling(() => true)
+    await invoke(rust_fns.download_game, { installPath: vuProdInstallPath })
+
+    while (gameDownloadUpdateInstalling) {
+      // do nothing
+    }
+    while (gameDownloadUpdateExtracting) {
+      // do nothing
+    }
+    await invoke(rust_fns.copy_vu_prod_to_folder, { path: vuProdInstallPath })
+    queryClient.invalidateQueries({ queryKey: [QueryKey.IsVuInstalled], refetchType: 'all' })
   }
 
   return (
@@ -44,7 +60,6 @@ export function InstallVuProdDialog({
             This will install VU to the above directory.
           </DialogDescription>
         </DialogHeader>
-        {submitLoading && <LoaderComponent />}
         <div className="flex justify-center gap-8">
           <DialogClose>
             <p className="flex gap-2 rounded-md bg-secondary p-2 transition hover:bg-secondary/80">
@@ -63,7 +78,7 @@ export function InstallVuProdDialog({
           <DialogClose>
             <p
               className="flex gap-4 rounded-md bg-green-600 p-2 text-white transition hover:cursor-pointer hover:bg-green-600/80"
-              onClick={InstallVuProdToPath}
+              onClick={InstallVuProdAndDevToPath}
             >
               <Check /> Install VU Prod AND Dev
             </p>

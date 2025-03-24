@@ -1,7 +1,6 @@
 import { setVUInstallLocation } from '@/api'
 import { Button } from '@/components/ui/button'
-import { QueryKey, rust_fns } from '@/config/config'
-import { invoke } from '@tauri-apps/api/core'
+import { QueryKey } from '@/config/config'
 import { open } from '@tauri-apps/plugin-dialog'
 import { Download, Search } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
@@ -180,6 +179,8 @@ export function InstallVU() {
           <InstallVuProdDialog
             vuProdInstallPath={vuProdInstallPath}
             setGameDownloadUpdateInstalling={setGameDownloadUpdateInstalling}
+            gameDownloadUpdateInstalling={gameDownloadUpdateInstalling}
+            gameDownloadUpdateExtracting={gameDownloadUpdateExtracting}
             dialogRef={dialogRef}
           />
         </>
