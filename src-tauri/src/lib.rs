@@ -20,8 +20,9 @@ use dirs_next;
 
 mod reg_functions;
 use reg_functions::{
-    get_install_path_registry, get_reg_vu_install_location, get_settings_json_path_registry,
-    set_settings_json_path_registry, set_vu_install_location_registry,
+    get_install_path_registry, get_reg_vu_dev_branch_install_location, get_reg_vu_install_location,
+    get_settings_json_path_registry, set_settings_json_path_registry,
+    set_vu_dev_branch_install_location_registry, set_vu_install_location_registry,
 };
 
 mod web;
@@ -48,14 +49,11 @@ use loadouts::{
     loadout_common_launch_args_to_vec, refresh_loadout,
 };
 
+use keyring::Entry;
+use std::error::Error;
+
 pub const CREATE_NO_WINDOW: u32 = 0x08000000;
 pub const CREATE_NEW_CONSOLE: u32 = 0x00000010;
-
-#[derive(Serialize, Deserialize, Debug)]
-struct Account {
-    username: String,
-    password: String,
-}
 
 #[derive(Serialize, Deserialize, Debug)]
 struct Server {
@@ -68,40 +66,128 @@ struct Server {
 struct UserPreferences {
     is_sidebar_enabled: bool,
     venice_unleashed_shortcut_location: String,
-    accounts: Vec<Account>,
+    dev_venice_unleashed_shortcut_location: String,
+    usernames: Vec<String>,
     servers: Vec<Server>,
     server_guid: String,
     show_multiple_account_join: bool,
+    is_onboarded: bool,
+    use_dev_branch: bool,
+    preferred_player_index: i32,
+    preferred_server_index: i32,
 }
 
-fn set_default_preferences() {
-    let path_prematch = get_reg_vu_install_location();
-    let path = match path_prematch {
-        Ok(info) => info,
-        Err(_) => {
-            println!("Could not find VU install location. Aborting creation of Preferences File.");
-            return;
-        }
+fn set_default_preferences() -> bool {
+    let path_to_vu_client = match get_reg_vu_install_location() {
+        Ok(info) => String::from(Path::new(&info).join("vu.exe").to_str().unwrap()),
+        Err(_) => String::from(""),
     };
-    let path_to_vu_client = String::from(Path::new(&path).join("vu.exe").to_str().unwrap());
+
+    let path_to_vu_dev_client = match get_reg_vu_dev_branch_install_location() {
+        Ok(info) => String::from(Path::new(&info).join("vu.exe").to_str().unwrap()),
+        Err(_) => String::from(""),
+    };
 
     let sample_preferences = UserPreferences {
         is_sidebar_enabled: false,
         venice_unleashed_shortcut_location: path_to_vu_client,
-        accounts: Vec::new(),
+        dev_venice_unleashed_shortcut_location: path_to_vu_dev_client,
+        usernames: Vec::new(),
         servers: Vec::new(),
         server_guid: String::from(""),
         show_multiple_account_join: false,
+        is_onboarded: false,
+        use_dev_branch: false,
+        preferred_player_index: 9001,
+        preferred_server_index: 9001,
     };
 
     match save_user_preferences(sample_preferences) {
         Ok(_) => {
             println!("Successfully saved user preferences!");
+            return true;
         }
         Err(err) => {
             println!("Failed to save user preferences due to reason:\n{:?}", err);
+            return false;
         }
     };
+}
+
+pub fn update_vu_shortcut_preference() -> bool {
+    match get_user_preferences_as_struct() {
+        Ok(mut preferences) => {
+            let path_prematch = get_reg_vu_install_location();
+            let path = match path_prematch {
+                Ok(info) => info,
+                Err(err) => {
+                    println!(
+                        "Failed to update VU Dev shortcute due to reason:\n{:?}",
+                        err
+                    );
+                    return false;
+                }
+            };
+            let path_to_vu_client = String::from(Path::new(&path).join("vu.exe").to_str().unwrap());
+            preferences.venice_unleashed_shortcut_location = path_to_vu_client;
+
+            match save_user_preferences(preferences) {
+                Ok(_) => {
+                    println!("Successfully saved user preferences!");
+                    return true;
+                }
+                Err(err) => {
+                    println!("Failed to save user preferences due to reason:\n{:?}", err);
+                    return false;
+                }
+            };
+        }
+        Err(err) => {
+            println!(
+                "Failed to update VU shortcut preference due to error:\n{:?}",
+                err
+            );
+            return false;
+        }
+    }
+}
+
+pub fn update_vu_dev_shortcut_preference() -> bool {
+    match get_user_preferences_as_struct() {
+        Ok(mut preferences) => {
+            let path_prematch = get_reg_vu_dev_branch_install_location();
+            let path = match path_prematch {
+                Ok(info) => info,
+                Err(err) => {
+                    println!(
+                        "Failed to update VU Dev shortcute due to reason:\n{:?}",
+                        err
+                    );
+                    return false;
+                }
+            };
+            let path_to_vu_client = String::from(Path::new(&path).join("vu.exe").to_str().unwrap());
+            preferences.dev_venice_unleashed_shortcut_location = path_to_vu_client;
+
+            match save_user_preferences(preferences) {
+                Ok(_) => {
+                    println!("Successfully saved user preferences!");
+                    return true;
+                }
+                Err(err) => {
+                    println!("Failed to save user preferences due to reason:\n{:?}", err);
+                    return false;
+                }
+            };
+        }
+        Err(err) => {
+            println!(
+                "Failed to update VU shortcut preference due to error:\n{:?}",
+                err
+            );
+            return false;
+        }
+    }
 }
 
 fn save_user_preferences(preferences: UserPreferences) -> io::Result<()> {
@@ -131,15 +217,20 @@ fn settings_json_exists() -> bool {
 }
 
 #[tauri::command]
-fn first_time_setup() {
+fn first_time_setup() -> bool {
     match settings_json_exists() {
         true => {
-            println!("Settings JSON already exists.")
+            println!("Settings JSON already exists.");
+            return false;
         }
         false => {
             println!("Settings JSON does not exist. Doing first time setup now...");
-            set_settings_json_path_registry();
-            set_default_preferences();
+            if set_settings_json_path_registry() && set_default_preferences() {
+                return true;
+            } else {
+                println!("Failed to complete first time setup.");
+                return false;
+            }
         }
     }
 }
@@ -149,8 +240,19 @@ fn get_user_preferences_as_struct() -> io::Result<UserPreferences> {
     let settings_path = Path::new(&settings_string);
 
     let info = fs::read_to_string(settings_path)?;
-    let info_for_rust = serde_json::from_str(&info)?;
-    Ok(info_for_rust)
+    let info_for_rust = serde_json::from_str(&info);
+    match info_for_rust {
+        Ok(clean_info) => return Ok(clean_info),
+        Err(_) => {
+            // nuke the preferences to save user the trouble of going in and deleting it themselves
+            println!("Resetting user preferences. Invalid data structure was detected");
+            set_default_preferences();
+            let info_attempt = fs::read_to_string(settings_path)?;
+            let info_for_rust_attempt = serde_json::from_str(&info_attempt)?;
+
+            return Ok(info_for_rust_attempt);
+        }
+    }
 }
 
 fn get_user_preferences_as_string() -> io::Result<String> {
@@ -158,7 +260,35 @@ fn get_user_preferences_as_string() -> io::Result<String> {
     let settings_path = Path::new(&settings_string);
 
     let info = fs::read_to_string(settings_path)?;
-    Ok(info)
+    let info_for_rust: Result<UserPreferences, serde_json::Error> = serde_json::from_str(&info);
+    match info_for_rust {
+        Ok(clean_info) => {
+            let final_string = serde_json::to_string(&clean_info)?;
+            return Ok(final_string);
+        }
+        Err(_) => {
+            // nuke the preferences to save user the trouble of going in and deleting it themselves
+            println!("Resetting user preferences. Invalid data structure was detected");
+            set_default_preferences();
+            let info_attempt: String = fs::read_to_string(settings_path)?;
+            let info_for_rust_attempt: Result<UserPreferences, serde_json::Error> =
+                serde_json::from_str(&info_attempt);
+
+            match info_for_rust_attempt {
+                Ok(data) => {
+                    let final_string = serde_json::to_string(&data)?;
+                    return Ok(final_string);
+                }
+                Err(err) => {
+                    println!(
+                        "Failed to get user preferences as string due to error:\n{:?}",
+                        err
+                    );
+                }
+            }
+        }
+    }
+    Ok(String::from("Failed to get user preferences."))
 }
 
 #[tauri::command]
@@ -236,7 +366,7 @@ async fn get_vu_data() -> String {
 }
 
 #[tauri::command]
-async fn play_vu(account_index: usize, server_index: usize) -> bool {
+async fn play_vu(account_index: usize, server_index: usize, use_dev_branch: bool) -> bool {
     let preferences_prematch = get_user_preferences_as_struct();
     let preferences = match preferences_prematch {
         Ok(info) => info,
@@ -244,8 +374,24 @@ async fn play_vu(account_index: usize, server_index: usize) -> bool {
     };
 
     let mut args: Vec<&str> = Vec::new();
+
     args.push("/C");
-    args.push(&preferences.venice_unleashed_shortcut_location);
+
+    if use_dev_branch {
+        if preferences.dev_venice_unleashed_shortcut_location.len() > 1 {
+            args.push(&preferences.dev_venice_unleashed_shortcut_location);
+            args.push("-updateBranch");
+            args.push("dev");
+        } else {
+            args.push(&preferences.venice_unleashed_shortcut_location);
+            args.push("-updateBranch");
+            args.push("dev");
+        }
+    } else {
+        args.push(&preferences.venice_unleashed_shortcut_location);
+        args.push("-updateBranch");
+        args.push("prod");
+    }
 
     let mut server_join_string = String::from("vu://join/");
 
@@ -283,15 +429,28 @@ async fn play_vu(account_index: usize, server_index: usize) -> bool {
         }
     };
 
-    match preferences.accounts.len() {
+    let mut password = String::from("");
+    match preferences.usernames.len() {
         0 => {
             println!("No user credentials found.")
         }
         _ => {
             args.push("-username");
-            args.push(&preferences.accounts[account_index].username);
-            args.push("-password");
-            args.push(&preferences.accounts[account_index].password);
+            args.push(&preferences.usernames[account_index]);
+
+            let username = String::from(&preferences.usernames[account_index]);
+
+            match get_vu_account_password(username) {
+                Ok(pw) => {
+                    password = pw.clone();
+                    args.push("-password");
+                    args.push(&password);
+                }
+                Err(err) => {
+                    println!("Failed to fetch user password due to error:\n{:?}", err);
+                    return false;
+                }
+            }
         }
     };
 
@@ -325,6 +484,29 @@ async fn play_vu_on_local_server(name: String, users: Vec<usize>) -> bool {
         }
     };
 
+    let mut args = Vec::new();
+    args.push("/C");
+
+    if &loadout.launch.common.gamepath == &Some(String::from("")) {
+        println!("Gamepath arg was empty!");
+        if preferences.use_dev_branch {
+            if preferences.dev_venice_unleashed_shortcut_location.len() > 1 {
+                args.push(&preferences.dev_venice_unleashed_shortcut_location);
+                args.push("-updateBranch");
+                args.push("dev");
+            } else {
+                args.push(&preferences.venice_unleashed_shortcut_location);
+                args.push("-updateBranch");
+                args.push("dev");
+            }
+        } else {
+            args.push(&preferences.venice_unleashed_shortcut_location)
+        }
+    } else {
+        // if there is a gamepath specified, make sure to give a valid vu.exe to pass the gamepath arg to
+        args.push(&preferences.venice_unleashed_shortcut_location)
+    }
+
     let mut common = loadout_common_launch_args_to_vec(&loadout.launch.common);
     let mut client = loadout_client_launch_args_to_vec(&loadout.launch.client);
 
@@ -347,21 +529,35 @@ async fn play_vu_on_local_server(name: String, users: Vec<usize>) -> bool {
     }
 
     client.append(&mut common);
+    args.append(&mut client);
 
+    let mut password = String::from("");
     match users.len() {
         0 => {
-            match preferences.accounts.len() {
+            match preferences.usernames.len() {
                 0 => {
                     println!("No user credentials found.")
                 }
                 _ => {
-                    client.push("-username");
-                    client.push(&preferences.accounts[0].username);
-                    client.push("-password");
-                    client.push(&preferences.accounts[0].password);
+                    args.push("-username");
+                    args.push(&preferences.usernames[0]);
 
-                    Command::new(&preferences.venice_unleashed_shortcut_location)
-                        .args(client)
+                    let username = String::from(&preferences.usernames[0]);
+
+                    match get_vu_account_password(username) {
+                        Ok(pw) => {
+                            password = pw.clone();
+                            args.push("-password");
+                            args.push(&password);
+                        }
+                        Err(err) => {
+                            println!("Failed to fetch user password due to error:\n{:?}", err);
+                            return false;
+                        }
+                    }
+
+                    Command::new("cmd")
+                        .args(args)
                         .creation_flags(CREATE_NO_WINDOW)
                         .spawn()
                         .expect("failed to execute process");
@@ -370,14 +566,26 @@ async fn play_vu_on_local_server(name: String, users: Vec<usize>) -> bool {
         }
         _ => {
             for index in users {
-                let mut copied_args: Vec<&str> = client.clone();
+                let mut copied_args: Vec<&str> = args.clone();
 
                 copied_args.push("-username");
-                copied_args.push(&preferences.accounts[index].username);
-                copied_args.push("-password");
-                copied_args.push(&preferences.accounts[index].password);
+                copied_args.push(&preferences.usernames[index]);
 
-                Command::new(&preferences.venice_unleashed_shortcut_location)
+                let username = String::from(preferences.usernames[index].clone());
+
+                match get_vu_account_password(username) {
+                    Ok(pw) => {
+                        password = pw.clone();
+                        copied_args.push("-password");
+                        copied_args.push(&password);
+                    }
+                    Err(err) => {
+                        println!("Failed to fetch user password due to error:\n{:?}", err);
+                        return false;
+                    }
+                }
+
+                Command::new("cmd")
                     .args(copied_args)
                     .creation_flags(CREATE_NO_WINDOW)
                     .spawn()
@@ -404,6 +612,14 @@ fn open_explorer_for_loadout(loadout_name: String) {
 #[tauri::command]
 fn is_vu_installed() -> bool {
     match get_reg_vu_install_location() {
+        Ok(_) => return true,
+        Err(_) => return false,
+    }
+}
+
+#[tauri::command]
+fn is_vu_dev_installed() -> bool {
+    match get_reg_vu_dev_branch_install_location() {
         Ok(_) => return true,
         Err(_) => return false,
     }
@@ -458,6 +674,58 @@ async fn activate_bf3_ea_auth_token(token: String) -> bool {
     true
 }
 
+#[tauri::command]
+async fn copy_vu_prod_to_folder(mut path: String) -> bool {
+    path.push_str("\\VeniceUnleashedDev");
+
+    let vu_install_path_result = get_reg_vu_install_location();
+    match vu_install_path_result {
+        Ok(vu_path) => {
+            let vu_pathbuf = PathBuf::from(&vu_path);
+            let target_pathbuf = PathBuf::from(&path);
+
+            if !target_pathbuf.exists() {
+                match fs::create_dir_all(&target_pathbuf) {
+                    Ok(_) => match dircpy::copy_dir(vu_pathbuf, target_pathbuf) {
+                        Ok(_) => {
+                            println!("Successfully copied over loadout!");
+                            match set_vu_dev_branch_install_location_registry(path) {
+                                Ok(_) => return true,
+                                Err(err) => {
+                                    println!(
+                                            "Failed to update VU Dev regKey after copying due to error:\n{:?}",
+                                            err
+                                        );
+                                    return false;
+                                }
+                            }
+                        }
+                        Err(err) => {
+                            println!(
+                                "Failed to copy VU PROD -> VU Dev folder due to error:\n{:?}",
+                                err
+                            );
+                            return false;
+                        }
+                    },
+                    Err(err) => {
+                        println!(
+                            "Failed to create all dirs for VeniceUnleashedDev due to error:\n{:?}",
+                            err
+                        );
+                        return false;
+                    }
+                }
+            }
+            return false;
+        }
+        Err(err) => {
+            println!("Failed to find VU install path to error:\n{:?}", err);
+            return false;
+        }
+    }
+}
+
 // Ugly HACK! Remove when possible see:
 // https://github.com/tauri-apps/tauri/issues/1564
 // https://github.com/tauri-apps/tauri/issues/5170
@@ -465,6 +733,63 @@ async fn activate_bf3_ea_auth_token(token: String) -> bool {
 fn show_window(app: tauri::AppHandle) {
     println!("Attempting to show window after dom loaded!");
     app.get_webview_window("main").unwrap().show().unwrap();
+}
+
+fn store_vu_account_password(username: String, password: String) -> Result<(), Box<dyn Error>> {
+    let service_name = "venice_unleashed_launcher";
+
+    let keyring_entry = Entry::new(service_name, &username)?;
+
+    keyring_entry.set_password(&password)?;
+
+    let retrieved_password = keyring_entry.get_password()?;
+    println!("Retrieved password: {}", retrieved_password);
+
+    Ok(())
+}
+
+fn remove_vu_account_password(username: String) -> Result<(), Box<dyn Error>> {
+    let service_name = "venice_unleashed_launcher";
+
+    let keyring_entry = Entry::new(service_name, &username)?;
+
+    keyring_entry.delete_credential()?;
+
+    println!("Deleted Credentials for: {}", &username);
+
+    Ok(())
+}
+
+fn get_vu_account_password(username: String) -> Result<String, Box<dyn Error>> {
+    let service_name = "venice_unleashed_launcher";
+
+    let keyring_entry = Entry::new(service_name, &username)?;
+
+    let password = keyring_entry.get_password()?;
+
+    Ok(password)
+}
+
+#[tauri::command]
+async fn add_vu_credentials(username: String, password: String) -> bool {
+    match store_vu_account_password(username, password) {
+        Ok(_) => return true,
+        Err(err) => {
+            println!("Failed to add VU credentials due to reason:\n{:?}", err);
+            return false;
+        }
+    }
+}
+
+#[tauri::command]
+async fn remove_vu_credentials(username: String) -> bool {
+    match remove_vu_account_password(username) {
+        Ok(_) => return true,
+        Err(err) => {
+            println!("Failed to delete VU credentials due to reason:\n{:?}", err);
+            return false;
+        }
+    }
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -510,7 +835,12 @@ pub fn run() {
             refresh_loadout,
             activate_bf3_lsx,
             activate_bf3_ea_auth_token,
-            show_window
+            show_window,
+            is_vu_dev_installed,
+            set_vu_dev_branch_install_location_registry,
+            copy_vu_prod_to_folder,
+            add_vu_credentials,
+            remove_vu_credentials
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

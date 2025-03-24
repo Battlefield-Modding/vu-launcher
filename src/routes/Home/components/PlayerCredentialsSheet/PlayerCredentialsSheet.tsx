@@ -26,7 +26,7 @@ export default function PlayerCredentialsSheet() {
   if (isPending) {
     return (
       <div>
-        <h1>LOADING Mods</h1>
+        <h1>Loading Users...</h1>
         <Loader />
       </div>
     )
@@ -35,7 +35,7 @@ export default function PlayerCredentialsSheet() {
   if (isError) {
     return (
       <div className="rounded-md bg-red-600 pl-2 pr-2 text-xl leading-9 text-white">
-        <h1>ERROR: No Mods Found</h1>
+        <h1>ERROR: No users found</h1>
         <p>{error.message}</p>
       </div>
     )
@@ -56,12 +56,12 @@ export default function PlayerCredentialsSheet() {
         </div>
       </SheetTrigger>
       <SheetContent>
-        <SheetHeader >
-          <SheetTitle className='text-center'>Save VU Credentials</SheetTitle>
-          <SheetDescription className='text-center'>
+        <SheetHeader>
+          <SheetTitle className="text-center">Save VU Credentials</SheetTitle>
+          <SheetDescription className="text-center">
             No account? Sign up here:
             <a
-              className="text-blue-500 underline ml-1"
+              className="ml-1 text-blue-500 underline"
               href="https://veniceunleashed.net/signup"
               target="_blank"
             >

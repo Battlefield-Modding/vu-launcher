@@ -23,6 +23,7 @@ export enum rust_fns {
   set_user_preferences = 'set_user_preferences',
   play_vu = 'play_vu',
   is_vu_installed = "is_vu_installed",
+  is_vu_dev_installed = "is_vu_dev_installed",
   get_vu_data = "get_vu_data",
   download_game = "download_game",
   create_server_loadout = 'create_server_loadout',
@@ -34,6 +35,7 @@ export enum rust_fns {
   save_server_guid = 'save_server_guid',
   get_server_loadout = 'get_server_loadout',
   set_vu_install_location_registry = 'set_vu_install_location_registry',
+  set_vu_dev_branch_install_location_registry = 'set_vu_dev_branch_install_location_registry',
   open_explorer_for_loadout = 'open_explorer_for_loadout',
   get_mod_names_in_cache = "get_mod_names_in_cache",
   import_mod_to_cache = "import_mod_to_cache",
@@ -48,6 +50,9 @@ export enum rust_fns {
   refresh_loadout = "refresh_loadout",
   activate_bf3_lsx = "activate_bf3_lsx",
   activate_bf3_ea_auth_token = "activate_bf3_ea_auth_token",
+  copy_vu_prod_to_folder = "copy_vu_prod_to_folder",
+  add_vu_credentials = "add_vu_credentials",
+  remove_vu_credentials = "remove_vu_credentials"
 }
 
 export enum QueryKey {
@@ -112,10 +117,15 @@ export type DragDropEventTauri = {
 export type UserPreferences = {
   is_sidebar_enabled: boolean,
   venice_unleashed_shortcut_location: string,
-  accounts: UserCredential[],
+  dev_venice_unleashed_shortcut_location: string,
+  usernames: string[],
   servers: SavedServer[],
   server_guid: string,
-  show_multiple_account_join: boolean
+  show_multiple_account_join: boolean,
+  is_onboarded: boolean,
+  use_dev_branch: boolean,
+  preferred_player_index: number,
+  preferred_server_index: number,
 }
 
 export type SavedServer = {

@@ -4,13 +4,12 @@ import { QueryKey, rust_fns } from '@/config/config'
 import { invoke } from '@tauri-apps/api/core'
 import { open } from '@tauri-apps/plugin-dialog'
 import { Download, Search } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
 import { listen } from '@tauri-apps/api/event'
 import { Progress } from '@/components/ui/progress'
 import { useQueryClient } from '@tanstack/react-query'
-import { InstallVuProdDialog } from './InstallVuProdDialog'
 
 interface TauriEmitEvent {
   payload: number
@@ -34,7 +33,7 @@ interface LauncherUpdateStatusEventPayload {
   error: string
 }
 
-export function InstallVU() {
+export function InstallVUDev() {
   const queryClient = useQueryClient()
   const [gameDownloadUpdateInstalling, setGameDownloadUpdateInstalling] = useState(false)
   const [gameDownloadUpdateProgress, setGameDownloadUpdateProgress] = useState(0)
@@ -44,9 +43,6 @@ export function InstallVU() {
     gameDownloadUpdateExtractingFilesRemaining,
     setGameDownloadUpdateExtractingFilesRemaining,
   ] = useState(0)
-
-  const [vuProdInstallPath, setVuProdInstallPath] = useState('')
-  const dialogRef = useRef(null)
 
   useEffect(() => {
     listen('download-progress', (event: TauriEmitEvent) => {
@@ -117,10 +113,15 @@ export function InstallVU() {
       directory: true,
     })
     if (installPath) {
-      setVuProdInstallPath(() => installPath)
-      if (dialogRef.current) {
-        const element = dialogRef.current as HTMLDialogElement
-        element.click()
+      const confirmed = await confirm(
+        'Are you sure? Venice Unleashed Launcher will be installed to: ' +
+          installPath +
+          '\\VeniceUnleashed',
+      )
+
+      if (confirmed) {
+        setGameDownloadUpdateInstalling(() => true)
+        await invoke(rust_fns.download_game, { installPath })
       }
     }
   }
@@ -151,37 +152,18 @@ export function InstallVU() {
         <>
           <div className="flex flex-1 justify-center gap-4 align-middle text-xl leading-9">
             <h1 className="flex-1">VU already installed?</h1>
-            <Button
-              variant={'secondary'}
-              onClick={(e) => {
-                e.preventDefault()
-                handleSetVUInstallLocation()
-              }}
-            >
+            <Button variant={'secondary'} onClick={handleSetVUInstallLocation}>
               <Search /> Find VU
             </Button>
           </div>
 
           <div className="flex flex-1 justify-center gap-4 align-middle text-xl leading-9">
             <h1 className="flex-1 text-white">Download VU</h1>
-            <Button
-              variant={'secondary'}
-              className=""
-              onClick={(e) => {
-                e.preventDefault()
-                handleDownloadVU()
-              }}
-            >
+            <Button variant={'secondary'} className="" onClick={handleDownloadVU}>
               <Download size={'10px'} />
               <p>Choose Install Location</p>
             </Button>
           </div>
-
-          <InstallVuProdDialog
-            vuProdInstallPath={vuProdInstallPath}
-            setGameDownloadUpdateInstalling={setGameDownloadUpdateInstalling}
-            dialogRef={dialogRef}
-          />
         </>
       )}
 

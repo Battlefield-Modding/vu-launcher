@@ -20,22 +20,37 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { toast } from 'sonner'
-import { QueryKey, STALE } from '@/config/config'
-import { useQuery } from '@tanstack/react-query'
-import { getServersAndAccounts, playVU } from '@/api'
+import { QueryKey, STALE, UserPreferences } from '@/config/config'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import {
+  getServersAndAccounts,
+  playVU,
+  setPreferredPlayer,
+  setPreferredServer,
+  toggleDevBranch,
+} from '@/api'
 import { Loader, Play } from 'lucide-react'
 import DeleteVUCredentialDialog from './DeleteVUCredentialDialog'
 import DeleteVUServerDialog from './DeleteVUServerDialog'
 import { getCurrentWindow } from '@tauri-apps/api/window'
+import clsx from 'clsx'
+import { Switch } from '@/components/ui/switch'
 
 const FormSchema = z.object({
   accountIndex: z.string().optional(),
   serverIndex: z.string().optional(),
+  useDevBranch: z.boolean(),
 })
 
-export default function PlayVUForm() {
+export default function PlayVUForm({ preferences }: { preferences: UserPreferences }) {
+  const queryClient = useQueryClient()
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
+    defaultValues: {
+      accountIndex: `${preferences.preferred_player_index === 90001 ? 0 : preferences.preferred_player_index}`,
+      serverIndex: `${preferences.preferred_player_index === 9001 ? 0 : preferences.preferred_player_index}`,
+      useDevBranch: preferences.use_dev_branch,
+    },
   })
 
   const { isPending, isError, data, error } = useQuery({
@@ -63,11 +78,13 @@ export default function PlayVUForm() {
   }
 
   async function onSubmit(formData: z.infer<typeof FormSchema>) {
+    console.log(formData)
     let accountIndex = 9001
     let serverIndex = 9001
+    let useDevBranch = formData.useDevBranch
 
     if (formData.accountIndex === undefined) {
-      if (data && data.accounts.length > 0) {
+      if (data && data.usernames.length > 0) {
         accountIndex = 0
       }
     } else {
@@ -78,7 +95,7 @@ export default function PlayVUForm() {
       serverIndex = parseInt(formData.serverIndex)
     }
 
-    const status = await playVU({ accountIndex, serverIndex })
+    const status = await playVU({ accountIndex, serverIndex, useDevBranch })
 
     if (status) {
       toast('Starting VU...')
@@ -90,42 +107,40 @@ export default function PlayVUForm() {
     }
   }
 
-  if (!data || typeof data !== 'object' || !data.accounts[0]) {
-    return (
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex w-64 flex-col gap-8">
-        <h1>No accounts Found</h1>
-        <Button variant={'constructive'} className="p-8 text-2xl" type="submit">
-          <Play />
-          PLAY
-        </Button>
-      </form>
-    )
-  }
-
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex w-64 flex-col gap-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex w-64 flex-col gap-4">
         <FormField
           control={form.control}
           name="accountIndex"
           render={({ field }) => (
             <FormItem>
               <FormLabel>VU Account</FormLabel>
-              <Select onValueChange={field.onChange}>
+              <Select
+                onValueChange={async (e) => {
+                  await setPreferredPlayer(parseInt(e))
+                  field.onChange(e)
+                }}
+              >
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder={data.accounts[0].username} />
+                    <SelectValue
+                      placeholder={data.usernames[preferences.preferred_player_index] || 'None'}
+                    />
                   </SelectTrigger>
                 </FormControl>
-                <SelectContent defaultValue={data.accounts[0].username}>
-                  {data.accounts.map((x, index) => {
-                    return (
-                      <div className="flex" key={x.username}>
-                        <SelectItem value={`${index}`}>{x.username}</SelectItem>
-                        <DeleteVUCredentialDialog username={x.username} />
-                      </div>
-                    )
-                  })}
+                <SelectContent
+                  defaultValue={data.usernames[preferences.preferred_player_index] || 'None'}
+                >
+                  {data.usernames &&
+                    data.usernames.map((x, index) => {
+                      return (
+                        <div className="flex" key={x}>
+                          <SelectItem value={`${index}`}>{x}</SelectItem>
+                          <DeleteVUCredentialDialog username={x} />
+                        </div>
+                      )
+                    })}
                 </SelectContent>
               </Select>
               <FormDescription></FormDescription>
@@ -139,13 +154,30 @@ export default function PlayVUForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Quick-Join Server</FormLabel>
-              <Select onValueChange={field.onChange}>
+              <Select
+                onValueChange={async (e) => {
+                  await setPreferredServer(parseInt(e))
+                  field.onChange(e)
+                }}
+              >
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="None" />
+                    <SelectValue
+                      placeholder={
+                        data.servers[preferences.preferred_server_index]
+                          ? data.servers[preferences.preferred_server_index].nickname
+                          : 'None'
+                      }
+                    />
                   </SelectTrigger>
                 </FormControl>
-                <SelectContent defaultValue="None">
+                <SelectContent
+                  defaultValue={
+                    data.servers[preferences.preferred_server_index]
+                      ? data.servers[preferences.preferred_server_index].nickname
+                      : 'None'
+                  }
+                >
                   {data.servers.map((x, index) => {
                     return (
                       <div className="flex" key={x.nickname}>
@@ -154,6 +186,9 @@ export default function PlayVUForm() {
                       </div>
                     )
                   })}
+                  <div className="flex">
+                    <SelectItem value={`${9001}`}>None</SelectItem>
+                  </div>
                 </SelectContent>
               </Select>
               <FormDescription></FormDescription>
@@ -161,7 +196,36 @@ export default function PlayVUForm() {
             </FormItem>
           )}
         />
-        <Button variant={'constructive'} className="p-8 text-2xl" type="submit">
+        <FormField
+          control={form.control}
+          name={`useDevBranch`}
+          render={({ field }) => (
+            <FormItem
+              className={clsx(
+                'flex justify-between rounded-md rounded-l-none border-b border-secondary',
+                field.value && 'border-green-500 text-green-500 opacity-100',
+              )}
+            >
+              <FormLabel className="mt-1">Use Dev Branch</FormLabel>
+              <FormControl>
+                {/* @ts-ignore */}
+                <Switch
+                  {...field}
+                  checked={field.value}
+                  onCheckedChange={async (e) => {
+                    await toggleDevBranch(e)
+                    queryClient.invalidateQueries({
+                      queryKey: [QueryKey.UserPreferences],
+                      refetchType: 'all',
+                    })
+                    field.onChange(e)
+                  }}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        <Button variant={'constructive'} className="mt-4 p-8 text-2xl" type="submit">
           <Play />
           PLAY
         </Button>

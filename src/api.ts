@@ -1,26 +1,34 @@
 import {invoke} from "@tauri-apps/api/core"
 import { LoadoutJSON, rust_fns, SavedServer, UserCredential, UserPreferences } from "./config/config"
 
-export async function firstTimeSetup(){
-  await invoke(rust_fns.first_time_setup)
+export async function firstTimeSetup(): Promise<boolean>{
+  const status = await invoke(rust_fns.first_time_setup) as boolean
+  return status
 }
 
-export async function saveUserPreferences(newPreferences: UserPreferences){
-  const status = await invoke(rust_fns.set_user_preferences, {newPreferences});
+export async function saveUserPreferences(newPreferences: UserPreferences): Promise<boolean> {
+  const status = await invoke(rust_fns.set_user_preferences, {newPreferences}) as boolean
   return status
 }
 
 export async function saveUserCredentials({username, password}: {username: string, password:string}){
   const preferences = JSON.parse(await invoke(rust_fns.get_user_preferences));
-  const accounts = preferences.accounts ?? []
-  accounts.push({username, password})
-  const newPreferences = {...preferences, accounts}
-  const status = await invoke(rust_fns.set_user_preferences, {newPreferences})
-  return status
+  const usernames = preferences.usernames ?? []
+  usernames.push(username)
+  const newPreferences = {...preferences, usernames}
+  const pwStatus = await invoke(rust_fns.add_vu_credentials, {username, password})
+  if (pwStatus) {
+    const prefStatus = await invoke(rust_fns.set_user_preferences, {newPreferences})
+    if (prefStatus) {
+      return true
+    }
+  }
+  
+  return false
 }
 
-export async function playVU({accountIndex, serverIndex}: {accountIndex: number, serverIndex: number}): Promise<boolean> {
-  const status = await invoke(rust_fns.play_vu, {accountIndex, serverIndex}) as boolean
+export async function playVU({accountIndex, serverIndex, useDevBranch}: {accountIndex: number, serverIndex: number, useDevBranch: boolean}): Promise<boolean> {
+  const status = await invoke(rust_fns.play_vu, {accountIndex, serverIndex, useDevBranch}) as boolean
   return status
 }
 
@@ -32,21 +40,10 @@ export async function playVUOnLocalServer(loadoutName: string, users?: number[])
   }
 }
 
-function isValidCredential(cred: string){
-  if (typeof cred === "string"){
-    if (cred.length >= 2) {
-      return true
-    }
-  }
-  return false
-}
-
 export async function doesCredentialsExist(): Promise<boolean>{
-  const {accounts} = await getUserPreferences()
-  if(accounts[0]){
-    if (isValidCredential(accounts[0].username) && isValidCredential(accounts[0].password)){
+  const {usernames} = await getUserPreferences()
+  if(usernames[0]){
       return true
-    }
   }
   return false
 }
@@ -56,13 +53,19 @@ export async function getUserPreferences(): Promise<UserPreferences>{
   return info
 }
 
-export async function getUsers(): Promise<UserCredential[]>{
-  const {accounts} = await getUserPreferences()
-  return accounts
+export async function getUsers(): Promise<string[]>{
+  const {usernames} = await getUserPreferences()
+  return usernames
 }
 
-export async function vuIsInstalled(): Promise<boolean> {
+export async function vuProdIsInstalled(): Promise<boolean> {
   const info = JSON.parse(await invoke(rust_fns.is_vu_installed))
+  return info
+}
+
+export async function vuDevIsInstalled(): Promise<boolean> {
+  const info = JSON.parse(await invoke(rust_fns.is_vu_dev_installed))
+  console.log(`VU Dev installation status: ${info}`)
   return info
 }
 
@@ -102,8 +105,8 @@ export async function deleteServerLoadout(name: string): Promise<boolean>{
   return info
 }
 
-export async function serverKeyExists(){
-  const info = await invoke(rust_fns.server_key_exists)
+export async function serverKeyExists(): Promise<boolean>{
+  const info = await invoke(rust_fns.server_key_exists) as boolean
   return info
 }
 
@@ -130,6 +133,11 @@ export async function getServerLoadout(name: string){
 
 export async function setVUInstallLocation(installdir: string){
   const info = await invoke(rust_fns.set_vu_install_location_registry, {installdir})
+  return info
+}
+
+export async function setVUDevInstallLocation(installdir: string){
+  const info = await invoke(rust_fns.set_vu_dev_branch_install_location_registry, {installdir})
   return info
 }
 
@@ -174,15 +182,21 @@ export async function openModWithVsCode({name, modname}: {name: string, modname:
 
 export async function deleteUserCredentials({username}: {username: string}){
   const preferences = JSON.parse(await invoke(rust_fns.get_user_preferences)) as UserPreferences
-  const accounts = preferences.accounts ?? [];
-  const filteredAccounts = accounts.filter((item) => {
-    if(item.username !== username){
-      return item
+  const usernames = preferences.usernames ?? [];
+  const filteredUsernames = usernames.filter((name) => {
+    if(username !== name){
+      return name
     }
   })
-  const newPreferences = {...preferences, accounts: filteredAccounts}
-  const status = await invoke(rust_fns.set_user_preferences, {newPreferences})
-  return status
+  const newPreferences = {...preferences, usernames: filteredUsernames}
+  const accStatus = await invoke(rust_fns.remove_vu_credentials, {username});
+  if (accStatus){
+    const prefStatus = await invoke(rust_fns.set_user_preferences, {newPreferences})
+    if (prefStatus){
+      return true
+    }
+  }
+  return false
 }
 
 export async function getAllServers(): Promise<SavedServer[]>{
@@ -190,9 +204,9 @@ export async function getAllServers(): Promise<SavedServer[]>{
   return servers
 }
 
-export async function getServersAndAccounts(): Promise<{servers:SavedServer[], accounts: UserCredential[]}> {
-  const {servers, accounts} = await getUserPreferences();
-  return {servers, accounts}
+export async function getServersAndAccounts(): Promise<{servers:SavedServer[], usernames: string[]}> {
+  const {servers, usernames} = await getUserPreferences();
+  return {servers, usernames}
 }
 
 export async function deleteServer({server}: {server: SavedServer}): Promise<boolean>{
@@ -238,4 +252,48 @@ export async function activateBf3LSX(){
 export async function activateBf3EaAuthToken(token: string){
   const status = await invoke(rust_fns.activate_bf3_ea_auth_token, {token})
   return status
+}
+
+export async function finishOnboarding(): Promise<boolean>{
+  const preferences = await getUserPreferences();
+  preferences.is_onboarded = true
+  const status = await saveUserPreferences(preferences)
+  if (status) {
+    return false // done with onboarding
+  } else {
+    return true // something went wrong
+  }
+}
+
+export async function toggleDevBranch(state: boolean): Promise<boolean>{
+  const preferences = await getUserPreferences();
+  preferences.use_dev_branch = state
+  const status = await saveUserPreferences(preferences)
+  if (status) {
+    return false // done with onboarding
+  } else {
+    return true // something went wrong
+  }
+}
+
+export async function setPreferredPlayer(index: number): Promise<boolean>{
+  const preferences = await getUserPreferences();
+  preferences.preferred_player_index = index
+  const status = await saveUserPreferences(preferences)
+  if (status) {
+    return false // done with onboarding
+  } else {
+    return true // something went wrong
+  }
+}
+
+export async function setPreferredServer(index: number): Promise<boolean>{
+  const preferences = await getUserPreferences();
+  preferences.preferred_server_index = index
+  const status = await saveUserPreferences(preferences)
+  if (status) {
+    return false // done with onboarding
+  } else {
+    return true // something went wrong
+  }
 }

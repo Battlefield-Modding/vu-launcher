@@ -793,15 +793,18 @@ pub fn loadout_common_launch_args_to_vec(common: &CommonLaunchArguments) -> Vec<
         }
         None => {}
     };
-    match &common.updateBranch {
-        Some(info) => {
-            if !info.eq("") {
-                args.push("-updateBranch");
-                args.push(info);
+    // only override the updatebranch if using a custom gamepath
+    if &common.gamepath != &Some(String::from("")) {
+        match &common.updateBranch {
+            Some(info) => {
+                if !info.eq("") {
+                    args.push("-updateBranch");
+                    args.push(info);
+                }
             }
-        }
-        None => {}
-    };
+            None => {}
+        };
+    }
     match &common.vextdebug {
         Some(info) => {
             if !info.eq("") {

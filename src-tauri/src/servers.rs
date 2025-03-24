@@ -317,6 +317,8 @@ pub async fn delete_server_loadout(name: String) -> bool {
 pub async fn start_server_loadout(name: String) -> bool {
     let mut args: Vec<&str> = Vec::new();
 
+    args.push("/C");
+
     let loadout = match get_loadout_json_as_struct(&name) {
         Ok(info) => info,
         Err(err) => {
@@ -334,6 +336,26 @@ pub async fn start_server_loadout(name: String) -> bool {
         Err(_) => return false,
     };
 
+    if &loadout.launch.common.gamepath == &Some(String::from("")) {
+        println!("Gamepath arg was empty!");
+        if preferences.use_dev_branch {
+            if preferences.dev_venice_unleashed_shortcut_location.len() > 1 {
+                args.push(&preferences.dev_venice_unleashed_shortcut_location);
+                args.push("-updateBranch");
+                args.push("dev");
+            } else {
+                args.push(&preferences.venice_unleashed_shortcut_location);
+                args.push("-updateBranch");
+                args.push("dev");
+            }
+        } else {
+            args.push(&preferences.venice_unleashed_shortcut_location)
+        }
+    } else {
+        // if there is a gamepath specified, make sure to give a valid vu.exe to pass the gamepath arg to
+        args.push(&preferences.venice_unleashed_shortcut_location)
+    }
+
     args.push("-server");
     args.push("-dedicated");
 
@@ -342,7 +364,7 @@ pub async fn start_server_loadout(name: String) -> bool {
     let mut common = loadout_common_launch_args_to_vec(&loadout.launch.common);
     args.append(&mut common);
 
-    Command::new(&preferences.venice_unleashed_shortcut_location)
+    Command::new("cmd")
         .args(args)
         .creation_flags(CREATE_NO_WINDOW)
         .spawn()
