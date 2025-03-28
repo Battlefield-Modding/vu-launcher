@@ -3,6 +3,7 @@ import { initReactI18next } from 'react-i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
 import { EnglishTranslations } from './translations/English'
 import { GermanTranslations } from './translations/German'
+import { ChineseTranslations } from './translations/Chinese'
 
 export enum i18nLanguageCodes {
   Arabic = 'ar',
@@ -16,7 +17,11 @@ export enum i18nLanguageCodes {
   Russian = 'ru',
 }
 
-export const supportedLanguages = [i18nLanguageCodes.English, i18nLanguageCodes.German]
+export const supportedLanguages = [
+  i18nLanguageCodes.English,
+  i18nLanguageCodes.German,
+  i18nLanguageCodes.Chinese,
+]
 
 i18n
   // detect user language
@@ -42,6 +47,11 @@ i18n
       [i18nLanguageCodes.German]: {
         translation: {
           ...GermanTranslations,
+        },
+      },
+      [i18nLanguageCodes.Chinese]: {
+        translation: {
+          ...ChineseTranslations,
         },
       },
     },
