@@ -6,7 +6,11 @@ import { getUserPreferences } from '@/api'
 import { useQuery } from '@tanstack/react-query'
 import { Loader } from 'lucide-react'
 
+import { useTranslation, Trans } from 'react-i18next'
+
 export default function Home() {
+  const { t } = useTranslation()
+
   const { isPending, isError, data, error } = useQuery({
     queryKey: [QueryKey.UserPreferences],
     queryFn: getUserPreferences,
