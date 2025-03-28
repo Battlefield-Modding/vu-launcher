@@ -11,15 +11,17 @@ import { Input } from '@/components/ui/input'
 import { Trash } from 'lucide-react'
 import { useState } from 'react'
 import { useFieldArray } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 export function ReservedSlotsComponent({ form }: { form: any }) {
   const fieldArray = useFieldArray({ name: 'reservedSlots', control: form.control })
   const [autoFocusIndex, setAutoFocusIndex] = useState(-1)
+  const { t } = useTranslation()
 
   return (
     <div className="flex">
       <div className="flex-1">
-        <FormLabel className="text-lg">Add Players to Reserved Slots</FormLabel>
+        <FormLabel className="text-lg">{t('startupDescriptions.reservedSlots.add')}</FormLabel>
         <FormDescription>reservedSlots.add</FormDescription>
       </div>
 
