@@ -1,14 +1,11 @@
 import { LoadoutJSON } from '@/config/config'
-import {
-  defaultLaunchArgumentInputTypes,
-  LaunchArgumentDescriptions,
-  LaunchArguments,
-} from '../setup/LaunchArguments'
+import { defaultLaunchArgumentInputTypes, LaunchArguments } from '../setup/LaunchArguments'
 import { SwitchComponent } from '../../Startup/FormBuilder/SwitchComponent'
 import { NumberComponent } from '../../Startup/FormBuilder/NumberComponent'
 import { TextAreaComponent } from '../../Startup/FormBuilder/TextAreaComponent'
 import { SelectComponent } from './SelectComponent'
 import { TextComponent } from '../../Startup/FormBuilder/TextComponent'
+import { useTranslation } from 'react-i18next'
 
 export function LaunchArgumentFormBuilder({
   form,
@@ -19,14 +16,14 @@ export function LaunchArgumentFormBuilder({
   sectionNames: Array<keyof LaunchArguments>
   filteredArguments: Partial<LoadoutJSON>
 }) {
+  const { t } = useTranslation()
   return sectionNames.map((sectionName) => {
     // @ts-expect-error
     return Object.entries(filteredArguments[sectionName] ?? {}).map(([key, value]) => {
       // @ts-expect-error
       const fieldType = defaultLaunchArgumentInputTypes[sectionName][key]
 
-      // @ts-expect-error
-      const label = LaunchArgumentDescriptions[sectionName as keyof LaunchArguments][key]
+      const label = t(`launchArgumentDescriptions.${sectionName as keyof LaunchArguments}.${key}`)
       if (fieldType === 'checkbox') {
         return (
           <SwitchComponent
