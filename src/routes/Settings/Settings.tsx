@@ -6,6 +6,7 @@ import LocalServerGuidForm from './components/LocalServerGuidForm'
 import { ActivateBF3Sheet } from './components/ActivateBF3/ActivateBF3Sheet'
 import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
+import { LanguageSelector } from './components/LanguageSelector'
 
 export default function Settings() {
   const queryClient = useQueryClient()
@@ -41,6 +42,11 @@ export default function Settings() {
         <div>
           <ActivateBF3Sheet />
         </div>
+
+        <div>
+          <LanguageSelector />
+        </div>
+
         <LocalServerGuidForm guid={data.server_guid} />
 
         <div className="flex">
