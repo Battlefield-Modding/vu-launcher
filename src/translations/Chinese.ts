@@ -1,4 +1,6 @@
-export const ChineseTranslations = {
+import { TranslationObject } from './English'
+
+export const ChineseTranslations: TranslationObject = {
   startupDescriptions: {
     admin: {
       password: '为 Procon 设置 RCON 密码',

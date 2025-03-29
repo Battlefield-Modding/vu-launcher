@@ -1,3 +1,5 @@
+export type TranslationObject = typeof EnglishTranslations
+
 export const EnglishTranslations = {
   startupDescriptions: {
     admin: {

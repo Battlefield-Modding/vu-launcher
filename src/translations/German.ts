@@ -1,4 +1,6 @@
-export const GermanTranslations = {
+import { TranslationObject } from './English'
+
+export const GermanTranslations: TranslationObject = {
   startupDescriptions: {
     admin: {
       password: 'RCON-Passwort für Procon festlegen',
