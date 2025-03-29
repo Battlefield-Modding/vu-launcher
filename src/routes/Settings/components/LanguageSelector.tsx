@@ -21,6 +21,7 @@ import {
 
 import { CIcon } from '@coreui/icons-react'
 import * as icon from '@coreui/icons'
+import { toast } from 'sonner'
 
 const formSchema = z.object({
   language: z.string(),
@@ -59,6 +60,7 @@ export function LanguageSelector() {
                 onValueChange={(e) => {
                   // TODO: make this part of user preferences
                   i18n.changeLanguage(e)
+                  toast(`Changed language to: ${e}`)
                   field.onChange(e)
                 }}
                 defaultValue={field.value}
