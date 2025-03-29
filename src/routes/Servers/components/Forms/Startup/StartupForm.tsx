@@ -7,11 +7,11 @@ import { Form } from '@/components/ui/form'
 import { useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { LoaderComponent } from '@/components/LoaderComponent'
-import { defaultStartupArguments } from './Setup/DefaultStartupConfig'
 import { FormBuilder } from './FormBuilder/FormBuilder'
 import { LoadoutJSON, QueryKey } from '@/config/config'
 import { editServerLoadout } from '@/api'
 import { toast } from 'sonner'
+import { StartupSearch } from './StartupSearch'
 
 const formSchema = z.object({
   admin: z.object({
@@ -131,42 +131,10 @@ export function StartupForm({
     }
   }
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const info = Object.keys(defaultStartupArguments).map((x) => {
-      // @ts-ignore
-      const filtered_fields = Object.keys(defaultStartupArguments[x])
-        .filter((key) => key.toLowerCase().includes(e.target.value))
-        .reduce((obj, key) => {
-          // @ts-ignore
-          obj[key] = defaultStartupArguments[x][key]
-          return obj
-        }, {})
-
-      return {
-        name: x,
-        values: filtered_fields,
-      }
-    })
-
-    const combinedObject = {}
-    info.forEach((x) => {
-      // @ts-ignore
-      combinedObject[x.name] = x.values
-    })
-
-    setFilteredArgs(() => combinedObject)
-  }
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="m-auto max-w-screen-md">
-        <input
-          type="text"
-          placeholder={`Search Startup Config     [CTRL + F]`}
-          className="fixed top-0 w-[720px] rounded-md border border-gray-500 bg-black p-2 focus:border-cyan-300 focus:outline-none focus:ring-0"
-          onChange={handleChange}
-          ref={searchRef}
-        />
+        <StartupSearch setFilteredArgs={setFilteredArgs} searchRef={searchRef} />
 
         <div className="flex flex-col gap-6 pt-12">
           <FormBuilder
