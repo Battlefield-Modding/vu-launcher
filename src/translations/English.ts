@@ -1,6 +1,63 @@
 export type TranslationObject = typeof EnglishTranslations
 
 export const EnglishTranslations = {
+  onboarding: {
+    loading: 'Loading Onboarding component',
+    error: 'Failed to load Onboarding component',
+    header: 'First Time Setup',
+    button: {
+      continue: 'Skip / Continue',
+      complete: 'Skip / Complete Onboarding',
+    },
+    activate: {
+      header: 'Activate BF3 with EA App / Origin',
+      step1: 'Please launch your EA App / Origin and sign in.',
+      step2: 'Once signed-in click on the Activate BF3 button:',
+      step3: 'After it succeeds click continue.',
+      button: 'Activate BF3',
+    },
+    install: {
+      prod: {
+        locate: {
+          header: 'VU already installed?',
+          button: 'Find VU',
+        },
+        download: {
+          header: 'Download VU',
+          button: 'Choose Install Location',
+        },
+        progress: {
+          header: 'Downloading VU',
+          extractingPrefix: 'Extracting Files',
+          extractingSuffix: 'remaining',
+        },
+        dialog: {
+          title: 'Install VU to:',
+          description: 'This will install VU to the above directory.',
+          button: {
+            confirmOne: 'Install VU Prod',
+            confirmBoth: 'Install VU Prod AND Dev',
+            cancel: 'Cancel',
+          },
+        },
+      },
+      dev: {
+        header: 'Found VU Prod. Install VU Dev also?',
+        button: 'Choose Install Location',
+        dialog: {
+          title: 'Install VU Dev to',
+          description: 'This will install VU Dev to the above directory.',
+          button: {
+            confirm: 'Install VU Dev',
+            cancel: 'Cancel',
+          },
+        },
+      },
+    },
+    account: {
+      add: 'Add a VU account',
+    },
+  },
   startupDescriptions: {
     admin: {
       password: 'Set RCON Password for Procon',

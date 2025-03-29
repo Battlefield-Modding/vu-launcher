@@ -10,8 +10,10 @@ import { open } from '@tauri-apps/plugin-dialog'
 import { InstallVuDevDialog } from './InstallVuDevDialog'
 import { toast } from 'sonner'
 import PlayerCredentialsSheet from '@/routes/Home/components/PlayerCredentialsSheet/PlayerCredentialsSheet'
+import { useTranslation } from 'react-i18next'
 
 export function Onboarding({ setOnboarding }: { setOnboarding: (t: () => boolean) => void }) {
+  const { t } = useTranslation()
   const [progress, setProgress] = useState(0)
   const [vuDevInstallPath, setVuDevInstallPath] = useState('')
   const dialogRef = useRef(null)
@@ -67,7 +69,7 @@ export function Onboarding({ setOnboarding }: { setOnboarding: (t: () => boolean
   if (isPending) {
     return (
       <div>
-        <h1>Home Route LOADING</h1>
+        <h1>{t('onboarding.loading')}</h1>
         <Loader />
       </div>
     )
@@ -76,7 +78,7 @@ export function Onboarding({ setOnboarding }: { setOnboarding: (t: () => boolean
   if (isError) {
     return (
       <div>
-        <h1>Home Route Error</h1>
+        <h1>{t('onboarding.error')}</h1>
         <p>{error.message}</p>
       </div>
     )
@@ -86,12 +88,12 @@ export function Onboarding({ setOnboarding }: { setOnboarding: (t: () => boolean
 
   return (
     <form className="m-auto flex max-w-screen-md flex-col items-center gap-8 p-8">
-      <h1 className="text-4xl">First Time Setup</h1>
+      <h1 className="text-4xl">{t('onboarding.header')}</h1>
 
       {progress == 100 && (
         <div className="m-auto flex max-h-[500px] max-w-[500px] flex-col justify-between gap-8 rounded-md bg-black p-8">
           <>
-            <h1 className="text-xl">Add a VU account</h1>
+            <h1 className="text-xl">{t('onboarding.account.add')}</h1>
             <PlayerCredentialsSheet />
             <Button
               variant={'outline'}
@@ -101,7 +103,7 @@ export function Onboarding({ setOnboarding }: { setOnboarding: (t: () => boolean
                 setOnboarding(() => status)
               }}
             >
-              Skip / Complete Onboarding
+              {t('onboarding.button.complete')}
             </Button>
           </>
         </div>
@@ -111,11 +113,11 @@ export function Onboarding({ setOnboarding }: { setOnboarding: (t: () => boolean
         <div className="m-auto flex max-h-[500px] max-w-[500px] flex-col justify-between gap-8 rounded-md bg-black p-8">
           <div className="flex flex-col items-center gap-8">
             <div className="flex flex-col items-center">
-              <h1 className="text-xl">Activate BF3 with EA App / Origin</h1>
+              <h1 className="text-xl">{t('onboarding.activate.header')}</h1>
               <ul className="m-4 ml-8 list-disc">
-                <li>Please launch your EA App / Origin and sign in.</li>
-                <li>Once signed-in click on the Activate BF3 button: </li>
-                <li>After it succeeds click continue.</li>
+                <li>{t('onboarding.activate.step1')}</li>
+                <li>{t('onboarding.activate.step2')}</li>
+                <li>{t('onboarding.activate.step3')}</li>
               </ul>
               <Button
                 variant={'constructive'}
@@ -124,7 +126,7 @@ export function Onboarding({ setOnboarding }: { setOnboarding: (t: () => boolean
                   handleActivateLSX()
                 }}
               >
-                Activate BF3
+                {t('onboarding.activate.button')}
               </Button>
             </div>
             <Button
@@ -134,7 +136,7 @@ export function Onboarding({ setOnboarding }: { setOnboarding: (t: () => boolean
                 increaseProgress()
               }}
             >
-              Skip / Continue
+              {t('onboarding.button.continue')}
             </Button>
           </div>
         </div>
@@ -145,7 +147,7 @@ export function Onboarding({ setOnboarding }: { setOnboarding: (t: () => boolean
       {vuProduction && !vuDevelopment && progress < 50 && (
         <div className="m-auto flex max-h-[500px] max-w-[500px] flex-col justify-between gap-8 rounded-md bg-black p-8">
           <>
-            <h1 className="text-xl">Found VU Prod. Install VU Dev also?</h1>
+            <h1 className="text-xl">{t('onboarding.install.dev.header')}</h1>
             <Button
               variant={'secondary'}
               onClick={(e) => {
@@ -154,7 +156,7 @@ export function Onboarding({ setOnboarding }: { setOnboarding: (t: () => boolean
               }}
             >
               <Download size={'10px'} />
-              <p>Choose Install Location</p>
+              <p>{t('onboarding.install.dev.button')}</p>
             </Button>
             <Button
               variant={'outline'}
@@ -163,7 +165,7 @@ export function Onboarding({ setOnboarding }: { setOnboarding: (t: () => boolean
                 increaseProgress()
               }}
             >
-              Skip / Continue
+              {t('onboarding.button.continue')}
             </Button>
             <InstallVuDevDialog dialogRef={dialogRef} vuDevInstallPath={vuDevInstallPath} />
           </>

@@ -10,6 +10,7 @@ import { listen } from '@tauri-apps/api/event'
 import { Progress } from '@/components/ui/progress'
 import { useQueryClient } from '@tanstack/react-query'
 import { InstallVuProdDialog } from './InstallVuProdDialog'
+import { useTranslation } from 'react-i18next'
 
 interface TauriEmitEvent {
   payload: number
@@ -46,6 +47,7 @@ export function InstallVU() {
 
   const [vuProdInstallPath, setVuProdInstallPath] = useState('')
   const dialogRef = useRef(null)
+  const { t } = useTranslation()
 
   useEffect(() => {
     listen('download-progress', (event: TauriEmitEvent) => {
@@ -149,7 +151,7 @@ export function InstallVU() {
       {!gameDownloadUpdateInstalling && (
         <>
           <div className="flex flex-1 justify-center gap-4 align-middle text-xl leading-9">
-            <h1 className="flex-1">VU already installed?</h1>
+            <h1 className="flex-1">{t('onboarding.install.prod.locate.header')}</h1>
             <Button
               variant={'secondary'}
               onClick={(e) => {
@@ -157,12 +159,12 @@ export function InstallVU() {
                 handleSetVUInstallLocation()
               }}
             >
-              <Search /> Find VU
+              <Search /> {t('onboarding.install.prod.locate.button')}
             </Button>
           </div>
 
           <div className="flex flex-1 justify-center gap-4 align-middle text-xl leading-9">
-            <h1 className="flex-1 text-white">Download VU</h1>
+            <h1 className="flex-1 text-white">{t('onboarding.install.prod.download.header')}</h1>
             <Button
               variant={'secondary'}
               className=""
@@ -172,7 +174,7 @@ export function InstallVU() {
               }}
             >
               <Download size={'10px'} />
-              <p>Choose Install Location</p>
+              <p>{t('onboarding.install.prod.download.button')}</p>
             </Button>
           </div>
 
@@ -189,7 +191,7 @@ export function InstallVU() {
       {gameDownloadUpdateInstalling && (
         <>
           <div className="flex flex-1 justify-center gap-4 align-middle text-3xl leading-9 text-white">
-            <h1>Downloading VU</h1>
+            <h1>{t('onboarding.install.prod.progress.header')}</h1>
           </div>
 
           <div className="flex w-full flex-col rounded-md text-white">
@@ -212,7 +214,9 @@ export function InstallVU() {
               </div>
             ) : (
               <p className="noselect mr-2 text-right text-sm font-light">
-                Extracting Files ({gameDownloadUpdateExtractingFilesRemaining} left)
+                {t('onboarding.install.progress.extractingPrefix')} (
+                {gameDownloadUpdateExtractingFilesRemaining}{' '}
+                {t('onboarding.install.progress.extractingSuffix')})
               </p>
             )}
           </div>
