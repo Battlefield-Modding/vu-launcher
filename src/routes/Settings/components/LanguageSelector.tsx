@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { supportedLanguages } from '@/i18n'
+import { i18nLanguageCodes, supportedLanguages } from '@/i18n'
 import {
   Select,
   SelectContent,
@@ -19,9 +19,20 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 
+import { CIcon } from '@coreui/icons-react'
+import * as icon from '@coreui/icons'
+
 const formSchema = z.object({
   language: z.string(),
 })
+
+const languageCodesToFlags = {
+  [i18nLanguageCodes.English]: icon.flagSet.cifUs,
+  [i18nLanguageCodes.German]: icon.flagSet.cifDe,
+  [i18nLanguageCodes.Chinese]: icon.flagSet.cifCn,
+} as const
+
+type LanguageCodeToFlag = typeof languageCodesToFlags
 
 export function LanguageSelector() {
   const { i18n } = useTranslation()
@@ -52,7 +63,7 @@ export function LanguageSelector() {
                 }}
                 defaultValue={field.value}
               >
-                <FormControl className="w-32">
+                <FormControl className="w-fit">
                   <SelectTrigger>
                     <SelectValue placeholder="Choose your Language" />
                   </SelectTrigger>
@@ -61,7 +72,13 @@ export function LanguageSelector() {
                   {supportedLanguages.map((x, index) => {
                     return (
                       <SelectItem value={x} key={`language-selector-${index}-${x}`}>
-                        {x}
+                        <div className="flex flex-row items-center gap-2">
+                          <CIcon
+                            icon={languageCodesToFlags[x as keyof LanguageCodeToFlag]}
+                            className="h-5 w-5"
+                          />
+                          <div>{x}</div>
+                        </div>
                       </SelectItem>
                     )
                   })}
