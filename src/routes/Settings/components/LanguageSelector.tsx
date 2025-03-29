@@ -40,7 +40,7 @@ export function LanguageSelector() {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { language: supportedLanguages[0] },
+    defaultValues: { language: i18n.language },
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
