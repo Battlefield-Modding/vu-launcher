@@ -34,7 +34,7 @@ function App() {
   return (
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
-        {!onboarding ? (
+        {onboarding ? (
           <>
             <Onboarding setOnboarding={setOnboarding} />
             <Toaster />
