@@ -1,6 +1,31 @@
 export type TranslationObject = typeof EnglishTranslations
 
 export const EnglishTranslations = {
+  mods: {
+    discover: {
+      title: 'Discover Mods',
+      github: 'Github',
+      forums: 'VU Forums',
+      discord: 'VU Discord',
+    },
+    import: {
+      sheet: {
+        trigger: 'Import Mods',
+        title: 'Import a Venice Unleashed Mod',
+        description: 'Accepts .zip files',
+      },
+      form: {
+        drag: "Drag n Drop your mod's zipped folder here",
+        click: 'Click to search instead',
+        confirm: 'Copying mod from',
+        toast: {
+          success: 'Successfully imported mod from',
+          invalid: 'Only .zip files are accepted',
+          failure: 'Failed to import mod. May already exist?',
+        },
+      },
+    },
+  },
   settings: {
     multiAccount: {
       title: 'Show Multi-Account join?',
