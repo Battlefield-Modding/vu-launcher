@@ -2,14 +2,16 @@ import VSCodeIcon from '@/assets/VSCodeIcon.svg'
 import DeleteModDialog from './DeleteModDialog'
 import { toast } from 'sonner'
 import { openModWithVsCode } from '@/api'
+import { useTranslation } from 'react-i18next'
 
 function Mod({ modName, loadoutName }: { modName: string; loadoutName: string }) {
+  const { t } = useTranslation()
   async function handleOpenInVSCode() {
     const status = await openModWithVsCode({ name: loadoutName, modname: modName })
     if (status) {
-      toast(`Opened ${modName} in vscode`)
+      toast(`${modName} ${t('mods.manage.sheet.mod.toast.success')}`)
     } else {
-      toast(`Failed to open ${modName} in vscode`)
+      toast(`${modName} ${t('mods.manage.sheet.mod.toast.failure')}`)
     }
   }
 

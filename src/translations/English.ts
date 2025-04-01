@@ -25,6 +25,34 @@ export const EnglishTranslations = {
         },
       },
     },
+    manage: {
+      loading: 'Loading Manage Mods sheet',
+      error: 'Failed to load Manage Mods Sheet',
+      empty: {
+        title: 'No mods found',
+        description: 'Once you download some mods they will appear here?',
+      },
+      sheet: {
+        trigger: 'Manage Mods',
+        title: 'Installed Mods Appear Here',
+        mod: {
+          toast: {
+            success: 'opened in VSCode',
+            failure: 'failed to open in VSCode',
+          },
+        },
+      },
+      deleteDialog: {
+        title: 'DELETE',
+        description: 'This action cannot be undone. This will permanently delete ',
+        confirm: 'Delete',
+        cancel: 'Cancel',
+        toast: {
+          success: 'Deleted',
+          failure: 'Error: Failed to delete',
+        },
+      },
+    },
   },
   settings: {
     multiAccount: {
