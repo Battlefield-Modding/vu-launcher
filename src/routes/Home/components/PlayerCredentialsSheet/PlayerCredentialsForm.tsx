@@ -17,6 +17,7 @@ import { toast } from 'sonner'
 import { saveUserCredentials } from '@/api'
 import { useQueryClient } from '@tanstack/react-query'
 import { QueryKey } from '@/config/config'
+import { useTranslation } from 'react-i18next'
 
 const formSchema = z.object({
   username: z.string().min(2).max(50),
@@ -25,6 +26,7 @@ const formSchema = z.object({
 
 export default function PlayerCredentialsForm({ setSheetOpen }: { setSheetOpen: any }) {
   const queryClient = useQueryClient()
+  const { t } = useTranslation()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -58,12 +60,12 @@ export default function PlayerCredentialsForm({ setSheetOpen }: { setSheetOpen: 
           name="username"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>VU Username</FormLabel>
+              <FormLabel>{t('home.playerCredentials.form.username.title')}</FormLabel>
               <FormControl>
                 <Input type="text" placeholder="username" {...field} autoFocus />
               </FormControl>
               <FormDescription>
-                Stored using your Operating System's native credential manager.
+                {t('home.playerCredentials.form.username.description')}
                 <a
                   className="ml-1 text-blue-500 underline"
                   href="https://docs.rs/keyring/latest/keyring/"
@@ -81,12 +83,12 @@ export default function PlayerCredentialsForm({ setSheetOpen }: { setSheetOpen: 
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>VU Password</FormLabel>
+              <FormLabel>{t('home.playerCredentials.form.password.title')}</FormLabel>
               <FormControl>
                 <Input type="password" placeholder="password" {...field} />
               </FormControl>
               <FormDescription>
-                Stored using your Operating System's native credential manager.
+                {t('home.playerCredentials.form.password.description')}
                 <a
                   className="ml-1 text-blue-500 underline"
                   href="https://docs.rs/keyring/latest/keyring/"
@@ -100,7 +102,7 @@ export default function PlayerCredentialsForm({ setSheetOpen }: { setSheetOpen: 
           )}
         />
         <Button className="m-auto w-fit" type="submit">
-          Submit
+          {t('home.playerCredentials.form.button')}
         </Button>
       </form>
     </Form>

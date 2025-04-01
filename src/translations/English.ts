@@ -1,6 +1,29 @@
 export type TranslationObject = typeof EnglishTranslations
 
 export const EnglishTranslations = {
+  home: {
+    playerCredentials: {
+      loading: 'Loading Users...',
+      error: 'Error loading Player Credentials',
+      sheet: {
+        login: 'Login',
+        addUser: 'Add User',
+        title: 'Save VU Credentials',
+        description: 'No account? Sign up here:',
+      },
+      form: {
+        username: {
+          title: 'VU Username',
+          description: "Stored using your Operating System's native credential manager.",
+        },
+        password: {
+          title: 'VU Password',
+          description: "Stored using your Operating System's native credential manager.",
+        },
+        button: 'submit',
+      },
+    },
+  },
   onboarding: {
     loading: 'Loading Onboarding component',
     error: 'Failed to load Onboarding component',
