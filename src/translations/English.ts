@@ -4,6 +4,29 @@ export const EnglishTranslations = {
   home: {
     loading: 'Loading home route',
     error: 'Error loading home route',
+    server: {
+      sheet: {
+        trigger: 'Add Server',
+        title: 'Add a quick-join server',
+        description:
+          'Lets you join a server after selecting a soldier, skipping the server browser.',
+      },
+      form: {
+        nickname: {
+          title: 'Nickname',
+          placeholder: 'My Favorite Server',
+        },
+        serverGUID: {
+          title: 'Server Guid',
+          description: "Server's Public ID with or without dashes. Can be found in join string",
+        },
+        serverPassword: {
+          title: 'Server Password (optional)',
+          placeholder: 'password - Leave blank if no password',
+        },
+        submit: 'Submit',
+      },
+    },
     playVu: {
       form: {
         loading: 'Loading Play VU Form',
