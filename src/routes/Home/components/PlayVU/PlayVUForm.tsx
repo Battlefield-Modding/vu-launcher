@@ -127,12 +127,18 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue
-                      placeholder={data.usernames[preferences.preferred_player_index] || 'None'}
+                      placeholder={
+                        data.usernames[preferences.preferred_player_index] ||
+                        t('home.playVu.form.acount.none')
+                      }
                     />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent
-                  defaultValue={data.usernames[preferences.preferred_player_index] || 'None'}
+                  defaultValue={
+                    data.usernames[preferences.preferred_player_index] ||
+                    t('home.playVu.form.acount.none')
+                  }
                 >
                   {data.usernames &&
                     data.usernames.map((x, index) => {
@@ -168,7 +174,7 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
                       placeholder={
                         data.servers[preferences.preferred_server_index]
                           ? data.servers[preferences.preferred_server_index].nickname
-                          : 'None'
+                          : t('home.playVu.form.server.none')
                       }
                     />
                   </SelectTrigger>
@@ -177,7 +183,7 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
                   defaultValue={
                     data.servers[preferences.preferred_server_index]
                       ? data.servers[preferences.preferred_server_index].nickname
-                      : 'None'
+                      : t('home.playVu.form.server.none')
                   }
                 >
                   {data.servers.map((x, index) => {
@@ -189,7 +195,7 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
                     )
                   })}
                   <div className="flex">
-                    <SelectItem value={`${9001}`}>None</SelectItem>
+                    <SelectItem value={`${9001}`}>{t('home.playVu.form.server.none')}</SelectItem>
                   </div>
                 </SelectContent>
               </Select>
@@ -229,7 +235,7 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
         />
         <Button variant={'constructive'} className="mt-4 p-8 text-2xl" type="submit">
           <Play />
-          PLAY
+          {t('home.playVu.form.submit')}
         </Button>
       </form>
     </Form>

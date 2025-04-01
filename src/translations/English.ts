@@ -33,13 +33,16 @@ export const EnglishTranslations = {
         error: 'Error loading Play VU Form',
         account: {
           title: 'VU Account',
+          none: 'None',
         },
         server: {
           title: 'Quick-Join Server',
+          none: 'None',
         },
         devBranch: {
           title: 'Use Dev Branch',
         },
+        submit: 'PLAY',
       },
     },
     playerCredentials: {
