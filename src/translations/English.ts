@@ -1,6 +1,55 @@
 export type TranslationObject = typeof EnglishTranslations
 
 export const EnglishTranslations = {
+  settings: {
+    multiAccount: {
+      title: 'Show Multi-Account join?',
+      toast: {
+        enable: 'Enabled loadout multi-account join',
+        disable: 'Disabled loadout multi-account join',
+        failed: 'Failed to update multi-account join',
+      },
+    },
+    languageSelector: {
+      title: 'Choose your language',
+      toast: 'Changed language to',
+    },
+    activateBF3: {
+      tooltip: {
+        title: 'Activate BF3',
+        content: 'Guided BF3 activation',
+      },
+      sheet: {
+        title: 'Activate BF3',
+        option1: {
+          title: 'Option 1: EA App / Origin LSX (recommended)',
+          step1: 'Please launch your EA App / Origin and sign in.',
+          step2: 'Once signed-in click on the Activate BF3 button:',
+          button: 'Activate BF3 (LSX)',
+          toast: 'Activating BF3 (LSX)',
+        },
+        option2: {
+          title: 'Option 2: EA Token',
+          step1: 'Login to EA App / Origin',
+          step2: 'Run VU with these arguments ',
+          step3:
+            'Copy the EA Auth token that window generates into the box below and click on the Activate BF3 button.',
+          placeholder: 'EA Token',
+          button: 'Activate BF3 (EA Token)',
+          toast: 'Activating BF3 (EA Token)',
+        },
+      },
+    },
+    serverGuidForm: {
+      title: 'Local Server GUID',
+      description: 'This will be used to Quick-Join your local server.',
+      submit: 'Submit',
+      toast: {
+        success: 'Updated Server GUID Successfully!',
+        failure: 'Something went wrong.',
+      },
+    },
+  },
   sidebar: {
     header: 'Unofficial VU Launcher',
     routes: {

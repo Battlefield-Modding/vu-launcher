@@ -36,7 +36,7 @@ const languageCodesToFlags = {
 type LanguageCodeToFlag = typeof languageCodesToFlags
 
 export function LanguageSelector() {
-  const { i18n } = useTranslation()
+  const { i18n, t } = useTranslation()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -55,19 +55,19 @@ export function LanguageSelector() {
           name="language"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Choose your language</FormLabel>
+              <FormLabel>{t('settings.languageSelector.title')}</FormLabel>
               <Select
                 onValueChange={(e) => {
                   // TODO: make this part of user preferences
                   i18n.changeLanguage(e)
-                  toast(`Changed language to: ${e}`)
+                  toast(`${t('settings.languageSelector.toast')}: ${e}`)
                   field.onChange(e)
                 }}
                 defaultValue={field.value}
               >
                 <FormControl className="w-fit">
                   <SelectTrigger>
-                    <SelectValue placeholder="Choose your Language" />
+                    <SelectValue placeholder="" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
