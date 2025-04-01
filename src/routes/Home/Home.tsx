@@ -6,7 +6,7 @@ import { getUserPreferences } from '@/api'
 import { useQuery } from '@tanstack/react-query'
 import { Loader } from 'lucide-react'
 
-import { useTranslation, Trans } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 export default function Home() {
   const { t } = useTranslation()
@@ -20,7 +20,7 @@ export default function Home() {
   if (isPending) {
     return (
       <div>
-        <h1>Fetching User Preferences</h1>
+        <h1>{t('home.loading')}</h1>
         <Loader />
       </div>
     )
@@ -29,7 +29,7 @@ export default function Home() {
   if (isError) {
     return (
       <div className="rounded-md bg-destructive pl-2 pr-2 text-xl leading-9">
-        <h1>ERROR: No User Preferences</h1>
+        <h1>{t('home.error')}</h1>
         <p>{error.message}</p>
       </div>
     )

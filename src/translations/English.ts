@@ -2,6 +2,23 @@ export type TranslationObject = typeof EnglishTranslations
 
 export const EnglishTranslations = {
   home: {
+    loading: 'Loading home route',
+    error: 'Error loading home route',
+    playVu: {
+      form: {
+        loading: 'Loading Play VU Form',
+        error: 'Error loading Play VU Form',
+        account: {
+          title: 'VU Account',
+        },
+        server: {
+          title: 'Quick-Join Server',
+        },
+        devBranch: {
+          title: 'Use Dev Branch',
+        },
+      },
+    },
     playerCredentials: {
       loading: 'Loading Users...',
       error: 'Error loading Player Credentials',

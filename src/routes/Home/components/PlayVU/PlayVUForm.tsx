@@ -35,6 +35,7 @@ import DeleteVUServerDialog from './DeleteVUServerDialog'
 import { getCurrentWindow } from '@tauri-apps/api/window'
 import clsx from 'clsx'
 import { Switch } from '@/components/ui/switch'
+import { useTranslation } from 'react-i18next'
 
 const FormSchema = z.object({
   accountIndex: z.string().optional(),
@@ -44,6 +45,7 @@ const FormSchema = z.object({
 
 export default function PlayVUForm({ preferences }: { preferences: UserPreferences }) {
   const queryClient = useQueryClient()
+  const { t } = useTranslation()
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -62,7 +64,7 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
   if (isPending) {
     return (
       <div>
-        <h1>LOADING accounts AND SERVERS</h1>
+        <h1>{t('home.playVu.form.loading')}</h1>
         <Loader />
       </div>
     )
@@ -71,7 +73,7 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
   if (isError) {
     return (
       <div className="rounded-md bg-red-600 pl-2 pr-2 text-xl leading-9 text-white">
-        <h1>ERROR: No accounts/Servers Found</h1>
+        <h1>{t('home.playVu.form.error')}</h1>
         <p>{error.message}</p>
       </div>
     )
@@ -115,7 +117,7 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
           name="accountIndex"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>VU Account</FormLabel>
+              <FormLabel>{t('home.playVu.form.account.title')}</FormLabel>
               <Select
                 onValueChange={async (e) => {
                   await setPreferredPlayer(parseInt(e))
@@ -153,7 +155,7 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
           name="serverIndex"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Quick-Join Server</FormLabel>
+              <FormLabel>{t('home.playVu.form.server.title')}</FormLabel>
               <Select
                 onValueChange={async (e) => {
                   await setPreferredServer(parseInt(e))
@@ -206,7 +208,7 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
                 field.value && 'border-green-500 text-green-500 opacity-100',
               )}
             >
-              <FormLabel className="mt-1">Use Dev Branch</FormLabel>
+              <FormLabel className="mt-1">{t('home.playVu.form.devBranch.title')}</FormLabel>
               <FormControl>
                 {/* @ts-ignore */}
                 <Switch
