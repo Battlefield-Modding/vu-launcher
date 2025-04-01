@@ -1,6 +1,15 @@
 export type TranslationObject = typeof EnglishTranslations
 
 export const EnglishTranslations = {
+  sidebar: {
+    header: 'Unofficial VU Launcher',
+    routes: {
+      home: 'Home',
+      loadouts: 'Loadouts',
+      mods: 'Mods',
+      settings: 'Settings',
+    },
+  },
   home: {
     loading: 'Loading home route',
     error: 'Error loading home route',
