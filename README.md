@@ -1,5 +1,5 @@
 # Unofficial VU Launcher
-![image](https://github.com/user-attachments/assets/4a714f12-7823-4639-87f1-79cbf26783fd)
+![image](https://github.com/user-attachments/assets/d2da0481-1600-4eb3-ac0b-abb7e93671b8)
 ## What?
 A WIP launcher for Battlefield 3: Venice Unleashed. Mostly useful if playing VU locally or developing mods.
 ### Features:
