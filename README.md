@@ -1,9 +1,10 @@
 # Unofficial VU Launcher
-![image](https://github.com/user-attachments/assets/b5bec60c-8693-4bce-a454-bed41ec6ca50)
+![image](https://github.com/user-attachments/assets/4a714f12-7823-4639-87f1-79cbf26783fd)
 ## What?
 A WIP launcher for Battlefield 3: Venice Unleashed. Mostly useful if playing VU locally or developing mods.
 ### Features:
-- Install VU
+- Install VU Prod / Dev
+- Simultaneous VU Installs (Prod/Dev)
 - Guided server setup
 - Server Loadouts
   - Quickly swap between different server configurations (startup/maplist/modlist/banlist).
