@@ -230,6 +230,14 @@
             "placeholder": "RCON password",
             "title": "Set RCON password for Procon (Remote Admin)"
           },
+          "banlist": {
+            "button": {
+              "addAnotherPlayer": "Add another to Banlist",
+              "addFirstPlayer": "Add Player"
+            },
+            "placeholder": "Ent/Bksp Add/Remove",
+            "title": "Set banned players"
+          },
           "maplist": {
             "addAnotherMap": "Add another Map",
             "addFirstMap": "Add Map",
