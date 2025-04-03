@@ -1,21 +1,21 @@
 import { useTranslation } from 'react-i18next'
 
-import { EnglishTranslations } from '@/translations/English'
-import { GermanTranslations } from '@/translations/German'
-import { ChineseTranslations } from '@/translations/Chinese'
+import en from '@/i18n/locales/en/translation.json'
+import de from '@/i18n/locales/de/translation.json'
+import zh from '@/i18n/locales/zh/translation.json'
 import { useState } from 'react'
-import { i18nLanguageCodes } from '@/i18n'
+import { i18nLanguageCodes } from '@/i18n/config'
 import { defaultStartupArguments } from './Setup/DefaultStartupConfig'
 
 const languageCodeToTranslation = {
   [i18nLanguageCodes.Chinese]: {
-    ...ChineseTranslations.startupDescriptions,
+    ...zh.startupDescriptions,
   },
   [i18nLanguageCodes.English]: {
-    ...EnglishTranslations.startupDescriptions,
+    ...en.startupDescriptions,
   },
   [i18nLanguageCodes.German]: {
-    ...GermanTranslations.startupDescriptions,
+    ...de.startupDescriptions,
   },
 } as const
 

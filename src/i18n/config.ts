@@ -1,9 +1,9 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
-import { EnglishTranslations } from './translations/English'
-import { GermanTranslations } from './translations/German'
-import { ChineseTranslations } from './translations/Chinese'
+import en from './locales/en/translation.json'
+import de from './locales/de/translation.json'
+import zh from './locales/zh/translation.json'
 
 export enum i18nLanguageCodes {
   Arabic = 'ar',
@@ -39,20 +39,13 @@ i18n
     },
     resources: {
       [i18nLanguageCodes.English]: {
-        translation: {
-          // here we will place our translations...
-          ...EnglishTranslations,
-        },
+        translation: en,
       },
       [i18nLanguageCodes.German]: {
-        translation: {
-          ...GermanTranslations,
-        },
+        translation: de,
       },
       [i18nLanguageCodes.Chinese]: {
-        translation: {
-          ...ChineseTranslations,
-        },
+        translation: zh,
       },
     },
   })

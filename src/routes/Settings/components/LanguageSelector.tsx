@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { i18nLanguageCodes, supportedLanguages } from '@/i18n'
+import { i18nLanguageCodes, supportedLanguages } from '@/i18n/config'
 import {
   Select,
   SelectContent,
