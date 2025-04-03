@@ -16,6 +16,7 @@ import { toast } from 'sonner'
 import { saveServerGUID } from '@/api'
 import { useState } from 'react'
 import clsx from 'clsx'
+import { useTranslation } from 'react-i18next'
 
 const formSchema = z.object({
   guid: z.string().min(2).max(50),
@@ -23,6 +24,7 @@ const formSchema = z.object({
 
 export function ServerGuidForm({ handleGuid }: { handleGuid: (val: boolean) => void }) {
   const [savedGUID, setSavedGUID] = useState(false)
+  const { t } = useTranslation()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -35,9 +37,9 @@ export function ServerGuidForm({ handleGuid }: { handleGuid: (val: boolean) => v
     if (status) {
       setSavedGUID(() => true)
       handleGuid(true)
-      toast('Updated Server GUID Successfully!')
+      toast(t('settings.serverGuidForm.toast.success'))
     } else {
-      toast('Something went wrong.')
+      toast(t('settings.serverGuidForm.toast.failure'))
     }
   }
   return (
@@ -49,17 +51,24 @@ export function ServerGuidForm({ handleGuid }: { handleGuid: (val: boolean) => v
           render={({ field }) => (
             <FormItem className={clsx('ml-9 w-1/2', savedGUID && 'hidden')}>
               <FormControl>
-                <Input type="text" placeholder="guid" {...field} disabled={savedGUID} />
+                <Input
+                  type="text"
+                  placeholder="5ccbc53a-6266-4b83-b782-c98cc49da88f"
+                  {...field}
+                  disabled={savedGUID}
+                />
               </FormControl>
-              <FormDescription>This will be used to Quick-Join your local server.</FormDescription>
+              <FormDescription>{t('settings.serverGuidForm.description')}</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
         <Button type="submit" className={clsx('ml-9', savedGUID && 'hidden')} disabled={savedGUID}>
-          Submit
+          {t('settings.serverGuidForm.submit')}
         </Button>
-        <h3 className={clsx(savedGUID ? 'visible ml-9 text-primary/70' : 'hidden')}>Done!</h3>
+        <h3 className={clsx(savedGUID ? 'visible ml-9 text-primary/70' : 'hidden')}>
+          {t('servers.firstTime.guidForm.done')}
+        </h3>
       </form>
     </Form>
   )

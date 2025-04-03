@@ -2,9 +2,11 @@ import { useState } from 'react'
 import serverKeyImage from '@/assets/server-key-info.png'
 import { ServerGuidForm } from './ServerGuidForm'
 import { ServerKeyUpload } from './ServerKeyUpload'
+import { useTranslation } from 'react-i18next'
 
 export function FirstTimeSetup() {
   const [isGuidSaved, setIsGuidSaved] = useState(false)
+  const { t } = useTranslation()
 
   function handleGuid(val: boolean) {
     setIsGuidSaved(() => val)
@@ -14,7 +16,7 @@ export function FirstTimeSetup() {
     <div className="flex min-h-[100vh] flex-col bg-black">
       <div className="m-auto flex max-w-screen-lg flex-col gap-8 p-8">
         <div>
-          <h1 className="text-2xl font-bold">1.) Download server.key from:</h1>
+          <h1 className="text-2xl font-bold">1.) {t('servers.firstTime.step1')}:</h1>
           <a
             href="https://veniceunleashed.net/keys"
             target="_blank"
@@ -28,12 +30,12 @@ export function FirstTimeSetup() {
         </div>
 
         <div>
-          <h1 className="text-2xl font-bold">2.) Copy Server GUID from above:</h1>
+          <h1 className="text-2xl font-bold">2.) {t('servers.firstTime.step2')}:</h1>
           <ServerGuidForm handleGuid={handleGuid} />
         </div>
 
         <div>
-          <h1 className="text-2xl font-bold">3.) Drag and Drop your key into this window:</h1>
+          <h1 className="text-2xl font-bold">3.) {t('servers.firstTime.step3')}:</h1>
         </div>
       </div>
 

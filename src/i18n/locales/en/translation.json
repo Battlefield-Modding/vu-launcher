@@ -223,8 +223,21 @@
   "servers": {
     "firstTime": {
       "error": "Failed to find server key",
+      "guidForm": {
+        "click": "Click to search instead",
+        "confirm": "Copying server key from",
+        "done": "Done!",
+        "title": "Drag n Drop your file here",
+        "toast": {
+          "failure": "Incorrect File. Please use server.key",
+          "success": "Successfully imported server key."
+        }
+      },
       "loading": "Checking if Server Key Exists",
-      "redoGuid": "Please re-enter your server GUID"
+      "redoGuid": "Please re-enter your server GUID",
+      "step1": "Download server key from",
+      "step2": "Copy Server GUID from above",
+      "step3": "Drag and Drop your key into this window"
     },
     "loadouts": {
       "createLoadout": {
