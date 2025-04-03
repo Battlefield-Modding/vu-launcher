@@ -107,6 +107,9 @@
       "unlisted": "Hide server from server list. Join requires connect console command or vu join string."
     }
   },
+  "loaderComponent": {
+    "title": "Loading"
+  },
   "mods": {
     "discover": {
       "discord": "VU Discord",
@@ -290,6 +293,38 @@
         }
       },
       "error": "No loadouts found.",
+      "importLoadout": {
+        "error": "Failed to get existing loadout names",
+        "form": {
+          "dragDrop": {
+            "search": "Click to search instead",
+            "title": "Drag n Drop folder here",
+            "toast": {
+              "invalid": "Incorrect directory. Please choose the /Server folder"
+            }
+          },
+          "importPath": {
+            "path": "Will copy from",
+            "title": "Set path to import from"
+          },
+          "nickname": {
+            "description": "Forbidden Characters: \\ / : * ? \" < > | '",
+            "placeholder": "Loadout One",
+            "title": "Set loadout name"
+          },
+          "submit": "Submit",
+          "toast": {
+            "failure": "Failed to import loadout.",
+            "nameCollision": "Loadout name is already taken.",
+            "success": "Imported loadout successfully"
+          }
+        },
+        "loading": "Getting existing loadout names",
+        "sheet": {
+          "title": "Import Loadout",
+          "trigger": "Import loadout"
+        }
+      },
       "loading": "Fetching Server Loadouts"
     }
   },

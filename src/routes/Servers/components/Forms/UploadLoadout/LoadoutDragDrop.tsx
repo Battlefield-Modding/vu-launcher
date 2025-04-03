@@ -6,9 +6,12 @@ import { Search, Upload } from 'lucide-react'
 import { DragDropEventTauri } from '@/config/config'
 import { toast } from 'sonner'
 import { open } from '@tauri-apps/plugin-dialog'
+import { useTranslation } from 'react-i18next'
 
 export function LoadoutDragDrop({ setPath }: { setPath: (state: string) => void }) {
   const [isDraggingOver, setIsDraggingOver] = useState(false)
+  const { t } = useTranslation()
+
   let handleDrop: UnlistenFn | undefined
   let handleDragEnter: UnlistenFn | undefined
   let handleDragLeave: UnlistenFn | undefined
@@ -37,6 +40,8 @@ export function LoadoutDragDrop({ setPath }: { setPath: (state: string) => void 
 
         if (payload && payload.paths[0] && payload.paths[0].includes('Server')) {
           setPath(payload.paths[0])
+        } else {
+          toast(t('servers.loadouts.importLoadout.form.dragDrop.toast.invalid'))
         }
       })
 
@@ -61,7 +66,7 @@ export function LoadoutDragDrop({ setPath }: { setPath: (state: string) => void 
       if (installPath.includes('Server')) {
         setPath(installPath)
       } else {
-        toast('Incorrect directory. Please choose the Server folder which contains Admin/mods/...')
+        toast(t('servers.loadouts.importLoadout.form.dragDrop.toast.invalid'))
       }
     }
   }
@@ -82,12 +87,13 @@ export function LoadoutDragDrop({ setPath }: { setPath: (state: string) => void 
         <div className="text-md m-auto flex flex-col gap-8">
           <div className="flex gap-4">
             <p>
-              Drag n Drop <code className="rounded-md bg-black p-1">\Server</code> here
+              {t('servers.loadouts.importLoadout.form.dragDrop.title')}:{' '}
+              <code className="rounded-md bg-black p-1">\Server</code>
             </p>
             <Upload />
           </div>
           <div className="flex gap-2">
-            <p>Click to search instead</p>
+            <p>{t('servers.loadouts.importLoadout.form.dragDrop.search')}</p>
             <Search />
           </div>
         </div>

@@ -21,6 +21,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { QueryKey } from '@/config/config'
 import clsx from 'clsx'
 import { LoaderComponent } from '@/components/LoaderComponent'
+import { useTranslation } from 'react-i18next'
 
 const formSchema = z.object({
   name: z
@@ -43,6 +44,7 @@ export function UploadLoadoutForm({
   existingLoadoutNames: string[]
   setSheetOpen: (state: boolean) => void
 }) {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const [path, setPath] = useState('')
   const [submitLoading, setSubmitLoading] = useState(false)
@@ -55,7 +57,7 @@ export function UploadLoadoutForm({
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (existingLoadoutNames.includes(values.name)) {
-      toast('Loadout name already used. Pick another.')
+      toast(t('servers.loadouts.importLoadout.form.toast.nameCollision'))
       return
     }
 
@@ -64,14 +66,14 @@ export function UploadLoadoutForm({
     setSubmitLoading(() => false)
 
     if (status) {
-      toast(`Imported loadout ${values.name} successfully!`)
+      toast(`${t('servers.loadouts.importLoadout.form.toast.success')}: ${values.name}`)
       queryClient.invalidateQueries({
         queryKey: [QueryKey.GetAllLoadoutJSON],
         refetchType: 'all',
       })
       setSheetOpen(false)
     } else {
-      toast('Invalid folder. Make sure you picked the server folder itself.')
+      toast(t('servers.loadouts.importLoadout.form.toast.failure'))
     }
   }
   return (
@@ -86,24 +88,37 @@ export function UploadLoadoutForm({
           render={({ field }) => (
             <FormItem className="flex">
               <div className="flex-1">
-                <FormLabel className="text-xl">Set loadout name</FormLabel>
+                <FormLabel className="text-xl">
+                  {t('servers.loadouts.importLoadout.form.nickname.title')}
+                </FormLabel>
                 <FormDescription>
-                  Forbidden characters: \ / : * ? " {'<'} {'>'} | '
+                  {t('servers.loadouts.importLoadout.form.nickname.description')}
                 </FormDescription>
               </div>
 
               <FormControl className="ml-auto mr-0 w-1/2">
-                <Input type="text" placeholder="name" {...field} autoFocus={true} />
+                <Input
+                  type="text"
+                  placeholder={t('servers.loadouts.importLoadout.form.nickname.placeholder')}
+                  {...field}
+                  autoFocus={true}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
         <div>
-          <h2 className="mb-4 text-xl">Set path to import from</h2>
+          <h2 className="mb-4 text-xl">
+            {t('servers.loadouts.importLoadout.form.importPath.title')}
+          </h2>
           <LoadoutDragDrop setPath={setPath} />
         </div>
-        {path && <FormLabel>Will copy from: {path}</FormLabel>}
+        {path && (
+          <FormLabel>
+            {t('servers.loadouts.importLoadout.form.importPath.path')}: {path}
+          </FormLabel>
+        )}
 
         {submitLoading && <LoaderComponent />}
 
@@ -116,7 +131,7 @@ export function UploadLoadoutForm({
             path && 'bg-green-500 text-primary hover:bg-green-500/80',
           )}
         >
-          Submit
+          {t('servers.loadouts.importLoadout.form.submit')}
         </Button>
       </form>
     </Form>
