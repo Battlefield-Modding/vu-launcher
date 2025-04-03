@@ -18,9 +18,11 @@ import { useFieldArray } from 'react-hook-form'
 import { allMaps } from '../../../Maplist/Setup/allMaps'
 import { Trash } from 'lucide-react'
 import { CreateLoadoutFormType } from '../../CreateLoadoutForm'
+import { useTranslation } from 'react-i18next'
 
 export function Maplist({ form }: { form: CreateLoadoutFormType }) {
   const fieldArray = useFieldArray({ name: 'maplist', control: form.control })
+  const { t } = useTranslation()
 
   function clearGamemode(index: number) {
     form.resetField(`maplist.${index}.gameMode`)
@@ -28,7 +30,9 @@ export function Maplist({ form }: { form: CreateLoadoutFormType }) {
 
   return (
     <div>
-      <FormLabel className="text-xl">Set maps and gamemodes</FormLabel>
+      <FormLabel className="text-xl">
+        {t('servers.loadouts.createLoadout.form.maplist.title')}
+      </FormLabel>
       <FormDescription className="mb-8">maplist.add</FormDescription>
 
       {fieldArray.fields.length === 0 && (
@@ -40,7 +44,7 @@ export function Maplist({ form }: { form: CreateLoadoutFormType }) {
             fieldArray.append({ mapCode: '', gameMode: '' })
           }}
         >
-          Add Map
+          {t('servers.loadouts.createLoadout.form.maplist.addFirstMap')}
         </Button>
       )}
       <div className="flex flex-col gap-4">
@@ -64,7 +68,11 @@ export function Maplist({ form }: { form: CreateLoadoutFormType }) {
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select a map" />
+                          <SelectValue
+                            placeholder={t(
+                              'servers.loadouts.createLoadout.form.maplist.mapPlaceholder',
+                            )}
+                          />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -90,7 +98,11 @@ export function Maplist({ form }: { form: CreateLoadoutFormType }) {
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select a gamemode" />
+                          <SelectValue
+                            placeholder={t(
+                              'servers.loadouts.createLoadout.form.maplist.gamemodePlaceholder',
+                            )}
+                          />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -129,7 +141,7 @@ export function Maplist({ form }: { form: CreateLoadoutFormType }) {
                     fieldArray.append({ mapCode: '', gameMode: '' })
                   }}
                 >
-                  Add another Map
+                  {t('servers.loadouts.createLoadout.form.maplist.addAnotherMap')}
                 </Button>
               )}
             </div>

@@ -230,6 +230,13 @@
             "placeholder": "RCON password",
             "title": "Set RCON password for Procon (Remote Admin)"
           },
+          "maplist": {
+            "addAnotherMap": "Add another Map",
+            "addFirstMap": "Add Map",
+            "gamemodePlaceholder": "Select a gamemode",
+            "mapPlaceholder": "Select a map",
+            "title": "Set maps and gamemodes"
+          },
           "maxPlayers": {
             "title": "Set maximum playercount"
           },
