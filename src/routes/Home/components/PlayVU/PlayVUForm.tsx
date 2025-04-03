@@ -129,7 +129,7 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
                     <SelectValue
                       placeholder={
                         data.usernames[preferences.preferred_player_index] ||
-                        t('home.playVu.form.acount.none')
+                        t('home.playVu.form.account.none')
                       }
                     />
                   </SelectTrigger>
@@ -137,7 +137,7 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
                 <SelectContent
                   defaultValue={
                     data.usernames[preferences.preferred_player_index] ||
-                    t('home.playVu.form.acount.none')
+                    t('home.playVu.form.account.none')
                   }
                 >
                   {data.usernames &&
