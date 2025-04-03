@@ -233,6 +233,9 @@
           "maxPlayers": {
             "title": "Set maximum playercount"
           },
+          "modlist": {
+            "title": "Set active mods"
+          },
           "nickname": {
             "description": "Forbidden Characters: \\ / : * ? \" < > | '",
             "placeholder": "Loadout One",
