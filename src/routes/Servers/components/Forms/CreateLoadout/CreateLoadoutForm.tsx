@@ -26,6 +26,7 @@ import { ModList } from './components/Forms/Modlist'
 import { Startup } from './components/Forms/Startup'
 import { defaultStartupArguments } from '../Startup/Setup/DefaultStartupConfig'
 import { defaultLaunchArguments } from '../LaunchArguments/setup/LaunchArguments'
+import { useTranslation } from 'react-i18next'
 
 const formSchema = z.object({
   name: z
@@ -87,6 +88,7 @@ export type CreateLoadoutFormType = UseFormReturn<
 export function CreateLoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any; mods: string[] }) {
   const queryClient = useQueryClient()
   const [submitLoading, setSubmitLoading] = useState(false)
+  const { t } = useTranslation()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -128,14 +130,14 @@ export function CreateLoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any; m
     setSubmitLoading(() => false)
 
     if (status) {
-      toast(`Success! Created loadout: ${values.name}`)
+      toast(`${t('servers.loadouts.createLoadout.form.toast.success')}: ${values.name}`)
       queryClient.invalidateQueries({
         queryKey: [QueryKey.GetAllLoadoutJSON],
         refetchType: 'all',
       })
       setSheetOpen(() => false)
     } else {
-      toast('Use a different loadout name.')
+      toast(t('servers.loadouts.createLoadout.form.toast.failure'))
     }
   }
 
@@ -151,15 +153,17 @@ export function CreateLoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any; m
           render={({ field }) => (
             <FormItem className="flex">
               <div className="flex-1">
-                <FormLabel className="text-xl">Set loadout nickname</FormLabel>
+                <FormLabel className="text-xl">
+                  {t('servers.loadouts.createLoadout.form.nickname.title')}
+                </FormLabel>
                 <FormDescription>
-                  Forbidden Characters: \ / : * ? " {'<'} {'>'} | '
+                  {t('servers.loadouts.createLoadout.form.nickname.description')}
                 </FormDescription>
               </div>
               <FormControl className="ml-auto mr-0">
                 <Input
                   type="text"
-                  placeholder="name"
+                  placeholder={t('servers.loadouts.createLoadout.form.nickname.placeholder')}
                   autoFocus={true}
                   className="w-1/2"
                   {...field}

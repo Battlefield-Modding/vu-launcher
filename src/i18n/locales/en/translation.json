@@ -225,6 +225,32 @@
     },
     "loadouts": {
       "createLoadout": {
+        "form": {
+          "adminPassword": {
+            "placeholder": "RCON password",
+            "title": "Set RCON password for Procon (Remote Admin)"
+          },
+          "maxPlayers": {
+            "title": "Set maximum playercount"
+          },
+          "nickname": {
+            "description": "Forbidden Characters: \\ / : * ? \" < > | '",
+            "placeholder": "Loadout One",
+            "title": "Set loadout nickname"
+          },
+          "serverName": {
+            "placeholder": "[Country Code][Main Mod] YourServerTitle",
+            "title": "Set name shown in VU Server Browser"
+          },
+          "serverPassword": {
+            "placeholder": "Game Password",
+            "title": "Set server password"
+          },
+          "toast": {
+            "failure": "Use a different loadout name.",
+            "success": "Success! Created loadout"
+          }
+        },
         "sheet": {
           "error": "Failed to fetch modlist for loadouts",
           "loading": "Fetching mods for Loadouts",
