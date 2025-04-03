@@ -222,6 +222,30 @@
       "error": "Failed to find server key",
       "loading": "Checking if Server Key Exists",
       "redoGuid": "Please re-enter your server GUID"
+    },
+    "loadouts": {
+      "createLoadout": {
+        "sheet": {
+          "error": "Failed to fetch modlist for loadouts",
+          "loading": "Fetching mods for Loadouts",
+          "title": "Create Loadout",
+          "trigger": "Create Loadout"
+        }
+      },
+      "deleteDialog": {
+        "buttons": {
+          "cancel": "Cancel",
+          "confirm": "Delete"
+        },
+        "description": "This action cannot be undone. This will permanently delete all data related to this loadout.",
+        "title": "DELETE loadout",
+        "toast": {
+          "failure": "Failed to delete loadout",
+          "success": "Deleted server loadout"
+        }
+      },
+      "error": "No loadouts found.",
+      "loading": "Fetching Server Loadouts"
     }
   },
   "settings": {
