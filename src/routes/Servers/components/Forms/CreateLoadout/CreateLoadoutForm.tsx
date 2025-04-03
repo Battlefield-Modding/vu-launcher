@@ -185,7 +185,7 @@ export function CreateLoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any; m
         <Banlist form={form} alwaysAutoFocus={false} />
         {submitLoading && <LoaderComponent />}
         <Button type="submit" className="m-auto mt-6 w-fit">
-          Submit
+          {t('servers.loadouts.createLoadout.form.submit')}
         </Button>
       </form>
     </Form>

@@ -264,6 +264,7 @@
             "placeholder": "Game Password",
             "title": "Set server password"
           },
+          "submit": "Submit",
           "toast": {
             "failure": "Use a different loadout name.",
             "success": "Success! Created loadout"
