@@ -17,14 +17,18 @@ import {
 import { useFieldArray } from 'react-hook-form'
 import { Plus, Trash } from 'lucide-react'
 import { Input } from '@/components/ui/input'
+import { useTranslation } from 'react-i18next'
 
 export function SetTeamTicketCountComponent({ form }: { form: any }) {
   const fieldArray = useFieldArray({ name: 'vu.SetTeamTicketCount', control: form.control })
+  const { t } = useTranslation()
 
   return (
     <div className="flex">
       <div className="flex-1">
-        <FormLabel className="text-lg">Set tickets per team</FormLabel>
+        <FormLabel className="text-lg">
+          {t('servers.loadouts.loadout.startup.form.setTeamTickets.title')}
+        </FormLabel>
         <FormDescription className="leading-9">vu.SetTeamTicketCount</FormDescription>
       </div>
 
@@ -38,7 +42,7 @@ export function SetTeamTicketCountComponent({ form }: { form: any }) {
             fieldArray.append({ teamId: 'team2', ticketCount: 100 })
           }}
         >
-          <Plus /> Set Tickets
+          <Plus /> {t('servers.loadouts.loadout.startup.form.setTeamTickets.button.setTickets')}
         </Button>
       )}
       <div className="flex flex-col gap-4">
@@ -53,7 +57,9 @@ export function SetTeamTicketCountComponent({ form }: { form: any }) {
                     fieldArray.append({ teamId: `team${index + 2}`, ticketCount: 100 })
                   }}
                 >
-                  Set other team's tickets
+                  {t(
+                    'servers.loadouts.loadout.startup.form.setTeamTickets.button.setOtherTeamTickets',
+                  )}
                 </Button>
               )}
               <FormField
@@ -65,18 +71,38 @@ export function SetTeamTicketCountComponent({ form }: { form: any }) {
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select a team" />
+                          <SelectValue
+                            placeholder={t(
+                              'servers.loadouts.loadout.startup.form.setTeamTickets.placeholder',
+                            )}
+                          />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value={'team1'}>Team1</SelectItem>
-                        <SelectItem value={'team2'}>Team2</SelectItem>
-                        <SelectItem value={'team3'}>Team3</SelectItem>
-                        <SelectItem value={'team4'}>Team4</SelectItem>
-                        <SelectItem value={'team5'}>Team5</SelectItem>
-                        <SelectItem value={'team6'}>Team6</SelectItem>
-                        <SelectItem value={'team7'}>Team7</SelectItem>
-                        <SelectItem value={'team8'}>Team8</SelectItem>
+                        <SelectItem value={'team1'}>
+                          {t('servers.loadouts.loadout.startup.form.setTeamTickets.team1')}
+                        </SelectItem>
+                        <SelectItem value={'team2'}>
+                          {t('servers.loadouts.loadout.startup.form.setTeamTickets.team2')}
+                        </SelectItem>
+                        <SelectItem value={'team3'}>
+                          {t('servers.loadouts.loadout.startup.form.setTeamTickets.team3')}
+                        </SelectItem>
+                        <SelectItem value={'team4'}>
+                          {t('servers.loadouts.loadout.startup.form.setTeamTickets.team4')}
+                        </SelectItem>
+                        <SelectItem value={'team5'}>
+                          {t('servers.loadouts.loadout.startup.form.setTeamTickets.team5')}
+                        </SelectItem>
+                        <SelectItem value={'team6'}>
+                          {t('servers.loadouts.loadout.startup.form.setTeamTickets.team6')}
+                        </SelectItem>
+                        <SelectItem value={'team7'}>
+                          {t('servers.loadouts.loadout.startup.form.setTeamTickets.team7')}
+                        </SelectItem>
+                        <SelectItem value={'team8'}>
+                          {t('servers.loadouts.loadout.startup.form.setTeamTickets.team8')}
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />

@@ -62,7 +62,12 @@ export default function PlayerCredentialsForm({ setSheetOpen }: { setSheetOpen: 
             <FormItem>
               <FormLabel>{t('home.playerCredentials.form.username.title')}</FormLabel>
               <FormControl>
-                <Input type="text" placeholder="username" {...field} autoFocus />
+                <Input
+                  type="text"
+                  placeholder={t('home.playerCredentials.form.username.placeholder')}
+                  {...field}
+                  autoFocus
+                />
               </FormControl>
               <FormDescription>
                 {t('home.playerCredentials.form.username.description')}
@@ -85,7 +90,11 @@ export default function PlayerCredentialsForm({ setSheetOpen }: { setSheetOpen: 
             <FormItem>
               <FormLabel>{t('home.playerCredentials.form.password.title')}</FormLabel>
               <FormControl>
-                <Input type="password" placeholder="password" {...field} />
+                <Input
+                  type="password"
+                  placeholder={t('home.playerCredentials.form.password.placeholder')}
+                  {...field}
+                />
               </FormControl>
               <FormDescription>
                 {t('home.playerCredentials.form.password.description')}

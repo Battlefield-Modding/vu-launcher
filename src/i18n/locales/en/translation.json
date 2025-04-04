@@ -50,6 +50,7 @@
         "button": "submit",
         "password": {
           "description": "Stored using your Operating System's native credential manager.",
+          "placeholder": "password",
           "title": "VU Password"
         },
         "toast": {
@@ -58,6 +59,7 @@
         },
         "username": {
           "description": "Stored using your Operating System's native credential manager.",
+          "placeholder": "username",
           "title": "VU Username"
         }
       },
@@ -403,6 +405,9 @@
         "error": "Failed to load user preferences for loadout",
         "launchArgs": {
           "form": {
+            "env": {
+              "placeholder": "Select env"
+            },
             "searchPlaceholder": "Search Launch Arguments",
             "submit": "Submit",
             "toast": {
@@ -489,7 +494,28 @@
         "startServerAndClient": "Start Server and Client",
         "startup": {
           "form": {
+            "reservedSlots": {
+              "addAnotherPlayer": "Add Player",
+              "addFirstPlayer": "Add Player",
+              "placeholder": "Ent/Bksp Add/Remove"
+            },
             "searchPlaceholder": "Search Startup Config",
+            "setTeamTickets": {
+              "button": {
+                "setOtherTeamTickets": "Set other team's tickets",
+                "setTickets": "Set Tickets"
+              },
+              "placeholder": "Select a team",
+              "team1": "Team1",
+              "team2": "Team2",
+              "team3": "Team3",
+              "team4": "Team4",
+              "team5": "Team5",
+              "team6": "Team6",
+              "team7": "Team7",
+              "team8": "Team8",
+              "title": "Set tickets per team"
+            },
             "submit": "Submit",
             "toast": {
               "failure": "Failed to update startup args for",
