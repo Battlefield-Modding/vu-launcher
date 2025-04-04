@@ -25,6 +25,7 @@ import { toast } from 'sonner'
 import { useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { LoaderComponent } from '@/components/LoaderComponent'
+import { useTranslation } from 'react-i18next'
 
 const formSchema = z.object({
   maplist: z.array(
@@ -44,6 +45,7 @@ export function MaplistForm({
 }) {
   const [submitLoading, setSubmitLoading] = useState(false)
   const queryClient = useQueryClient()
+  const { t } = useTranslation()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -66,14 +68,14 @@ export function MaplistForm({
     setSubmitLoading(() => false)
 
     if (status) {
-      toast(`Success! Updated maps for ${loadout.name}`)
+      toast(`${t('servers.loadouts.loadout.maplist.form.toast.success')} ${loadout.name}`)
       queryClient.invalidateQueries({
         queryKey: [QueryKey.GetAllLoadoutJSON],
         refetchType: 'all',
       })
       setSheetOpen(false)
     } else {
-      toast('Use a different loadout name.')
+      toast(`${t('servers.loadouts.loadout.maplist.form.toast.failure')} ${loadout.name}`)
     }
   }
 
@@ -91,7 +93,7 @@ export function MaplistForm({
               fieldArray.append({ mapCode: '', gameMode: '' })
             }}
           >
-            Add Map
+            {t('servers.loadouts.loadout.maplist.form.button.addFirstMap')}
           </Button>
         )}
         <div className="flex w-fit flex-col items-end gap-4">
@@ -117,7 +119,11 @@ export function MaplistForm({
                         >
                           <FormControl>
                             <SelectTrigger>
-                              <SelectValue placeholder="Select a map" />
+                              <SelectValue
+                                placeholder={t(
+                                  'servers.loadouts.loadout.maplist.form.mapPlaceholder',
+                                )}
+                              />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
@@ -143,7 +149,11 @@ export function MaplistForm({
                         <Select onValueChange={field.onChange} value={field.value}>
                           <FormControl>
                             <SelectTrigger>
-                              <SelectValue placeholder="Select a gamemode" />
+                              <SelectValue
+                                placeholder={t(
+                                  'servers.loadouts.loadout.maplist.form.gamemodePlaceholder',
+                                )}
+                              />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
@@ -184,7 +194,7 @@ export function MaplistForm({
                       fieldArray.append({ mapCode: '', gameMode: '' })
                     }}
                   >
-                    Add another Map
+                    {t('servers.loadouts.loadout.maplist.form.button.addAnotherMap')}
                   </Button>
                 )}
               </div>
@@ -193,7 +203,7 @@ export function MaplistForm({
         </div>
         {submitLoading && <LoaderComponent />}
         <div className="mt-8 flex justify-center">
-          <Button type="submit">Submit</Button>
+          <Button type="submit">{t('servers.loadouts.loadout.maplist.form.submit')}</Button>
         </div>
       </form>
     </Form>

@@ -11,15 +11,17 @@ import { Input } from '@/components/ui/input'
 import { Trash } from 'lucide-react'
 import { useState } from 'react'
 import { useFieldArray } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 export function ReservedSlotsComponent({ form }: { form: any }) {
   const fieldArray = useFieldArray({ name: 'reservedSlots', control: form.control })
   const [autoFocusIndex, setAutoFocusIndex] = useState(-1)
+  const { t } = useTranslation()
 
   return (
     <div className="flex">
       <div className="flex-1">
-        <FormLabel className="text-lg">Add Players to Reserved Slots</FormLabel>
+        <FormLabel className="text-lg">{t('startupDescriptions.reservedSlots.add')}</FormLabel>
         <FormDescription>reservedSlots.add</FormDescription>
       </div>
 
@@ -32,7 +34,7 @@ export function ReservedSlotsComponent({ form }: { form: any }) {
             fieldArray.append('')
           }}
         >
-          Add Player
+          {t('servers.loadouts.loadout.startup.form.reservedSlots.addFirstPlayer')}
         </Button>
       )}
       <div className="ml-auto mr-0 flex flex-col gap-4">
@@ -47,7 +49,7 @@ export function ReservedSlotsComponent({ form }: { form: any }) {
                     fieldArray.append('')
                   }}
                 >
-                  Add Player
+                  {t('servers.loadouts.loadout.startup.form.reservedSlots.addAnotherPlayer')}
                 </Button>
               )}
               <FormField
@@ -59,7 +61,9 @@ export function ReservedSlotsComponent({ form }: { form: any }) {
                       <Input
                         autoFocus={index === autoFocusIndex}
                         type={'text'}
-                        placeholder={`Ent/Bksp Add/Remove`}
+                        placeholder={t(
+                          'servers.loadouts.loadout.startup.form.reservedSlots.placeholder',
+                        )}
                         {...field}
                         onKeyDown={(e) => {
                           if (e.key === 'Enter') {

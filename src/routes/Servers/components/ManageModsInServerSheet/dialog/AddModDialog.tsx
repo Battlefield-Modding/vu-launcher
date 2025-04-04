@@ -11,6 +11,7 @@ import {
 import { LoadoutJSON, QueryKey } from '@/config/config'
 import { useQueryClient } from '@tanstack/react-query'
 import { Plus, X } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
 export function AddModDialog({
@@ -23,6 +24,7 @@ export function AddModDialog({
   queryKey: string
 }) {
   const queryClient = useQueryClient()
+  const { t } = useTranslation()
 
   async function handleClick() {
     let tempModList = [...(loadout.modlist as string[])]
@@ -32,7 +34,7 @@ export function AddModDialog({
     const status = await editServerLoadout(finalLoadout)
 
     if (status) {
-      toast(`Installed ${modName}`)
+      toast(`${t('servers.loadouts.loadout.mods.addModDialog.toast.success')}: ${modName}`)
       queryClient.invalidateQueries({
         queryKey: [queryKey],
         refetchType: 'all',
@@ -42,7 +44,7 @@ export function AddModDialog({
         refetchType: 'all',
       })
     } else {
-      toast('Error. Failed to install mod')
+      toast(`${t('servers.loadouts.loadout.mods.addModDialog.toast.failure')}: ${modName}`)
     }
   }
 
@@ -56,25 +58,26 @@ export function AddModDialog({
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="pb-4">
-            Install mod:{' '}
-            <code className="text-md rounded-md bg-gray-800 p-1 pl-2 pr-2 ">
+            {t('servers.loadouts.loadout.mods.addModDialog.title')}{' '}
+            <code className="text-md rounded-md bg-gray-800 p-1 pl-2 pr-2">
               {modName.length >= 20 ? `${modName.substring(0, 20)}...` : modName}
             </code>
           </DialogTitle>
           <DialogDescription>
-            Install Mod {modName} to {loadout.name}?
+            {t('servers.loadouts.loadout.mods.addModDialog.description')} {loadout.name}/{modName}?
           </DialogDescription>
         </DialogHeader>
         <div className="flex justify-center gap-8">
           <DialogClose>
             <p className="flex gap-2 rounded-md bg-secondary p-2 hover:bg-secondary/80">
               <X />
-              Cancel
+              {t('servers.loadouts.loadout.mods.addModDialog.cancel')}
             </p>
           </DialogClose>
           <DialogClose onClick={handleClick}>
             <p className="flex gap-4 rounded-md bg-green-600 p-2 hover:bg-green-600/80">
-              <Plus /> Install: {modName.length >= 20 ? `${modName.substring(0, 20)}...` : modName}
+              <Plus /> {t('servers.loadouts.loadout.mods.addModDialog.confirm')}:{' '}
+              {modName.length >= 20 ? `${modName.substring(0, 20)}...` : modName}
             </p>
           </DialogClose>
         </div>

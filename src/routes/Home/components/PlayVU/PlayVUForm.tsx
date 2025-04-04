@@ -35,6 +35,7 @@ import DeleteVUServerDialog from './DeleteVUServerDialog'
 import { getCurrentWindow } from '@tauri-apps/api/window'
 import clsx from 'clsx'
 import { Switch } from '@/components/ui/switch'
+import { useTranslation } from 'react-i18next'
 
 const FormSchema = z.object({
   accountIndex: z.string().optional(),
@@ -44,6 +45,7 @@ const FormSchema = z.object({
 
 export default function PlayVUForm({ preferences }: { preferences: UserPreferences }) {
   const queryClient = useQueryClient()
+  const { t } = useTranslation()
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -62,7 +64,7 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
   if (isPending) {
     return (
       <div>
-        <h1>LOADING accounts AND SERVERS</h1>
+        <h1>{t('home.playVu.form.loading')}</h1>
         <Loader />
       </div>
     )
@@ -71,7 +73,7 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
   if (isError) {
     return (
       <div className="rounded-md bg-red-600 pl-2 pr-2 text-xl leading-9 text-white">
-        <h1>ERROR: No accounts/Servers Found</h1>
+        <h1>{t('home.playVu.form.error')}</h1>
         <p>{error.message}</p>
       </div>
     )
@@ -98,12 +100,12 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
     const status = await playVU({ accountIndex, serverIndex, useDevBranch })
 
     if (status) {
-      toast('Starting VU...')
+      toast(t('home.playVu.form.toast.success'))
       setTimeout(() => {
         getCurrentWindow().minimize()
       }, 1500)
     } else {
-      toast('Failed to start VU.')
+      toast(t('home.playVu.form.toast.failure'))
     }
   }
 
@@ -115,7 +117,7 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
           name="accountIndex"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>VU Account</FormLabel>
+              <FormLabel>{t('home.playVu.form.account.title')}</FormLabel>
               <Select
                 onValueChange={async (e) => {
                   await setPreferredPlayer(parseInt(e))
@@ -125,12 +127,18 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue
-                      placeholder={data.usernames[preferences.preferred_player_index] || 'None'}
+                      placeholder={
+                        data.usernames[preferences.preferred_player_index] ||
+                        t('home.playVu.form.account.none')
+                      }
                     />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent
-                  defaultValue={data.usernames[preferences.preferred_player_index] || 'None'}
+                  defaultValue={
+                    data.usernames[preferences.preferred_player_index] ||
+                    t('home.playVu.form.account.none')
+                  }
                 >
                   {data.usernames &&
                     data.usernames.map((x, index) => {
@@ -153,7 +161,7 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
           name="serverIndex"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Quick-Join Server</FormLabel>
+              <FormLabel>{t('home.playVu.form.server.title')}</FormLabel>
               <Select
                 onValueChange={async (e) => {
                   await setPreferredServer(parseInt(e))
@@ -166,7 +174,7 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
                       placeholder={
                         data.servers[preferences.preferred_server_index]
                           ? data.servers[preferences.preferred_server_index].nickname
-                          : 'None'
+                          : t('home.playVu.form.server.none')
                       }
                     />
                   </SelectTrigger>
@@ -175,7 +183,7 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
                   defaultValue={
                     data.servers[preferences.preferred_server_index]
                       ? data.servers[preferences.preferred_server_index].nickname
-                      : 'None'
+                      : t('home.playVu.form.server.none')
                   }
                 >
                   {data.servers.map((x, index) => {
@@ -187,7 +195,7 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
                     )
                   })}
                   <div className="flex">
-                    <SelectItem value={`${9001}`}>None</SelectItem>
+                    <SelectItem value={`${9001}`}>{t('home.playVu.form.server.none')}</SelectItem>
                   </div>
                 </SelectContent>
               </Select>
@@ -206,7 +214,7 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
                 field.value && 'border-green-500 text-green-500 opacity-100',
               )}
             >
-              <FormLabel className="mt-1">Use Dev Branch</FormLabel>
+              <FormLabel className="mt-1">{t('home.playVu.form.devBranch.title')}</FormLabel>
               <FormControl>
                 {/* @ts-ignore */}
                 <Switch
@@ -227,7 +235,7 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
         />
         <Button variant={'constructive'} className="mt-4 p-8 text-2xl" type="submit">
           <Play />
-          PLAY
+          {t('home.playVu.form.submit')}
         </Button>
       </form>
     </Form>

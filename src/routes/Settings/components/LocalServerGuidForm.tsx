@@ -17,6 +17,7 @@ import { toast } from 'sonner'
 import { saveServerGUID } from '@/api'
 import { useQueryClient } from '@tanstack/react-query'
 import { QueryKey } from '@/config/config'
+import { useTranslation } from 'react-i18next'
 
 const formSchema = z.object({
   guid: z.string().min(2).max(50),
@@ -24,6 +25,7 @@ const formSchema = z.object({
 
 export default function LocalServerGuidForm({ guid }: { guid: string }) {
   const queryClient = useQueryClient()
+  const { t } = useTranslation()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -35,11 +37,11 @@ export default function LocalServerGuidForm({ guid }: { guid: string }) {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const status = await saveServerGUID(values.guid)
     if (status) {
-      toast('Updated Server GUID Successfully!')
+      toast(t('settings.serverGuidForm.toast.success'))
       queryClient.invalidateQueries({ queryKey: [QueryKey.UserPreferences], refetchType: 'all' })
       queryClient.invalidateQueries({ queryKey: [QueryKey.ServerKeyExists], refetchType: 'all' })
     } else {
-      toast('Something went wrong.')
+      toast(t('settings.serverGuidForm.toast.failure'))
     }
   }
   return (
@@ -50,16 +52,16 @@ export default function LocalServerGuidForm({ guid }: { guid: string }) {
           name="guid"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-xl">Local Server GUID</FormLabel>
+              <FormLabel className="text-xl">{t('settings.serverGuidForm.title')}</FormLabel>
               <FormControl>
-                <Input type="text" placeholder="guid" {...field} />
+                <Input type="text" placeholder="5ccbc53a-6266-4b83-b782-c98cc49da88f" {...field} />
               </FormControl>
-              <FormDescription>This will be used to Quick-Join your local server.</FormDescription>
+              <FormDescription>{t('settings.serverGuidForm.description')}</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button type="submit">{t('settings.serverGuidForm.submit')}</Button>
       </form>
     </Form>
   )

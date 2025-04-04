@@ -1,0 +1,689 @@
+{
+  "home": {
+    "error": "错误加载家庭路线",
+    "loading": "加载家庭路线",
+    "playVu": {
+      "form": {
+        "account": {
+          "none": "没有任何",
+          "title": "VU帐户"
+        },
+        "deleteCredentialDialog": {
+          "cancel": "取消",
+          "confirm": "删除",
+          "description": "这将永久从操作系统的凭据管理器中删除该帐户",
+          "title": "删除存储的凭据",
+          "toast": {
+            "failure": "未能删除凭据",
+            "success": "成功删除了"
+          }
+        },
+        "deleteServerDialog": {
+          "cancel": "取消",
+          "confirm": "删除",
+          "description": "这将从启动器中删除服务器信息",
+          "title": "删除快速加入服务器",
+          "toast": {
+            "failure": "无法删除快速加入服务器",
+            "success": "成功删除了快速加入服务器"
+          }
+        },
+        "devBranch": {
+          "title": "使用开发分支"
+        },
+        "error": "错误加载播放VU表格",
+        "loading": "加载播放VU形式",
+        "server": {
+          "none": "没有任何",
+          "title": "快速加入服务器"
+        },
+        "submit": "玩",
+        "toast": {
+          "failure": "无法启动VU",
+          "success": "开始VU ..."
+        }
+      }
+    },
+    "playerCredentials": {
+      "error": "错误加载播放器凭据",
+      "form": {
+        "button": "提交",
+        "password": {
+          "description": "使用操作系统的本机凭证管理器存储。",
+          "placeholder": "密码",
+          "title": "VU密码"
+        },
+        "toast": {
+          "failure": "无法保存VU凭据",
+          "success": "成功更新了VU凭据！"
+        },
+        "username": {
+          "description": "使用操作系统的本机凭证管理器存储。",
+          "placeholder": "用户名",
+          "title": "VU用户名"
+        }
+      },
+      "loading": "加载用户...",
+      "sheet": {
+        "addUser": "添加用户",
+        "description": "没有帐户？\n在这里注册：",
+        "login": "登录",
+        "title": "保存VU凭据"
+      }
+    },
+    "server": {
+      "form": {
+        "nickname": {
+          "placeholder": "我最喜欢的服务器",
+          "title": "昵称"
+        },
+        "serverGUID": {
+          "description": "服务器的公共ID带有或不带破折号。\n可以在加入字符串中找到",
+          "title": "服务器指导"
+        },
+        "serverPassword": {
+          "placeholder": "密码 - 如果没有密码，请留空",
+          "title": "服务器密码（可选）"
+        },
+        "submit": "提交",
+        "toast": {
+          "failure": "无法将服务器添加到快速加入列表",
+          "success": "成功将服务器添加到快速加入列表中"
+        }
+      },
+      "sheet": {
+        "description": "选择士兵后，可以加入服务器，跳过服务器浏览器。",
+        "title": "添加快速加入服务器",
+        "trigger": "添加服务器"
+      }
+    }
+  },
+  "launchArgumentDescriptions": {
+    "client": {
+      "cefdebug": "为 CEF for WebUI mods 启用详细调试日志记录。将在 VU 目录中创建一个 debug.log 文件（通常为 %LocalAppData%\\VeniceUnleashed\\client）。",
+      "credentials": "-username <用户名> -password <密码> 使用指定的 VU 凭据登录到您的 VU 帐户。",
+      "disableUiHwAcceleration": "禁用 WebUI 的硬件加速。仅在启动 VU 出现黑色加载屏幕时使用。在未支持的操作系统上默认启用。",
+      "dwebui": "在 http://localhost:8884 启用 WebUI 调试。",
+      "serverJoinString": "使用给定的 GUID 和可选密码连接到服务器。可以用作加入的超链接。如果加入和观看字符串为空，VU Launcher 将自动在后端创建加入字符串。vu://join/4ffa57c1068540e59b9a25eb6b00dfcd/amazingpass",
+      "serverSpectateString": "使用给定的 GUID 和可选密码作为观看者连接到服务器。可以用作加入的超链接。如果加入和观看字符串为空，VU Launcher 将自动在后端创建加入字符串。vu://spectate/4ffa57c1068540e59b9a25eb6b00dfcd/amazingpass"
+    },
+    "common": {
+      "activateWithEaToken": "-activate -ea_token <token> 使用提供的 EA 身份验证令牌在当前计算机上激活 BF3。可以使用上述命令从另一台计算机检索令牌。请记住，令牌会过期。",
+      "activateWithLSX": "-activate -lsx 使用 EA app/Origin (LSX) 在当前计算机上激活 BF3，该应用程序/Origin (LSX) 必须正在运行并登录到拥有 BF3 的帐户。它还会打印从 EA 应用程序检索到的身份验证令牌。",
+      "activateWithOrigin": "-activate -o_mail <email> -o_pass <pass> 使用指定的 Origin 凭据在当前计算机上激活 BF3。",
+      "cacert": "设置自定义 CA 证书包以用于 SSL 验证。",
+      "console": "启用外部控制台窗口以进行调试日志记录。",
+      "debuglog": "启用日志记录。服务器日志位于服务器实例目录中。客户端日志位于 VU AppData 安装文件夹中。",
+      "env": "设置 Zeus 环境。默认为 prod。",
+      "gamepath": "设置自定义 Battlefield 3 安装目录。",
+      "perftrace": "启用性能日志记录到 perftrace-[server|client].csv",
+      "trace": "启用详细日志记录。",
+      "tracedc": "在 VEXT 中启用 DataContainer Trace 使用，并在关卡销毁期间打印任何悬空 DC。",
+      "updateBranch": "设置更新分支。默认为 -env 所设置的任何值。",
+      "vextdebug": "设置 VEXT 远程调试主机：端口（目前不起作用）。它还可以防止服务器/客户端连接超时，并使发送到客户端的编译 VEXT 模块包含调试符号。",
+      "vexttrace": "启用 VEXT 执行跟踪。启用跟踪且 VU 崩溃时，每个加载的 VEXT 模块的最后一行执行内容将从崩溃对话框和提交的崩溃详细信息中提供。请记住，这可能会对性能产生不利影响。"
+    },
+    "server": {
+      "disableTerrainInterpolation": "禁用不同地形 LOD 之间的插值。",
+      "headless": "以无头模式运行 VU 服务器（不创建任何窗口）。",
+      "high120": "将 VU 服务器频率设置为 120Hz。",
+      "high60": "将 VU 服务器频率设置为 60Hz。",
+      "highResTerrain": "启用高分辨率地形。用于将地图扩展到其原始游戏区域之外。",
+      "joinaddr": "设置客户端应连接到的 IPv4 地址。如果为空，后端将尝试自动检测服务器的 IP 地址。",
+      "joinhost": "设置客户端在连接时应使用的主机名。指定此主机名时，-joinaddr 无效，任何尝试连接的客户端都不会尝试执行任何 NAT 检测。",
+      "listen": "设置 VU 服务器应监听连接的主机和端口。默认为 0.0.0.0:25200",
+      "mHarmonyPort": "设置 VU 服务器应监听 MonitoredHarmony 连接的端口。默认为 7948",
+      "maxPlayers": "设置最大玩家数 (vars.maxPlayers + vars.maxSpectators)。使用默认观众人数 24 时，您无法将 vars.maxPlayers 设置为高于 40。",
+      "noUpdate": "禁用自动更新。",
+      "remoteAdminPort": "设置 VU 服务器应监听 RCON 连接的主机和端口。默认为 0.0.0.0:47200",
+      "serverInstancePath": "为 VU 服务器设置服务器实例路径（存储服务器配置、日志和模块的位置）。",
+      "skipChecksum": "禁用客户端连接上的级别校验和验证。",
+      "unlisted": "从服务器列表中隐藏服务器。加入需要 connect 控制台命令或 vu join 字符串。"
+    }
+  },
+  "loaderComponent": {
+    "title": "加载中"
+  },
+  "mods": {
+    "discover": {
+      "discord": "VU不和谐",
+      "forums": "VU论坛",
+      "github": "github",
+      "title": "发现mod"
+    },
+    "import": {
+      "form": {
+        "click": "点击搜索",
+        "confirm": "从中复制mod",
+        "drag": "在这里拖动n丢下mod的拉链文件夹",
+        "toast": {
+          "failure": "未能导入mod。\n可能已经存在了吗？",
+          "invalid": "仅接受.zip文件",
+          "success": "成功导入的mod"
+        }
+      },
+      "sheet": {
+        "description": "接受.zip文件",
+        "title": "导入威尼斯释放mod",
+        "trigger": "导入mod"
+      }
+    },
+    "manage": {
+      "deleteDialog": {
+        "cancel": "取消",
+        "confirm": "删除",
+        "description": "该动作不能撤消。\n这将永久删除",
+        "title": "删除",
+        "toast": {
+          "failure": "错误：无法删除",
+          "success": "删除"
+        }
+      },
+      "empty": {
+        "description": "下载一些mod后，它们将出现在这里？",
+        "title": "找不到mod"
+      },
+      "error": "无法加载管理mod表",
+      "loading": "加载管理mods表",
+      "sheet": {
+        "mod": {
+          "toast": {
+            "failure": "无法在VSCODE中打开",
+            "success": "在Vscode中打开"
+          }
+        },
+        "title": "安装的mod出现在这里",
+        "trigger": "管理mod"
+      }
+    }
+  },
+  "onboarding": {
+    "account": {
+      "add": "添加VU帐户"
+    },
+    "activate": {
+      "button": "激活BF3",
+      "header": "用EA应用程序 / Origin激活BF3",
+      "step1": "请启动您的EA应用程序 / Origin并登录。",
+      "step2": "登录后，单击激活BF3按钮：",
+      "step3": "成功后，单击继续。"
+    },
+    "button": {
+      "complete": "跳过 /完整的入职",
+      "continue": "跳过 /继续"
+    },
+    "error": "无法加载入职组件",
+    "header": "首次设置",
+    "install": {
+      "dev": {
+        "button": "选择安装位置",
+        "dialog": {
+          "button": {
+            "cancel": "取消",
+            "confirm": "安装Vu Dev"
+          },
+          "description": "这将在上述目录上安装VU开发人员。",
+          "title": "安装Vu Dev",
+          "toast": {
+            "failure": "无法将VU产品复制到Dev文件夹",
+            "success": "成功将VU产品复制到Dev文件夹"
+          }
+        },
+        "header": "找到Vu产品。\n还安装Vu Dev吗？"
+      },
+      "prod": {
+        "dialog": {
+          "button": {
+            "cancel": "取消",
+            "confirmBoth": "安装VU产品和开发人员",
+            "confirmOne": "安装VU产品"
+          },
+          "description": "这将安装VU到上述目录。",
+          "title": "将VU安装到："
+        },
+        "download": {
+          "button": "选择安装位置",
+          "header": "下载Vu"
+        },
+        "locate": {
+          "button": "找到Vu",
+          "header": "VU已经安装了？"
+        },
+        "progress": {
+          "extractingPrefix": "提取文件",
+          "extractingSuffix": "其余的",
+          "header": "下载Vu"
+        },
+        "toast": {
+          "chooseInstallDir": {
+            "failure": "无法设置VU安装路径",
+            "success": "成功将VU安装路径设置为"
+          },
+          "installComplete": "VU安装完成"
+        }
+      }
+    },
+    "loading": "加载入职组件",
+    "toast": {
+      "activateBF3": "激活BF3"
+    }
+  },
+  "servers": {
+    "firstTime": {
+      "error": "无法找到服务器密钥",
+      "guidForm": {
+        "click": "点击搜索",
+        "confirm": "复制服务器密钥从",
+        "done": "完毕！",
+        "title": "在这里拖动n放置您的文件",
+        "toast": {
+          "failure": "不正确的文件。\n请使用server.key",
+          "success": "成功导入的服务器密钥。"
+        }
+      },
+      "loading": "检查服务器密钥是否存在",
+      "redoGuid": "请重新输入您的服务器GUID",
+      "step1": "从下载服务器密钥",
+      "step2": "从上方复制服务器指南",
+      "step3": "将钥匙拖入此窗口"
+    },
+    "loadouts": {
+      "createLoadout": {
+        "form": {
+          "adminPassword": {
+            "placeholder": "RCON密码",
+            "title": "设置Procon（远程管理员）的RCON密码"
+          },
+          "banlist": {
+            "button": {
+              "addAnotherPlayer": "将另一个添加到banlist",
+              "addFirstPlayer": "添加播放器"
+            },
+            "placeholder": "ENT/BKSP添加/删除",
+            "title": "设定被禁止的球员"
+          },
+          "maplist": {
+            "addAnotherMap": "添加另一个地图",
+            "addFirstMap": "添加地图",
+            "gamemodePlaceholder": "选择一个GameMode",
+            "mapPlaceholder": "选择地图",
+            "title": "设置地图和gamemodes"
+          },
+          "maxPlayers": {
+            "title": "设置最大游戏"
+          },
+          "modlist": {
+            "title": "设置活动mod"
+          },
+          "nickname": {
+            "description": "禁止字符：\\ /： *？ \n“ <> |'",
+            "placeholder": "加载一个",
+            "title": "设置LOADOUT昵称"
+          },
+          "serverName": {
+            "placeholder": "[国家代码] [Main Mod] Yourservertitle",
+            "title": "设置名称在VU服务器浏览器中"
+          },
+          "serverPassword": {
+            "placeholder": "游戏密码",
+            "title": "设置服务器密码"
+          },
+          "submit": "提交",
+          "toast": {
+            "failure": "使用其他负载名称。",
+            "success": "成功！\n创建的加载"
+          }
+        },
+        "sheet": {
+          "error": "无法获取loadOut的模列",
+          "loading": "获取用于加载的mods",
+          "title": "创建LoadOut",
+          "trigger": "创建LoadOut"
+        }
+      },
+      "deleteDialog": {
+        "buttons": {
+          "cancel": "取消",
+          "confirm": "删除"
+        },
+        "description": "该动作不能撤消。\n这将永久删除与此加载相关的所有数据。",
+        "title": "删除加载",
+        "toast": {
+          "failure": "无法删除LOADOUT",
+          "success": "删除服务器加载"
+        }
+      },
+      "error": "找不到负载。",
+      "importLoadout": {
+        "error": "无法获取现有的加载名称",
+        "form": {
+          "dragDrop": {
+            "search": "点击搜索",
+            "title": "在这里拖动N Drop文件夹",
+            "toast": {
+              "invalid": "错误目录。\n请选择 /服务器文件夹"
+            }
+          },
+          "importPath": {
+            "path": "将复制",
+            "title": "设置从"
+          },
+          "nickname": {
+            "description": "禁止字符：\\ /： *？ \n“ <> |'",
+            "placeholder": "加载一个",
+            "title": "设置加载名称"
+          },
+          "submit": "提交",
+          "toast": {
+            "failure": "无法导入加载。",
+            "nameCollision": "负载名称已采用。",
+            "success": "成功导入负载"
+          }
+        },
+        "loading": "获取现有的加载名称",
+        "sheet": {
+          "title": "导入加载",
+          "trigger": "导入加载"
+        }
+      },
+      "loading": "获取服务器加载",
+      "loadout": {
+        "banlist": {
+          "form": {
+            "submit": "提交",
+            "toast": {
+              "failure": "无法更新banlist for LoadOut",
+              "success": "成功更新了Banlist"
+            }
+          },
+          "sheet": {
+            "title": "BANLIST",
+            "trigger": "BANLIST"
+          }
+        },
+        "devToggle": "使用开发分支？",
+        "error": "无法加载负载的用户首选项",
+        "launchArgs": {
+          "form": {
+            "env": {
+              "placeholder": "选择Env"
+            },
+            "searchPlaceholder": "搜索启动参数",
+            "submit": "提交",
+            "toast": {
+              "failure": "未能更新针对的启动参数",
+              "success": "成功更新了启动参数"
+            }
+          },
+          "sheet": {
+            "description": "在这里调整您的发布论点！",
+            "title": "启动参数表格",
+            "trigger": "启动参数"
+          }
+        },
+        "loading": "获取负载的用户首选项。",
+        "maplist": {
+          "form": {
+            "button": {
+              "addAnotherMap": "添加另一个地图",
+              "addFirstMap": "添加地图"
+            },
+            "gamemodePlaceholder": "选择一个GameMode",
+            "mapPlaceholder": "选择地图",
+            "submit": "提交",
+            "toast": {
+              "failure": "未能更新映射",
+              "success": "成功更新了"
+            }
+          },
+          "sheet": {
+            "title": "管理映射",
+            "trigger": "枫树列"
+          }
+        },
+        "mods": {
+          "addModDialog": {
+            "cancel": "取消",
+            "confirm": "安装",
+            "description": "安装mod到",
+            "title": "安装mod",
+            "toast": {
+              "failure": "无法安装mod",
+              "success": "成功安装了mod"
+            }
+          },
+          "deleteModDialog": {
+            "cancel": "取消",
+            "confirm": "删除",
+            "description": "该动作不能撤消。\n这将永久删除",
+            "title": "删除mod",
+            "toast": {
+              "failure": "无法从",
+              "success": "成功删除的mod从"
+            }
+          },
+          "empty": "找不到mod",
+          "error": "无法获取mod名称的列表",
+          "loading": "获取所有mod名称",
+          "loadoutMod": {
+            "activated": "活性",
+            "deactivated": "去激活",
+            "toast": {
+              "modFailure": "无法激活mod",
+              "vsCodeFailure": "无法在VSCODE中打开mod",
+              "vsCodeSuccess": "在Vscode中打开mod"
+            }
+          },
+          "sheet": {
+            "modCache": "mod-cache",
+            "trigger": "mods"
+          }
+        },
+        "multiAccount": {
+          "form": {
+            "play": "玩"
+          },
+          "sheet": {
+            "description": "选择使用哪些VU帐户加入服务器",
+            "empty": "用户列表为空",
+            "error": "无法获取多帐户表的用户列表",
+            "loading": "加载多帐户表的用户列表",
+            "title": "选择要加入加载的帐户",
+            "toast": {
+              "serverFailure": "无法启动服务器加载",
+              "serverSucces": "启动VU服务器。\n启动客户..."
+            },
+            "trigger": "启动服务器和多个客户端"
+          }
+        },
+        "openExplorer": "资源管理器",
+        "refreshTooltip": "从loadout JSON中重新加载TXT文件（如果您手动更新loadout.json）",
+        "startServer": "启动服务器",
+        "startServerAndClient": "启动服务器和客户端",
+        "startup": {
+          "form": {
+            "reservedSlots": {
+              "addAnotherPlayer": "添加播放器",
+              "addFirstPlayer": "添加播放器",
+              "placeholder": "ENT/BKSP添加/删除"
+            },
+            "searchPlaceholder": "搜索启动配置",
+            "setTeamTickets": {
+              "button": {
+                "setOtherTeamTickets": "设置其他团队的门票",
+                "setTickets": "设定票"
+              },
+              "placeholder": "选择一个团队",
+              "team1": "Team1",
+              "team2": "Team2",
+              "team3": "Team3",
+              "team4": "Team4",
+              "team5": "Team5",
+              "team6": "团队6",
+              "team7": "Team7",
+              "team8": "Team8",
+              "title": "设定每队门票"
+            },
+            "submit": "提交",
+            "toast": {
+              "failure": "无法更新启动args",
+              "success": "成功更新的启动args"
+            }
+          },
+          "sheet": {
+            "description": "获取startup.txt参数并存储它们",
+            "title": "管理startup.txt",
+            "trigger": "启动"
+          }
+        },
+        "toast": {
+          "openExplorer": "打开了用于加载的资源管理器",
+          "playFailure": "无法启动服务器加载",
+          "playSuccess": "启动VU服务器。\n启动客户...",
+          "refreshFailure": "无法从loadout.json更新txt文件",
+          "refreshSuccess": "从loadout.json更新的启动/映射/maplist/modlist/banlist for",
+          "serverFailure": "无法启动服务器加载",
+          "serverSuccess": "启动VU服务器..."
+        }
+      }
+    }
+  },
+  "settings": {
+    "activateBF3": {
+      "sheet": {
+        "option1": {
+          "button": "激活BF3（LSX）",
+          "step1": "请启动您的EA应用程序 / Origin并登录。",
+          "step2": "登录后，单击激活BF3按钮：",
+          "title": "选项1：EA App / Origin LSX（推荐）",
+          "toast": "激活BF3（LSX）"
+        },
+        "option2": {
+          "button": "激活BF3（EA令牌）",
+          "placeholder": "EA令牌",
+          "step1": "登录到EA应用程序 /原始",
+          "step2": "用这些参数运行VU",
+          "step3": "复制该窗口生成在下面的框中的EA Auth令牌，然后单击激活BF3按钮。",
+          "title": "选项2：EA令牌",
+          "toast": "激活BF3（EA令牌）"
+        },
+        "title": "激活BF3"
+      },
+      "tooltip": {
+        "content": "引导BF3激活",
+        "title": "激活BF3"
+      }
+    },
+    "languageSelector": {
+      "title": "选择您的语言",
+      "toast": "将语言更改为"
+    },
+    "multiAccount": {
+      "title": "显示多门数加入？",
+      "toast": {
+        "disable": "禁用加载多学时加入",
+        "enable": "启用LOADOUT多学时加入",
+        "failed": "未能更新多学时加入"
+      }
+    },
+    "serverGuidForm": {
+      "description": "这将用于快速加入本地服务器。",
+      "submit": "提交",
+      "title": "本地服务器GUID",
+      "toast": {
+        "failure": "出了点问题。",
+        "success": "成功更新了服务器GUID！"
+      }
+    },
+    "title": "设置"
+  },
+  "sidebar": {
+    "header": "非官方VU发射器",
+    "routes": {
+      "home": "家",
+      "loadouts": "加载",
+      "mods": "mods",
+      "settings": "设置"
+    }
+  },
+  "startupDescriptions": {
+    "RM": {
+      "autoPerfEnabled": "激活自动性能",
+      "autoPerfMaxPlayers": "自动性能截止",
+      "battleCryLink": "链接到您的 battlecry JSON 端点",
+      "defaultPreRoundTime": "回合开始前的时间",
+      "ingameBanner": "图片链接",
+      "pingLimitEnable": "激活 ping 限制",
+      "pingLimitInMs": "时间（毫秒）",
+      "serverInfo": "服务器描述",
+      "serverLicenseKey": "RM 服务器许可证密钥",
+      "setAdmins": "设置管理员列表，以空格分隔",
+      "setAutoBalancer": "自动平衡",
+      "setDevelopers": "设置开发人员列表，以空格分隔",
+      "setLightAdmins": "设置轻量级管理员列表，以空格分隔",
+      "tempReservedSlotsEnabled": "启用自动重新加入",
+      "tempReservedSlotsRejoinTime": "重新加入前多久被移除"
+    },
+    "admin": {
+      "password": "为 Procon 设置 RCON 密码"
+    },
+    "reservedSlots": {
+      "add": "要添加到预留位置的玩家列表，以逗号分隔"
+    },
+    "vars": {
+      "_3dSpotting": "在发现的敌人上启用3D标记",
+      "_3pCam": "启用第三人称车辆摄像头",
+      "autoBalance": "启用自动平衡",
+      "bulletDamage": "设置子弹伤害比例因子",
+      "crossHair": "为所有武器启用十字准线",
+      "friendlyFire": "启用团队伤害",
+      "gameModeCounter": "设置结束回合的票数比例因子",
+      "gamePassword": "设置加入服务器的密码",
+      "hud": "启用HUD",
+      "idleBanRounds": "设置应禁止多少轮空闲超时（如果有）",
+      "idleTimeout": "设置空闲超时",
+      "killCam": "启用击杀镜头",
+      "maxPlayers": "设置最大玩家",
+      "miniMap": "启用小地图",
+      "miniMapSpotting": "在小地图上启用发现的敌人",
+      "nameTag": "启用姓名标签",
+      "onlySquadLeaderSpawn": "禁用小队队长以外的小队成员重生",
+      "playerManDownTime": "设置玩家倒地时间比例因子",
+      "playerRespawnTime": "设置玩家重生时间尺度因子",
+      "ranked": "启用排名",
+      "regenerateHealth": "启用健康再生",
+      "roundLockdownCountdown": "设置回合前持续时间",
+      "roundRestartPlayerCount": "设置最小玩家数量以恢复热身",
+      "roundStartPlayerCount": "设置最小玩家以激活回合前/回合内",
+      "serverDescription": "设置服务器描述",
+      "serverMessage": "设置服务器欢迎消息",
+      "serverName": "设置服务器名称",
+      "soldierHealth": "设置士兵最大健康比例因子",
+      "teamKillCountForKick": "设置一轮中允许的团队击杀次数",
+      "teamKillKickForBan": "设置导致永久禁赛的团队击杀次数",
+      "teamKillValueDecreasePerSecond": "设置每秒击杀值减少",
+      "teamKillValueForKick": "设置玩家在被踢出前允许的最大击杀值",
+      "teamKillValuelncrease": "设置团队击杀的击杀值增加",
+      "vehicleSpawnAllowed": "启用车辆生成",
+      "vehicleSpawnDelay": "设置车辆生成延迟比例因子"
+    },
+    "vu": {
+      "ColorCorrectionEnabled": "启用蓝色滤镜",
+      "CorpseDamageEnabled": "启用尸体伤害以防止复活",
+      "DesertingAllowed": "禁用越界",
+      "DestructionEnabled": "启用破坏",
+      "DisablePreRound": "禁用等待玩家",
+      "FriendlyFireSuppression": "启用对盟友的压制",
+      "HighPerformanceReplication": "启用远处玩家的高性能更新",
+      "HttpAssetUrl": "设置指向远程 [ui.vuic] 的 URL，而不是从游戏服务器下载",
+      "ServerBanner": "设置指向 1378x162 jpg 的浏览器横幅 URL",
+      "SetTeamTicketCount": "设置团队的团队票数。",
+      "SquadSize": "设置每个小队的最大玩家数量",
+      "SunFlareEnabled": "启用太阳耀斑",
+      "SuppressionMultiplier": "设置压制强度 [0，无限]",
+      "TeamActivatedMines": "启用地雷以触发盟友",
+      "TimeScale": "减慢或加快游戏速度 [0.0，2.0]",
+      "VehicleDisablingEnabled": "启用对车辆的移动命中"
+    }
+  }
+}

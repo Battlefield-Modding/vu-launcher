@@ -2,12 +2,16 @@ import { FormControl, FormDescription, FormField, FormItem, FormLabel } from '@/
 import { CreateLoadoutFormType } from '../../CreateLoadoutForm'
 import { Switch } from '@/components/ui/switch'
 import clsx from 'clsx'
+import { useTranslation } from 'react-i18next'
 
 export function ModList({ form, mods }: { form: CreateLoadoutFormType; mods: string[] }) {
+  const { t } = useTranslation()
   return (
     <div>
       <FormItem>
-        <FormLabel className="text-xl">Set active mods</FormLabel>
+        <FormLabel className="text-xl">
+          {t('servers.loadouts.createLoadout.form.modlist.title')}
+        </FormLabel>
         <FormDescription>modlist.add</FormDescription>
       </FormItem>
       <div className="flex h-fit max-h-80 flex-col gap-4 overflow-y-auto">

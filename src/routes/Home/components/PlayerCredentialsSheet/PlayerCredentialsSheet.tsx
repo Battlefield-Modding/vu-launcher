@@ -13,9 +13,11 @@ import { doesCredentialsExist } from '@/api'
 import clsx from 'clsx'
 import { useQuery } from '@tanstack/react-query'
 import { QueryKey, STALE } from '@/config/config'
+import { useTranslation } from 'react-i18next'
 
 export default function PlayerCredentialsSheet() {
   const [sheetOpen, setSheetOpen] = useState(false)
+  const { t } = useTranslation()
 
   const { isPending, isError, data, error } = useQuery({
     queryKey: [QueryKey.CredentialsExist],
@@ -26,7 +28,7 @@ export default function PlayerCredentialsSheet() {
   if (isPending) {
     return (
       <div>
-        <h1>Loading Users...</h1>
+        <h1>{t('home.playerCredentials.loading')}</h1>
         <Loader />
       </div>
     )
@@ -35,7 +37,7 @@ export default function PlayerCredentialsSheet() {
   if (isError) {
     return (
       <div className="rounded-md bg-red-600 pl-2 pr-2 text-xl leading-9 text-white">
-        <h1>ERROR: No users found</h1>
+        <h1>{t('home.playerCredentials.error')}</h1>
         <p>{error.message}</p>
       </div>
     )
@@ -51,15 +53,17 @@ export default function PlayerCredentialsSheet() {
             'text-md flex justify-center rounded-md bg-secondary p-1.5 text-primary hover:bg-secondary/80',
           )}
         >
-          {credsExist ? 'Add User' : 'Login'}
+          {credsExist
+            ? t('home.playerCredentials.sheet.addUser')
+            : t('home.playerCredentials.sheet.login')}
           <User />
         </div>
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle className="text-center">Save VU Credentials</SheetTitle>
+          <SheetTitle className="text-center">{t('home.playerCredentials.sheet.title')}</SheetTitle>
           <SheetDescription className="text-center">
-            No account? Sign up here:
+            {t('home.playerCredentials.sheet.description')}
             <a
               className="ml-1 text-blue-500 underline"
               href="https://veniceunleashed.net/signup"

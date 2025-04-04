@@ -1,4 +1,4 @@
-import { formBuilderInputTypes, StartupDescriptions } from '../Setup/DefaultStartupConfig'
+import { formBuilderInputTypes } from '../Setup/DefaultStartupConfig'
 import { StartupArgs } from '../Setup/StartupTypes'
 import { SwitchComponent } from './SwitchComponent'
 import { NumberComponent } from './NumberComponent'
@@ -7,6 +7,7 @@ import { TextAreaComponent } from './TextAreaComponent'
 import { ReservedSlotsComponent } from './ReservedSlotsComponent'
 import { SetTeamTicketCountComponent } from './SetTeamTicketCountComponent'
 import { TextComponent } from './TextComponent'
+import { useTranslation } from 'react-i18next'
 
 export function FormBuilder({
   form,
@@ -17,6 +18,7 @@ export function FormBuilder({
   sectionNames: Array<keyof StartupArgs>
   filteredArguments: Partial<LoadoutJSON>
 }) {
+  const { t } = useTranslation()
   return sectionNames.map((sectionName) => {
     if (sectionName === 'reservedSlots') {
       return <ReservedSlotsComponent key={`${sectionName}-key`} form={form} />
@@ -27,8 +29,7 @@ export function FormBuilder({
       // @ts-expect-error
       const fieldType = formBuilderInputTypes[sectionName][key]
 
-      // @ts-expect-error
-      const label = StartupDescriptions[sectionName as keyof StartupArgs][key]
+      const label = t(`startupDescriptions.${sectionName as keyof StartupArgs}.${key}`)
       if (fieldType === 'checkbox') {
         return (
           <SwitchComponent

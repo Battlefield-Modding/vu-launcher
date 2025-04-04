@@ -14,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { useTranslation } from 'react-i18next'
 
 export function SelectComponent({
   form,
@@ -26,6 +27,8 @@ export function SelectComponent({
   label: string
   sectionName: keyof LaunchArguments
 }) {
+  const { t } = useTranslation()
+
   return (
     <FormField
       key={keyName}
@@ -43,7 +46,9 @@ export function SelectComponent({
           <Select onValueChange={field.onChange} defaultValue={field.value}>
             <FormControl className="ml-auto mr-0 w-32">
               <SelectTrigger>
-                <SelectValue placeholder="Select env" />
+                <SelectValue
+                  placeholder={t('servers.loadouts.loadout.launchArgs.form.env.placeholder')}
+                />
               </SelectTrigger>
             </FormControl>
             <SelectContent>

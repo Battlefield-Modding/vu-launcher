@@ -8,8 +8,10 @@ import { DeleteLoadoutDialog } from './DeleteLoadoutDialog'
 import { CreateLoadoutSheet } from '../Forms/CreateLoadout/CreateLoadoutSheet'
 import { UploadLoadoutSheet } from '../Forms/UploadLoadout/UploadLoadoutSheet'
 import clsx from 'clsx'
+import { useTranslation } from 'react-i18next'
 
 export function LoadoutContainer() {
+  const { t } = useTranslation()
   const [activeLoadout, setActiveLoadout] = useState<LoadoutJSON | null>(null)
 
   const { isPending, isError, data, error } = useQuery({
@@ -21,7 +23,7 @@ export function LoadoutContainer() {
   if (isPending) {
     return (
       <div>
-        <h1>Fetching Server Loadouts</h1>
+        <h1>{t('servers.loadouts.loading')}</h1>
         <Loader />
       </div>
     )
@@ -30,7 +32,7 @@ export function LoadoutContainer() {
   if (isError) {
     return (
       <div className="rounded-md bg-destructive pl-2 pr-2 text-xl leading-9">
-        <h1>ERROR: No Loadouts Found</h1>
+        <h1>{t('servers.loadouts.error')}</h1>
         <p>{error.message}</p>
       </div>
     )
@@ -39,8 +41,7 @@ export function LoadoutContainer() {
   if (!data) {
     return (
       <div className="rounded-md bg-destructive pl-2 pr-2 text-xl leading-9">
-        <h1>No Loadouts Found</h1>
-        <p>Create a loadout and it will appear here.</p>
+        <h1>{t('servers.loadouts.error')}</h1>
       </div>
     )
   }
@@ -96,7 +97,7 @@ export function LoadoutContainer() {
           </div>
         </div>
         <div className="flex w-full flex-col items-center justify-center">
-          <p>No loadouts Found</p>
+          <p>{t('servers.loadouts.error')}</p>
         </div>
       </div>
     )

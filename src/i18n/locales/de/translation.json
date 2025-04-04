@@ -1,0 +1,689 @@
+{
+  "home": {
+    "error": "Fehler laden Home Route",
+    "loading": "Home Route laden",
+    "playVu": {
+      "form": {
+        "account": {
+          "none": "Keiner",
+          "title": "VU -Konto"
+        },
+        "deleteCredentialDialog": {
+          "cancel": "Stornieren",
+          "confirm": "Löschen",
+          "description": "Dadurch wird das Konto dauerhaft vom Anmeldeinformationsmanager Ihres Betriebssystems gelöscht",
+          "title": "Löschen Sie gespeicherte Anmeldeinformationen",
+          "toast": {
+            "failure": "Nicht löschen Anmeldeinformationen für",
+            "success": "Erfolgreich gelöschte Anmeldeinformationen für"
+          }
+        },
+        "deleteServerDialog": {
+          "cancel": "Stornieren",
+          "confirm": "Löschen",
+          "description": "Dadurch wird die Serverinformationen vom Launcher gelöscht",
+          "title": "Löschen Sie den Quick-Join-Server",
+          "toast": {
+            "failure": "Ich habe den Quick-Join-Server nicht gelöscht",
+            "success": "Erfolgreich gelöschte Schnelljoin-Server"
+          }
+        },
+        "devBranch": {
+          "title": "Verwenden Sie Dev Branch"
+        },
+        "error": "Fehlerladen spielen Vu -Formular",
+        "loading": "Laden des Spiels vu Formular",
+        "server": {
+          "none": "Keiner",
+          "title": "Quick-Join-Server"
+        },
+        "submit": "SPIELEN",
+        "toast": {
+          "failure": "Versäumte es, VU zu starten",
+          "success": "Starten vu ..."
+        }
+      }
+    },
+    "playerCredentials": {
+      "error": "Fehler laden Player -Anmeldeinformationen",
+      "form": {
+        "button": "einreichen",
+        "password": {
+          "description": "Speichern Sie mit dem nativen Anmeldeinformationsmanager Ihres Betriebssystems.",
+          "placeholder": "Passwort",
+          "title": "Vu Passwort"
+        },
+        "toast": {
+          "failure": "Ich habe VU -Anmeldeinformationen nicht gespeichert",
+          "success": "VU -Anmeldeinformationen erfolgreich aktualisiert!"
+        },
+        "username": {
+          "description": "Speichern Sie mit dem nativen Anmeldeinformationsmanager Ihres Betriebssystems.",
+          "placeholder": "Benutzername",
+          "title": "Vu Benutzername"
+        }
+      },
+      "loading": "Benutzer laden ...",
+      "sheet": {
+        "addUser": "Benutzer hinzufügen",
+        "description": "Kein Konto? \nMelden Sie sich hier an:",
+        "login": "Login",
+        "title": "Speichern Sie VU -Anmeldeinformationen"
+      }
+    },
+    "server": {
+      "form": {
+        "nickname": {
+          "placeholder": "Mein Lieblingsserver",
+          "title": "Spitzname"
+        },
+        "serverGUID": {
+          "description": "Die öffentliche ID des Servers mit oder ohne Striche. \nKann in der Join -String gefunden werden",
+          "title": "Serverguid"
+        },
+        "serverPassword": {
+          "placeholder": "Passwort - leer lassen, wenn kein Passwort",
+          "title": "Serverkennwort (optional)"
+        },
+        "submit": "Einreichen",
+        "toast": {
+          "failure": "Versäumte es, Server zur Quick-Join-Liste hinzuzufügen",
+          "success": "Erfolgreich hinzugefügt Server zur Quick-Join-Liste hinzugefügt"
+        }
+      },
+      "sheet": {
+        "description": "Sie können einem Server nach der Auswahl eines Soldaten beitreten und den Serverbrowser überspringen.",
+        "title": "Fügen Sie einen Schnelljoin-Server hinzu",
+        "trigger": "Server hinzufügen"
+      }
+    }
+  },
+  "launchArgumentDescriptions": {
+    "client": {
+      "cefdebug": "Aktiviere ausführliches Debugging-Logging für CEF für WebUI-Mods. Eine Datei „debug.log“ wird im VU-Verzeichnis erstellt. (normalerweise %LocalAppData%\\VeniceUnleashed\\client).",
+      "credentials": "-username <Benutzername> -password <Passwort> Meldet Sie mit den angegebenen VU-Anmeldedaten bei Ihrem VU-Konto an.",
+      "disableUiHwAcceleration": "Hardwarebeschleunigung für WebUI deaktivieren. Nur verwenden, wenn beim Starten der VU ein schwarzer Ladebildschirm angezeigt wird. Auf nicht unterstützten Betriebssystemen standardmäßig aktiviert.",
+      "dwebui": "WebUI-Debugging unter http://localhost:8884 aktivieren.",
+      "serverJoinString": "Verbinde dich mit einem Server mit der angegebenen GUID und einem optionalen Passwort. Kann als Hyperlink zum Beitritt verwendet werden. Wenn die Zeichenfolgen „Join“ und „Spectate“ leer sind, erstellt der VU Launcher automatisch eine Beitrittszeichenfolge im Backend. vu://join/4ffa57c1068540e59b9a25eb6b00dfcd/amazingpass.",
+      "serverSpectateString": "Verbinde dich als Zuschauer mit einem Server mit der angegebenen GUID und einem optionalen Passwort. Kann als Hyperlink zum Beitritt verwendet werden. Wenn die Zeichenfolgen „Join“ und „Spectate“ leer sind, erstellt der VU Launcher automatisch eine Beitrittszeichenfolge im Backend. vu://spectate/4ffa57c1068540e59b9a25eb6b00dfcd/amazingpass."
+    },
+    "common": {
+      "activateWithEaToken": "-activate -ea_token <Token> Aktiviert BF3 auf dem aktuellen Rechner mit dem bereitgestellten EA-Authentifizierungstoken. Das Token kann mit dem obigen Befehl von einem anderen Rechner abgerufen werden. Beachten Sie, dass Token ablaufen.",
+      "activateWithLSX": "-activate -lsx Aktiviert BF3 auf dem aktuellen Rechner mit der EA-App/Origin (LSX). Diese muss ausgeführt werden und mit einem Konto angemeldet sein, das BF3 besitzt. Außerdem wird das von der EA-App abgerufene Authentifizierungstoken ausgegeben.",
+      "activateWithOrigin": "-activate -o_mail <E-Mail> -o_pass <Passwort> Aktiviert BF3 auf dem aktuellen Rechner mit den angegebenen Origin-Anmeldedaten.",
+      "cacert": "Benutzerdefiniertes CA-Zertifikatpaket für die SSL-Verifizierung festlegen.",
+      "console": "Aktivieren Sie das externe Konsolenfenster für die Debug-Protokollierung.",
+      "debuglog": "Aktivieren Sie die Protokollierung. Serverprotokolle befinden sich im Serverinstanzverzeichnis. Clientprotokolle befinden sich im VU AppData-Installationsordner.",
+      "env": "Zeus-Umgebung festlegen. Standardmäßig „prod“.",
+      "gamepath": "Benutzerdefiniertes Battlefield 3-Installationsverzeichnis festlegen.",
+      "perftrace": "Leistungsprotokollierung aktivieren (perftrace-[server|client].csv).",
+      "trace": "Aktivieren Sie die ausführliche Protokollierung.",
+      "tracedc": "DataContainer-Trace-Nutzung in VEXT aktivieren und alle nicht ausstehenden Domänencontroller während der Level-Demonstration ausgeben.",
+      "updateBranch": "Update-Branch festlegen. Standardmäßig „-env“ festlegen.",
+      "vextdebug": "Legen Sie Host:Port für VEXT-Remote-Debugging fest (dies funktioniert derzeit nicht). Dies verhindert außerdem Timeouts bei Server-/Client-Verbindungen und sorgt dafür, dass kompilierte VEXT-Module, die an den Client gesendet werden, Debug-Symbole enthalten.",
+      "vexttrace": "Aktivieren Sie die VEXT-Ausführungsverfolgung. Wenn die Verfolgung aktiviert ist und VU abstürzt, ist die letzte ausgeführte Zeile jedes geladenen VEXT-Mods im Absturzdialog und in den übermittelten Absturzdetails verfügbar. Beachten Sie, dass dies die Leistung beeinträchtigen kann."
+    },
+    "server": {
+      "disableTerrainInterpolation": "Interpolation zwischen verschiedenen Terrain-LODs deaktivieren.",
+      "headless": "VU-Server im Headless-Modus ausführen (ohne Fenster zu erstellen).",
+      "high120": "VU-Serverfrequenz auf 120 Hz einstellen.",
+      "high60": "VU-Serverfrequenz auf 60 Hz einstellen.",
+      "highResTerrain": "Hochauflösendes Terrain aktivieren. Nützlich, um Karten über ihren ursprünglichen Spielbereich hinaus zu erweitern.",
+      "joinaddr": "IPv4-Adresse festlegen, mit der sich Clients verbinden sollen. Falls leer, versucht das Backend, die IP-Adresse des Servers automatisch zu erkennen.",
+      "joinhost": "Hostnamen festlegen, den Clients bei der Verbindung verwenden sollen. Ist dieser Wert angegeben, hat -joinaddr keine Wirkung, und Clients, die eine Verbindung herstellen möchten, führen keine NAT-Erkennung durch.",
+      "listen": "Host und Port festlegen, auf denen der VU-Server auf Verbindungen warten soll. Standardmäßig 0.0.0.0:25200.",
+      "mHarmonyPort": "Port festlegen, auf dem der VU-Server auf MonitoredHarmony-Verbindungen warten soll. Standardmäßig 7948.",
+      "maxPlayers": "Maximale Spieleranzahl festlegen (vars.maxPlayers + vars.maxSpectators). Bei Verwendung der Standard-Zuschaueranzahl von 24 ist ein Wert von vars.maxPlayers über 40 nicht möglich.",
+      "noUpdate": "Automatische Updates deaktivieren.",
+      "remoteAdminPort": "Host und Port festlegen, auf denen der VU-Server auf RCON-Verbindungen warten soll. Standardmäßig 0.0.0.0:47200.",
+      "serverInstancePath": "Serverinstanzpfad (in dem Serverkonfiguration, Protokolle und Mods gespeichert sind) für den VU-Server festlegen.",
+      "skipChecksum": "Level-Prüfsummenvalidierung bei Client-Verbindung deaktivieren.",
+      "unlisted": "Server aus der Serverliste ausblenden. Für den Beitritt ist der Konsolenbefehl „connect“ oder „vu join“ erforderlich. Zeichenfolge."
+    }
+  },
+  "loaderComponent": {
+    "title": "Laden"
+  },
+  "mods": {
+    "discover": {
+      "discord": "Vu Discord",
+      "forums": "VU -Foren",
+      "github": "Github",
+      "title": "MODS entdecken"
+    },
+    "import": {
+      "form": {
+        "click": "Klicken Sie, um stattdessen zu suchen",
+        "confirm": "Mod kopieren von",
+        "drag": "Ziehen Sie n den Ordner Ihres Mod -Reißverschlusses hier",
+        "toast": {
+          "failure": "MOD nicht importieren. \nVielleicht existieren Sie bereits?",
+          "invalid": "Nur .zip -Dateien werden akzeptiert",
+          "success": "Erfolgreich importiert mod von"
+        }
+      },
+      "sheet": {
+        "description": "Akzeptiert .zip -Dateien",
+        "title": "Importieren Sie ein Venedig -MOD, der mod entfesselt wurde",
+        "trigger": "Mods importieren"
+      }
+    },
+    "manage": {
+      "deleteDialog": {
+        "cancel": "Stornieren",
+        "confirm": "Löschen",
+        "description": "Diese Aktion kann nicht rückgängig gemacht werden. \nDies wird dauerhaft löschen",
+        "title": "LÖSCHEN",
+        "toast": {
+          "failure": "Fehler: Nicht löschen",
+          "success": "Gelöscht"
+        }
+      },
+      "empty": {
+        "description": "Sobald Sie einige Mods heruntergeladen haben, werden sie hier erscheinen?",
+        "title": "Keine Mods gefunden"
+      },
+      "error": "MODS -Blatt nicht laden Verwalten",
+      "loading": "Laden Sie das Mods -Blatt verwalten",
+      "sheet": {
+        "mod": {
+          "toast": {
+            "failure": "in VSCODE nicht geöffnet",
+            "success": "in VSCODE geöffnet"
+          }
+        },
+        "title": "Installierte Mods werden hier angezeigt",
+        "trigger": "Mods verwalten"
+      }
+    }
+  },
+  "onboarding": {
+    "account": {
+      "add": "Fügen Sie ein VU -Konto hinzu"
+    },
+    "activate": {
+      "button": "BF3 aktivieren",
+      "header": "Aktivieren Sie BF3 mit EA App / Origin",
+      "step1": "Bitte starten Sie Ihre EA -App / Herkunft und melden Sie sich an.",
+      "step2": "Sobald Sie angemeldet sind, klicken Sie auf die Schaltfläche BF3 aktivieren:",
+      "step3": "Nachdem es erfolgreich ist, klicken Sie auf Weiter."
+    },
+    "button": {
+      "complete": "Überspringen / komplett in Boarding",
+      "continue": "Überspringen / fortfahren"
+    },
+    "error": "Die Komponente des Bordes nicht laden",
+    "header": "Erstanpassungs -Setup",
+    "install": {
+      "dev": {
+        "button": "Wählen Sie den Standort installieren",
+        "dialog": {
+          "button": {
+            "cancel": "Stornieren",
+            "confirm": "Installieren vu dev"
+          },
+          "description": "Dadurch wird VU Dev in das obige Verzeichnis installiert.",
+          "title": "Installieren vu dev an",
+          "toast": {
+            "failure": "Ich habe Vu prod nicht in den Dev -Ordner kopieren",
+            "success": "Erfolgreich vu prod in den Entwickler kopiert"
+          }
+        },
+        "header": "VU prod gefunden. \nVU Dev auch installieren?"
+      },
+      "prod": {
+        "dialog": {
+          "button": {
+            "cancel": "Stornieren",
+            "confirmBoth": "Installieren Sie Vu prod und dev",
+            "confirmOne": "Installieren Sie Vu prod"
+          },
+          "description": "Dadurch wird VU in das obige Verzeichnis installiert.",
+          "title": "Installieren Sie VU an:"
+        },
+        "download": {
+          "button": "Wählen Sie den Standort installieren",
+          "header": "Laden Sie Vu herunter"
+        },
+        "locate": {
+          "button": "Finde vu",
+          "header": "VU bereits installiert?"
+        },
+        "progress": {
+          "extractingPrefix": "Dateien extrahieren",
+          "extractingSuffix": "übrig",
+          "header": "VU herunterladen"
+        },
+        "toast": {
+          "chooseInstallDir": {
+            "failure": "Ich habe den Vu -Installationsweg nicht festgelegt",
+            "success": "Erfolgreich einstellen vu install path auf"
+          },
+          "installComplete": "VU -Installation abgeschlossen"
+        }
+      }
+    },
+    "loading": "Laden von Bordkomponenten",
+    "toast": {
+      "activateBF3": "BF3 aktivieren"
+    }
+  },
+  "servers": {
+    "firstTime": {
+      "error": "Der Serverschlüssel fehlte nicht",
+      "guidForm": {
+        "click": "Klicken Sie, um stattdessen zu suchen",
+        "confirm": "Kopieren des Serverschlüssels von",
+        "done": "Erledigt!",
+        "title": "Ziehen Sie n Ihre Datei hier ab",
+        "toast": {
+          "failure": "Falsche Datei. \nBitte verwenden Sie Server.Key",
+          "success": "Erfolgreich importierte Serverschlüssel."
+        }
+      },
+      "loading": "Überprüfen Sie, ob der Serverschlüssel vorliegt",
+      "redoGuid": "Bitte geben Sie Ihre Server-GUID erneut ein",
+      "step1": "Laden Sie den Serverschlüssel von herunter",
+      "step2": "Kopieren Sie den Server GUID von oben",
+      "step3": "Ziehen Sie und lassen Sie Ihre Taste in dieses Fenster ab"
+    },
+    "loadouts": {
+      "createLoadout": {
+        "form": {
+          "adminPassword": {
+            "placeholder": "RCON -Passwort",
+            "title": "Setzen Sie das RCON -Passwort für Procon (Remote -Administrator)"
+          },
+          "banlist": {
+            "button": {
+              "addAnotherPlayer": "Fügen Sie eine weitere Banliste hinzu",
+              "addFirstPlayer": "Spieler hinzufügen"
+            },
+            "placeholder": "Ent/BKSP hinzufügen/entfernen",
+            "title": "Setzen Sie verbotene Spieler"
+          },
+          "maplist": {
+            "addAnotherMap": "Fügen Sie eine andere Karte hinzu",
+            "addFirstMap": "Karte hinzufügen",
+            "gamemodePlaceholder": "Wählen Sie einen Gamemode aus",
+            "mapPlaceholder": "Wählen Sie eine Karte aus",
+            "title": "Karten und Gamemoden festlegen"
+          },
+          "maxPlayers": {
+            "title": "Stellen Sie maximale PlayerCount ein"
+          },
+          "modlist": {
+            "title": "Setzen Sie aktive Mods"
+          },
+          "nickname": {
+            "description": "Verbotene Zeichen: \\ /: *? \n\"<> | '",
+            "placeholder": "Loadout eins",
+            "title": "Setzen Sie den Lade -Spitznamen"
+          },
+          "serverName": {
+            "placeholder": "[Ländercode] [Hauptmod] YourServertitle",
+            "title": "Setzen Sie den in VU Serverbrowser gezeigten Namen"
+          },
+          "serverPassword": {
+            "placeholder": "Spielkennwort",
+            "title": "Setzen Sie das Serverkennwort"
+          },
+          "submit": "Einreichen",
+          "toast": {
+            "failure": "Verwenden Sie einen anderen Loadout -Namen.",
+            "success": "Erfolg! \nLoadout erstellt"
+          }
+        },
+        "sheet": {
+          "error": "MODLIST für Loadouts fehlgeschlagen",
+          "loading": "MODS für Loadouts abrufen",
+          "title": "Loadout erstellen",
+          "trigger": "Loadout erstellen"
+        }
+      },
+      "deleteDialog": {
+        "buttons": {
+          "cancel": "Stornieren",
+          "confirm": "Löschen"
+        },
+        "description": "Diese Aktion kann nicht rückgängig gemacht werden. \nDadurch werden alle Daten im Zusammenhang mit diesem Loadout dauerhaft gelöscht.",
+        "title": "Loadout löschen",
+        "toast": {
+          "failure": "Lastout nicht löschen",
+          "success": "Gelöschter Server -Loadout"
+        }
+      },
+      "error": "Keine Loadouts gefunden.",
+      "importLoadout": {
+        "error": "Es wurden vorhandene Loadout -Namen nicht erhalten",
+        "form": {
+          "dragDrop": {
+            "search": "Klicken Sie, um stattdessen zu suchen",
+            "title": "Ziehen Sie n Drop -Ordner hier",
+            "toast": {
+              "invalid": "Falsches Verzeichnis. \nBitte wählen Sie den Ordner /Server -Ordner"
+            }
+          },
+          "importPath": {
+            "path": "Wird kopieren von",
+            "title": "Setzen Sie den Pfad zum Importieren von"
+          },
+          "nickname": {
+            "description": "Verbotene Zeichen: \\ /: *? \n\"<> | '",
+            "placeholder": "Loadout eins",
+            "title": "Setzen Sie den Ladennamen"
+          },
+          "submit": "Einreichen",
+          "toast": {
+            "failure": "Lastout nicht importieren.",
+            "nameCollision": "Der Name des Loadouts ist bereits genommen.",
+            "success": "Importiert Lastout erfolgreich"
+          }
+        },
+        "loading": "Erhalten vorhandenen Loadout -Namen",
+        "sheet": {
+          "title": "Importlast",
+          "trigger": "Importlast"
+        }
+      },
+      "loading": "Abrufen von Server -Loadouts",
+      "loadout": {
+        "banlist": {
+          "form": {
+            "submit": "Einreichen",
+            "toast": {
+              "failure": "Die Banlist für Loadout nicht aktualisieren",
+              "success": "Erfolgreich aktualisierte Banliste für"
+            }
+          },
+          "sheet": {
+            "title": "Banlist",
+            "trigger": "Banlist"
+          }
+        },
+        "devToggle": "Dev Branch verwenden?",
+        "error": "Die Benutzereinstellungen für Loadout nicht laden",
+        "launchArgs": {
+          "form": {
+            "env": {
+              "placeholder": "Wählen Sie Env"
+            },
+            "searchPlaceholder": "Suchstartargumente",
+            "submit": "Einreichen",
+            "toast": {
+              "failure": "Startete startargumente für nicht aktualisiert",
+              "success": "Erfolgreich aktualisierte Startargumente für"
+            }
+          },
+          "sheet": {
+            "description": "Optimieren Sie Ihre Startargumente hier!",
+            "title": "Startargumente Formular",
+            "trigger": "Argumente starten"
+          }
+        },
+        "loading": "Abrufen von Benutzereinstellungen für Loadout.",
+        "maplist": {
+          "form": {
+            "button": {
+              "addAnotherMap": "Fügen Sie eine andere Karte hinzu",
+              "addFirstMap": "Karte hinzufügen"
+            },
+            "gamemodePlaceholder": "Wählen Sie einen Gamemode aus",
+            "mapPlaceholder": "Wählen Sie eine Karte aus",
+            "submit": "Einreichen",
+            "toast": {
+              "failure": "Die MAPLIST für nicht aktualisieren für",
+              "success": "Erfolgreich aktualisierte MAPLILT für"
+            }
+          },
+          "sheet": {
+            "title": "Mapliste verwalten",
+            "trigger": "Mapliste"
+          }
+        },
+        "mods": {
+          "addModDialog": {
+            "cancel": "Stornieren",
+            "confirm": "Installieren",
+            "description": "MOD an installieren",
+            "title": "MOD installieren",
+            "toast": {
+              "failure": "MOD nicht installieren",
+              "success": "Erfolgreich installiert mod"
+            }
+          },
+          "deleteModDialog": {
+            "cancel": "Stornieren",
+            "confirm": "Löschen",
+            "description": "Diese Aktion kann nicht rückgängig gemacht werden. \nDies wird dauerhaft löschen",
+            "title": "Mod löschen",
+            "toast": {
+              "failure": "Versäumte den Schreibabfall nicht aus",
+              "success": "Erfolgreich gelöscht mod von"
+            }
+          },
+          "empty": "Keine Mods gefunden",
+          "error": "Die Liste der Modnamen nicht abrufen",
+          "loading": "Alle Mod -Namen abrufen",
+          "loadoutMod": {
+            "activated": "Aktiviert",
+            "deactivated": "Deaktiviert",
+            "toast": {
+              "modFailure": "MOD nicht aktivieren",
+              "vsCodeFailure": "MOD in VSCODE nicht geöffnet",
+              "vsCodeSuccess": "Öffnete mod in vscode"
+            }
+          },
+          "sheet": {
+            "modCache": "Mod-Cache",
+            "trigger": "Mods"
+          }
+        },
+        "multiAccount": {
+          "form": {
+            "play": "Spielen"
+          },
+          "sheet": {
+            "description": "Wählen Sie aus, mit welchen VU",
+            "empty": "Die Benutzerliste war leer",
+            "error": "Die Benutzerliste für ein Multi -Konto -Blatt nicht abrufen",
+            "loading": "Benutzerliste für Multi -Konto -Blatt laden",
+            "title": "Wählen Sie Konten zum Beitritt zur Loadout",
+            "toast": {
+              "serverFailure": "Der Server -Loadout fehlgeschlagen",
+              "serverSucces": "VU Server gestartet. \nKunde starten ..."
+            },
+            "trigger": "Starten Sie Server und mehrere Clients"
+          }
+        },
+        "openExplorer": "Forscher",
+        "refreshTooltip": "Laden Sie TXT -Dateien von Loadout JSON neu (wenn Sie loadout.json manuell aktualisiert haben)",
+        "startServer": "Server starten",
+        "startServerAndClient": "Server und Client starten",
+        "startup": {
+          "form": {
+            "reservedSlots": {
+              "addAnotherPlayer": "Spieler hinzufügen",
+              "addFirstPlayer": "Spieler hinzufügen",
+              "placeholder": "Ent/BKSP hinzufügen/entfernen"
+            },
+            "searchPlaceholder": "Suchen Sie Startkonfiguration",
+            "setTeamTickets": {
+              "button": {
+                "setOtherTeamTickets": "Stellen Sie die Tickets eines anderen Teams ein",
+                "setTickets": "Tickets einstellen"
+              },
+              "placeholder": "Wählen Sie ein Team aus",
+              "team1": "Team1",
+              "team2": "Team2",
+              "team3": "Team3",
+              "team4": "Team4",
+              "team5": "Team5",
+              "team6": "Team6",
+              "team7": "Team7",
+              "team8": "Team8",
+              "title": "Tickets pro Team einstellen"
+            },
+            "submit": "Einreichen",
+            "toast": {
+              "failure": "Startup args für nicht aktualisiert für",
+              "success": "Erfolgreich aktualisierte Startup -Argumente für"
+            }
+          },
+          "sheet": {
+            "description": "Nimmt startup.txtargumente und speichert sie",
+            "title": "Verwalten Sie startup.txt",
+            "trigger": "Start-up"
+          }
+        },
+        "toast": {
+          "openExplorer": "Eröffneten Explorer für Loadout",
+          "playFailure": "Der Server -Loadout fehlgeschlagen",
+          "playSuccess": "VU Server gestartet. \nKunde starten ...",
+          "refreshFailure": "TXT -Dateien von loadout.json für nicht aktualisiert",
+          "refreshSuccess": "Aktualisierte Startup/Maplist/Modlist/Banlist von loadout.json für",
+          "serverFailure": "Der Server -Loadout fehlgeschlagen",
+          "serverSuccess": "VU Server gestartet ..."
+        }
+      }
+    }
+  },
+  "settings": {
+    "activateBF3": {
+      "sheet": {
+        "option1": {
+          "button": "BF3 (LSX) aktivieren",
+          "step1": "Bitte starten Sie Ihre EA -App / Herkunft und melden Sie sich an.",
+          "step2": "Sobald Sie angemeldet sind, klicken Sie auf die Schaltfläche BF3 aktivieren:",
+          "title": "Option 1: EA App / Origin LSX (empfohlen)",
+          "toast": "Aktivieren von BF3 (LSX)"
+        },
+        "option2": {
+          "button": "BF3 (EA Token) aktivieren",
+          "placeholder": "EA Token",
+          "step1": "Melden Sie sich bei EA App / Herkunft an",
+          "step2": "Führen Sie VU mit diesen Argumenten aus",
+          "step3": "Kopieren Sie das EA Auth -Token, das das Fenster in das Feld unten generiert, und klicken Sie auf die Schaltfläche BF3 aktivieren.",
+          "title": "Option 2: EA -Token",
+          "toast": "BF3 aktivieren (EA -Token)"
+        },
+        "title": "BF3 aktivieren"
+      },
+      "tooltip": {
+        "content": "Geführte BF3 -Aktivierung",
+        "title": "BF3 aktivieren"
+      }
+    },
+    "languageSelector": {
+      "title": "Wählen Sie Ihre Sprache",
+      "toast": "Sprache geändert in"
+    },
+    "multiAccount": {
+      "title": "Multi-Account Join zeigen?",
+      "toast": {
+        "disable": "Deaktiviert Loadout Multi-Account Join",
+        "enable": "Aktiviert Lastout Multi-Account Join",
+        "failed": "Ich habe den Multi-Account-Join nicht aktualisiert"
+      }
+    },
+    "serverGuidForm": {
+      "description": "Dies wird verwendet, um Ihren lokalen Server schnell zu befriedigen.",
+      "submit": "Einreichen",
+      "title": "Lokale Serverguid",
+      "toast": {
+        "failure": "Etwas lief schief.",
+        "success": "Server GUID erfolgreich aktualisiert!"
+      }
+    },
+    "title": "Einstellungen"
+  },
+  "sidebar": {
+    "header": "Inoffizieller VU -Launcher",
+    "routes": {
+      "home": "Heim",
+      "loadouts": "Loadouts",
+      "mods": "Mods",
+      "settings": "Einstellungen"
+    }
+  },
+  "startupDescriptions": {
+    "RM": {
+      "autoPerfEnabled": "Auto-Performance aktivieren",
+      "autoPerfMaxPlayers": "Abschaltzeit für Auto-Performance",
+      "battleCryLink": "Link zu deinem Battlecry-JSON-Endpunkt",
+      "defaultPreRoundTime": "Zeit bis Rundenbeginn",
+      "ingameBanner": "Bildlink",
+      "pingLimitEnable": "Ping-Limit aktivieren",
+      "pingLimitInMs": "Zeit in ms",
+      "serverInfo": "Serverbeschreibung",
+      "serverLicenseKey": "RM-Server-Lizenzschlüssel",
+      "setAdmins": "Administratorliste festlegen, durch Leerzeichen getrennt",
+      "setAutoBalancer": "Autobalance",
+      "setDevelopers": "Entwicklerliste festlegen, durch Leerzeichen getrennt",
+      "setLightAdmins": "Light-Administratorliste festlegen, durch Leerzeichen getrennt",
+      "tempReservedSlotsEnabled": "Automatisches Wiederbeitreten aktivieren",
+      "tempReservedSlotsRejoinTime": "Wie lange dauert es, bis das Wiederbeitreten aufgehoben wird"
+    },
+    "admin": {
+      "password": "RCON-Passwort für Procon festlegen"
+    },
+    "reservedSlots": {
+      "add": "Liste der Spieler, die dem reservierten Slot hinzugefügt werden sollen, durch Komma getrennt"
+    },
+    "vars": {
+      "_3dSpotting": "3D-Markierungen über entdeckten Gegnern aktivieren",
+      "_3pCam": "Third-Person-Fahrzeugkamera aktivieren",
+      "autoBalance": "Autobalance aktivieren",
+      "bulletDamage": "Skalierungsfaktor für Geschossschaden festlegen",
+      "crossHair": "Fadenkreuz für alle Waffen aktivieren",
+      "friendlyFire": "Teamschaden aktivieren",
+      "gameModeCounter": "Skalierungsfaktor für Ticketanzahl zum Rundenende festlegen",
+      "gamePassword": "Passwort für Serverbeitritt festlegen",
+      "hud": "HUD aktivieren",
+      "idleBanRounds": "Festlegen, wie viele Runden das Leerlauf-Timeout sperren soll (falls überhaupt)",
+      "idleTimeout": "Leerlauf-Timeout festlegen",
+      "killCam": "Killcam aktivieren",
+      "maxPlayers": "Maximale Spieleranzahl festlegen",
+      "miniMap": "Minikarte aktivieren",
+      "miniMapSpotting": "Erkannte Gegner auf der Minikarte aktivieren",
+      "nameTag": "Namensschilder aktivieren",
+      "onlySquadLeaderSpawn": "Spawns von Truppmitgliedern außer Truppführer deaktivieren",
+      "playerManDownTime": "Skalierungsfaktor für Spieler-Man-Down-Zeit festlegen",
+      "playerRespawnTime": "Skalierungsfaktor für Spieler-Respawnzeit festlegen",
+      "ranked": "Rangliste aktivieren",
+      "regenerateHealth": "Gesundheitsregeneration aktivieren",
+      "roundLockdownCountdown": "Dauer vor der Runde festlegen",
+      "roundRestartPlayerCount": "Mindestanzahl an Spielern für Aufwärmphase festlegen",
+      "roundStartPlayerCount": "Mindestanzahl an Spielern für Vorrunde/während der Runde festlegen",
+      "serverDescription": "Serverbeschreibung festlegen",
+      "serverMessage": "Server-Begrüßungsnachricht festlegen",
+      "serverName": "Servername festlegen",
+      "soldierHealth": "Skalierungsfaktor für maximale Gesundheit von Soldaten festlegen",
+      "teamKillCountForKick": "Anzahl der erlaubten Teamkills pro Runde festlegen",
+      "teamKillKickForBan": "Anzahl der Teamkill-Kicks festlegen das führt zu einem dauerhaften Bann",
+      "teamKillValueDecreasePerSecond": "Kill-Zahl-Verringerung pro Sekunde festlegen",
+      "teamKillValueForKick": "Maximale Kill-Zahl eines Spielers festlegen, bevor er gekickt wird",
+      "teamKillValuelncrease": "Kill-Zahl-Erhöhung für Teamkills festlegen",
+      "vehicleSpawnAllowed": "Fahrzeuge spawnen lassen",
+      "vehicleSpawnDelay": "Skalierungsfaktor für Fahrzeug-Spawnverzögerung festlegen"
+    },
+    "vu": {
+      "ColorCorrectionEnabled": "Blaufilter aktivieren",
+      "CorpseDamageEnabled": "Leichenschaden aktivieren, um Wiederbelebungen zu verhindern",
+      "DesertingAllowed": "Außerhalb der Grenzen deaktivieren",
+      "DestructionEnabled": "Zerstörung aktivieren",
+      "DisablePreRound": "Warten auf Spieler deaktivieren",
+      "FriendlyFireSuppression": "Unterdrückung von Verbündeten aktivieren",
+      "HighPerformanceReplication": "Hochleistungsupdates für weit entfernte Spieler aktivieren",
+      "HttpAssetUrl": "URL auf Remote [ui.vuic] festlegen, anstatt vom Spielserver herunterzuladen",
+      "ServerBanner": "Browser-Banner-URL auf 1378 x 162 JPG festlegen",
+      "SetTeamTicketCount": "Teamticketanzahl für ein Team festlegen",
+      "SquadSize": "Maximale Spieleranzahl pro Trupp festlegen",
+      "SunFlareEnabled": "Sonneneruption aktivieren",
+      "SuppressionMultiplier": "Unterdrückungsintensität [0, unendlich] festlegen",
+      "TeamActivatedMines": "Minenauslösung bei Verbündeten aktivieren",
+      "TimeScale": "Spiel verlangsamen oder beschleunigen [0,0, 2,0]",
+      "VehicleDisablingEnabled": "Mobilitätstreffer für Fahrzeuge aktivieren"
+    }
+  }
+}

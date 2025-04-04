@@ -8,9 +8,11 @@ import { QueryKey, DragDropEventTauri } from '@/config/config'
 import { toast } from 'sonner'
 import { open } from '@tauri-apps/plugin-dialog'
 import { importModToCache } from '@/api'
+import { useTranslation } from 'react-i18next'
 
 export default function ModUpload() {
   const [isDraggingOver, setIsDraggingOver] = useState(false)
+  const { t } = useTranslation()
   let handleDrop: UnlistenFn | undefined
   let handleDragEnter: UnlistenFn | undefined
   let handleDragLeave: UnlistenFn | undefined
@@ -51,12 +53,12 @@ export default function ModUpload() {
               queryKey: [QueryKey.GetAllModNames],
               refetchType: 'all',
             })
-            toast(`Successfully imported mod from: ${info}`)
+            toast(`${t('mods.import.form.toast.success')}: ${info}`)
           } else {
-            toast('Failed to import mod. May already exist?')
+            toast(t('mods.import.form.toast.failure'))
           }
         } else {
-          toast('Only .zip files are accepted')
+          toast(t('mods.import.form.toast.invalid'))
         }
       })
 
@@ -79,7 +81,8 @@ export default function ModUpload() {
     })
     if (installPath) {
       if (installPath.includes('.zip')) {
-        const confirmed = await confirm('Copying mod from "' + installPath + '" ?')
+        // TODO: Make a custom confirm window instead of native
+        const confirmed = await confirm(`${t('mods.import.form.confirm')}: ${installPath}`)
 
         if (confirmed) {
           const result = await importModToCache(installPath)
@@ -92,13 +95,13 @@ export default function ModUpload() {
               queryKey: [QueryKey.GetAllModNames],
               refetchType: 'all',
             })
-            toast(`Successfully imported mod from: ${installPath}`)
+            toast(`${t('mods.import.form.toast.success')}: ${installPath}`)
           } else {
-            toast('Failed to import mod. May already exist?')
+            toast(t('mods.import.form.toast.failure'))
           }
         }
       } else {
-        toast('Only .zip files are accepted')
+        toast(t('mods.import.form.toast.invalid'))
       }
     }
   }
@@ -119,13 +122,13 @@ export default function ModUpload() {
         <div className="text-md m-auto flex flex-col gap-8">
           <div className="flex gap-4">
             <p>
-              Drag n Drop your mod's{' '}
-              <code className="rounded-md bg-black p-1 text-white"> .zip folder</code> here
+              {t('mods.import.form.drag')}
+              <code className="rounded-md bg-black p-1 text-white">.zip</code>
             </p>
             <Upload />
           </div>
           <div className="flex gap-2">
-            <p>Click to search instead</p>
+            <p>{t('mods.import.form.click')}</p>
             <Search />
           </div>
         </div>

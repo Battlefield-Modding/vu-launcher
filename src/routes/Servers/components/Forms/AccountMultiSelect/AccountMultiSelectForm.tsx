@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { useTranslation } from 'react-i18next'
 
 const formSchema = z.object({
   account0: z.boolean(),
@@ -22,6 +23,8 @@ export function AccountMultiSelectForm({
   setSheetOpen: (state: boolean) => void
   updateUsers: (info: number[]) => void
 }) {
+  const { t } = useTranslation()
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -76,7 +79,7 @@ export function AccountMultiSelectForm({
           />
         ))}
         <Button type="submit" className="m-auto w-96 p-8 text-2xl">
-          Play
+          {t('servers.loadouts.loadout.multiAccount.form.play')}
         </Button>
       </form>
     </Form>

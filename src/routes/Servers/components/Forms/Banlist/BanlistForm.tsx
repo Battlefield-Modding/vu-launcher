@@ -10,6 +10,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { LoaderComponent } from '@/components/LoaderComponent'
 import { Banlist } from '../CreateLoadout/components/Forms/Banlist'
+import { useTranslation } from 'react-i18next'
 
 const formSchema = z.object({
   banlist: z.array(z.string().optional()),
@@ -24,6 +25,7 @@ export function BanlistForm({
 }) {
   const [submitLoading, setSubmitLoading] = useState(false)
   const queryClient = useQueryClient()
+  const { t } = useTranslation()
 
   const initialList =
     loadout.banlist && loadout.banlist.length > 0 ? loadout.banlist : ['playerName']
@@ -45,14 +47,14 @@ export function BanlistForm({
     setSubmitLoading(() => false)
 
     if (status) {
-      toast(`Success! Updated maps for ${loadout.name}`)
+      toast(`${t('servers.loadouts.loadout.banlist.form.toast.success')}: ${loadout.name}`)
       queryClient.invalidateQueries({
         queryKey: [QueryKey.GetAllLoadoutJSON],
         refetchType: 'all',
       })
       setSheetOpen(false)
     } else {
-      toast('Use a different loadout name.')
+      toast(`${t('servers.loadouts.loadout.banlist.form.toast.failure')}: ${loadout.name}`)
     }
   }
 
@@ -65,7 +67,7 @@ export function BanlistForm({
         <Banlist form={form} alwaysAutoFocus={true} />
         {submitLoading && <LoaderComponent />}
         <Button type="submit" className="m-auto mt-8">
-          Submit
+          {t('servers.loadouts.loadout.banlist.form.submit')}
         </Button>
       </form>
     </Form>

@@ -5,8 +5,10 @@ import { useQuery } from '@tanstack/react-query'
 import { FirstTimeSetup } from './components/Forms/FirstTimeSetup/FirstTimeSetup'
 import { LoadoutContainer } from './components/Loadouts/LoadoutContainer'
 import LocalServerGuidForm from '../Settings/components/LocalServerGuidForm'
+import { useTranslation } from 'react-i18next'
 
 export function Servers() {
+  const { t } = useTranslation()
   const { isPending, isError, data, error } = useQuery({
     queryKey: [QueryKey.ServerKeyExists],
     queryFn: async (): Promise<{ serverKeyFileExists: boolean; serverGuidExists: boolean }> => {
@@ -22,7 +24,7 @@ export function Servers() {
   if (isPending) {
     return (
       <div>
-        <h1>Checking for Server Key</h1>
+        <h1>{t('servers.firstTime.loading')}</h1>
         <Loader />
       </div>
     )
@@ -31,7 +33,7 @@ export function Servers() {
   if (isError) {
     return (
       <div className="rounded-md bg-destructive pl-2 pr-2 text-xl leading-9">
-        <h1>ERROR: No Server Key</h1>
+        <h1>{t('servers.firstTime.error')}</h1>
         <p>{error.message}</p>
       </div>
     )
@@ -44,7 +46,7 @@ export function Servers() {
   if (!data.serverGuidExists) {
     return (
       <div className="m-auto flex h-full max-w-screen-md flex-col items-center justify-center gap-8">
-        <h1 className="text-2xl">Please re-enter your server GUID:</h1>
+        <h1 className="text-2xl">{t('servers.firstTime.redoGuid')}:</h1>
         <LocalServerGuidForm guid={''} />
       </div>
     )

@@ -10,13 +10,17 @@ import {
 import { Input } from '@/components/ui/input'
 import { Trash } from 'lucide-react'
 import { useFieldArray } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 export function Banlist({ form, alwaysAutoFocus }: { form: any; alwaysAutoFocus: boolean }) {
   const fieldArray = useFieldArray({ name: 'banlist', control: form.control })
+  const { t } = useTranslation()
 
   return (
     <div>
-      <FormLabel className="text-xl">Set banned players</FormLabel>
+      <FormLabel className="text-xl">
+        {t('servers.loadouts.createLoadout.form.banlist.title')}
+      </FormLabel>
       <FormDescription className="mb-8">banlist.add</FormDescription>
       {fieldArray.fields.length === 0 && (
         <Button
@@ -27,7 +31,7 @@ export function Banlist({ form, alwaysAutoFocus }: { form: any; alwaysAutoFocus:
             fieldArray.append('')
           }}
         >
-          Add Player
+          {t('servers.loadouts.createLoadout.form.banlist.button.addFirstPlayer')}
         </Button>
       )}
       <div className="flex flex-col gap-4">
@@ -44,7 +48,7 @@ export function Banlist({ form, alwaysAutoFocus }: { form: any; alwaysAutoFocus:
                         <Input
                           autoFocus={index !== 0 || alwaysAutoFocus}
                           type={'text'}
-                          placeholder={`Ent/Bksp Add/Remove`}
+                          placeholder={t('servers.loadouts.createLoadout.form.banlist.placeholder')}
                           {...field}
                           onKeyDown={(e) => {
                             if (e.key === 'Enter') {
@@ -81,7 +85,7 @@ export function Banlist({ form, alwaysAutoFocus }: { form: any; alwaysAutoFocus:
                     fieldArray.append('')
                   }}
                 >
-                  Add another to Banlist
+                  {t('servers.loadouts.createLoadout.form.banlist.button.addAnotherPlayer')}
                 </Button>
               )}
             </div>

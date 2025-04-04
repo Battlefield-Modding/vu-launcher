@@ -5,6 +5,7 @@ import { editServerLoadout, openModWithVsCode } from '@/api'
 import { Input } from '@/components/ui/input'
 import { LoadoutJSON, QueryKey } from '@/config/config'
 import { useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 
 export function LoadoutMod({
   loadout,
@@ -18,13 +19,14 @@ export function LoadoutMod({
   queryKey: string
 }) {
   const queryClient = useQueryClient()
+  const { t } = useTranslation()
 
   async function handleOpenInVSCode() {
     const status = await openModWithVsCode({ name: loadout.name, modname: modName })
     if (status) {
-      toast(`Opened ${modName} in vscode`)
+      toast(`${t('servers.loadouts.loadout.mods.loadoutMod.toast.vsCodeSuccess')}: ${modName}`)
     } else {
-      toast(`Failed to open ${modName} in vscode`)
+      toast(`${t('servers.loadouts.loadout.mods.loadoutMod.toast.vsCodeFailure')}: ${modName}`)
     }
   }
 
@@ -32,14 +34,14 @@ export function LoadoutMod({
     const target = e.target as HTMLInputElement
     const value = target.checked
     let tempModList = [...(loadout.modlist as string[])]
-    let message = `Activated ${modName}`
+    let message = `${t('servers.loadouts.loadout.mods.loadoutMod.activated')} ${modName}`
     if (value) {
       if (!tempModList.includes(modName)) {
         tempModList.push(modName)
       }
     } else {
       tempModList = tempModList.filter((x) => x !== modName)
-      message = `De-Activated ${modName}`
+      message = `${t('servers.loadouts.loadout.mods.loadoutMod.deactivated')} ${modName}`
     }
 
     const finalLoadout = { ...loadout, modlist: tempModList }
@@ -51,7 +53,7 @@ export function LoadoutMod({
       queryClient.invalidateQueries({ queryKey: [queryKey], refetchType: 'all' })
       queryClient.invalidateQueries({ queryKey: [QueryKey.GetAllLoadoutJSON], refetchType: 'all' })
     } else {
-      toast('Error. Failed to update mod status')
+      toast(`${t('servers.loadouts.loadout.mods.loadoutMod.toast.modFailure')}: ${modName}`)
     }
   }
 

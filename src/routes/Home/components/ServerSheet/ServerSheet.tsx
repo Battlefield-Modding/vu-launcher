@@ -10,9 +10,11 @@ import { Server } from 'lucide-react'
 import { useState } from 'react'
 import clsx from 'clsx'
 import ServerForm from './ServerForm'
+import { useTranslation } from 'react-i18next'
 
 export default function ServerSheet() {
   const [sheetOpen, setSheetOpen] = useState(false)
+  const { t } = useTranslation()
 
   return (
     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
@@ -22,15 +24,16 @@ export default function ServerSheet() {
             'text-md flex justify-center gap-1 rounded-md bg-secondary p-1.5 text-primary hover:bg-secondary/80',
           )}
         >
-          Add Server
+          {t('home.server.sheet.trigger')}
+
           <Server />
         </div>
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle className='text-center'>Add a quick-join server</SheetTitle>
-          <SheetDescription className='text-center'>
-            Lets you join a server after selecting a soldier, skipping the server browser.
+          <SheetTitle className="text-center">{t('home.server.sheet.title')}</SheetTitle>
+          <SheetDescription className="text-center">
+            {t('home.server.sheet.description')}
           </SheetDescription>
         </SheetHeader>
         <br />

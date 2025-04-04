@@ -12,9 +12,11 @@ import { QueryKey, STALE } from '@/config/config'
 import { useQuery } from '@tanstack/react-query'
 import { getLoadoutNames } from '@/api'
 import { UploadLoadoutForm } from './UploadLoadoutForm'
+import { useTranslation } from 'react-i18next'
 
 export function UploadLoadoutSheet() {
   const [sheetOpen, setSheetOpen] = useState(false)
+  const { t } = useTranslation()
 
   const { isPending, isError, data, error } = useQuery({
     queryKey: [QueryKey.ServerLoadouts],
@@ -25,7 +27,7 @@ export function UploadLoadoutSheet() {
   if (isPending) {
     return (
       <div>
-        <h1>Getting Loadout names</h1>
+        <h1>{t('servers.loadouts.importLoadout.loading')}</h1>
         <Loader />
       </div>
     )
@@ -34,7 +36,7 @@ export function UploadLoadoutSheet() {
   if (isError) {
     return (
       <div className="rounded-md bg-red-600 pl-2 pr-2 text-xl leading-9 text-white">
-        <h1>ERROR: No loadouts Found</h1>
+        <h1>{t('servers.loadouts.importLoadout.error')}</h1>
         <p>{error.message}</p>
       </div>
     )
@@ -44,13 +46,15 @@ export function UploadLoadoutSheet() {
     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
       <SheetTrigger>
         <div className="flex items-center justify-between gap-2 bg-gray-600 p-2 text-lg hover:bg-gray-600/80">
-          Import loadout
+          {t('servers.loadouts.importLoadout.sheet.trigger')}
           <Upload />
         </div>
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle className="text-center text-2xl">Import Loadout</SheetTitle>
+          <SheetTitle className="text-center text-2xl">
+            {t('servers.loadouts.importLoadout.sheet.title')}
+          </SheetTitle>
           <SheetDescription></SheetDescription>
         </SheetHeader>
         <br />

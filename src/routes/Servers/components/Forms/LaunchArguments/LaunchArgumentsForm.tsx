@@ -12,6 +12,8 @@ import { editServerLoadout } from '@/api'
 import { toast } from 'sonner'
 import { defaultLaunchArguments } from './setup/LaunchArguments'
 import { LaunchArgumentFormBuilder } from './LaunchArgumentFormBuilder/LaunchArgumentFormBuilder'
+import { LaunchArgumentsSearch } from './LaunchArgumentsSearch'
+import { useTranslation } from 'react-i18next'
 
 const formSchema = z.object({
   common: z
@@ -73,6 +75,7 @@ export function LaunchArgumentForm({
   const queryClient = useQueryClient()
   const [submitLoading, setSubmitLoading] = useState(false)
   const [filteredArgs, setFilteredArgs] = useState<{}>({ ...existingLoadout.launch })
+  const { t } = useTranslation()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -87,50 +90,22 @@ export function LaunchArgumentForm({
     setSubmitLoading(() => false)
 
     if (status) {
-      toast(`Successfully updated Launch Arguments for ${existingLoadout.name}`)
+      toast(
+        `${t('servers.loadouts.loadout.launchArgs.form.toast.success')} ${existingLoadout.name}`,
+      )
       queryClient.invalidateQueries({ queryKey: [QueryKey.GetAllLoadoutJSON], refetchType: 'all' })
       setSheetOpen(() => false)
     } else {
-      toast(`Error. Could not update Launch Arguments for ${existingLoadout.name}`)
+      toast(
+        `${t('servers.loadouts.loadout.launchArgs.form.toast.failure')} ${existingLoadout.name}`,
+      )
     }
-  }
-
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const info = Object.keys(defaultLaunchArguments).map((x) => {
-      // @ts-ignore
-      const filtered_fields = Object.keys(defaultLaunchArguments[x])
-        .filter((key) => key.toLowerCase().includes(e.target.value))
-        .reduce((obj, key) => {
-          // @ts-ignore
-          obj[key] = defaultLaunchArguments[x][key]
-          return obj
-        }, {})
-
-      return {
-        name: x,
-        values: filtered_fields,
-      }
-    })
-
-    const combinedObject = {}
-    info.forEach((x) => {
-      // @ts-ignore
-      combinedObject[x.name] = x.values
-    })
-
-    setFilteredArgs(() => combinedObject)
   }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="m-auto max-w-screen-md">
-        <input
-          type="text"
-          placeholder={`Search Launch Arguments     [CTRL + F]`}
-          className="fixed top-0 w-[720px] rounded-md border border-gray-500 bg-black p-2 focus:border-cyan-300 focus:outline-none focus:ring-0"
-          onChange={handleChange}
-          ref={searchRef}
-        />
+        <LaunchArgumentsSearch searchRef={searchRef} setFilteredArgs={setFilteredArgs} />
 
         <div className="flex flex-col gap-6 pt-12">
           <LaunchArgumentFormBuilder
@@ -142,7 +117,7 @@ export function LaunchArgumentForm({
 
         {submitLoading && <LoaderComponent />}
         <Button type="submit" className="mt-8">
-          Submit
+          {t('servers.loadouts.loadout.launchArgs.form.submit')}
         </Button>
       </form>
     </Form>

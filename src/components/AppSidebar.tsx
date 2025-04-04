@@ -14,26 +14,27 @@ import {
 import { Link, useLocation } from 'react-router'
 import { routes } from '@/config/config'
 import clsx from 'clsx'
+import { useTranslation } from 'react-i18next'
 
 // Menu items.
 const items = [
   {
-    title: 'Home',
+    title: 'home',
     url: routes.HOME,
     icon: Home,
   },
   {
-    title: 'Loadouts',
+    title: 'loadouts',
     url: routes.SERVERS,
     icon: Server,
   },
   {
-    title: 'Mods',
+    title: 'mods',
     url: routes.MODS,
     icon: Book,
   },
   {
-    title: 'Settings',
+    title: 'settings',
     url: routes.SETTINGS,
     icon: Settings,
   },
@@ -41,6 +42,7 @@ const items = [
 
 export function AppSidebar() {
   const { pathname } = useLocation()
+  const { t } = useTranslation()
   return (
     <Sidebar>
       <SidebarContent>
@@ -48,7 +50,7 @@ export function AppSidebar() {
           <div className="flex flex-col items-center justify-center p-4">
             <img src={vuIconRed} className="w-16 lg:w-24" />
             <SidebarGroupLabel className="flex w-full justify-center">
-              Unofficial VU Launcher
+              {t('sidebar.header')}
             </SidebarGroupLabel>
           </div>
           <SidebarGroupContent>
@@ -67,7 +69,9 @@ export function AppSidebar() {
                       <div>
                         <item.icon />
                       </div>
-                      <p className="flex-1 text-[max(1vw,1.25rem)]">{item.title}</p>
+                      <p className="flex-1 text-[max(1vw,1.25rem)]">
+                        {t(`sidebar.routes.${item.title}`)}
+                      </p>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

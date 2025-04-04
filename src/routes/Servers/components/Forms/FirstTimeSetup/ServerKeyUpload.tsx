@@ -8,9 +8,11 @@ import { useQueryClient } from '@tanstack/react-query'
 import { QueryKey, DragDropEventTauri } from '@/config/config'
 import { toast } from 'sonner'
 import { open } from '@tauri-apps/plugin-dialog'
+import { useTranslation } from 'react-i18next'
 
 export function ServerKeyUpload() {
   const [isDraggingOver, setIsDraggingOver] = useState(false)
+  const { t } = useTranslation()
   let handleDrop: UnlistenFn | undefined
   let handleDragEnter: UnlistenFn | undefined
   let handleDragLeave: UnlistenFn | undefined
@@ -46,11 +48,12 @@ export function ServerKeyUpload() {
               queryKey: [QueryKey.ServerKeyExists],
               refetchType: 'all',
             })
-            toast('Successfully imported server key.')
+
+            toast(t('servers.firstTime.guidForm.toast.success'))
             cleanupListeners()
           }
         } else {
-          toast('Incorrect File. Please use server.key')
+          toast(t('servers.firstTime.guidForm.toast.failure'))
         }
       })
 
@@ -73,7 +76,9 @@ export function ServerKeyUpload() {
     })
     if (installPath) {
       if (installPath.includes('server.key')) {
-        const confirmed = await confirm('Copying server key from' + installPath + '?')
+        const confirmed = await confirm(
+          `${t('servers.firstTime.guidForm.confirm')}: ${installPath} ?`,
+        )
 
         if (confirmed) {
           const info = await serverKeySetup(installPath)
@@ -82,12 +87,12 @@ export function ServerKeyUpload() {
               queryKey: [QueryKey.ServerKeyExists],
               refetchType: 'all',
             })
-            toast('Successfully imported server key.')
+            toast(t('servers.firstTime.guidForm.toast.success'))
             cleanupListeners()
           }
         }
       } else {
-        toast('Incorrect File. Please use server.key')
+        toast(t('servers.firstTime.guidForm.toast.failure'))
       }
     }
   }
@@ -108,13 +113,13 @@ export function ServerKeyUpload() {
         <div className="text-md m-auto flex flex-col gap-8">
           <div className="flex gap-4">
             <p>
-              Drag n Drop your{' '}
-              <code className="rounded-md bg-black p-1 text-white">server.key</code> here
+              {t('servers.firstTime.guidForm.title')}:{' '}
+              <code className="rounded-md bg-black p-1 text-white">server.key</code>
             </p>
             <Upload />
           </div>
           <div className="flex gap-2">
-            <p>Click to search instead</p>
+            <p>{t('servers.firstTime.guidForm.click')}</p>
             <Search />
           </div>
         </div>

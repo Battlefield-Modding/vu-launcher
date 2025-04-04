@@ -8,8 +8,10 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { CreateLoadoutFormType } from '../../CreateLoadoutForm'
+import { useTranslation } from 'react-i18next'
 
 export function Startup({ form }: { form: CreateLoadoutFormType }) {
+  const { t } = useTranslation()
   return (
     <>
       <FormField
@@ -18,13 +20,15 @@ export function Startup({ form }: { form: CreateLoadoutFormType }) {
         render={({ field }) => (
           <FormItem className="flex">
             <div className="flex-1">
-              <FormLabel className="text-xl">Set name showed in Server Browser</FormLabel>
+              <FormLabel className="text-xl">
+                {t('servers.loadouts.createLoadout.form.serverName.title')}
+              </FormLabel>
               <FormDescription>vars.serverName</FormDescription>
             </div>
             <FormControl className="ml-auto mr-0">
               <Input
                 type="text"
-                placeholder="[Country][Main Mod] Clan"
+                placeholder={t('servers.loadouts.createLoadout.form.serverName.placeholder')}
                 className="w-1/2"
                 {...field}
                 onKeyDown={(e) => {
@@ -45,13 +49,15 @@ export function Startup({ form }: { form: CreateLoadoutFormType }) {
         render={({ field }) => (
           <FormItem className="flex">
             <div className="flex-1">
-              <FormLabel className="text-xl">Set server password</FormLabel>
+              <FormLabel className="text-xl">
+                {t('servers.loadouts.createLoadout.form.serverPassword.title')}
+              </FormLabel>
               <FormDescription>vars.gamePassword</FormDescription>
             </div>
             <FormControl className="ml-auto mr-0">
               <Input
                 type="text"
-                placeholder="Game Password"
+                placeholder={t('servers.loadouts.createLoadout.form.serverPassword.placeholder')}
                 className="w-1/2"
                 {...field}
                 onKeyDown={(e) => {
@@ -72,13 +78,15 @@ export function Startup({ form }: { form: CreateLoadoutFormType }) {
         render={({ field }) => (
           <FormItem className="flex">
             <div className="flex-1">
-              <FormLabel className="text-xl">Set RCON password for Procon</FormLabel>
+              <FormLabel className="text-xl">
+                {t('servers.loadouts.createLoadout.form.adminPassword.title')}
+              </FormLabel>
               <FormDescription>admin.password</FormDescription>
             </div>
             <FormControl className="ml-auto mr-0">
               <Input
                 type="text"
-                placeholder="RCON password"
+                placeholder={t('servers.loadouts.createLoadout.form.adminPassword.placeholder')}
                 className="w-1/2"
                 {...field}
                 onKeyDown={(e) => {
@@ -99,7 +107,9 @@ export function Startup({ form }: { form: CreateLoadoutFormType }) {
         render={({ field }) => (
           <FormItem className="flex">
             <div className="flex-1">
-              <FormLabel className="text-xl">Set max playercount</FormLabel>
+              <FormLabel className="text-xl">
+                {t('servers.loadouts.createLoadout.form.maxPlayers.title')}
+              </FormLabel>
               <FormDescription>vars.maxPlayers</FormDescription>
             </div>
 

@@ -17,6 +17,7 @@ import { toast } from 'sonner'
 import { addServer } from '@/api'
 import { useQueryClient } from '@tanstack/react-query'
 import { QueryKey } from '@/config/config'
+import { useTranslation } from 'react-i18next'
 
 const formSchema = z.object({
   nickname: z.string().min(2).max(50),
@@ -26,6 +27,7 @@ const formSchema = z.object({
 
 export default function ServerForm({ setSheetOpen }: { setSheetOpen: any }) {
   const queryClient = useQueryClient()
+  const { t } = useTranslation()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -46,26 +48,34 @@ export default function ServerForm({ setSheetOpen }: { setSheetOpen: any }) {
     const status = await addServer(temp)
 
     if (status) {
-      toast(`Success! Added ${values.nickname} to Quick-Join servers!`)
+      toast(`${t('home.server.form.toast.success')}: ${values.nickname}`)
       queryClient.invalidateQueries({ queryKey: [QueryKey.ServerList], refetchType: 'all' })
       queryClient.invalidateQueries({ queryKey: [QueryKey.PlayVUInformation], refetchType: 'all' })
       setSheetOpen(() => false)
     } else {
-      toast('Something went wrong.')
+      toast(`${t('home.server.form.toast.failure')}: ${values.nickname}`)
     }
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="m-auto max-w-screen-md flex flex-col gap-8">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="m-auto flex max-w-screen-md flex-col gap-8"
+      >
         <FormField
           control={form.control}
           name="nickname"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Nickname</FormLabel>
+              <FormLabel>{t('home.server.form.nickname.title')}</FormLabel>
               <FormControl>
-                <Input type="text" placeholder="My Favorite Server" {...field} autoFocus />
+                <Input
+                  type="text"
+                  placeholder={t('home.server.form.nickname.placeholder')}
+                  {...field}
+                  autoFocus
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -76,11 +86,14 @@ export default function ServerForm({ setSheetOpen }: { setSheetOpen: any }) {
           name="guid"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Server Guid</FormLabel>
+              <FormLabel>{t('home.server.form.serverGUID.title')}</FormLabel>
               <FormControl>
                 <Input type="text" placeholder="5ccbc53a-6266-4b83-b782-c98cc49da88f" {...field} />
               </FormControl>
-              <FormDescription>Server's Public ID with or without dashes. Can be found in join string (vu://join/TheGuidInQuestion/PasswordIfAny)</FormDescription>
+              <FormDescription>
+                {t('home.server.form.serverGUID.description')}
+                (vu://join/5ccbc53a-6266-4b83-b782-c98cc49da88f)
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -90,15 +103,21 @@ export default function ServerForm({ setSheetOpen }: { setSheetOpen: any }) {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Server Password (optional)</FormLabel>
+              <FormLabel>{t('home.server.form.serverPassword.title')}</FormLabel>
               <FormControl>
-                <Input type="text" placeholder="password - Leave blank if no password" {...field} />
+                <Input
+                  type="text"
+                  placeholder={t('home.server.form.serverPassword.placeholder')}
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button className="w-fit m-auto" type="submit">Submit</Button>
+        <Button className="m-auto w-fit" type="submit">
+          {t('home.server.form.submit')}
+        </Button>
       </form>
     </Form>
   )

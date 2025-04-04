@@ -6,9 +6,11 @@ import { getModNamesInCache, getModNamesInLoadout } from '@/api'
 import { useQuery } from '@tanstack/react-query'
 import { LoadoutMod } from './mods/LoadoutMod'
 import { ModCacheMod } from './mods/ModCacheMod'
+import { useTranslation } from 'react-i18next'
 
 export function ManageModsInServerSheet({ loadout }: { loadout: LoadoutJSON }) {
   const [sheetOpen, setSheetOpen] = useState(false)
+  const { t } = useTranslation()
 
   const { isPending, isError, data, error } = useQuery({
     queryKey: [`${QueryKey.GetAllModNames}-${loadout.name}`],
@@ -29,7 +31,7 @@ export function ManageModsInServerSheet({ loadout }: { loadout: LoadoutJSON }) {
   if (isPending) {
     return (
       <div>
-        <h1>Fetching Server Loadouts</h1>
+        <h1>{t('servers.loadouts.loadout.mods.loading')}</h1>
         <Loader />
       </div>
     )
@@ -38,7 +40,7 @@ export function ManageModsInServerSheet({ loadout }: { loadout: LoadoutJSON }) {
   if (isError) {
     return (
       <div className="rounded-md bg-destructive pl-2 pr-2 text-xl leading-9">
-        <h1>ERROR: No Loadouts Found</h1>
+        <h1>{t('servers.loadouts.loadout.mods.error')}</h1>
         <p>{error.message}</p>
       </div>
     )
@@ -47,8 +49,7 @@ export function ManageModsInServerSheet({ loadout }: { loadout: LoadoutJSON }) {
   if (!data) {
     return (
       <div className="rounded-md bg-secondary pl-2 pr-2 text-xl leading-9 text-primary">
-        <h1>No mods found</h1>
-        <p>Once you download some mods they will appear here?</p>
+        <h1>{t('servers.loadouts.loadout.mods.empty')}</h1>
       </div>
     )
   }
@@ -57,7 +58,7 @@ export function ManageModsInServerSheet({ loadout }: { loadout: LoadoutJSON }) {
     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
       <SheetTrigger>
         <div className="flex w-fit items-center gap-2 rounded-md bg-secondary p-2 text-xl text-primary hover:bg-secondary/80">
-          Mods
+          {t('servers.loadouts.loadout.mods.sheet.trigger')}
           <Book />
         </div>
       </SheetTrigger>
@@ -65,7 +66,6 @@ export function ManageModsInServerSheet({ loadout }: { loadout: LoadoutJSON }) {
         <div className="m-auto flex max-w-screen-lg flex-col gap-8">
           <div>
             <SheetTitle>
-              <p>Mods inside</p>
               <code className="underline">{loadout.name}</code>
             </SheetTitle>
             <div className="flex flex-wrap gap-4">
@@ -86,7 +86,9 @@ export function ManageModsInServerSheet({ loadout }: { loadout: LoadoutJSON }) {
           <div>
             <SheetTitle>
               <p>
-                Mods inside <code className="underline">mod-cache</code>
+                <code className="underline">
+                  {t('servers.loadouts.loadout.mods.sheet.modCache')}
+                </code>
               </p>
             </SheetTitle>
             <div className="flex flex-wrap gap-4">

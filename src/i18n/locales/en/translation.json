@@ -1,0 +1,689 @@
+{
+  "home": {
+    "error": "Error loading home route",
+    "loading": "Loading home route",
+    "playVu": {
+      "form": {
+        "account": {
+          "none": "None",
+          "title": "VU Account"
+        },
+        "deleteCredentialDialog": {
+          "cancel": "Cancel",
+          "confirm": "Delete",
+          "description": "This will permanently delete the account from your Operating System's credential manager",
+          "title": "DELETE stored credentials",
+          "toast": {
+            "failure": "Failed to delete credentials for",
+            "success": "Successfully deleted credentials for"
+          }
+        },
+        "deleteServerDialog": {
+          "cancel": "Cancel",
+          "confirm": "Delete",
+          "description": "This will delete the server info from the launcher",
+          "title": "Delete Quick-Join Server",
+          "toast": {
+            "failure": "Failed to delete Quick-Join server",
+            "success": "Successfully deleted Quick-Join server"
+          }
+        },
+        "devBranch": {
+          "title": "Use Dev Branch"
+        },
+        "error": "Error loading Play VU Form",
+        "loading": "Loading Play VU Form",
+        "server": {
+          "none": "None",
+          "title": "Quick-Join Server"
+        },
+        "submit": "PLAY",
+        "toast": {
+          "failure": "Failed to start VU",
+          "success": "Starting VU..."
+        }
+      }
+    },
+    "playerCredentials": {
+      "error": "Error loading Player Credentials",
+      "form": {
+        "button": "submit",
+        "password": {
+          "description": "Stored using your Operating System's native credential manager.",
+          "placeholder": "password",
+          "title": "VU Password"
+        },
+        "toast": {
+          "failure": "Failed to save VU Credentials",
+          "success": "Updated VU Credentials Successfully!"
+        },
+        "username": {
+          "description": "Stored using your Operating System's native credential manager.",
+          "placeholder": "username",
+          "title": "VU Username"
+        }
+      },
+      "loading": "Loading Users...",
+      "sheet": {
+        "addUser": "Add User",
+        "description": "No account? Sign up here:",
+        "login": "Login",
+        "title": "Save VU Credentials"
+      }
+    },
+    "server": {
+      "form": {
+        "nickname": {
+          "placeholder": "My Favorite Server",
+          "title": "Nickname"
+        },
+        "serverGUID": {
+          "description": "Server's Public ID with or without dashes. Can be found in join string",
+          "title": "Server Guid"
+        },
+        "serverPassword": {
+          "placeholder": "password - Leave blank if no password",
+          "title": "Server Password (optional)"
+        },
+        "submit": "Submit",
+        "toast": {
+          "failure": "Failed to add server to Quick-Join list",
+          "success": "Successfully added server to Quick-Join list"
+        }
+      },
+      "sheet": {
+        "description": "Lets you join a server after selecting a soldier, skipping the server browser.",
+        "title": "Add a quick-join server",
+        "trigger": "Add Server"
+      }
+    }
+  },
+  "launchArgumentDescriptions": {
+    "client": {
+      "cefdebug": "Enable verbose debugging logging for CEF for WebUI mods. A debug.log file will be created in the directory of VU (usually %LocalAppData%\\VeniceUnleashed\\client).",
+      "credentials": "-username <username> -password <password> Logs you in to your VU account using the specified VU credentials.",
+      "disableUiHwAcceleration": "Disable hardware acceleration for WebUI. Use only if launching VU gives a black loading screen. Enabled by default on unsupported operating systems.",
+      "dwebui": "Enable WebUI debugging at http://localhost:8884.",
+      "serverJoinString": "Connect to a server with the given GUID and an optional password. Can be used as hyperlink to join. If join AND spectate strings are empty, VU Launcher will automatically create a join string in backend. vu://join/4ffa57c1068540e59b9a25eb6b00dfcd/amazingpass",
+      "serverSpectateString": " Connect as a spectator to a server with the given GUID and an optional password. Can be used as hyperlink to join as a spectator. If join AND spectate strings are empty, VU Launcher will automatically create a join string in backend. vu://spectate/4ffa57c1068540e59b9a25eb6b00dfcd/amazingpass"
+    },
+    "common": {
+      "activateWithEaToken": "-activate -ea_token <token> Activates BF3 on the current machine using the provided EA auth token. The token can be retrieved from another computer using the command above. Keep in mind that tokens expire.",
+      "activateWithLSX": "-activate -lsx Activates BF3 on the current machine using EA app / Origin (LSX), which must be running and be logged in to an account that owns BF3. It also prints the authentication token retrieved from the EA app.",
+      "activateWithOrigin": "-activate -o_mail <email> -o_pass <pass> Activates BF3 on the current machine using the specified Origin credentials.",
+      "cacert": "Set a custom CA certificate bundle to use for SSL verification.",
+      "console": "Enable external console window for debug logging.",
+      "debuglog": "Enable logging. Server logs are in server instance directory. Clients logs are in the VU AppData installation folder.",
+      "env": "Set Zeus environment. Defaults to prod.",
+      "gamepath": "Set custom Battlefield 3 installation directory.",
+      "perftrace": "Enable performance logging to perftrace-[server|client].csv",
+      "trace": "Enable verbose logging.",
+      "tracedc": "Enable DataContainer Trace usage in VEXT and print any dangling DCs during level destuction.",
+      "updateBranch": "Set update branch. Defaults to whatever -env is set to.",
+      "vextdebug": "Set VEXT remote debugging host:port (this does not currently work). It also prevents the server / client connections from timing out and makes it so compiled VEXT modules sent to the client contain debug symbols.",
+      "vexttrace": "Enable VEXT execution tracing. When tracing is enabled and VU crashes, the last executed line of each loaded VEXT mod will be available from the crash dialog and in the submitted crash details. Keep in mind that this could adversely affect performance."
+    },
+    "server": {
+      "disableTerrainInterpolation": "Disable interpolation between different terrain LODs.",
+      "headless": "Run VU server in headless mode (without creating any windows).",
+      "high120": "Set VU server frequency to 120Hz.",
+      "high60": "Set VU server frequency to 60Hz.",
+      "highResTerrain": "Enable high resolution terrain. Useful for extending maps beyond their original play area.",
+      "joinaddr": "Set IPv4 address clients should connect to. If empty backend will attempt to automatically detect the server's IP address.",
+      "joinhost": "Set a hostname clients should use when connecting. When this is specified -joinaddr has no effect and any clients attempting to connect will not attempt to perform any NAT detection.",
+      "listen": "Set the host and port the VU server should listen for connections on. Defaults to 0.0.0.0:25200",
+      "mHarmonyPort": "Set the port the VU server should listen for MonitoredHarmony connections. Defaults to 7948",
+      "maxPlayers": "Set maximum players (vars.maxPlayers + vars.maxSpectators). When using the default spectator size of 24, you won't be able to set vars.maxPlayers higher then 40.",
+      "noUpdate": "Disable automatic updates.",
+      "remoteAdminPort": "Set the host and port the VU server should listen for RCON connections. Defaults to 0.0.0.0:47200",
+      "serverInstancePath": "Set server instance path (where the server configuration, logs, and mods are stored) for the VU server.",
+      "skipChecksum": "Disable level checksum validation on client connection.",
+      "unlisted": "Hide server from server list. Join requires connect console command or vu join string."
+    }
+  },
+  "loaderComponent": {
+    "title": "Loading"
+  },
+  "mods": {
+    "discover": {
+      "discord": "VU Discord",
+      "forums": "VU Forums",
+      "github": "Github",
+      "title": "Discover Mods"
+    },
+    "import": {
+      "form": {
+        "click": "Click to search instead",
+        "confirm": "Copying mod from",
+        "drag": "Drag n Drop your mod's zipped folder here",
+        "toast": {
+          "failure": "Failed to import mod. May already exist?",
+          "invalid": "Only .zip files are accepted",
+          "success": "Successfully imported mod from"
+        }
+      },
+      "sheet": {
+        "description": "Accepts .zip files",
+        "title": "Import a Venice Unleashed Mod",
+        "trigger": "Import Mods"
+      }
+    },
+    "manage": {
+      "deleteDialog": {
+        "cancel": "Cancel",
+        "confirm": "Delete",
+        "description": "This action cannot be undone. This will permanently delete ",
+        "title": "DELETE",
+        "toast": {
+          "failure": "Error: Failed to delete",
+          "success": "Deleted"
+        }
+      },
+      "empty": {
+        "description": "Once you download some mods they will appear here?",
+        "title": "No mods found"
+      },
+      "error": "Failed to load Manage Mods Sheet",
+      "loading": "Loading Manage Mods sheet",
+      "sheet": {
+        "mod": {
+          "toast": {
+            "failure": "failed to open in VSCode",
+            "success": "opened in VSCode"
+          }
+        },
+        "title": "Installed Mods Appear Here",
+        "trigger": "Manage Mods"
+      }
+    }
+  },
+  "onboarding": {
+    "account": {
+      "add": "Add a VU account"
+    },
+    "activate": {
+      "button": "Activate BF3",
+      "header": "Activate BF3 with EA App / Origin",
+      "step1": "Please launch your EA App / Origin and sign in.",
+      "step2": "Once signed-in click on the Activate BF3 button:",
+      "step3": "After it succeeds click continue."
+    },
+    "button": {
+      "complete": "Skip / Complete Onboarding",
+      "continue": "Skip / Continue"
+    },
+    "error": "Failed to load Onboarding component",
+    "header": "First Time Setup",
+    "install": {
+      "dev": {
+        "button": "Choose Install Location",
+        "dialog": {
+          "button": {
+            "cancel": "Cancel",
+            "confirm": "Install VU Dev"
+          },
+          "description": "This will install VU Dev to the above directory.",
+          "title": "Install VU Dev to",
+          "toast": {
+            "failure": "Failed to copy VU Prod to dev folder",
+            "success": "Successfully copied VU Prod to dev folder"
+          }
+        },
+        "header": "Found VU Prod. Install VU Dev also?"
+      },
+      "prod": {
+        "dialog": {
+          "button": {
+            "cancel": "Cancel",
+            "confirmBoth": "Install VU Prod AND Dev",
+            "confirmOne": "Install VU Prod"
+          },
+          "description": "This will install VU to the above directory.",
+          "title": "Install VU to:"
+        },
+        "download": {
+          "button": "Choose Install Location",
+          "header": "Download VU"
+        },
+        "locate": {
+          "button": "Find VU",
+          "header": "VU already installed?"
+        },
+        "progress": {
+          "extractingPrefix": "Extracting Files",
+          "extractingSuffix": "remaining",
+          "header": "Downloading VU"
+        },
+        "toast": {
+          "chooseInstallDir": {
+            "failure": "Failed to set VU install path",
+            "success": "Successfully set VU install path to"
+          },
+          "installComplete": "VU Installation Completed"
+        }
+      }
+    },
+    "loading": "Loading Onboarding component",
+    "toast": {
+      "activateBF3": "Activating BF3"
+    }
+  },
+  "servers": {
+    "firstTime": {
+      "error": "Failed to find server key",
+      "guidForm": {
+        "click": "Click to search instead",
+        "confirm": "Copying server key from",
+        "done": "Done!",
+        "title": "Drag n Drop your file here",
+        "toast": {
+          "failure": "Incorrect File. Please use server.key",
+          "success": "Successfully imported server key."
+        }
+      },
+      "loading": "Checking if Server Key Exists",
+      "redoGuid": "Please re-enter your server GUID",
+      "step1": "Download server key from",
+      "step2": "Copy Server GUID from above",
+      "step3": "Drag and Drop your key into this window"
+    },
+    "loadouts": {
+      "createLoadout": {
+        "form": {
+          "adminPassword": {
+            "placeholder": "RCON password",
+            "title": "Set RCON password for Procon (Remote Admin)"
+          },
+          "banlist": {
+            "button": {
+              "addAnotherPlayer": "Add another to Banlist",
+              "addFirstPlayer": "Add Player"
+            },
+            "placeholder": "Ent/Bksp Add/Remove",
+            "title": "Set banned players"
+          },
+          "maplist": {
+            "addAnotherMap": "Add another Map",
+            "addFirstMap": "Add Map",
+            "gamemodePlaceholder": "Select a gamemode",
+            "mapPlaceholder": "Select a map",
+            "title": "Set maps and gamemodes"
+          },
+          "maxPlayers": {
+            "title": "Set maximum playercount"
+          },
+          "modlist": {
+            "title": "Set active mods"
+          },
+          "nickname": {
+            "description": "Forbidden Characters: \\ / : * ? \" < > | '",
+            "placeholder": "Loadout One",
+            "title": "Set loadout nickname"
+          },
+          "serverName": {
+            "placeholder": "[Country Code][Main Mod] YourServerTitle",
+            "title": "Set name shown in VU Server Browser"
+          },
+          "serverPassword": {
+            "placeholder": "Game Password",
+            "title": "Set server password"
+          },
+          "submit": "Submit",
+          "toast": {
+            "failure": "Use a different loadout name.",
+            "success": "Success! Created loadout"
+          }
+        },
+        "sheet": {
+          "error": "Failed to fetch modlist for loadouts",
+          "loading": "Fetching mods for Loadouts",
+          "title": "Create Loadout",
+          "trigger": "Create Loadout"
+        }
+      },
+      "deleteDialog": {
+        "buttons": {
+          "cancel": "Cancel",
+          "confirm": "Delete"
+        },
+        "description": "This action cannot be undone. This will permanently delete all data related to this loadout.",
+        "title": "DELETE loadout",
+        "toast": {
+          "failure": "Failed to delete loadout",
+          "success": "Deleted server loadout"
+        }
+      },
+      "error": "No loadouts found.",
+      "importLoadout": {
+        "error": "Failed to get existing loadout names",
+        "form": {
+          "dragDrop": {
+            "search": "Click to search instead",
+            "title": "Drag n Drop folder here",
+            "toast": {
+              "invalid": "Incorrect directory. Please choose the /Server folder"
+            }
+          },
+          "importPath": {
+            "path": "Will copy from",
+            "title": "Set path to import from"
+          },
+          "nickname": {
+            "description": "Forbidden Characters: \\ / : * ? \" < > | '",
+            "placeholder": "Loadout One",
+            "title": "Set loadout name"
+          },
+          "submit": "Submit",
+          "toast": {
+            "failure": "Failed to import loadout.",
+            "nameCollision": "Loadout name is already taken.",
+            "success": "Imported loadout successfully"
+          }
+        },
+        "loading": "Getting existing loadout names",
+        "sheet": {
+          "title": "Import Loadout",
+          "trigger": "Import loadout"
+        }
+      },
+      "loading": "Fetching Server Loadouts",
+      "loadout": {
+        "banlist": {
+          "form": {
+            "submit": "Submit",
+            "toast": {
+              "failure": "Failed to update banlist for loadout",
+              "success": "Succesfully updated banlist for"
+            }
+          },
+          "sheet": {
+            "title": "Banlist",
+            "trigger": "Banlist"
+          }
+        },
+        "devToggle": "Use dev branch?",
+        "error": "Failed to load user preferences for loadout",
+        "launchArgs": {
+          "form": {
+            "env": {
+              "placeholder": "Select env"
+            },
+            "searchPlaceholder": "Search Launch Arguments",
+            "submit": "Submit",
+            "toast": {
+              "failure": "Failed to update Launch Arguments for",
+              "success": "Successfully updated Launch Arguments for"
+            }
+          },
+          "sheet": {
+            "description": "Tweak your launch arguments here!",
+            "title": "Launch Arguments Form",
+            "trigger": "Launch Arguments"
+          }
+        },
+        "loading": "Fetching user preferences for loadout.",
+        "maplist": {
+          "form": {
+            "button": {
+              "addAnotherMap": "Add Another Map",
+              "addFirstMap": "Add Map"
+            },
+            "gamemodePlaceholder": "Select a Gamemode",
+            "mapPlaceholder": "Select a Map",
+            "submit": "Submit",
+            "toast": {
+              "failure": "Failed to update maplist for",
+              "success": "Successfully updated maplist for"
+            }
+          },
+          "sheet": {
+            "title": "Manage Maplist",
+            "trigger": "Maplist"
+          }
+        },
+        "mods": {
+          "addModDialog": {
+            "cancel": "Cancel",
+            "confirm": "Install",
+            "description": "Install mod to",
+            "title": "Install mod",
+            "toast": {
+              "failure": "Failed to install mod",
+              "success": "Successfully installed mod"
+            }
+          },
+          "deleteModDialog": {
+            "cancel": "Cancel",
+            "confirm": "Delete",
+            "description": "This action cannot be undone. This will permanently delete",
+            "title": "DELETE mod",
+            "toast": {
+              "failure": "Failed to delete mod from",
+              "success": "Successfully deleted mod from"
+            }
+          },
+          "empty": "No mods found",
+          "error": "Failed to fetch list of mod names",
+          "loading": "Fetching all mod names",
+          "loadoutMod": {
+            "activated": "Activated",
+            "deactivated": "De-Activated",
+            "toast": {
+              "modFailure": "Failed to activate mod",
+              "vsCodeFailure": "Failed to open mod in vsCode",
+              "vsCodeSuccess": "Opened mod in vscode"
+            }
+          },
+          "sheet": {
+            "modCache": "mod-cache",
+            "trigger": "Mods"
+          }
+        },
+        "multiAccount": {
+          "form": {
+            "play": "Play"
+          },
+          "sheet": {
+            "description": "Choose which VU accounts to join server with",
+            "empty": "User list was empty",
+            "error": "Failed to fetch userlist for Multi Account sheet",
+            "loading": "Loading userlist for multi account sheet",
+            "title": "Choose accounts to join loadout",
+            "toast": {
+              "serverFailure": "Failed to start server loadout",
+              "serverSucces": "Started VU Server. Starting Client..."
+            },
+            "trigger": "Start Server and Multiple Clients"
+          }
+        },
+        "openExplorer": "Explorer",
+        "refreshTooltip": "Reload txt files from Loadout JSON (if you manually updated loadout.json)",
+        "startServer": "Start Server",
+        "startServerAndClient": "Start Server and Client",
+        "startup": {
+          "form": {
+            "reservedSlots": {
+              "addAnotherPlayer": "Add Player",
+              "addFirstPlayer": "Add Player",
+              "placeholder": "Ent/Bksp Add/Remove"
+            },
+            "searchPlaceholder": "Search Startup Config",
+            "setTeamTickets": {
+              "button": {
+                "setOtherTeamTickets": "Set other team's tickets",
+                "setTickets": "Set Tickets"
+              },
+              "placeholder": "Select a team",
+              "team1": "Team1",
+              "team2": "Team2",
+              "team3": "Team3",
+              "team4": "Team4",
+              "team5": "Team5",
+              "team6": "Team6",
+              "team7": "Team7",
+              "team8": "Team8",
+              "title": "Set tickets per team"
+            },
+            "submit": "Submit",
+            "toast": {
+              "failure": "Failed to update startup args for",
+              "success": "Successfully updated startup args for"
+            }
+          },
+          "sheet": {
+            "description": "Takes Startup.txt arguments and stores them",
+            "title": "Manage Startup.txt",
+            "trigger": "Startup"
+          }
+        },
+        "toast": {
+          "openExplorer": "Opened explorer for loadout",
+          "playFailure": "Failed to start server loadout",
+          "playSuccess": "Started VU server. Starting client...",
+          "refreshFailure": "Failed to update txt files from loadout.json for",
+          "refreshSuccess": "Updated Startup/Maplist/Modlist/Banlist from loadout.json for",
+          "serverFailure": "Failed to start server loadout",
+          "serverSuccess": "Started VU Server..."
+        }
+      }
+    }
+  },
+  "settings": {
+    "activateBF3": {
+      "sheet": {
+        "option1": {
+          "button": "Activate BF3 (LSX)",
+          "step1": "Please launch your EA App / Origin and sign in.",
+          "step2": "Once signed-in click on the Activate BF3 button:",
+          "title": "Option 1: EA App / Origin LSX (recommended)",
+          "toast": "Activating BF3 (LSX)"
+        },
+        "option2": {
+          "button": "Activate BF3 (EA Token)",
+          "placeholder": "EA Token",
+          "step1": "Login to EA App / Origin",
+          "step2": "Run VU with these arguments ",
+          "step3": "Copy the EA Auth token that window generates into the box below and click on the Activate BF3 button.",
+          "title": "Option 2: EA Token",
+          "toast": "Activating BF3 (EA Token)"
+        },
+        "title": "Activate BF3"
+      },
+      "tooltip": {
+        "content": "Guided BF3 activation",
+        "title": "Activate BF3"
+      }
+    },
+    "languageSelector": {
+      "title": "Choose your language",
+      "toast": "Changed language to"
+    },
+    "multiAccount": {
+      "title": "Show Multi-Account join?",
+      "toast": {
+        "disable": "Disabled loadout multi-account join",
+        "enable": "Enabled loadout multi-account join",
+        "failed": "Failed to update multi-account join"
+      }
+    },
+    "serverGuidForm": {
+      "description": "This will be used to Quick-Join your local server.",
+      "submit": "Submit",
+      "title": "Local Server GUID",
+      "toast": {
+        "failure": "Something went wrong.",
+        "success": "Updated Server GUID Successfully!"
+      }
+    },
+    "title": "Settings"
+  },
+  "sidebar": {
+    "header": "Unofficial VU Launcher",
+    "routes": {
+      "home": "Home",
+      "loadouts": "Loadouts",
+      "mods": "Mods",
+      "settings": "Settings"
+    }
+  },
+  "startupDescriptions": {
+    "RM": {
+      "autoPerfEnabled": "activate auto perf",
+      "autoPerfMaxPlayers": "cutoff for auto perf",
+      "battleCryLink": "link to your battlecry JSON endpoint",
+      "defaultPreRoundTime": "time before round starts",
+      "ingameBanner": "a link to an image",
+      "pingLimitEnable": "activate ping limit",
+      "pingLimitInMs": "time in ms",
+      "serverInfo": "a description for your server",
+      "serverLicenseKey": "RM Server License Key",
+      "setAdmins": "Set list of admins, separated by a space",
+      "setAutoBalancer": "autobalance",
+      "setDevelopers": "Set list of developers, separated by a space",
+      "setLightAdmins": "Set list of light-admins, separated by a space",
+      "tempReservedSlotsEnabled": "enable automatic rejoining",
+      "tempReservedSlotsRejoinTime": "how long before rejoin is removed"
+    },
+    "admin": {
+      "password": "Set RCON Password for Procon"
+    },
+    "reservedSlots": {
+      "add": "list of players to add to reserved slot separated by comma ,"
+    },
+    "vars": {
+      "_3dSpotting": "Enable 3d markers over spotted enemies",
+      "_3pCam": "Enable 3rd person vehicle camera",
+      "autoBalance": "Enable Autobalance",
+      "bulletDamage": "Set bullet damage scale factor",
+      "crossHair": "Enable crosshair for all weapons",
+      "friendlyFire": "Enable team damage",
+      "gameModeCounter": "Set scale factor for number of tickets to end round",
+      "gamePassword": "Set password for joining server",
+      "hud": "Enable HUD",
+      "idleBanRounds": "Set how many rounds idle timeout should ban (if at all)",
+      "idleTimeout": "Set idle timeout",
+      "killCam": "Enable killcam",
+      "maxPlayers": "Set max players",
+      "miniMap": "Enable minimap",
+      "miniMapSpotting": "Enable spotted enemies on minimap",
+      "nameTag": "Enable nametags",
+      "onlySquadLeaderSpawn": "Disable squadmate spawns except squadleader",
+      "playerManDownTime": "Set player man-down time scale factor",
+      "playerRespawnTime": "Set player respawn time scale factor",
+      "ranked": "Enable ranked",
+      "regenerateHealth": "Enable health regeneration",
+      "roundLockdownCountdown": "Set pre-round duration",
+      "roundRestartPlayerCount": "Set min players numbers to revert to warm-up",
+      "roundStartPlayerCount": "Set min players to activate pre-round/in-round",
+      "serverDescription": "Set server description",
+      "serverMessage": "Set server welcome message",
+      "serverName": "Set server name",
+      "soldierHealth": "Set soldier max health scale factor",
+      "teamKillCountForKick": "Set number of teamkills allowed during a round",
+      "teamKillKickForBan": "Set number of team-kill kicks that will lead to permaban",
+      "teamKillValueDecreasePerSecond": "Set kill-value decrease per second",
+      "teamKillValueForKick": "Set max kill-value allowed for a player before he/she is kicked",
+      "teamKillValuelncrease": "Set kill-value increase for a teamkill",
+      "vehicleSpawnAllowed": "Enable vehicles to spawn",
+      "vehicleSpawnDelay": "Set vehicle spawn delay scale factor"
+    },
+    "vu": {
+      "ColorCorrectionEnabled": "Enable blue-tint filter",
+      "CorpseDamageEnabled": "Enables corpse damage to prevent revives",
+      "DesertingAllowed": "Disable Out of Bounds",
+      "DestructionEnabled": "Enable Destruction",
+      "DisablePreRound": "Disable waiting for players",
+      "FriendlyFireSuppression": "Enable suppression of allies",
+      "HighPerformanceReplication": "Enable high-performance updates on far away players",
+      "HttpAssetUrl": "Set URL pointing to remote [ui.vuic] instead of downloading from game server",
+      "ServerBanner": "Set browser banner URL pointing to 1378x162 jpg",
+      "SetTeamTicketCount": "Set team ticket count for a team.",
+      "SquadSize": "Set max players per squad",
+      "SunFlareEnabled": "Enable sun flare",
+      "SuppressionMultiplier": "Set suppression intensity [0, infinite]",
+      "TeamActivatedMines": "Enable mines to trigger on allies",
+      "TimeScale": "Slow down or speed up game [0.0, 2.0]",
+      "VehicleDisablingEnabled": "Enable mobility hits on vehicles"
+    }
+  }
+}
