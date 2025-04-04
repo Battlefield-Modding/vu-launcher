@@ -417,7 +417,8 @@
           },
           "sheet": {
             "description": "Tweak your launch arguments here!",
-            "title": "Launch Arguments Form"
+            "title": "Launch Arguments Form",
+            "trigger": "Launch Arguments"
           }
         },
         "loading": "Fetching user preferences for loadout.",
@@ -593,7 +594,8 @@
         "failure": "Something went wrong.",
         "success": "Updated Server GUID Successfully!"
       }
-    }
+    },
+    "title": "Settings"
   },
   "sidebar": {
     "header": "Unofficial VU Launcher",

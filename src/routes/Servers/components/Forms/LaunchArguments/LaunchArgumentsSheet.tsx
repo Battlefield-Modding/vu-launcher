@@ -22,7 +22,7 @@ export function LaunchArgumentSheet({ existingLoadout }: { existingLoadout: Load
     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
       <SheetTrigger>
         <div className="flex w-fit items-center gap-2 rounded-md bg-primary p-2 text-xl text-secondary hover:bg-primary/80">
-          Launch Arguments
+          {t('servers.loadouts.loadout.launchArgs.sheet.trigger')}
           <Rocket />
         </div>
       </SheetTrigger>

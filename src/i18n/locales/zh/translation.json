@@ -417,7 +417,8 @@
           },
           "sheet": {
             "description": "在这里调整您的发布论点！",
-            "title": "启动参数表格"
+            "title": "启动参数表格",
+            "trigger": "启动参数"
           }
         },
         "loading": "获取负载的用户首选项。",
@@ -593,7 +594,8 @@
         "failure": "出了点问题。",
         "success": "成功更新了服务器GUID！"
       }
-    }
+    },
+    "title": "设置"
   },
   "sidebar": {
     "header": "非官方VU发射器",
