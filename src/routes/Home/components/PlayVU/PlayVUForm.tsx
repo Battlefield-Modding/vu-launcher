@@ -100,12 +100,12 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
     const status = await playVU({ accountIndex, serverIndex, useDevBranch })
 
     if (status) {
-      toast('Starting VU...')
+      toast(t('home.playVu.form.toast.success'))
       setTimeout(() => {
         getCurrentWindow().minimize()
       }, 1500)
     } else {
-      toast('Failed to start VU.')
+      toast(t('home.playVu.form.toast.failure'))
     }
   }
 

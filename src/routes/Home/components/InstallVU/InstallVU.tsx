@@ -76,7 +76,7 @@ export function InstallVU() {
       setGameDownloadUpdateInstalling(false)
       setGameDownloadUpdateExtracting(false)
       console.log('VU Installation Completed')
-      toast('VU Installation Completed')
+      toast(t('onboarding.install.prod.toast.installComplete'))
       queryClient.invalidateQueries({ queryKey: [QueryKey.IsVuInstalled], refetchType: 'all' })
     })
 
@@ -140,9 +140,9 @@ export function InstallVU() {
         queryKey: [QueryKey.IsVuInstalled],
         refetchType: 'all',
       })
-      toast(`Successfully set VU install to: ${dir}`)
+      toast(`${t('onboarding.install.prod.toast.chooseInstallDir.success')}: ${dir}`)
     } else {
-      toast('Something went wrong setting VU install location.')
+      toast(t('onboarding.install.prod.toast.chooseInstallDir.failure'))
     }
   }
 

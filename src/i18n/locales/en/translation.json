@@ -8,6 +8,26 @@
           "none": "None",
           "title": "VU Account"
         },
+        "deleteCredentialDialog": {
+          "cancel": "Cancel",
+          "confirm": "Delete",
+          "description": "This will permanently delete the account from your Operating System's credential manager",
+          "title": "DELETE stored credentials",
+          "toast": {
+            "failure": "Failed to delete credentials for",
+            "success": "Successfully deleted credentials for"
+          }
+        },
+        "deleteServerDialog": {
+          "cancel": "Cancel",
+          "confirm": "Delete",
+          "description": "This will delete the server info from the launcher",
+          "title": "Delete Quick-Join Server",
+          "toast": {
+            "failure": "Failed to delete Quick-Join server",
+            "success": "Successfully deleted Quick-Join server"
+          }
+        },
         "devBranch": {
           "title": "Use Dev Branch"
         },
@@ -17,7 +37,11 @@
           "none": "None",
           "title": "Quick-Join Server"
         },
-        "submit": "PLAY"
+        "submit": "PLAY",
+        "toast": {
+          "failure": "Failed to start VU",
+          "success": "Starting VU..."
+        }
       }
     },
     "playerCredentials": {
@@ -27,6 +51,10 @@
         "password": {
           "description": "Stored using your Operating System's native credential manager.",
           "title": "VU Password"
+        },
+        "toast": {
+          "failure": "Failed to save VU Credentials",
+          "success": "Updated VU Credentials Successfully!"
         },
         "username": {
           "description": "Stored using your Operating System's native credential manager.",
@@ -55,7 +83,11 @@
           "placeholder": "password - Leave blank if no password",
           "title": "Server Password (optional)"
         },
-        "submit": "Submit"
+        "submit": "Submit",
+        "toast": {
+          "failure": "Failed to add server to Quick-Join list",
+          "success": "Successfully added server to Quick-Join list"
+        }
       },
       "sheet": {
         "description": "Lets you join a server after selecting a soldier, skipping the server browser.",
@@ -189,7 +221,11 @@
             "confirm": "Install VU Dev"
           },
           "description": "This will install VU Dev to the above directory.",
-          "title": "Install VU Dev to"
+          "title": "Install VU Dev to",
+          "toast": {
+            "failure": "Failed to copy VU Prod to dev folder",
+            "success": "Successfully copied VU Prod to dev folder"
+          }
         },
         "header": "Found VU Prod. Install VU Dev also?"
       },
@@ -215,10 +251,20 @@
           "extractingPrefix": "Extracting Files",
           "extractingSuffix": "remaining",
           "header": "Downloading VU"
+        },
+        "toast": {
+          "chooseInstallDir": {
+            "failure": "Failed to set VU install path",
+            "success": "Successfully set VU install path to"
+          },
+          "installComplete": "VU Installation Completed"
         }
       }
     },
-    "loading": "Loading Onboarding component"
+    "loading": "Loading Onboarding component",
+    "toast": {
+      "activateBF3": "Activating BF3"
+    }
   },
   "servers": {
     "firstTime": {
@@ -340,6 +386,19 @@
       },
       "loading": "Fetching Server Loadouts",
       "loadout": {
+        "banlist": {
+          "form": {
+            "submit": "Submit",
+            "toast": {
+              "failure": "Failed to update banlist for loadout",
+              "success": "Succesfully updated banlist for"
+            }
+          },
+          "sheet": {
+            "title": "Banlist",
+            "trigger": "Banlist"
+          }
+        },
         "devToggle": "Use dev branch?",
         "error": "Failed to load user preferences for loadout",
         "launchArgs": {
@@ -357,6 +416,56 @@
           }
         },
         "loading": "Fetching user preferences for loadout.",
+        "maplist": {
+          "form": {
+            "button": {
+              "addAnotherMap": "Add Another Map",
+              "addFirstMap": "Add Map"
+            },
+            "gamemodePlaceholder": "Select a Gamemode",
+            "mapPlaceholder": "Select a Map",
+            "submit": "Submit",
+            "toast": {
+              "failure": "Failed to update maplist for",
+              "success": "Successfully updated maplist for"
+            }
+          },
+          "sheet": {
+            "title": "Manage Maplist",
+            "trigger": "Maplist"
+          }
+        },
+        "mods": {
+          "addModDialog": {
+            "cancel": "Cancel",
+            "confirm": "Install",
+            "description": "Install mod to",
+            "title": "Install mod",
+            "toast": {
+              "failure": "Failed to install mod",
+              "success": "Successfully installed mod"
+            }
+          },
+          "deleteModDialog": {
+            "cancel": "Cancel",
+            "confirm": "Delete",
+            "description": "This action cannot be undone. This will permanently delete",
+            "title": "DELETE mod",
+            "toast": {
+              "failure": "Failed to delete mod from",
+              "success": "Successfully deleted mod from"
+            }
+          },
+          "loadoutMod": {
+            "activated": "Activated",
+            "deactivated": "De-Activated",
+            "toast": {
+              "modFailure": "Failed to activate mod",
+              "vsCodeFailure": "Failed to open mod in vsCode",
+              "vsCodeSuccess": "Opened mod in vscode"
+            }
+          }
+        },
         "multiAccount": {
           "form": {
             "play": "Play"

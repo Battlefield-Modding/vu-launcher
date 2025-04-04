@@ -62,7 +62,7 @@ export function Onboarding({ setOnboarding }: { setOnboarding: (t: () => boolean
   }
 
   function handleActivateLSX() {
-    toast('Activating BF3 (LSX)')
+    toast(t('onboarding.toast.activateBF3'))
     activateBf3LSX()
   }
 

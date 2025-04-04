@@ -40,12 +40,12 @@ export default function PlayerCredentialsForm({ setSheetOpen }: { setSheetOpen: 
     const status = await saveUserCredentials(values)
 
     if (status) {
-      toast('Updated VU Credentials Successfully!')
+      toast(t('home.playerCredentials.form.toast.success'))
       queryClient.invalidateQueries({ queryKey: [QueryKey.UserList], refetchType: 'all' })
       queryClient.invalidateQueries({ queryKey: [QueryKey.PlayVUInformation], refetchType: 'all' })
       setSheetOpen(() => false)
     } else {
-      toast('Something went wrong.')
+      toast(t('home.playerCredentials.form.toast.failure'))
     }
   }
 

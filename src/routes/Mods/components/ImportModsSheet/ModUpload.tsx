@@ -53,12 +53,12 @@ export default function ModUpload() {
               queryKey: [QueryKey.GetAllModNames],
               refetchType: 'all',
             })
-            toast(`Successfully imported mod from: ${info}`)
+            toast(`${t('mods.import.form.toast.success')}: ${info}`)
           } else {
-            toast('Failed to import mod. May already exist?')
+            toast(t('mods.import.form.toast.failure'))
           }
         } else {
-          toast('Only .zip files are accepted')
+          toast(t('mods.import.form.toast.invalid'))
         }
       })
 

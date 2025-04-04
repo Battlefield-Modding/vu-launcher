@@ -11,6 +11,7 @@ import {
 import { QueryKey } from '@/config/config'
 import { useQueryClient } from '@tanstack/react-query'
 import { Trash, X } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
 export function DeleteModDialog({
@@ -23,11 +24,14 @@ export function DeleteModDialog({
   queryKey: string
 }) {
   const queryClient = useQueryClient()
+  const { t } = useTranslation()
 
   async function handleDelete() {
     const status = await removeModFromLoadout(loadoutName, modName)
     if (status) {
-      toast(`Deleted ${modName} from ${loadoutName}.`)
+      toast(
+        `${t('servers.loadouts.loadout.mods.deleteModDialog.toast.success')}: ${loadoutName}/${modName}`,
+      )
       queryClient.invalidateQueries({
         queryKey: [queryKey],
         refetchType: 'all',
@@ -37,7 +41,9 @@ export function DeleteModDialog({
         refetchType: 'all',
       })
     } else {
-      toast(`Error: Failed to delete ${modName}`)
+      toast(
+        `${t('servers.loadouts.loadout.mods.deleteModDialog.toast.failure')}: ${loadoutName}/${modName}`,
+      )
     }
   }
 
@@ -51,25 +57,26 @@ export function DeleteModDialog({
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="pb-4">
-            DELETE mod:{' '}
+            {t('servers.loadouts.loadout.mods.deleteModDialog.title')}:{' '}
             <code className="text-md rounded-md bg-gray-800 p-1 pl-2 pr-2 text-white">
               {modName.length >= 20 ? `${modName.substring(0, 20)}...` : modName}
             </code>
           </DialogTitle>
           <DialogDescription>
-            This action cannot be undone. This will permanently delete {modName} from {loadoutName}.
+            {t('servers.loadouts.loadout.mods.deleteModDialog.description')} {loadoutName}/{modName}
           </DialogDescription>
         </DialogHeader>
         <div className="flex justify-center gap-8">
           <DialogClose>
             <p className="flex gap-2 rounded-md bg-secondary p-2 text-white hover:bg-secondary/80">
               <X />
-              Cancel
+              {t('servers.loadouts.loadout.mods.deleteModDialog.cancel')}
             </p>
           </DialogClose>
           <DialogClose onClick={handleDelete}>
             <p className="flex gap-4 rounded-md bg-red-600 p-2 text-white hover:bg-red-600/80">
-              <Trash /> Delete: {modName.length >= 20 ? `${modName.substring(0, 20)}...` : modName}
+              <Trash /> {t('servers.loadouts.loadout.mods.deleteModDialog.confirm')}:{' '}
+              {modName.length >= 20 ? `${modName.substring(0, 20)}...` : modName}
             </p>
           </DialogClose>
         </div>

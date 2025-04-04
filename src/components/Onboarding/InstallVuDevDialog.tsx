@@ -29,10 +29,14 @@ export function InstallVuDevDialog({
 
   async function InstallVuDevToPath() {
     setSubmitLoading(() => true)
-    await invoke(rust_fns.copy_vu_prod_to_folder, { path: vuDevInstallPath })
+    const status = await invoke(rust_fns.copy_vu_prod_to_folder, { path: vuDevInstallPath })
     setSubmitLoading(() => false)
-    queryClient.invalidateQueries({ queryKey: [QueryKey.IsVuInstalled], refetchType: 'all' })
-    toast('Copied VU Prod to dev folder')
+    if (status) {
+      queryClient.invalidateQueries({ queryKey: [QueryKey.IsVuInstalled], refetchType: 'all' })
+      toast(t('onboarding.install.dev.dialog.toast.success'))
+    } else {
+      toast(t('onboarding.install.dev.dialog.toast.failure'))
+    }
   }
 
   return (
