@@ -10,17 +10,19 @@ import { Wrench } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { StartupForm } from './StartupForm'
 import { LoadoutJSON } from '@/config/config'
+import { useTranslation } from 'react-i18next'
 
 export function StartupSheet({ existingLoadout }: { existingLoadout: LoadoutJSON }) {
   const [sheetOpen, setSheetOpen] = useState(false)
   const [prevKeys, setPrevKeys] = useState<Array<String>>([])
   const searchRef = useRef<HTMLInputElement>(null)
+  const { t } = useTranslation()
 
   return (
     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
       <SheetTrigger>
         <div className="flex w-fit items-center gap-2 rounded-md bg-primary p-2 text-xl text-secondary hover:bg-primary/80">
-          Startup
+          {t('servers.loadouts.loadout.startup.sheet.trigger')}
           <Wrench />
         </div>
       </SheetTrigger>
@@ -46,8 +48,10 @@ export function StartupSheet({ existingLoadout }: { existingLoadout: LoadoutJSON
         }}
       >
         <SheetHeader className="hidden">
-          <SheetTitle>Manage Startup.txt</SheetTitle>
-          <SheetDescription>Takes Startup.txt arguments and stores them</SheetDescription>
+          <SheetTitle>{t('servers.loadouts.loadout.startup.sheet.title')}</SheetTitle>
+          <SheetDescription>
+            {t('servers.loadouts.loadout.startup.sheet.description')}
+          </SheetDescription>
         </SheetHeader>
 
         <StartupForm

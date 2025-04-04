@@ -342,6 +342,20 @@
       "loadout": {
         "devToggle": "Use dev branch?",
         "error": "Failed to load user preferences for loadout",
+        "launchArgs": {
+          "form": {
+            "searchPlaceholder": "Search Launch Arguments",
+            "submit": "Submit",
+            "toast": {
+              "failure": "Failed to update Launch Arguments for",
+              "success": "Successfully updated Launch Arguments for"
+            }
+          },
+          "sheet": {
+            "description": "Tweak your launch arguments here!",
+            "title": "Launch Arguments Form"
+          }
+        },
         "loading": "Fetching user preferences for loadout.",
         "multiAccount": {
           "form": {
@@ -361,8 +375,24 @@
           }
         },
         "openExplorer": "Explorer",
+        "refreshTooltip": "Reload txt files from Loadout JSON (if you manually updated loadout.json)",
         "startServer": "Start Server",
         "startServerAndClient": "Start Server and Client",
+        "startup": {
+          "form": {
+            "searchPlaceholder": "Search Startup Config",
+            "submit": "Submit",
+            "toast": {
+              "failure": "Failed to update startup args for",
+              "success": "Successfully updated startup args for"
+            }
+          },
+          "sheet": {
+            "description": "Takes Startup.txt arguments and stores them",
+            "title": "Manage Startup.txt",
+            "trigger": "Startup"
+          }
+        },
         "toast": {
           "openExplorer": "Opened explorer for loadout",
           "playFailure": "Failed to start server loadout",

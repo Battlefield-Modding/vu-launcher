@@ -28,7 +28,7 @@ export function LaunchArgumentsSearch({
   searchRef: any
   setFilteredArgs: any
 }) {
-  const { i18n } = useTranslation()
+  const { i18n, t } = useTranslation()
   const { language } = i18n
   const [translations, setTranslations] = useState(
     languageCodeToTranslation[language as keyof LaunchTranslation],
@@ -63,7 +63,7 @@ export function LaunchArgumentsSearch({
   return (
     <input
       type="text"
-      placeholder={`Search Launch Arguments     [CTRL + F]`}
+      placeholder={`${t('servers.loadouts.loadout.launchArgs.form.searchPlaceholder')}     [CTRL + F]`}
       className="fixed top-0 w-[720px] rounded-md border border-gray-500 bg-black p-2 focus:border-cyan-300 focus:outline-none focus:ring-0"
       onChange={handleChange}
       ref={searchRef}

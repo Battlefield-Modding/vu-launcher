@@ -12,6 +12,7 @@ import { LoadoutJSON, QueryKey } from '@/config/config'
 import { editServerLoadout } from '@/api'
 import { toast } from 'sonner'
 import { StartupSearch } from './StartupSearch'
+import { useTranslation } from 'react-i18next'
 
 const formSchema = z.object({
   admin: z.object({
@@ -109,6 +110,7 @@ export function StartupForm({
   const queryClient = useQueryClient()
   const [submitLoading, setSubmitLoading] = useState(false)
   const [filteredArgs, setFilteredArgs] = useState<{}>({ ...existingLoadout.startup })
+  const { t } = useTranslation()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -123,11 +125,11 @@ export function StartupForm({
     setSubmitLoading(() => false)
 
     if (status) {
-      toast(`Successfully updated Startup for ${existingLoadout.name}`)
+      toast(`${t('servers.loadouts.loadout.startup.form.toast.success')} ${existingLoadout.name}`)
       queryClient.invalidateQueries({ queryKey: [QueryKey.GetAllLoadoutJSON], refetchType: 'all' })
       setSheetOpen(() => false)
     } else {
-      toast(`Error. could not update Startup for ${existingLoadout.name}`)
+      toast(`${t('servers.loadouts.loadout.startup.form.toast.failure')} ${existingLoadout.name}`)
     }
   }
 
@@ -146,7 +148,7 @@ export function StartupForm({
 
         {submitLoading && <LoaderComponent />}
         <Button type="submit" className="mt-8">
-          Submit
+          {t('servers.loadouts.loadout.startup.form.submit')}
         </Button>
       </form>
     </Form>

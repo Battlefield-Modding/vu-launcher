@@ -10,11 +10,13 @@ import { Rocket } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { LaunchArgumentForm } from './LaunchArgumentsForm'
 import { LoadoutJSON } from '@/config/config'
+import { useTranslation } from 'react-i18next'
 
 export function LaunchArgumentSheet({ existingLoadout }: { existingLoadout: LoadoutJSON }) {
   const [sheetOpen, setSheetOpen] = useState(false)
   const [prevKeys, setPrevKeys] = useState<Array<String>>([])
   const searchRef = useRef<HTMLInputElement>(null)
+  const { t } = useTranslation()
 
   return (
     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
@@ -46,8 +48,10 @@ export function LaunchArgumentSheet({ existingLoadout }: { existingLoadout: Load
         }}
       >
         <SheetHeader className="hidden">
-          <SheetTitle>Launch Arguments Form</SheetTitle>
-          <SheetDescription>Tweak your launch arguments here!</SheetDescription>
+          <SheetTitle>{t('servers.loadouts.loadout.launchArgs.sheet.title')}</SheetTitle>
+          <SheetDescription>
+            {t('servers.loadouts.loadout.launchArgs.sheet.description')}
+          </SheetDescription>
         </SheetHeader>
 
         <LaunchArgumentForm

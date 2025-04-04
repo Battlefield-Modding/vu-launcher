@@ -13,6 +13,7 @@ import { toast } from 'sonner'
 import { defaultLaunchArguments } from './setup/LaunchArguments'
 import { LaunchArgumentFormBuilder } from './LaunchArgumentFormBuilder/LaunchArgumentFormBuilder'
 import { LaunchArgumentsSearch } from './LaunchArgumentsSearch'
+import { useTranslation } from 'react-i18next'
 
 const formSchema = z.object({
   common: z
@@ -74,6 +75,7 @@ export function LaunchArgumentForm({
   const queryClient = useQueryClient()
   const [submitLoading, setSubmitLoading] = useState(false)
   const [filteredArgs, setFilteredArgs] = useState<{}>({ ...existingLoadout.launch })
+  const { t } = useTranslation()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -88,11 +90,15 @@ export function LaunchArgumentForm({
     setSubmitLoading(() => false)
 
     if (status) {
-      toast(`Successfully updated Launch Arguments for ${existingLoadout.name}`)
+      toast(
+        `${t('servers.loadouts.loadout.launchArgs.form.toast.success')} ${existingLoadout.name}`,
+      )
       queryClient.invalidateQueries({ queryKey: [QueryKey.GetAllLoadoutJSON], refetchType: 'all' })
       setSheetOpen(() => false)
     } else {
-      toast(`Error. Could not update Launch Arguments for ${existingLoadout.name}`)
+      toast(
+        `${t('servers.loadouts.loadout.launchArgs.form.toast.failure')} ${existingLoadout.name}`,
+      )
     }
   }
 
@@ -111,7 +117,7 @@ export function LaunchArgumentForm({
 
         {submitLoading && <LoaderComponent />}
         <Button type="submit" className="mt-8">
-          Submit
+          {t('servers.loadouts.loadout.launchArgs.form.submit')}
         </Button>
       </form>
     </Form>

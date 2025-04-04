@@ -1,8 +1,10 @@
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { RefreshCcw } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 export function RefreshLoadoutTooltip() {
+  const { t } = useTranslation()
   return (
     <TooltipProvider>
       <Tooltip>
@@ -12,7 +14,7 @@ export function RefreshLoadoutTooltip() {
           </Button>
         </TooltipTrigger>
         <TooltipContent>
-          <p>Reload txt files from Loadout JSON (if you manually updated loadout.json)</p>
+          <p>{t('servers.loadouts.loadout.refreshTooltip')}</p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
