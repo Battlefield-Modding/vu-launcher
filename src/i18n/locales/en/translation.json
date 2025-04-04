@@ -338,7 +338,41 @@
           "trigger": "Import loadout"
         }
       },
-      "loading": "Fetching Server Loadouts"
+      "loading": "Fetching Server Loadouts",
+      "loadout": {
+        "devToggle": "Use dev branch?",
+        "error": "Failed to load user preferences for loadout",
+        "loading": "Fetching user preferences for loadout.",
+        "multiAccount": {
+          "form": {
+            "play": "Play"
+          },
+          "sheet": {
+            "description": "Choose which VU accounts to join server with",
+            "empty": "User list was empty",
+            "error": "Failed to fetch userlist for Multi Account sheet",
+            "loading": "Loading userlist for multi account sheet",
+            "title": "Choose accounts to join loadout",
+            "toast": {
+              "serverFailure": "Failed to start server loadout",
+              "serverSucces": "Started VU Server. Starting Client..."
+            },
+            "trigger": "Start Server and Multiple Clients"
+          }
+        },
+        "openExplorer": "Explorer",
+        "startServer": "Start Server",
+        "startServerAndClient": "Start Server and Client",
+        "toast": {
+          "openExplorer": "Opened explorer for loadout",
+          "playFailure": "Failed to start server loadout",
+          "playSuccess": "Started VU server. Starting client...",
+          "refreshFailure": "Failed to update txt files from loadout.json for",
+          "refreshSuccess": "Updated Startup/Maplist/Modlist/Banlist from loadout.json for",
+          "serverFailure": "Failed to start server loadout",
+          "serverSuccess": "Started VU Server..."
+        }
+      }
     }
   },
   "settings": {

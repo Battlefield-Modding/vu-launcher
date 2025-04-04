@@ -13,9 +13,11 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet'
 import { AccountMultiSelectForm } from './AccountMultiSelectForm'
+import { useTranslation } from 'react-i18next'
 
 export function ChooseAccountSheet({ loadoutName }: { loadoutName: string }) {
   const [sheetOpen, setSheetOpen] = useState(false)
+  const { t } = useTranslation()
 
   const { isPending, isError, data, error } = useQuery({
     queryKey: [QueryKey.UserList],
@@ -26,7 +28,7 @@ export function ChooseAccountSheet({ loadoutName }: { loadoutName: string }) {
   if (isPending) {
     return (
       <div>
-        <h1>LOADING USERS</h1>
+        <h1>{t('servers.loadouts.loadout.multiAccount.sheet.loading')}</h1>
         <Loader />
       </div>
     )
@@ -35,7 +37,7 @@ export function ChooseAccountSheet({ loadoutName }: { loadoutName: string }) {
   if (isError) {
     return (
       <div className="rounded-md bg-red-600 pl-2 pr-2 text-xl leading-9 text-white">
-        <h1>ERROR: No Users Found</h1>
+        <h1>{t('servers.loadouts.loadout.multiAccount.sheet.error')}</h1>
         <p>{error.message}</p>
       </div>
     )
@@ -44,12 +46,14 @@ export function ChooseAccountSheet({ loadoutName }: { loadoutName: string }) {
   async function handlePlay(users: number[]) {
     let status = await startServerLoadout(loadoutName)
     if (status) {
-      toast('Started VU Server. Starting Client in 1 second...')
+      toast(t('servers.loadouts.loadout.multiAccount.sheet.toast.serverSucces'))
       setTimeout(() => {
         playVUOnLocalServer(loadoutName, users)
       }, 1000)
     } else {
-      toast(`Failed to start loadout: ${loadoutName}`)
+      toast(
+        `${t('servers.loadouts.loadout.multiAccount.sheet.toast.serverFailure')}: ${loadoutName}`,
+      )
     }
   }
 
@@ -60,7 +64,7 @@ export function ChooseAccountSheet({ loadoutName }: { loadoutName: string }) {
   if (!data || !data[0]) {
     return (
       <div className="rounded-md bg-red-600 pl-2 pr-2 text-xl leading-9 text-white">
-        <h1>No Users Found</h1>
+        <h1>{t('servers.loadouts.loadout.multiAccount.sheet.empty')}</h1>
       </div>
     )
   } else {
@@ -68,7 +72,7 @@ export function ChooseAccountSheet({ loadoutName }: { loadoutName: string }) {
       <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
         <SheetTrigger>
           <div className="flex w-fit justify-between gap-2 rounded-md bg-green-800 p-2 text-primary hover:cursor-pointer hover:bg-green-800/80">
-            Start Server and Multiple Clients
+            {t('servers.loadouts.loadout.multiAccount.sheet.trigger')}
             <Server />
             <UserCheck />
           </div>
@@ -76,11 +80,12 @@ export function ChooseAccountSheet({ loadoutName }: { loadoutName: string }) {
         <SheetContent>
           <SheetHeader className="m-auto w-96">
             <SheetTitle>
-              Join <code>{loadoutName}</code> with what account(s)?
+              {t('servers.loadouts.loadout.multiAccount.sheet.title')} {'  '}
+              <code>{loadoutName}</code>
             </SheetTitle>
             <SheetDescription>
-              Choose which VU accounts to join with when your server <code>{loadoutName}</code>{' '}
-              starts.
+              {t('servers.loadouts.loadout.multiAccount.sheet.description')} {'  '}
+              <code>{loadoutName}</code>
             </SheetDescription>
           </SheetHeader>
           <br />

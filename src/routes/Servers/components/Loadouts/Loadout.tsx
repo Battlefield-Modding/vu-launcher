@@ -19,9 +19,11 @@ import { LaunchArgumentSheet } from '../Forms/LaunchArguments/LaunchArgumentsShe
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Switch } from '@/components/ui/switch'
 import clsx from 'clsx'
+import { useTranslation } from 'react-i18next'
 
 export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
   const queryClient = useQueryClient()
+  const { t } = useTranslation()
 
   const { isPending, isError, data, error } = useQuery({
     queryKey: [QueryKey.UserPreferences],
@@ -32,7 +34,7 @@ export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
   if (isPending) {
     return (
       <div>
-        <h1>Fetching User Preferences</h1>
+        <h1>{t('servers.loadouts.loadout.loading')}</h1>
         <Loader />
       </div>
     )
@@ -41,7 +43,7 @@ export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
   if (isError) {
     return (
       <div className="rounded-md bg-destructive pl-2 pr-2 text-xl leading-9">
-        <h1>ERROR: No User Preferences</h1>
+        <h1>{t('servers.loadouts.loadout.error')}</h1>
         <p>{error.message}</p>
       </div>
     )
@@ -50,35 +52,36 @@ export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
   async function handlePlay() {
     let status = await startServerLoadout(loadout.name)
     if (status) {
-      toast('Started VU Server. Starting Client in 1 second...')
+      toast(t('servers.loadouts.loadout.toast.playSuccess'))
       setTimeout(() => {
         playVUOnLocalServer(loadout.name)
       }, 1000)
     } else {
-      toast(`Failed to start loadout: ${loadout.name}`)
+      toast(`${t('servers.loadouts.loadout.toast.playFailure')}: ${loadout.name}`)
     }
   }
 
   async function handleServer() {
     let status = await startServerLoadout(loadout.name)
     if (status) {
-      toast('Started VU Server...')
+      toast(t('servers.loadouts.loadout.toast.serverSuccess'))
     } else {
-      toast(`Failed to start loadout: ${loadout.name}`)
+      toast(`${t('servers.loadouts.loadout.toast.serverFailure')}: ${loadout.name}`)
     }
   }
 
   async function handleOpenExplorer() {
-    toast(`Opened explorer for loadout: ${loadout.name}`)
+    toast(`${t('servers.loadouts.loadout.toast.openExplorer')}: ${loadout.name}`)
     await openExplorerAtLoadout(loadout.name)
   }
 
   async function handleRefreshLoadout() {
     const status = await refreshLoadout(loadout.name)
     if (status) {
-      toast(`Updated Startup/Maplist/Modlist/Banlist from loadout.json for: ${loadout.name}`)
+      //servers.loadouts.loadout.toast.serverFailure
+      toast(`${t('servers.loadouts.loadout.toast.refreshSuccess')}: ${loadout.name}`)
     } else {
-      toast(`Failed to update txt files from loadout.json for: ${loadout.name}`)
+      toast(`${t('servers.loadouts.loadout.toast.refreshFailure')}: ${loadout.name}`)
     }
   }
 
@@ -98,7 +101,7 @@ export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
             data.use_dev_branch && 'border-green-500 text-green-500 opacity-100',
           )}
         >
-          <h1>Use dev branch?</h1>
+          <h1>{t('servers.loadouts.loadout.devToggle')}</h1>
           <Switch
             defaultChecked={data.use_dev_branch}
             onCheckedChange={async (e) => {
@@ -118,14 +121,14 @@ export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
             onClick={handleServer}
             className="flex w-fit gap-2 rounded-md bg-green-800 p-2 text-primary hover:cursor-pointer hover:bg-green-800/80"
           >
-            Start Server
+            {t('servers.loadouts.loadout.startServer')}
             <Server />
           </div>
           <div
             onClick={handlePlay}
             className="flex w-fit justify-between gap-2 rounded-md bg-green-700 p-2 text-primary hover:cursor-pointer hover:bg-green-700/80"
           >
-            Start Server and Client
+            {t('servers.loadouts.loadout.startServerAndClient')}
             <Server />
             <User />
           </div>
@@ -137,7 +140,7 @@ export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
           className="m-auto flex w-fit items-center gap-2 rounded-md bg-gray-600 p-2 text-xl text-primary hover:cursor-pointer hover:bg-gray-600/80"
           onClick={handleOpenExplorer}
         >
-          Explorer
+          {t('servers.loadouts.loadout.openExplorer')}
           <Folder />
         </div>
 
