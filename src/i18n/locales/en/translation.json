@@ -461,6 +461,9 @@
               "success": "Successfully deleted mod from"
             }
           },
+          "empty": "No mods found",
+          "error": "Failed to fetch list of mod names",
+          "loading": "Fetching all mod names",
           "loadoutMod": {
             "activated": "Activated",
             "deactivated": "De-Activated",
@@ -469,6 +472,10 @@
               "vsCodeFailure": "Failed to open mod in vsCode",
               "vsCodeSuccess": "Opened mod in vscode"
             }
+          },
+          "sheet": {
+            "modCache": "mod-cache",
+            "trigger": "Mods"
           }
         },
         "multiAccount": {
