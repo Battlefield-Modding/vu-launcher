@@ -42,7 +42,7 @@ export function LaunchArgumentsSearch({
     const info = Object.keys(defaultLaunchArguments).map((x) => {
       // @ts-ignore
       const filtered_fields = Object.keys(defaultLaunchArguments[x])
-        .filter((key) => translations[x][key].toLowerCase().includes(e.target.value))
+        .filter((key) => translations[x][key].toLowerCase().includes(e.target.value.toLowerCase()))
         .reduce((obj, key) => {
           // @ts-ignore
           obj[key] = defaultLaunchArguments[x][key]

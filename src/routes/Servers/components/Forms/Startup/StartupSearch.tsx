@@ -44,7 +44,7 @@ export function StartupSearch({
       const filtered_fields = Object.keys(defaultStartupArguments[x])
         .filter((key) => {
           if (translations[x] && translations[x][key]) {
-            return translations[x][key].toLowerCase().includes(e.target.value)
+            return translations[x][key].toLowerCase().includes(e.target.value.toLowerCase())
           }
         })
         .reduce((obj, key) => {
