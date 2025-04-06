@@ -87,8 +87,8 @@ export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
 
   return (
     <div className="m-auto flex flex-col p-4">
-      <div className="mb-4 flex gap-2">
-        <h1 className="text-2xl text-primary underline">{loadout.name} </h1>
+      <div className="mb-4 ml-auto mr-auto flex max-w-80 items-center gap-2 lg:max-w-lg xl:max-w-screen-md">
+        <h1 className="text-primary xl:text-2xl">{loadout.name} </h1>
         <div onClick={handleRefreshLoadout} className="w-fit">
           <RefreshLoadoutTooltip />
         </div>
@@ -115,7 +115,23 @@ export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
         </div>
       </div>
 
-      <div className="m-auto grid w-fit grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-8 xl:grid-cols-3">
+      <div className="m-auto grid w-fit grid-cols-1 gap-1.5 lg:grid-cols-2 lg:gap-8 xl:grid-cols-3">
+        <div
+          onClick={handleServer}
+          className="flex items-center justify-center gap-2 rounded-md bg-green-800 p-2 text-xl text-primary hover:cursor-pointer hover:bg-green-800/80"
+        >
+          {t('servers.loadouts.loadout.startServer')}
+          <Server />
+        </div>
+        <div
+          onClick={handlePlay}
+          className="flex items-center justify-center gap-2 rounded-md bg-green-700 p-2 text-xl text-primary hover:cursor-pointer hover:bg-green-700/80"
+        >
+          {t('servers.loadouts.loadout.startServerAndClient')}
+          <Server />
+          <User />
+        </div>
+        {data.show_multiple_account_join && <ChooseAccountSheet loadoutName={loadout.name} />}
         <StartupSheet existingLoadout={loadout} />
         <LaunchArgumentSheet existingLoadout={loadout} />
         <MaplistSheet loadout={loadout} />
@@ -128,23 +144,6 @@ export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
           {t('servers.loadouts.loadout.openExplorer')}
           <Folder />
         </div>
-        <div
-          onClick={handleServer}
-          className="flex justify-center gap-2 rounded-md bg-green-800 p-2 text-primary hover:cursor-pointer hover:bg-green-800/80"
-        >
-          {t('servers.loadouts.loadout.startServer')}
-          <Server />
-        </div>
-        <div
-          onClick={handlePlay}
-          className="flex justify-center gap-2 rounded-md bg-green-700 p-2 text-primary hover:cursor-pointer hover:bg-green-700/80"
-        >
-          {t('servers.loadouts.loadout.startServerAndClient')}
-          <Server />
-          <User />
-        </div>
-
-        {data.show_multiple_account_join && <ChooseAccountSheet loadoutName={loadout.name} />}
       </div>
     </div>
   )
