@@ -493,7 +493,7 @@
               "serverFailure": "Failed to start server loadout",
               "serverSucces": "Started VU Server. Starting Client..."
             },
-            "trigger": "Start Server and Multiple Clients"
+            "trigger": "Start Server and Clients"
           }
         },
         "openExplorer": "Explorer",

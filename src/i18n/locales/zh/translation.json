@@ -493,7 +493,7 @@
               "serverFailure": "无法启动服务器加载",
               "serverSucces": "启动VU服务器。\n启动客户..."
             },
-            "trigger": "启动服务器和多个客户端"
+            "trigger": "启动服务器和客户端"
           }
         },
         "openExplorer": "资源管理器",

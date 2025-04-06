@@ -493,7 +493,7 @@
               "serverFailure": "Der Server -Loadout fehlgeschlagen",
               "serverSucces": "VU Server gestartet. \nKunde starten ..."
             },
-            "trigger": "Starten Sie Server und mehrere Clients"
+            "trigger": "Server und Clients starten"
           }
         },
         "openExplorer": "Forscher",
