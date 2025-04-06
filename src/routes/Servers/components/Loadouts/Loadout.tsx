@@ -138,7 +138,7 @@ export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
         <BanlistSheet loadout={loadout} />
         <ManageModsInServerSheet loadout={loadout} />
         <div
-          className="flex items-center justify-center gap-2 rounded-md bg-gray-600 p-2 text-xl text-primary hover:cursor-pointer hover:bg-gray-600/80"
+          className="flex items-center justify-center gap-2 rounded-md bg-secondary p-2 text-xl text-primary hover:cursor-pointer hover:bg-secondary/80"
           onClick={handleOpenExplorer}
         >
           {t('servers.loadouts.loadout.openExplorer')}
