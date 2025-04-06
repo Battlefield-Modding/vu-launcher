@@ -19,7 +19,7 @@ const languageCodeToTranslation = {
     ...de.startupDescriptions,
   },
   [i18nLanguageCodes.Russian]: {
-    ...ru.launchArgumentDescriptions,
+    ...ru.startupDescriptions,
   },
 } as const
 
