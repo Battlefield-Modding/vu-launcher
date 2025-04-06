@@ -86,7 +86,7 @@ export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
   }
 
   return (
-    <div className="m-auto flex flex-col p-4">
+    <div className="m-auto flex flex-col pl-4 pr-4">
       <div className="mb-4 ml-auto mr-auto flex max-w-80 items-center gap-2 lg:max-w-lg xl:max-w-screen-md">
         <h1 className="text-primary xl:text-2xl">{loadout.name} </h1>
         <div onClick={handleRefreshLoadout} className="w-fit">
