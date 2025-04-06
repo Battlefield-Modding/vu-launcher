@@ -115,44 +115,36 @@ export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
         </div>
       </div>
 
-      <div className="m-auto flex flex-col gap-12">
-        <div className="flex justify-end gap-4">
-          <div
-            onClick={handleServer}
-            className="flex w-fit gap-2 rounded-md bg-green-800 p-2 text-primary hover:cursor-pointer hover:bg-green-800/80"
-          >
-            {t('servers.loadouts.loadout.startServer')}
-            <Server />
-          </div>
-          <div
-            onClick={handlePlay}
-            className="flex w-fit justify-between gap-2 rounded-md bg-green-700 p-2 text-primary hover:cursor-pointer hover:bg-green-700/80"
-          >
-            {t('servers.loadouts.loadout.startServerAndClient')}
-            <Server />
-            <User />
-          </div>
-
-          {data.show_multiple_account_join && <ChooseAccountSheet loadoutName={loadout.name} />}
-        </div>
-
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-8 xl:grid-cols-3">
+        <StartupSheet existingLoadout={loadout} />
+        <LaunchArgumentSheet existingLoadout={loadout} />
+        <MaplistSheet loadout={loadout} />
+        <BanlistSheet loadout={loadout} />
+        <ManageModsInServerSheet loadout={loadout} />
         <div
-          className="m-auto flex w-fit items-center gap-2 rounded-md bg-gray-600 p-2 text-xl text-primary hover:cursor-pointer hover:bg-gray-600/80"
+          className="flex items-center justify-center gap-2 rounded-md bg-gray-600 p-2 text-xl text-primary hover:cursor-pointer hover:bg-gray-600/80"
           onClick={handleOpenExplorer}
         >
           {t('servers.loadouts.loadout.openExplorer')}
           <Folder />
         </div>
-
-        <div className="m-auto flex w-fit flex-col items-center gap-4">
-          <div>
-            <StartupSheet existingLoadout={loadout} />
-            <LaunchArgumentSheet existingLoadout={loadout} />
-          </div>
-          <MaplistSheet loadout={loadout} />
-          <BanlistSheet loadout={loadout} />
-          <ManageModsInServerSheet loadout={loadout} />
+        <div
+          onClick={handleServer}
+          className="flex justify-center gap-2 rounded-md bg-green-800 p-2 text-primary hover:cursor-pointer hover:bg-green-800/80"
+        >
+          {t('servers.loadouts.loadout.startServer')}
+          <Server />
         </div>
+        <div
+          onClick={handlePlay}
+          className="flex justify-center gap-2 rounded-md bg-green-700 p-2 text-primary hover:cursor-pointer hover:bg-green-700/80"
+        >
+          {t('servers.loadouts.loadout.startServerAndClient')}
+          <Server />
+          <User />
+        </div>
+
+        {data.show_multiple_account_join && <ChooseAccountSheet loadoutName={loadout.name} />}
       </div>
     </div>
   )

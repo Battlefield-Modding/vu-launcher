@@ -21,7 +21,7 @@ export function StartupSheet({ existingLoadout }: { existingLoadout: LoadoutJSON
   return (
     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
       <SheetTrigger>
-        <div className="flex w-fit items-center gap-2 rounded-md bg-primary p-2 text-xl text-secondary hover:bg-primary/80">
+        <div className="flex items-center justify-center gap-2 rounded-md bg-primary p-2 text-xl text-secondary hover:bg-primary/80">
           {t('servers.loadouts.loadout.startup.sheet.trigger')}
           <Wrench />
         </div>
