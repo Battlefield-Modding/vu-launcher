@@ -18,13 +18,23 @@ export enum i18nLanguageCodes {
   Russian = 'ru',
 }
 
-// TODO: make sure everywhere uses this, like the launchArg/startup search
-export const supportedLanguages = [
-  i18nLanguageCodes.English,
-  i18nLanguageCodes.German,
-  i18nLanguageCodes.Chinese,
-  i18nLanguageCodes.Russian,
-]
+const resources = {
+  [i18nLanguageCodes.English]: {
+    translation: en,
+  },
+  [i18nLanguageCodes.German]: {
+    translation: de,
+  },
+  [i18nLanguageCodes.Chinese]: {
+    translation: zh,
+  },
+  [i18nLanguageCodes.Russian]: {
+    translation: ru,
+  },
+}
+
+export type TSupportedLanguages = keyof typeof resources
+export const SupportedLanguages = Object.keys(resources) as (keyof typeof resources)[]
 
 i18n
   // detect user language
@@ -40,20 +50,7 @@ i18n
     interpolation: {
       escapeValue: false, // not needed for react as it escapes by default
     },
-    resources: {
-      [i18nLanguageCodes.English]: {
-        translation: en,
-      },
-      [i18nLanguageCodes.German]: {
-        translation: de,
-      },
-      [i18nLanguageCodes.Chinese]: {
-        translation: zh,
-      },
-      [i18nLanguageCodes.Russian]: {
-        translation: ru,
-      },
-    },
+    resources,
   })
 
 export default i18n

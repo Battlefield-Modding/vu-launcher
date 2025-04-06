@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { i18nLanguageCodes, supportedLanguages } from '@/i18n/config'
+import { i18nLanguageCodes, SupportedLanguages } from '@/i18n/config'
 import {
   Select,
   SelectContent,
@@ -72,7 +72,7 @@ export function LanguageSelector() {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {supportedLanguages.map((x, index) => {
+                  {SupportedLanguages.map((x, index) => {
                     return (
                       <SelectItem value={x} key={`language-selector-${index}-${x}`}>
                         <div className="flex flex-row items-center gap-2">
