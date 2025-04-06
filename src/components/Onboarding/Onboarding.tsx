@@ -11,6 +11,7 @@ import { InstallVuDevDialog } from './InstallVuDevDialog'
 import { toast } from 'sonner'
 import PlayerCredentialsSheet from '@/routes/Home/components/PlayerCredentialsSheet/PlayerCredentialsSheet'
 import { useTranslation } from 'react-i18next'
+import { LanguageSelector } from '@/routes/Settings/components/LanguageSelector'
 
 export function Onboarding({ setOnboarding }: { setOnboarding: (t: () => boolean) => void }) {
   const { t } = useTranslation()
@@ -171,6 +172,8 @@ export function Onboarding({ setOnboarding }: { setOnboarding: (t: () => boolean
           </>
         </div>
       )}
+
+      <LanguageSelector />
 
       <div className="flex w-full items-center justify-center gap-4">
         <Progress className="w-96 bg-secondary" value={progress} />
