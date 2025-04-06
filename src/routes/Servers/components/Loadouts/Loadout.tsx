@@ -115,7 +115,7 @@ export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-8 xl:grid-cols-3">
+      <div className="m-auto grid w-fit grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-8 xl:grid-cols-3">
         <StartupSheet existingLoadout={loadout} />
         <LaunchArgumentSheet existingLoadout={loadout} />
         <MaplistSheet loadout={loadout} />
