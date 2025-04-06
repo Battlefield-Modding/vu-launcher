@@ -1,29 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
-import en from '@/i18n/locales/en/translation.json'
-import de from '@/i18n/locales/de/translation.json'
-import zh from '@/i18n/locales/zh/translation.json'
-import ru from '@/i18n/locales/ru/translation.json'
 import { useState } from 'react'
-import { i18nLanguageCodes } from '@/i18n/config'
 import { defaultLaunchArguments } from './setup/LaunchArguments'
-
-const languageCodeToTranslation = {
-  [i18nLanguageCodes.Chinese]: {
-    ...zh.launchArgumentDescriptions,
-  },
-  [i18nLanguageCodes.English]: {
-    ...en.launchArgumentDescriptions,
-  },
-  [i18nLanguageCodes.German]: {
-    ...de.launchArgumentDescriptions,
-  },
-  [i18nLanguageCodes.Russian]: {
-    ...ru.launchArgumentDescriptions,
-  },
-} as const
-
-type LaunchTranslation = typeof languageCodeToTranslation
 
 export function LaunchArgumentsSearch({
   searchRef,
@@ -32,10 +10,9 @@ export function LaunchArgumentsSearch({
   searchRef: any
   setFilteredArgs: any
 }) {
-  const { i18n, t } = useTranslation()
-  const { language } = i18n
+  const { t } = useTranslation()
   const [translations, setTranslations] = useState(
-    languageCodeToTranslation[language as keyof LaunchTranslation],
+    t('launchArgumentDescriptions', { returnObjects: true }),
   )
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
