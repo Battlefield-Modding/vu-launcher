@@ -4,6 +4,8 @@ import DiscordIcon from '@/assets/DiscordIcon.svg'
 import VUIcon from '@/assets/VUIcon.svg'
 import { Globe } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import ImportModsSheet from './ImportModsSheet/ImportModsSheet'
+import ManageModsSheet from './ManageModsSheet.tsx/ManageModsSheet'
 
 function DiscoverMods() {
   const { t } = useTranslation()
@@ -38,6 +40,10 @@ function DiscoverMods() {
             {t('mods.discover.discord')} <img src={DiscordIcon} className="w-8" />
           </Button>
         </a>
+      </div>
+      <div className="flex justify-center gap-8">
+        <ImportModsSheet />
+        <ManageModsSheet />
       </div>
     </div>
   )
