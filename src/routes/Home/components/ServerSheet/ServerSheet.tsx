@@ -21,7 +21,7 @@ export default function ServerSheet() {
       <SheetTrigger>
         <div
           className={clsx(
-            'text-md flex justify-center gap-1 rounded-md bg-secondary p-1.5 text-primary hover:bg-secondary/80',
+            'text-md flex items-center justify-center gap-1 rounded-md bg-secondary p-1.5 text-primary hover:bg-secondary/80',
           )}
         >
           {t('home.server.sheet.trigger')}

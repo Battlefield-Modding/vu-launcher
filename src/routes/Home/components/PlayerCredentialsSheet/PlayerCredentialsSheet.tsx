@@ -50,7 +50,7 @@ export default function PlayerCredentialsSheet() {
       <SheetTrigger>
         <div
           className={clsx(
-            'text-md flex justify-center rounded-md bg-secondary p-1.5 text-primary hover:bg-secondary/80',
+            'text-md flex items-center justify-center rounded-md bg-secondary p-1.5 text-primary hover:bg-secondary/80',
           )}
         >
           {credsExist
