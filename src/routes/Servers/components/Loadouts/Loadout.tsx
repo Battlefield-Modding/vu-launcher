@@ -132,8 +132,8 @@ export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
           <User />
         </div>
         {data.show_multiple_account_join && <ChooseAccountSheet loadoutName={loadout.name} />}
-        <StartupSheet existingLoadout={loadout} />
         <LaunchArgumentSheet existingLoadout={loadout} />
+        <StartupSheet existingLoadout={loadout} />
         <MaplistSheet loadout={loadout} />
         <BanlistSheet loadout={loadout} />
         <ManageModsInServerSheet loadout={loadout} />
