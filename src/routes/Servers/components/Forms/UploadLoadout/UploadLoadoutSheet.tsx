@@ -45,7 +45,7 @@ export function UploadLoadoutSheet() {
   return (
     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
       <SheetTrigger>
-        <div className="flex items-center justify-between gap-2 bg-gray-600 p-2 text-lg hover:bg-gray-600/80">
+        <div className="flex h-full items-center justify-between gap-2 bg-gray-600 p-2 text-lg hover:bg-gray-600/80">
           {t('servers.loadouts.importLoadout.sheet.trigger')}
           <Upload />
         </div>
