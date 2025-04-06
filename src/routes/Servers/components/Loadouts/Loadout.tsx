@@ -131,7 +131,7 @@ export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
           <Server />
           <User />
         </div>
-        {data.show_multiple_account_join && <ChooseAccountSheet loadoutName={loadout.name} />}
+
         <LaunchArgumentSheet existingLoadout={loadout} />
         <StartupSheet existingLoadout={loadout} />
         <MaplistSheet loadout={loadout} />
@@ -144,6 +144,7 @@ export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
           {t('servers.loadouts.loadout.openExplorer')}
           <Folder />
         </div>
+        {data.show_multiple_account_join && <ChooseAccountSheet loadoutName={loadout.name} />}
       </div>
     </div>
   )
