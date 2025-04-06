@@ -31,6 +31,7 @@ const languageCodesToFlags = {
   [i18nLanguageCodes.English]: icon.flagSet.cifUs,
   [i18nLanguageCodes.German]: icon.flagSet.cifDe,
   [i18nLanguageCodes.Chinese]: icon.flagSet.cifCn,
+  [i18nLanguageCodes.Russian]: icon.flagSet.cifRu,
 } as const
 
 type LanguageCodeToFlag = typeof languageCodesToFlags

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import en from '@/i18n/locales/en/translation.json'
 import de from '@/i18n/locales/de/translation.json'
 import zh from '@/i18n/locales/zh/translation.json'
+import ru from '@/i18n/locales/zh/translation.json'
 import { useState } from 'react'
 import { i18nLanguageCodes } from '@/i18n/config'
 import { defaultStartupArguments } from './Setup/DefaultStartupConfig'
@@ -16,6 +17,9 @@ const languageCodeToTranslation = {
   },
   [i18nLanguageCodes.German]: {
     ...de.startupDescriptions,
+  },
+  [i18nLanguageCodes.Russian]: {
+    ...ru.launchArgumentDescriptions,
   },
 } as const
 

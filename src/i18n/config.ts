@@ -4,6 +4,7 @@ import LanguageDetector from 'i18next-browser-languagedetector'
 import en from './locales/en/translation.json'
 import de from './locales/de/translation.json'
 import zh from './locales/zh/translation.json'
+import ru from './locales/ru/translation.json'
 
 export enum i18nLanguageCodes {
   Arabic = 'ar',
@@ -17,10 +18,12 @@ export enum i18nLanguageCodes {
   Russian = 'ru',
 }
 
+// TODO: make sure everywhere uses this, like the launchArg/startup search
 export const supportedLanguages = [
   i18nLanguageCodes.English,
   i18nLanguageCodes.German,
   i18nLanguageCodes.Chinese,
+  i18nLanguageCodes.Russian,
 ]
 
 i18n
@@ -46,6 +49,9 @@ i18n
       },
       [i18nLanguageCodes.Chinese]: {
         translation: zh,
+      },
+      [i18nLanguageCodes.Russian]: {
+        translation: ru,
       },
     },
   })
