@@ -13,6 +13,7 @@
     "windows": [
       {
         "title": "vu-launcher",
+        "theme": "Dark",
         "width": 1280,
         "height": 720,
         "minWidth": 800,
