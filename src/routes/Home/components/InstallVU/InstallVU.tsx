@@ -214,9 +214,9 @@ export function InstallVU() {
               </div>
             ) : (
               <p className="noselect mr-2 text-right text-sm font-light">
-                {t('onboarding.install.progress.extractingPrefix')} (
+                {t('onboarding.install.prod.progress.extractingPrefix')} (
                 {gameDownloadUpdateExtractingFilesRemaining}{' '}
-                {t('onboarding.install.progress.extractingSuffix')})
+                {t('onboarding.install.prod.progress.extractingSuffix')})
               </p>
             )}
           </div>
