@@ -8,6 +8,7 @@ import { ReservedSlotsComponent } from './ReservedSlotsComponent'
 import { SetTeamTicketCountComponent } from './SetTeamTicketCountComponent'
 import { TextComponent } from './TextComponent'
 import { useTranslation } from 'react-i18next'
+import { StringArrayComponent } from './StringArrayComponent'
 
 export function FormBuilder({
   form,
@@ -68,6 +69,18 @@ export function FormBuilder({
         return (
           <TextComponent
             key={key}
+            sectionName={sectionName}
+            label={label}
+            form={form}
+            keyName={key}
+          />
+        )
+      }
+      if (fieldType === 'stringArray') {
+        return (
+          <StringArrayComponent
+            key={key}
+            defaultvalue={value}
             sectionName={sectionName}
             label={label}
             form={form}
