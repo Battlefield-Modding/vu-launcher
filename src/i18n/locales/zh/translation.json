@@ -608,21 +608,21 @@
   },
   "startupDescriptions": {
     "RM": {
-      "autoPerfEnabled": "激活自动性能",
-      "autoPerfMaxPlayers": "自动性能截止",
-      "battleCryLink": "链接到您的 battlecry JSON 端点",
-      "defaultPreRoundTime": "回合开始前的时间",
-      "ingameBanner": "图片链接",
-      "pingLimitEnable": "激活 ping 限制",
-      "pingLimitInMs": "时间（毫秒）",
-      "serverInfo": "服务器描述",
-      "serverLicenseKey": "RM 服务器许可证密钥",
-      "setAdmins": "设置管理员列表，以空格分隔",
-      "setAutoBalancer": "自动平衡",
-      "setDevelopers": "设置开发人员列表，以空格分隔",
-      "setLightAdmins": "设置轻量级管理员列表，以空格分隔",
+      "autoPerfEnabled": "启用Auto Perf",
+      "autoPerfMaxPlayers": "将最大播放器设置为Auto Perf",
+      "battleCryLink": "设置Battlecry JSON端点链接",
+      "defaultPreRoundTime": "在回合开始前设定时间",
+      "ingameBanner": "将链接链接到Ingame横幅图像",
+      "pingLimitEnable": "启用ping限制",
+      "pingLimitInMs": "在MS中设置ping限制",
+      "serverInfo": "设置服务器描述",
+      "serverLicenseKey": "设置RM服务器许可证密钥",
+      "setAdmins": "设置管理员列表",
+      "setAutoBalancer": "启用自动化",
+      "setDevelopers": "设置开发人员列表，由空间隔开",
+      "setLightAdmins": "设置光程的列表，被空间隔开",
       "tempReservedSlotsEnabled": "启用自动重新加入",
-      "tempReservedSlotsRejoinTime": "重新加入前多久被移除"
+      "tempReservedSlotsRejoinTime": "在重新加入插槽到期之前设置时间"
     },
     "admin": {
       "password": "为 Procon 设置 RCON 密码"
