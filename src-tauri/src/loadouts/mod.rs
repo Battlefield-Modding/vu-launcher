@@ -7,11 +7,11 @@ use std::{
 
 use loadout_structs::{
     Admin, ClientLaunchArguments, CommonLaunchArguments, LaunchArguments, LoadoutJson, Map,
-    ParsedStartupTxtLine, ServerLaunchArguments, SetTeamTicketCount, StartupArgs, VU_Commands,
-    Vars,
+    ParsedStartupTxtLine, RM_Commands, ServerLaunchArguments, SetTeamTicketCount, StartupArgs,
+    VU_Commands, Vars,
 };
-use serde_json::Error;
 use serde_json::Value;
+use serde_json::{to_value, Error};
 
 use crate::{
     get_user_preferences_as_struct,
@@ -255,6 +255,8 @@ fn import_startup_txt_into_loadout(loadout_name: &String) -> io::Result<StartupA
     let mut vars_object = vars_initial.as_object().unwrap().to_owned();
     let reserved_slots_initial = serde_json::to_value(startup.reservedSlots).unwrap();
     let mut reserved_slots_object = reserved_slots_initial.as_array().unwrap().to_owned();
+    let rm_initial = serde_json::to_value(startup.RM).unwrap();
+    let mut rm_object = rm_initial.as_object().unwrap().to_owned();
 
     let mut args_vec: Vec<ParsedStartupTxtLine> = Vec::new();
 
@@ -270,7 +272,9 @@ fn import_startup_txt_into_loadout(loadout_name: &String) -> io::Result<StartupA
                 let mut category = String::new();
                 let mut is_first_period = true;
                 let mut is_first_space = true;
-                let mut key = String::new();
+                let mut past_left_quote = false;
+
+                let mut key: String = String::new();
                 let mut value = String::new();
 
                 while let Some(character) = characters.next() {
@@ -295,7 +299,17 @@ fn import_startup_txt_into_loadout(loadout_name: &String) -> io::Result<StartupA
                             is_first_space = false;
                             temp_str.clear();
                         } else {
-                            temp_str.push(character);
+                            if key.contains("setAdmins")
+                                || key.contains("setLightAdmins")
+                                || key.contains("setDevelopers")
+                            {
+                                if past_left_quote {
+                                    // past a leftquote so a space is part of a username
+                                    temp_str.push(character)
+                                }
+                            } else {
+                                temp_str.push(character);
+                            }
                         }
                     } else if character == '#' {
                         value.push_str(&temp_str.trim());
@@ -306,7 +320,19 @@ fn import_startup_txt_into_loadout(loadout_name: &String) -> io::Result<StartupA
                         });
                         break;
                     } else if character == '\"' {
-                        // do nothing with quotes for now?
+                        if key.contains("setAdmins")
+                            || key.contains("setLightAdmins")
+                            || key.contains("setDevelopers")
+                        {
+                            if past_left_quote {
+                                // this would be right quote, store a delimeter
+                                temp_str.push_str(",");
+                                past_left_quote = false
+                            } else {
+                                // encountered a new left quote so flag it
+                                past_left_quote = true
+                            }
+                        }
                     } else {
                         // handle 3dSpotting -> _3dSpotting conversion
                         if key.len() == 0 && temp_str.len() == 0 {
@@ -345,6 +371,8 @@ fn import_startup_txt_into_loadout(loadout_name: &String) -> io::Result<StartupA
                             admin_object.insert(arg.key, val);
                         } else if arg.category.eq("vu") {
                             vu_object.insert(arg.key, val);
+                        } else if arg.category.eq("RM") {
+                            rm_object.insert(arg.key, val);
                         }
                         continue;
                     }
@@ -366,6 +394,8 @@ fn import_startup_txt_into_loadout(loadout_name: &String) -> io::Result<StartupA
                             admin_object.insert(arg.key, val);
                         } else if arg.category.eq("vu") {
                             vu_object.insert(arg.key, val);
+                        } else if arg.category.eq("RM") {
+                            rm_object.insert(arg.key, val);
                         }
                         continue;
                     }
@@ -387,6 +417,8 @@ fn import_startup_txt_into_loadout(loadout_name: &String) -> io::Result<StartupA
                             admin_object.insert(arg.key, val);
                         } else if arg.category.eq("vu") {
                             vu_object.insert(arg.key, val);
+                        } else if arg.category.eq("RM") {
+                            rm_object.insert(arg.key, val);
                         }
                         continue;
                     }
@@ -434,6 +466,19 @@ fn import_startup_txt_into_loadout(loadout_name: &String) -> io::Result<StartupA
             }
         }
 
+        if arg.key.eq("setDevelopers") || arg.key.eq("setAdmins") || arg.key.eq("setLightAdmins") {
+            let mut rm_array_arg = Vec::new();
+            for value in arg.value.split(",") {
+                if value.len() > 0 {
+                    rm_array_arg.push(value);
+                }
+            }
+            let final_val = serde_json::to_value(rm_array_arg)?;
+            println!("{:?}", &final_val);
+            rm_object.insert(arg.key, final_val);
+            continue;
+        }
+
         let str_val = serde_json::to_value(arg.value)?;
         if arg.category.eq("vars") {
             vars_object.insert(arg.key, str_val);
@@ -441,6 +486,8 @@ fn import_startup_txt_into_loadout(loadout_name: &String) -> io::Result<StartupA
             admin_object.insert(arg.key, str_val);
         } else if arg.category.eq("vu") {
             vu_object.insert(arg.key, str_val);
+        } else if arg.category.eq("RM") {
+            rm_object.insert(arg.key, str_val);
         } else if arg.category.eq("reservedSlots") {
             reserved_slots_object.push(str_val);
         }
@@ -456,6 +503,9 @@ fn import_startup_txt_into_loadout(loadout_name: &String) -> io::Result<StartupA
     let vu_string = serde_json::to_string(&vu_object)?;
     let vu_struct = serde_json::from_str::<VU_Commands>(&vu_string)?;
 
+    let rm_string = serde_json::to_string(&rm_object)?;
+    let rm_struct = serde_json::from_str::<RM_Commands>(&rm_string)?;
+
     let reserved_slots_string = serde_json::to_string(&reserved_slots_object)?;
     let reserved_slots_struct = serde_json::from_str::<Vec<String>>(&reserved_slots_string)?;
 
@@ -463,7 +513,7 @@ fn import_startup_txt_into_loadout(loadout_name: &String) -> io::Result<StartupA
         vars: vars_struct,
         admin: admin_struct,
         vu: Some(vu_struct),
-        RM: None,
+        RM: Some(rm_struct),
         reservedSlots: Some(reserved_slots_struct),
     };
 
@@ -585,6 +635,31 @@ fn make_txt_ready(res: Result<Value, Error>, prefix: String) -> Vec<String> {
                                     None => {
                                         println!(
                                             "Array was empty for VU array argument: {:?}",
+                                            &key
+                                        );
+                                    }
+                                }
+                            } else if prefix.eq("RM") {
+                                println!("RealityMod Array Argument found!");
+
+                                println!("{:?}", value);
+
+                                let mut final_str = String::from("RM.");
+                                final_str.push_str(key);
+                                final_str.push_str(" ");
+                                match value.as_array() {
+                                    Some(arr) => {
+                                        for name in arr {
+                                            // wrap each dev/admin name in quotes
+                                            final_str.push_str("\"");
+                                            final_str.push_str(name.as_str().unwrap());
+                                            final_str.push_str("\" ");
+                                        }
+                                        string_vec.push(final_str);
+                                    }
+                                    None => {
+                                        println!(
+                                            "Array was empty for RealityMod array argument: {:?}",
                                             &key
                                         );
                                     }
