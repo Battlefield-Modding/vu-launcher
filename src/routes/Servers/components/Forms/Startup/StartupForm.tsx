@@ -13,6 +13,7 @@ import { editServerLoadout } from '@/api'
 import { toast } from 'sonner'
 import { StartupSearch } from './StartupSearch'
 import { useTranslation } from 'react-i18next'
+import { StartupArgs } from './Setup/StartupTypes'
 
 const formSchema = z.object({
   admin: z.object({
@@ -133,17 +134,25 @@ export function StartupForm({
     }
   }
 
+  const sectionNames = ['admin', 'vars', 'vu', 'reservedSlots']
+  if (existingLoadout && existingLoadout.modlist) {
+    if (
+      existingLoadout.modlist.includes('RealityMod') ||
+      existingLoadout.modlist.includes('realitymod')
+    ) {
+      if (!sectionNames.includes('RM')) {
+        sectionNames.push('RM')
+      }
+    }
+  }
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="m-auto max-w-screen-md">
         <StartupSearch setFilteredArgs={setFilteredArgs} searchRef={searchRef} />
 
         <div className="flex flex-col gap-6 pt-12">
-          <FormBuilder
-            form={form}
-            filteredArguments={filteredArgs}
-            sectionNames={['admin', 'vars', 'vu', 'reservedSlots']}
-          />
+          <FormBuilder form={form} filteredArguments={filteredArgs} sectionNames={sectionNames} />
         </div>
 
         {submitLoading && <LoaderComponent />}
