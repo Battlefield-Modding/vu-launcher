@@ -617,10 +617,10 @@
       "pingLimitInMs": "在MS中设置ping限制",
       "serverInfo": "设置服务器描述",
       "serverLicenseKey": "设置RM服务器许可证密钥",
-      "setAdmins": "设置管理员列表",
+      "setAdmins": "设置管理员",
       "setAutoBalancer": "启用自动化",
-      "setDevelopers": "设置开发人员列表，由空间隔开",
-      "setLightAdmins": "设置光程的列表，被空间隔开",
+      "setDevelopers": "设置开发人员",
+      "setLightAdmins": "设置轻型",
       "tempReservedSlotsEnabled": "启用自动重新加入",
       "tempReservedSlotsRejoinTime": "在重新加入插槽到期之前设置时间"
     },

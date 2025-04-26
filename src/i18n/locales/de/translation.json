@@ -617,10 +617,10 @@
       "pingLimitInMs": "Stellen Sie die Ping -Grenze in MS ein",
       "serverInfo": "Serverbeschreibung festlegen",
       "serverLicenseKey": "Legen Sie den RM -Serverlizenzschlüssel fest",
-      "setAdmins": "Stellen Sie die Liste der Administratoren fest",
+      "setAdmins": "Administratoren setzen",
       "setAutoBalancer": "Autobalance aktivieren",
-      "setDevelopers": "Stellen Sie die Liste der Entwickler fest, getrennt durch einen Raum",
-      "setLightAdmins": "Setzen Sie die Liste von Lichtadministratoren, die durch einen Raum getrennt sind",
+      "setDevelopers": "Entwickler setzen",
+      "setLightAdmins": "Leuchte einstellen",
       "tempReservedSlotsEnabled": "Aktivieren Sie die automatische Wiederbelebung",
       "tempReservedSlotsRejoinTime": "Stellen Sie Zeit ein, bevor der Slot abgelaufen ist"
     },

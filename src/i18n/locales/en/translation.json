@@ -617,10 +617,10 @@
       "pingLimitInMs": "Set ping limit in ms",
       "serverInfo": "Set server description",
       "serverLicenseKey": "Set RM Server License Key",
-      "setAdmins": "Set list of admins",
+      "setAdmins": "Set admins",
       "setAutoBalancer": "Enable autobalance",
-      "setDevelopers": "Set list of developers, separated by a space",
-      "setLightAdmins": "Set list of light-admins, separated by a space",
+      "setDevelopers": "Set developers",
+      "setLightAdmins": "Set light-admins",
       "tempReservedSlotsEnabled": "Enable automatic rejoining",
       "tempReservedSlotsRejoinTime": "Set time before rejoin slot expires"
     },
