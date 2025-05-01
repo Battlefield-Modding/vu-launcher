@@ -15,7 +15,7 @@ use crate::{
         write_to_txt_from_loadout,
     },
     mods::{get_mod_names_in_loadout, install_mods, make_folder_names_same_as_mod_json_names},
-    reg_functions, save_user_preferences, CREATE_NO_WINDOW,
+    reg_functions, save_user_preferences, CREATE_NEW_CONSOLE, CREATE_NO_WINDOW,
 };
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -366,7 +366,7 @@ pub async fn start_server_loadout(name: String) -> bool {
 
     Command::new("cmd")
         .args(args)
-        .creation_flags(CREATE_NO_WINDOW)
+        .creation_flags(CREATE_NEW_CONSOLE)
         .spawn()
         .expect("failed to execute process");
 

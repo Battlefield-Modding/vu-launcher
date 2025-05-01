@@ -373,7 +373,7 @@ impl ServerLaunchArguments {
         return ServerLaunchArguments {
             high60: Some(false),
             high120: Some(false),
-            headless: Some(false),
+            headless: Some(true),
             serverInstancePath: Some(String::from("")),
             highResTerrain: Some(false),
             disableTerrainInterpolation: Some(false),
