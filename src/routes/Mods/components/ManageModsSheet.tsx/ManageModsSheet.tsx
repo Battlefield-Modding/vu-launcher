@@ -87,7 +87,7 @@ export default function ManageModsSheet() {
                   <SheetTitle>
                     <code className="underline">{loadout.name}</code>
                   </SheetTitle>
-                  <div className="flex flex-wrap gap-4">
+                  <div>
                     {loadout.mods.map((modName, modIndex) => (
                       <Mod
                         modName={modName}

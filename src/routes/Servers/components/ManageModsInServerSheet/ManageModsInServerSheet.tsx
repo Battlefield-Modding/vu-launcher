@@ -68,7 +68,7 @@ export function ManageModsInServerSheet({ loadout }: { loadout: LoadoutJSON }) {
             <SheetTitle>
               <code className="underline">{loadout.name}</code>
             </SheetTitle>
-            <div className="flex flex-wrap gap-4">
+            <div>
               {data.modsInLoadout.map((x) => {
                 return (
                   <LoadoutMod
@@ -91,7 +91,7 @@ export function ManageModsInServerSheet({ loadout }: { loadout: LoadoutJSON }) {
                 </code>
               </p>
             </SheetTitle>
-            <div className="flex flex-wrap gap-4">
+            <div>
               {data.modsInCache.map((x) => {
                 return (
                   <ModCacheMod
