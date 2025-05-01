@@ -608,21 +608,21 @@
   },
   "startupDescriptions": {
     "RM": {
-      "autoPerfEnabled": "активировать Auto perf",
-      "autoPerfMaxPlayers": "отсечение для Auto perf",
-      "battleCryLink": "Ссылка на вашу конечную точку JSON Battlecry",
-      "defaultPreRoundTime": "время до начала раунда",
-      "ingameBanner": "ссылка на изображение",
-      "pingLimitEnable": "активировать предел пинга",
-      "pingLimitInMs": "Время в MS",
-      "serverInfo": "Описание для вашего сервера",
-      "serverLicenseKey": "Лицензионный ключ RM -сервера",
-      "setAdmins": "Установить список администраторов, разделенных пространством",
-      "setAutoBalancer": "Автобаланс",
-      "setDevelopers": "Установить список разработчиков, разделенных пространством",
-      "setLightAdmins": "Установить список световых админи, разделенных пространством",
+      "autoPerfEnabled": "Включить Auto Perf",
+      "autoPerfMaxPlayers": "Установить максимальные игроки для Auto Perf",
+      "battleCryLink": "Установите Battlecry JSON Endpoint Link",
+      "defaultPreRoundTime": "Установить время перед началом раунда",
+      "ingameBanner": "Установите ссылку на Ingame Banner Image",
+      "pingLimitEnable": "Включить предел пинга",
+      "pingLimitInMs": "Установите предел пинга в MS",
+      "serverInfo": "Установите описание сервера",
+      "serverLicenseKey": "Установить лицензионный ключ RM -сервера",
+      "setAdmins": "Установить администраторы",
+      "setAutoBalancer": "Включить автобаланс",
+      "setDevelopers": "Установить разработчиков",
+      "setLightAdmins": "Установите световые адмуны",
       "tempReservedSlotsEnabled": "Включить автоматическое воссоединение",
-      "tempReservedSlotsRejoinTime": "как долго до того, как вернуться к удалению"
+      "tempReservedSlotsRejoinTime": "Установите время до того, как истечет срок действия слота"
     },
     "admin": {
       "password": "Установите пароль RCON для ProCon"

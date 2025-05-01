@@ -608,21 +608,21 @@
   },
   "startupDescriptions": {
     "RM": {
-      "autoPerfEnabled": "Auto-Performance aktivieren",
-      "autoPerfMaxPlayers": "Abschaltzeit für Auto-Performance",
-      "battleCryLink": "Link zu deinem Battlecry-JSON-Endpunkt",
-      "defaultPreRoundTime": "Zeit bis Rundenbeginn",
-      "ingameBanner": "Bildlink",
-      "pingLimitEnable": "Ping-Limit aktivieren",
-      "pingLimitInMs": "Zeit in ms",
-      "serverInfo": "Serverbeschreibung",
-      "serverLicenseKey": "RM-Server-Lizenzschlüssel",
-      "setAdmins": "Administratorliste festlegen, durch Leerzeichen getrennt",
-      "setAutoBalancer": "Autobalance",
-      "setDevelopers": "Entwicklerliste festlegen, durch Leerzeichen getrennt",
-      "setLightAdmins": "Light-Administratorliste festlegen, durch Leerzeichen getrennt",
-      "tempReservedSlotsEnabled": "Automatisches Wiederbeitreten aktivieren",
-      "tempReservedSlotsRejoinTime": "Wie lange dauert es, bis das Wiederbeitreten aufgehoben wird"
+      "autoPerfEnabled": "Automatische Perf aktivieren",
+      "autoPerfMaxPlayers": "Setzen Sie maximale Spieler für automatische Perf",
+      "battleCryLink": "Legen Sie den Battlecry JSON -Endpunkt -Link fest",
+      "defaultPreRoundTime": "Zeit setzen, bevor die Runde beginnt",
+      "ingameBanner": "Setzen Sie den Link zum Ingame -Bannerbild",
+      "pingLimitEnable": "Aktivieren Sie die Ping -Grenze",
+      "pingLimitInMs": "Stellen Sie die Ping -Grenze in MS ein",
+      "serverInfo": "Serverbeschreibung festlegen",
+      "serverLicenseKey": "Legen Sie den RM -Serverlizenzschlüssel fest",
+      "setAdmins": "Administratoren setzen",
+      "setAutoBalancer": "Autobalance aktivieren",
+      "setDevelopers": "Entwickler setzen",
+      "setLightAdmins": "Leuchte einstellen",
+      "tempReservedSlotsEnabled": "Aktivieren Sie die automatische Wiederbelebung",
+      "tempReservedSlotsRejoinTime": "Stellen Sie Zeit ein, bevor der Slot abgelaufen ist"
     },
     "admin": {
       "password": "RCON-Passwort für Procon festlegen"

@@ -127,21 +127,43 @@ pub struct StartupArgs {
 #[allow(non_snake_case)]
 #[derive(Serialize, Deserialize, Debug)]
 pub struct RM_Commands {
-    pub setDevelopers: String,  // Set list of developers, separated by a space
-    pub setAdmins: String,      // Set list of admins, separated by a space
-    pub setLightAdmins: String, // Set list of light-admins, separated by a space
-    pub serverInfo: String,     // a description for your server
-    pub serverLicenseKey: String, // RM Server License Key
-    pub ingameBanner: String,   // a link to an image
-    pub pingLimitEnable: bool,  // activate ping limit
-    pub pingLimitInMs: u32,     // time in ms
-    pub autoPerfEnabled: bool,  // activate auto perf
-    pub autoPerfMaxPlayers: u32, // cutoff for auto perf
+    pub setDevelopers: Vec<String>, // Set list of developers, separated by a space
+    pub setAdmins: Vec<String>,     // Set list of admins, separated by a space
+    pub setLightAdmins: Vec<String>, // Set list of light-admins, separated by a space
+    pub serverInfo: String,         // a description for your server
+    pub serverLicenseKey: String,   // RM Server License Key
+    pub ingameBanner: String,       // a link to an image
+    pub pingLimitEnable: bool,      // activate ping limit
+    pub pingLimitInMs: u32,         // time in ms
+    pub autoPerfEnabled: bool,      // activate auto perf
+    pub autoPerfMaxPlayers: u32,    // cutoff for auto perf
     pub tempReservedSlotsEnabled: bool, // enable automatic rejoining
     pub tempReservedSlotsRejoinTime: u32, // how long before rejoin is removed
-    pub defaultPreRoundTime: u32, // time before round starts
-    pub setAutoBalancer: bool,  // autobalance
-    pub battleCryLink: String,  // link to your battlecry JSON endpoint
+    pub defaultPreRoundTime: u32,   // time before round starts
+    pub setAutoBalancer: bool,      // autobalance
+    pub battleCryLink: String,      // link to your battlecry JSON endpoint
+}
+
+impl RM_Commands {
+    pub fn default() -> RM_Commands {
+        RM_Commands {
+            setDevelopers: Vec::new(),
+            setAdmins: Vec::new(),
+            setLightAdmins: Vec::new(),
+            serverInfo: String::from(""),
+            serverLicenseKey: String::from("1234567890"),
+            ingameBanner: String::from(""),
+            pingLimitEnable: false,
+            pingLimitInMs: 100,
+            autoPerfEnabled: false,
+            autoPerfMaxPlayers: 80,
+            tempReservedSlotsEnabled: true,
+            tempReservedSlotsRejoinTime: 180,
+            defaultPreRoundTime: 300,
+            setAutoBalancer: false,
+            battleCryLink: String::from(""),
+        }
+    }
 }
 
 #[allow(non_snake_case)]
@@ -207,7 +229,7 @@ impl StartupArgs {
         StartupArgs {
             admin: Admin::default(),
             vars: Vars::default(),
-            RM: None,
+            RM: Some(RM_Commands::default()),
             vu: Some(VU_Commands::default()),
             reservedSlots: Some(Vec::new()),
         }

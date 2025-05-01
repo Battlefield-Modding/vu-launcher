@@ -13,6 +13,7 @@ import { editServerLoadout } from '@/api'
 import { toast } from 'sonner'
 import { StartupSearch } from './StartupSearch'
 import { useTranslation } from 'react-i18next'
+import { StartupArgs } from './Setup/StartupTypes'
 
 const formSchema = z.object({
   admin: z.object({
@@ -56,25 +57,25 @@ const formSchema = z.object({
     onlySquadLeaderSpawn: z.boolean().optional(),
     // unlockMode: z.any().optional(),
   }),
-  // RM: z
-  //   .object({
-  //     setDevelopers: z.string(),
-  //     setAdmins: z.string(),
-  //     setLightAdmins: z.string(),
-  //     serverInfo: z.string(),
-  //     serverLicenseKey: z.string(),
-  //     ingameBanner: z.string(),
-  //     pingLimitEnable: z.boolean(),
-  //     pingLimitInMs: z.number(),
-  //     autoPerfEnabled: z.boolean(),
-  //     autoPerfMaxPlayers: z.number(),
-  //     tempReservedSlotsEnabled: z.boolean(),
-  //     tempReservedSlotsRejoinTime: z.number(),
-  //     defaultPreRoundTime: z.number(),
-  //     setAutoBalancer: z.boolean(),
-  //     battleCryLink: z.string(),
-  //   })
-  //   .optional(),
+  RM: z
+    .object({
+      setDevelopers: z.array(z.string()),
+      setAdmins: z.array(z.string()),
+      setLightAdmins: z.array(z.string()),
+      serverInfo: z.string(),
+      serverLicenseKey: z.string(),
+      ingameBanner: z.string(),
+      pingLimitEnable: z.boolean(),
+      pingLimitInMs: z.number(),
+      autoPerfEnabled: z.boolean(),
+      autoPerfMaxPlayers: z.number(),
+      tempReservedSlotsEnabled: z.boolean(),
+      tempReservedSlotsRejoinTime: z.number(),
+      defaultPreRoundTime: z.number(),
+      setAutoBalancer: z.boolean(),
+      battleCryLink: z.string(),
+    })
+    .optional(),
   vu: z.object({
     ColorCorrectionEnabled: z.boolean().optional(),
     DesertingAllowed: z.boolean().optional(),
@@ -133,17 +134,25 @@ export function StartupForm({
     }
   }
 
+  const sectionNames = ['admin', 'vars', 'vu', 'reservedSlots']
+  if (existingLoadout && existingLoadout.modlist) {
+    if (
+      existingLoadout.modlist.includes('RealityMod') ||
+      existingLoadout.modlist.includes('realitymod')
+    ) {
+      if (!sectionNames.includes('RM')) {
+        sectionNames.push('RM')
+      }
+    }
+  }
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="m-auto max-w-screen-md">
         <StartupSearch setFilteredArgs={setFilteredArgs} searchRef={searchRef} />
 
         <div className="flex flex-col gap-6 pt-12">
-          <FormBuilder
-            form={form}
-            filteredArguments={filteredArgs}
-            sectionNames={['admin', 'vars', 'vu', 'reservedSlots']}
-          />
+          <FormBuilder form={form} filteredArguments={filteredArgs} sectionNames={sectionNames} />
         </div>
 
         {submitLoading && <LoaderComponent />}

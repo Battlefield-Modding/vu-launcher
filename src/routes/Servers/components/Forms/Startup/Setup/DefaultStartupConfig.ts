@@ -1,9 +1,9 @@
-import { StartupArgs } from "./StartupTypes";
+import { StartupArgs } from './StartupTypes'
 
 export type formBuilderTypes = typeof formBuilderInputTypes
 
 export const formBuilderInputTypes = {
-  admin: {password: 'text'},
+  admin: { password: 'text' },
   vars: {
     _3dSpotting: 'checkbox',
     _3pCam: 'checkbox',
@@ -52,10 +52,10 @@ export const formBuilderInputTypes = {
     pingLimitInMs: 'number',
     serverInfo: 'text',
     serverLicenseKey: 'text',
-    setAdmins: 'text',
+    setAdmins: 'stringArray',
     setAutoBalancer: 'checkbox',
-    setDevelopers: 'text',
-    setLightAdmins: 'text',
+    setDevelopers: 'stringArray',
+    setLightAdmins: 'stringArray',
     tempReservedSlotsEnabled: 'checkbox',
     tempReservedSlotsRejoinTime: 'number',
   },
@@ -77,11 +77,11 @@ export const formBuilderInputTypes = {
     TeamActivatedMines: 'checkbox',
     CorpseDamageEnabled: 'checkbox',
   },
-  reservedSlots: 'reservedSlots' ,
+  reservedSlots: 'reservedSlots',
 }
 
 export const defaultStartupArguments: StartupArgs = {
-  admin: {password: ""},
+  admin: { password: '' },
   vars: {
     _3dSpotting: true,
     _3pCam: true,
@@ -90,7 +90,7 @@ export const defaultStartupArguments: StartupArgs = {
     crossHair: true,
     friendlyFire: false,
     gameModeCounter: 1,
-    gamePassword: "",
+    gamePassword: '',
     hud: true,
     idleBanRounds: false,
     idleTimeout: 9000,
@@ -107,9 +107,9 @@ export const defaultStartupArguments: StartupArgs = {
     roundLockdownCountdown: 10,
     roundRestartPlayerCount: 0,
     roundStartPlayerCount: 8,
-    serverDescription: "",
-    serverMessage: "",
-    serverName: "",
+    serverDescription: '',
+    serverMessage: '',
+    serverName: '',
     soldierHealth: 1,
     teamKillCountForKick: 0,
     teamKillKickForBan: 0,
@@ -123,26 +123,26 @@ export const defaultStartupArguments: StartupArgs = {
   RM: {
     autoPerfEnabled: false,
     autoPerfMaxPlayers: 80,
-    battleCryLink: "",
-    defaultPreRoundTime: 45,
-    ingameBanner: "",
+    battleCryLink: '',
+    defaultPreRoundTime: 300,
+    ingameBanner: '',
     pingLimitEnable: true,
-    pingLimitInMs: 250,
-    serverInfo: "",
-    serverLicenseKey: "",
-    setAdmins: "",
+    pingLimitInMs: 100,
+    serverInfo: '',
+    serverLicenseKey: '',
+    setAdmins: [],
     setAutoBalancer: false,
-    setDevelopers: "",
-    setLightAdmins: "",
+    setDevelopers: [],
+    setLightAdmins: [],
     tempReservedSlotsEnabled: true,
-    tempReservedSlotsRejoinTime: 180
+    tempReservedSlotsRejoinTime: 180,
   },
   vu: {
     ColorCorrectionEnabled: true,
     DesertingAllowed: false,
     DestructionEnabled: true,
     HighPerformanceReplication: false,
-    ServerBanner: "",
+    ServerBanner: '',
     SetTeamTicketCount: [],
     SquadSize: 4,
     SunFlareEnabled: true,
@@ -150,10 +150,10 @@ export const defaultStartupArguments: StartupArgs = {
     FriendlyFireSuppression: false,
     TimeScale: 1.0,
     VehicleDisablingEnabled: true,
-    HttpAssetUrl: "",
+    HttpAssetUrl: '',
     DisablePreRound: false,
     TeamActivatedMines: false,
     CorpseDamageEnabled: false,
   },
-  reservedSlots: [""],
+  reservedSlots: [''],
 }

@@ -608,21 +608,21 @@
   },
   "startupDescriptions": {
     "RM": {
-      "autoPerfEnabled": "activate auto perf",
-      "autoPerfMaxPlayers": "cutoff for auto perf",
-      "battleCryLink": "link to your battlecry JSON endpoint",
-      "defaultPreRoundTime": "time before round starts",
-      "ingameBanner": "a link to an image",
-      "pingLimitEnable": "activate ping limit",
-      "pingLimitInMs": "time in ms",
-      "serverInfo": "a description for your server",
-      "serverLicenseKey": "RM Server License Key",
-      "setAdmins": "Set list of admins, separated by a space",
-      "setAutoBalancer": "autobalance",
-      "setDevelopers": "Set list of developers, separated by a space",
-      "setLightAdmins": "Set list of light-admins, separated by a space",
-      "tempReservedSlotsEnabled": "enable automatic rejoining",
-      "tempReservedSlotsRejoinTime": "how long before rejoin is removed"
+      "autoPerfEnabled": "Enable auto perf",
+      "autoPerfMaxPlayers": "Set max players for auto perf",
+      "battleCryLink": "Set battlecry JSON endpoint link",
+      "defaultPreRoundTime": "Set time before round starts",
+      "ingameBanner": "Set link to ingame banner image",
+      "pingLimitEnable": "Enable ping limit",
+      "pingLimitInMs": "Set ping limit in ms",
+      "serverInfo": "Set server description",
+      "serverLicenseKey": "Set RM Server License Key",
+      "setAdmins": "Set admins",
+      "setAutoBalancer": "Enable autobalance",
+      "setDevelopers": "Set developers",
+      "setLightAdmins": "Set light-admins",
+      "tempReservedSlotsEnabled": "Enable automatic rejoining",
+      "tempReservedSlotsRejoinTime": "Set time before rejoin slot expires"
     },
     "admin": {
       "password": "Set RCON Password for Procon"
