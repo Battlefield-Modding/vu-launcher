@@ -69,14 +69,14 @@ export function ManageModsInServerSheet({ loadout }: { loadout: LoadoutJSON }) {
               <code className="underline">{loadout.name}</code>
             </SheetTitle>
             <div>
-              {data.modsInLoadout.map((x) => {
+              {data.modsInLoadout.map((x, index) => {
                 return (
                   <LoadoutMod
                     loadout={loadout}
                     modName={x}
                     queryKey={`${QueryKey.GetAllModNames}-${loadout.name}`}
                     isActive={loadout.modlist?.includes(x) || false}
-                    key={`${x}-mod`}
+                    key={`${x}-loadoutMod-${index}`}
                   />
                 )
               })}
@@ -92,13 +92,13 @@ export function ManageModsInServerSheet({ loadout }: { loadout: LoadoutJSON }) {
               </p>
             </SheetTitle>
             <div>
-              {data.modsInCache.map((x) => {
+              {data.modsInCache.map((x, index) => {
                 return (
                   <ModCacheMod
                     queryKey={`${QueryKey.GetAllModNames}-${loadout.name}`}
                     loadout={loadout}
                     modName={x}
-                    key={`${x}-mod`}
+                    key={`${x}-cacheMod-${index}`}
                   />
                 )
               })}
