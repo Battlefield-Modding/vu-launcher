@@ -65,7 +65,7 @@ export function AppSidebar() {
                       pathname === item.url ? 'opacity-70' : 'opacity-100',
                     )}
                   >
-                    <Link to={item.url} className="flex">
+                    <Link to={item.url} className="flex" viewTransition>
                       <div>
                         <item.icon />
                       </div>
