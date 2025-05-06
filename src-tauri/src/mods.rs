@@ -421,7 +421,7 @@ fn remove_mod_from_modlist(loadout_name: &String, mod_name: &String) -> bool {
     let loadout = get_loadout_json_as_struct(&loadout_name);
     match loadout {
         Ok(mut info) => {
-            let index = info.modlist.iter().position(|r| r.name.eq(mod_name)).unwrap();
+            let index = info.modlist.iter().position(|r| r.name.to_lowercase().eq(&mod_name.to_lowercase())).unwrap();
             info.modlist.remove(index);
 
             match write_loadout_json(&info) {
