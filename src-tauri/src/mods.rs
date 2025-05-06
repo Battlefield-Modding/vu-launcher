@@ -1,30 +1,18 @@
 use std::{
     env,
-    fs::{self, read_to_string},
+    fs::{self},
     io::{self},
     path::{Path, PathBuf},
     process::Command,
     os::windows::process::CommandExt,
 };
 
-use serde::{Deserialize, Serialize};
 use serde_json::Error;
 
 use crate::{
-    loadouts::{get_loadout_json_as_struct, loadout_structs::LoadoutJson, write_loadout_json, write_to_txt_from_loadout}, reg_functions, servers::{get_loadout_path, get_loadouts_path, ServerLoadout}, CREATE_NO_WINDOW
+    loadouts::{get_loadout_json_as_struct, loadout_structs::{GameMod, LoadoutJson, ModJson}, write_loadout_json, write_to_txt_from_loadout}, reg_functions, servers::{get_loadouts_path}, CREATE_NO_WINDOW
 };
 
-#[allow(non_snake_case)]
-#[derive(Serialize, Deserialize, Debug)]
-pub struct ModJson {
-    pub Name: String,
-    pub Authors: Option<Vec<String>>,
-    pub Description: Option<String>,
-    pub URL: Option<String>,
-    pub Version: String,
-    pub HasWebUI: bool,
-    pub HasVeniceEXT: bool,
-}
 
 pub fn get_mod_cache_path() -> PathBuf {
     let install_path = match reg_functions::get_install_path_registry() {
@@ -42,9 +30,18 @@ pub fn get_mod_cache_path() -> PathBuf {
     return mod_cache_path;
 }
 
-pub fn make_folder_names_same_as_mod_json_names(loadout_name: &String) -> io::Result<Vec<String>> {
+pub fn get_mod_json_for_mod_in_loadout(loadout_name: &String, mod_name: &String) -> io::Result<ModJson> {
+    let mut mod_json_path = get_mod_path_for_loadout(&loadout_name);
+    mod_json_path.push(mod_name);
+    mod_json_path.push("mod.json");
+    let text = fs::read_to_string(mod_json_path)?;
+    let final_struct = serde_json::from_str(&text)?;
+    Ok(final_struct)
+}
+
+pub fn make_folder_names_same_as_mod_json_names(loadout_name: &String) -> io::Result<Vec<GameMod>> {
     let mods_path = get_mod_path_for_loadout(&loadout_name);
-    let mut mod_list: Vec<String> = Vec::new();
+    let mut mod_list: Vec<GameMod> = Vec::new();
 
     fs::read_dir(&mods_path)?.for_each(|item| {
         match item {
@@ -80,11 +77,18 @@ pub fn make_folder_names_same_as_mod_json_names(loadout_name: &String) -> io::Re
 
                                 match fs::rename(&original_mod_path, renamed_mod_path) {
                                     Ok(_) => {
-                                        mod_list.push(String::from(&mod_json.Name));
                                         println!(
                                             "Successfully renamed mod folder for: {}",
                                             &mod_json.Name
                                         );
+                                        
+                                        mod_list.push(GameMod{
+                                            name: mod_json.Name,
+                                            enabled: false,
+                                            version: mod_json.Version,
+                                            image: None,
+                                            src: Some(mod_json.URL)
+                                        });
                                     }
                                     Err(_) => {
                                         println!("Failed to rename {}. Attempting to store inside MOD_DUMP", &mod_json.Name);
@@ -284,16 +288,25 @@ pub fn get_mod_names_in_loadout(name: String) -> Vec<String> {
     mod_names
 }
 
-pub fn install_mods(loadout: &LoadoutJson) -> Vec<String> {
+pub fn install_mods(loadout: &LoadoutJson) -> Vec<GameMod> {
     let path_to_mods_folder = get_mod_path_for_loadout(&loadout.name);
     let mods = &loadout.modlist;
 
-    let mut mod_names: Vec<String> = Vec::new();
-    for mod_name in mods {
-        if mod_name.contains(".zip") {
-            install_mod_to_loadout(mod_name, path_to_mods_folder.clone());
+    let mut mod_names: Vec<GameMod> = Vec::new();
+    for mod_info in mods {
+        if mod_info.name.contains(".zip") {
+            install_mod_to_loadout(&mod_info.name, path_to_mods_folder.clone());
         } else {
-            mod_names.push(String::from(mod_name));
+            match get_mod_json_for_mod_in_loadout(&loadout.name, &mod_info.name){
+                Ok(mod_json) => {
+                    mod_names.push(GameMod{
+                        name: mod_json.Name, enabled: true, image: None, src: Some(mod_json.URL), version: mod_json.Version
+                    });
+                },
+                Err(err) => {
+                    println!("Failed to add mod to modlist due to reason:\n{:?}", err);
+                }
+            }
         }
     }
 
