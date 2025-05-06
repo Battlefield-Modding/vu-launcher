@@ -418,25 +418,11 @@ fn get_vs_code_workspace_file(mod_path: PathBuf) -> io::Result<PathBuf> {
 }
 
 fn remove_mod_from_modlist(loadout_name: &String, mod_name: &String) -> bool {
-    let mut modlist_path = get_admin_path_for_loadout(&loadout_name);
-    modlist_path.push("modlist.txt");
-
-    let modlist_string = match read_to_string(&modlist_path) {
-        Ok(info) => info,
-        Err(err) => {
-            println!("{:?}", err);
-            err.to_string()
-        }
-    };
-
-    let modlist_filtered = modlist_string.split("\n").filter(|x| x != &mod_name);
-    let collected_modlist: Vec<String> = modlist_filtered.map(|x| x.to_owned()).collect();
     let loadout = get_loadout_json_as_struct(&loadout_name);
     match loadout {
         Ok(mut info) => {
-            info.modlist = collected_modlist.clone();
-            let mut loadout_json_path = get_loadout_path(&loadout_name);
-            loadout_json_path.push("loadout.json");
+            let index = info.modlist.iter().position(|r| r.name.eq(mod_name)).unwrap();
+            info.modlist.remove(index);
 
             match write_loadout_json(&info) {
                 Ok(_) => {},
@@ -445,7 +431,6 @@ fn remove_mod_from_modlist(loadout_name: &String, mod_name: &String) -> bool {
                     return false;
                 }
             }        
-
         },  
         Err(err) => {
             println!("Failed to get loadout due to error: \n{:?}", err);
