@@ -153,7 +153,7 @@ export function StartupForm({
     }
   }
 
-  const sectionNames = ['admin', 'vars', 'vu', 'reservedSlots']
+  const sectionNames = ['admin', 'vars', 'vu', 'reservedSlots'] as Array<keyof StartupArgs>
   if (existingLoadout && existingLoadout.modlist) {
     if (realityModActive) {
       if (!sectionNames.includes('RM')) {
