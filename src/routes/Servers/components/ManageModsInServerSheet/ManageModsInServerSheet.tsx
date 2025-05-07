@@ -1,5 +1,5 @@
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
-import { LoadoutJSON, QueryKey, STALE } from '@/config/config'
+import { GameMod, LoadoutJSON, QueryKey, STALE } from '@/config/config'
 import { Book, Loader } from 'lucide-react'
 import { useState } from 'react'
 import { getModNamesInCache, getModNamesInLoadout } from '@/api'
@@ -14,7 +14,7 @@ export function ManageModsInServerSheet({ loadout }: { loadout: LoadoutJSON }) {
 
   const { isPending, isError, data, error } = useQuery({
     queryKey: [`${QueryKey.GetAllModNames}-${loadout.name}`],
-    queryFn: async (): Promise<{ modsInCache: string[]; modsInLoadout: string[] }> => {
+    queryFn: async (): Promise<{ modsInCache: string[]; modsInLoadout: GameMod[] }> => {
       const modsInLoadout = await getModNamesInLoadout(loadout.name)
       const modsInCache = await getModNamesInCache()
 
@@ -73,9 +73,9 @@ export function ManageModsInServerSheet({ loadout }: { loadout: LoadoutJSON }) {
                 return (
                   <LoadoutMod
                     loadout={loadout}
-                    modName={x}
+                    mod={x}
                     queryKey={`${QueryKey.GetAllModNames}-${loadout.name}`}
-                    isActive={loadout.modlist?.includes(x) || false}
+                    isActive={x.enabled}
                     key={`${x}-loadoutMod-${index}`}
                   />
                 )

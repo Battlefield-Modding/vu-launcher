@@ -2,19 +2,19 @@ import VSCodeIcon from '@/assets/VSCodeIcon.svg'
 import { DeleteModDialog } from '../dialog/DeleteModDialog'
 import { toast } from 'sonner'
 import { editServerLoadout, openModWithVsCode } from '@/api'
-import { LoadoutJSON, QueryKey } from '@/config/config'
+import { GameMod, LoadoutJSON, QueryKey } from '@/config/config'
 import { useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { Switch } from '@/components/ui/switch'
 
 export function LoadoutMod({
   loadout,
-  modName,
+  mod,
   isActive,
   queryKey,
 }: {
   loadout: LoadoutJSON
-  modName: string
+  mod: GameMod
   isActive: boolean
   queryKey: string
 }) {
@@ -22,28 +22,35 @@ export function LoadoutMod({
   const { t } = useTranslation()
 
   async function handleOpenInVSCode() {
-    const status = await openModWithVsCode({ name: loadout.name, modname: modName })
+    const status = await openModWithVsCode({ name: loadout.name, modname: mod.name })
     if (status) {
-      toast(`${t('servers.loadouts.loadout.mods.loadoutMod.toast.vsCodeSuccess')}: ${modName}`)
+      toast(`${t('servers.loadouts.loadout.mods.loadoutMod.toast.vsCodeSuccess')}: ${mod.name}`)
     } else {
-      toast(`${t('servers.loadouts.loadout.mods.loadoutMod.toast.vsCodeFailure')}: ${modName}`)
+      toast(`${t('servers.loadouts.loadout.mods.loadoutMod.toast.vsCodeFailure')}: ${mod.name}`)
     }
   }
 
   async function handleToggleMod(modStatus: boolean) {
-    let tempModList = [...(loadout.modlist as string[])]
-    console.log(`Your temporary mod list is: ${tempModList}`)
-    let message = `${t('servers.loadouts.loadout.mods.loadoutMod.activated')} ${modName}`
-    if (modStatus) {
-      if (!tempModList.includes(modName)) {
-        tempModList.push(modName)
-      }
-    } else {
-      tempModList = tempModList.filter((x) => x !== modName && x !== '')
-      message = `${t('servers.loadouts.loadout.mods.loadoutMod.deactivated')} ${modName}`
+    if (!loadout.modlist) {
+      return
     }
 
-    const finalLoadout = { ...loadout, modlist: tempModList }
+    let modList = [...loadout.modlist]
+
+    modList.map((x) => {
+      if (x.name.toLowerCase() == mod.name.toLowerCase()) {
+        x.enabled = modStatus
+      }
+    })
+
+    let message
+    if (modStatus) {
+      message = `${t('servers.loadouts.loadout.mods.loadoutMod.activated')} ${mod.name}`
+    } else {
+      message = `${t('servers.loadouts.loadout.mods.loadoutMod.deactivated')} ${mod.name}`
+    }
+
+    const finalLoadout = { ...loadout, modlist: modList }
 
     const status = await editServerLoadout(finalLoadout)
 
@@ -52,7 +59,7 @@ export function LoadoutMod({
       queryClient.invalidateQueries({ queryKey: [QueryKey.GetAllLoadoutJSON], refetchType: 'all' })
       queryClient.invalidateQueries({ queryKey: [queryKey], refetchType: 'all' })
     } else {
-      toast(`${t('servers.loadouts.loadout.mods.loadoutMod.toast.modFailure')}: ${modName}`)
+      toast(`${t('servers.loadouts.loadout.mods.loadoutMod.toast.modFailure')}: ${mod.name}`)
     }
   }
 
@@ -65,9 +72,9 @@ export function LoadoutMod({
         }}
       />
 
-      <h1>{modName}</h1>
+      <h1>{mod.name}</h1>
       <code className="text-md text-nowrap rounded-md bg-gray-800 p-1 pl-2 pr-2 text-white">
-        v0.1.0
+        {mod.version}
       </code>
       <p
         className="ml-auto mr-0 rounded-md bg-sidebar p-1.5 hover:cursor-pointer hover:bg-sidebar/50"
@@ -75,7 +82,7 @@ export function LoadoutMod({
       >
         <img src={VSCodeIcon} className="m-auto"></img>
       </p>
-      <DeleteModDialog loadoutName={loadout.name} modName={modName} queryKey={queryKey} />
+      <DeleteModDialog loadoutName={loadout.name} modName={mod.name} queryKey={queryKey} />
     </div>
   )
 }

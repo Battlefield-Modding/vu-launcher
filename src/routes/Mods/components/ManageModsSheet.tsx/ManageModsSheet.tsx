@@ -1,6 +1,6 @@
 import { getLoadoutNames, getModNamesInCache, getModNamesInLoadout } from '@/api'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
-import { QueryKey, STALE } from '@/config/config'
+import { GameMod, QueryKey, STALE } from '@/config/config'
 import { useQuery } from '@tanstack/react-query'
 import { Book, Loader } from 'lucide-react'
 import { useState } from 'react'
@@ -23,14 +23,14 @@ export default function ManageModsSheet() {
         mods: modsInCache,
       })
 
-      const loadoutNames = await getLoadoutNames()
-      for (const loadout of loadoutNames) {
-        const mods = await getModNamesInLoadout(loadout)
-        modsArray.push({
-          name: loadout,
-          mods,
-        })
-      }
+      // const loadoutNames = await getLoadoutNames()
+      // for (const loadout of loadoutNames) {
+      //   const mods = await getModNamesInLoadout(loadout)
+      //   modsArray.push({
+      //     name: loadout,
+      //     mods,
+      //   })
+      // }
 
       return modsArray
     },

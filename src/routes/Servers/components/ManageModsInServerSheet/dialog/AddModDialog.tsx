@@ -1,4 +1,4 @@
-import { editServerLoadout } from '@/api'
+import { editServerLoadout, installZippedModToLoadout } from '@/api'
 import {
   Dialog,
   DialogClose,
@@ -27,11 +27,7 @@ export function AddModDialog({
   const { t } = useTranslation()
 
   async function handleClick() {
-    let tempModList = [...(loadout.modlist as string[])]
-    tempModList.push(modName)
-    const finalLoadout = { ...loadout, modlist: tempModList }
-
-    const status = await editServerLoadout(finalLoadout)
+    const status = await installZippedModToLoadout({ loadoutName: loadout.name, modName })
 
     if (status) {
       toast(`${t('servers.loadouts.loadout.mods.addModDialog.toast.success')}: ${modName}`)
