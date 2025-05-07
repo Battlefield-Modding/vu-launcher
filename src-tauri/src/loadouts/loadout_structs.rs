@@ -16,11 +16,11 @@ pub struct ModJson {
     pub Name: String,
     pub Authors: Vec<String>,
     pub Description: String,
-    pub URL: String,
+    pub URL: Option<String>,
     pub Version: String,
     pub HasWebUI: bool,
     pub HasVeniceEXT: bool,
-    pub Tags: Vec<String>,
+    pub Tags: Option<Vec<String>>,
     // Dependencies // Ignoring dependencies for now...
 }
 
@@ -30,11 +30,11 @@ impl ModJson {
             Name: String::from(""),
             Authors: Vec::new(),
             Description: String::from(""),
-            URL: String::from(""),
+            URL: Some(String::from("")),
             Version: String::from(""),
             HasWebUI: false,
             HasVeniceEXT: false,
-            Tags: Vec::new(),
+            Tags: Some(Vec::new()),
         }
     }
 }

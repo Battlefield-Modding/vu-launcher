@@ -148,7 +148,7 @@ fn import_modlist_txt_into_loadout(loadout_name: &String) -> io::Result<Vec<Game
     Ok(mods)
 }
 
-fn get_all_mod_json_in_loadout(loadout_name: &String) -> Vec<GameMod> {
+pub fn get_all_mod_json_in_loadout(loadout_name: &String) -> Vec<GameMod> {
     let mut loadout_path = get_loadouts_path();
     loadout_path.push(&loadout_name);
     loadout_path.push("Server");
@@ -177,7 +177,7 @@ fn get_all_mod_json_in_loadout(loadout_name: &String) -> Vec<GameMod> {
                                                     name: mod_info.Name,
                                                     version: mod_info.Version,
                                                     image: None,
-                                                    src: Some(mod_info.URL),
+                                                    src: mod_info.URL,
                                                     enabled: false,
                                                 };
                                                 mod_data.push(mod_info);
