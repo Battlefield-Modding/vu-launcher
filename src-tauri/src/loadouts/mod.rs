@@ -132,12 +132,15 @@ fn import_modlist_txt_into_loadout(loadout_name: &String) -> io::Result<Vec<Game
                     continue;
                 }
 
-                let index_of_mod = mods
+                match mods
                     .iter()
                     .position(|game_mod| game_mod.name.to_lowercase().eq(&item.to_lowercase()))
-                    .unwrap();
-
-                mods[index_of_mod].enabled = true;
+                {
+                    Some(index) => {
+                        mods[index].enabled = true;
+                    }
+                    None => {}
+                }
             }
         }
         Err(err) => {
