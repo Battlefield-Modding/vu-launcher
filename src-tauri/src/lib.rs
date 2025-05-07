@@ -31,14 +31,15 @@ use web::{download_game, get_vu_info, VeniceEndpointData};
 mod servers;
 use servers::{
     create_server_loadout, delete_server_loadout, edit_server_loadout, get_loadout_names,
-    get_loadouts_path, get_server_loadout, import_loadout_from_path, save_server_guid,
-    server_key_exists, server_key_setup, start_server_loadout,
+    get_loadouts_path, import_loadout_from_path, save_server_guid, server_key_exists,
+    server_key_setup, start_server_loadout,
 };
 
 mod mods;
 use mods::{
-    get_mod_names_in_cache, get_mod_names_in_loadout, import_mod_to_cache, open_mod_with_vscode,
-    remove_mod_from_cache, remove_mod_from_loadout,
+    get_mod_names_in_cache, get_mod_names_in_loadout, import_mod_to_cache,
+    install_zipped_mod_to_loadout, open_mod_with_vscode, remove_mod_from_cache,
+    remove_mod_from_loadout,
 };
 
 mod speed_calc;
@@ -819,7 +820,6 @@ pub fn run() {
             server_key_setup,
             start_server_loadout,
             save_server_guid,
-            get_server_loadout,
             set_vu_install_location_registry,
             open_explorer_for_loadout,
             get_mod_names_in_cache,
@@ -840,7 +840,8 @@ pub fn run() {
             set_vu_dev_branch_install_location_registry,
             copy_vu_prod_to_folder,
             add_vu_credentials,
-            remove_vu_credentials
+            remove_vu_credentials,
+            install_zipped_mod_to_loadout
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
