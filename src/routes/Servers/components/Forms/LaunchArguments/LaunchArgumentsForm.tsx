@@ -93,7 +93,10 @@ export function LaunchArgumentForm({
       toast(
         `${t('servers.loadouts.loadout.launchArgs.form.toast.success')} ${existingLoadout.name}`,
       )
-      queryClient.invalidateQueries({ queryKey: [QueryKey.GetAllLoadoutJSON], refetchType: 'all' })
+      queryClient.invalidateQueries({
+        queryKey: [QueryKey.GetLoadoutJSON],
+        refetchType: 'all',
+      })
       setSheetOpen(() => false)
     } else {
       toast(

@@ -146,7 +146,7 @@ export function StartupForm({
 
     if (status) {
       toast(`${t('servers.loadouts.loadout.startup.form.toast.success')} ${existingLoadout.name}`)
-      queryClient.invalidateQueries({ queryKey: [QueryKey.GetAllLoadoutJSON], refetchType: 'all' })
+      queryClient.invalidateQueries({ queryKey: [QueryKey.GetLoadoutJSON], refetchType: 'all' })
       setSheetOpen(() => false)
     } else {
       toast(`${t('servers.loadouts.loadout.startup.form.toast.failure')} ${existingLoadout.name}`)

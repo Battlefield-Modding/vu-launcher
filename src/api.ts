@@ -104,12 +104,12 @@ export async function fetchVUDataDummy() {
 }
 
 export async function createServerLoadout(loadout: LoadoutJSON) {
-  const status = JSON.parse(await invoke(rust_fns.create_server_loadout, { loadout }))
+  const status = JSON.parse(await invoke(rust_fns.create_loadout, { loadout }))
   return status
 }
 
 export async function editServerLoadout(loadout: any) {
-  const status = JSON.parse(await invoke(rust_fns.edit_server_loadout, { loadout }))
+  const status = JSON.parse(await invoke(rust_fns.edit_loadout, { loadout }))
   return status
 }
 
@@ -119,7 +119,7 @@ export async function getLoadoutNames(): Promise<string[]> {
 }
 
 export async function deleteServerLoadout(name: string): Promise<boolean> {
-  const info = (await invoke(rust_fns.delete_server_loadout, { name })) as boolean
+  const info = (await invoke(rust_fns.delete_loadout, { name })) as boolean
   return info
 }
 
@@ -134,7 +134,7 @@ export async function serverKeySetup(path: string) {
 }
 
 export async function startServerLoadout(name: string) {
-  const info = await invoke(rust_fns.start_server_loadout, { name })
+  const info = await invoke(rust_fns.start_loadout, { name })
   return info
 }
 
@@ -336,4 +336,17 @@ export async function installZippedModToLoadout({
 }) {
   const status = await invoke(rust_fns.install_zipped_mod_to_loadout, { loadoutName, modName })
   return status
+}
+
+export async function getAllLoadoutNames(): Promise<Array<string>> {
+  const names = (await invoke(rust_fns.get_all_loadout_names, {})) as string[]
+  return names
+}
+
+export async function getLoadoutJson(loadoutName: string): Promise<Array<LoadoutJSON>> {
+  const loadoutJson = (await invoke(rust_fns.get_loadout_json, {
+    loadoutName,
+  })) as Array<LoadoutJSON>
+
+  return loadoutJson
 }

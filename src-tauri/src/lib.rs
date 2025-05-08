@@ -30,9 +30,8 @@ use web::{download_game, get_vu_info, VeniceEndpointData};
 
 mod servers;
 use servers::{
-    create_server_loadout, delete_server_loadout, edit_server_loadout, get_loadout_names,
-    get_loadouts_path, import_loadout_from_path, save_server_guid, server_key_exists,
-    server_key_setup, start_server_loadout,
+    create_loadout, delete_loadout, edit_loadout, get_loadout_names, get_loadouts_path,
+    import_loadout_from_path, save_server_guid, server_key_exists, server_key_setup, start_loadout,
 };
 
 mod mods;
@@ -46,8 +45,8 @@ mod speed_calc;
 
 mod loadouts;
 use loadouts::{
-    get_all_loadout_json, get_loadout_json_as_struct, loadout_client_launch_args_to_vec,
-    loadout_common_launch_args_to_vec, refresh_loadout,
+    get_all_loadout_json, get_all_loadout_names, get_loadout_json, get_loadout_json_as_struct,
+    loadout_client_launch_args_to_vec, loadout_common_launch_args_to_vec, refresh_loadout,
 };
 
 use keyring::Entry;
@@ -813,19 +812,19 @@ pub fn run() {
             is_vu_installed,
             get_vu_data,
             download_game,
-            create_server_loadout,
+            create_loadout,
             get_loadout_names,
-            delete_server_loadout,
+            delete_loadout,
             server_key_exists,
             server_key_setup,
-            start_server_loadout,
+            start_loadout,
             save_server_guid,
             set_vu_install_location_registry,
             open_explorer_for_loadout,
             get_mod_names_in_cache,
             import_mod_to_cache,
             remove_mod_from_cache,
-            edit_server_loadout,
+            edit_loadout,
             import_loadout_from_path,
             get_mod_names_in_loadout,
             remove_mod_from_loadout,
@@ -841,7 +840,9 @@ pub fn run() {
             copy_vu_prod_to_folder,
             add_vu_credentials,
             remove_vu_credentials,
-            install_zipped_mod_to_loadout
+            install_zipped_mod_to_loadout,
+            get_all_loadout_names,
+            get_loadout_json
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

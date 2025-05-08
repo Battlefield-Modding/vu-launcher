@@ -88,7 +88,7 @@ export function MaplistForm({
     if (status) {
       toast(`${t('servers.loadouts.loadout.maplist.form.toast.success')} ${loadout.name}`)
       queryClient.invalidateQueries({
-        queryKey: [QueryKey.GetAllLoadoutJSON],
+        queryKey: [QueryKey.GetLoadoutJSON],
         refetchType: 'all',
       })
       setSheetOpen(false)

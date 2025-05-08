@@ -4,6 +4,8 @@ use std::{
     io::{self},
     ops::Index,
     path::PathBuf,
+    thread::sleep,
+    time::Duration,
 };
 
 use loadout_structs::{
@@ -814,6 +816,86 @@ fn get_modlist_as_string_array(loadout: &LoadoutJson) -> Vec<String> {
     });
 
     simple_mod_vec
+}
+
+#[tauri::command]
+pub fn get_all_loadout_names() -> Vec<String> {
+    let loadout_path = get_loadouts_path();
+
+    let dir_reader = read_dir(&loadout_path);
+    let mut loadouts: Vec<String> = Vec::new();
+    match dir_reader {
+        Ok(reader) => {
+            reader.for_each(|item| {
+                match item {
+                    Ok(info) => {
+                        if info.path().is_dir() {
+                            if is_loadout(&info.path()) {
+                                let temp = info.file_name();
+                                let loadout_name = String::from(temp.to_string_lossy());
+                                if has_loadout_json(&info.path()) {
+                                    loadouts.push(loadout_name);
+                                }
+                            }
+                        }
+                    }
+                    Err(_) => {
+                        println!("Error when reading loadout Json.")
+                    }
+                };
+            });
+        }
+        Err(err) => {
+            println!(
+                "Failed to get loadout JSON at path {:?} due to reason: \n{:?}",
+                &loadout_path, err
+            );
+        }
+    };
+    println!("{:?}", loadouts);
+    loadouts
+}
+
+#[tauri::command]
+pub fn get_loadout_json(loadout_name: String) -> Vec<LoadoutJson> {
+    let mut loadout_json = Vec::new();
+    match get_loadout_json_as_struct(&loadout_name) {
+        Ok(loadout) => {
+            loadout_json.push(loadout);
+            return loadout_json;
+        }
+        Err(err) => {
+            println!(
+                "Failed to get loadout json for {} due to error: \n{:?}",
+                loadout_name, err
+            );
+            // sleep for 100ms to allow for creation of new maplist/modlist/etc
+            match make_loadout_json_from_txt_files(&loadout_name) {
+                Ok(_) => {
+                    println!("Successfully made loadout JSON from txt files.");
+
+                    match get_loadout_json_as_struct(&loadout_name) {
+                        Ok(loadout) => {
+                            loadout_json.push(loadout);
+                        }
+                        Err(err) => {
+                            println!(
+                                "Failed to get loadout json for {} due to error: \n{:?}",
+                                loadout_name, err
+                            );
+                        }
+                    }
+                }
+                Err(err) => {
+                    println!(
+                        "Failed to create loadout JSON from txt files due to error:\n{:?}",
+                        err
+                    );
+                }
+            };
+        }
+    }
+    loadout_json
 }
 
 #[tauri::command]

@@ -1,5 +1,6 @@
 import { Folder, Loader, Server, User } from 'lucide-react'
 import {
+  getLoadoutJson,
   getUserPreferences,
   openExplorerAtLoadout,
   playVUOnLocalServer,
@@ -8,7 +9,7 @@ import {
   toggleDevBranch,
 } from '@/api'
 import { toast } from 'sonner'
-import { LoadoutJSON, QueryKey, STALE } from '@/config/config'
+import { LoadoutJSON, QueryKey, STALE, UserPreferences } from '@/config/config'
 import { ChooseAccountSheet } from '../Forms/AccountMultiSelect/AccountMultiSelectSheet'
 import { StartupSheet } from '../Forms/Startup/StartupSheet'
 import { ManageModsInServerSheet } from '../ManageModsInServerSheet/ManageModsInServerSheet'
@@ -20,14 +21,25 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Switch } from '@/components/ui/switch'
 import clsx from 'clsx'
 import { useTranslation } from 'react-i18next'
+import { useParams } from 'react-router'
 
-export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
+export function Loadout() {
+  let { loadoutName } = useParams()
+  if (!loadoutName) {
+    return <div>No loadoutName specified...</div>
+  }
+
   const queryClient = useQueryClient()
   const { t } = useTranslation()
 
   const { isPending, isError, data, error } = useQuery({
-    queryKey: [QueryKey.UserPreferences],
-    queryFn: getUserPreferences,
+    queryKey: [QueryKey.GetLoadoutJSON, loadoutName],
+    queryFn: async (): Promise<{ preferences: UserPreferences; loadout: LoadoutJSON }> => {
+      const loadout = (await getLoadoutJson(loadoutName))[0]
+      const preferences = await getUserPreferences()
+
+      return { preferences, loadout }
+    },
     staleTime: STALE.never,
   })
 
@@ -50,45 +62,45 @@ export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
   }
 
   async function handlePlay() {
-    let status = await startServerLoadout(loadout.name)
+    let status = await startServerLoadout(loadoutName)
     if (status) {
       toast(t('servers.loadouts.loadout.toast.playSuccess'))
       setTimeout(() => {
-        playVUOnLocalServer(loadout.name)
+        playVUOnLocalServer(loadoutName)
       }, 1000)
     } else {
-      toast(`${t('servers.loadouts.loadout.toast.playFailure')}: ${loadout.name}`)
+      toast(`${t('servers.loadouts.loadout.toast.playFailure')}: ${loadoutName}`)
     }
   }
 
   async function handleServer() {
-    let status = await startServerLoadout(loadout.name)
+    let status = await startServerLoadout(loadoutName)
     if (status) {
       toast(t('servers.loadouts.loadout.toast.serverSuccess'))
     } else {
-      toast(`${t('servers.loadouts.loadout.toast.serverFailure')}: ${loadout.name}`)
+      toast(`${t('servers.loadouts.loadout.toast.serverFailure')}: ${loadoutName}`)
     }
   }
 
   async function handleOpenExplorer() {
-    toast(`${t('servers.loadouts.loadout.toast.openExplorer')}: ${loadout.name}`)
-    await openExplorerAtLoadout(loadout.name)
+    toast(`${t('servers.loadouts.loadout.toast.openExplorer')}: ${loadoutName}`)
+    await openExplorerAtLoadout(loadoutName)
   }
 
   async function handleRefreshLoadout() {
-    const status = await refreshLoadout(loadout.name)
+    const status = await refreshLoadout(loadoutName)
     if (status) {
       //servers.loadouts.loadout.toast.serverFailure
-      toast(`${t('servers.loadouts.loadout.toast.refreshSuccess')}: ${loadout.name}`)
+      toast(`${t('servers.loadouts.loadout.toast.refreshSuccess')}: ${loadoutName}`)
     } else {
-      toast(`${t('servers.loadouts.loadout.toast.refreshFailure')}: ${loadout.name}`)
+      toast(`${t('servers.loadouts.loadout.toast.refreshFailure')}: ${loadoutName}`)
     }
   }
 
   return (
     <div className="m-auto flex flex-col pl-4 pr-4">
       <div className="mb-4 ml-auto mr-auto flex max-w-80 items-center gap-2 lg:max-w-lg xl:max-w-screen-md">
-        <h1 className="text-primary xl:text-2xl">{loadout.name} </h1>
+        <h1 className="text-primary xl:text-2xl">{loadoutName} </h1>
         <div onClick={handleRefreshLoadout} className="w-fit">
           <RefreshLoadoutTooltip />
         </div>
@@ -98,12 +110,12 @@ export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
         <div
           className={clsx(
             'flex gap-8 rounded-md rounded-l-none border-b border-secondary',
-            data.use_dev_branch && 'border-green-500 text-green-500 opacity-100',
+            data.preferences.use_dev_branch && 'border-green-500 text-green-500 opacity-100',
           )}
         >
           <h1>{t('servers.loadouts.loadout.devToggle')}</h1>
           <Switch
-            defaultChecked={data.use_dev_branch}
+            defaultChecked={data.preferences.use_dev_branch}
             onCheckedChange={async (e) => {
               await toggleDevBranch(e)
               queryClient.invalidateQueries({
@@ -132,11 +144,11 @@ export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
           <User />
         </div>
 
-        <LaunchArgumentSheet existingLoadout={loadout} />
-        <StartupSheet existingLoadout={loadout} />
-        <MaplistSheet loadout={loadout} />
-        <BanlistSheet loadout={loadout} />
-        <ManageModsInServerSheet loadout={loadout} />
+        <LaunchArgumentSheet existingLoadout={data.loadout} />
+        <StartupSheet existingLoadout={data.loadout} />
+        <MaplistSheet loadout={data.loadout} />
+        <BanlistSheet loadout={data.loadout} />
+        <ManageModsInServerSheet loadout={data.loadout} />
         <div
           className="flex items-center justify-center gap-2 rounded-md bg-secondary p-2 text-xl text-primary hover:cursor-pointer hover:bg-secondary/80"
           onClick={handleOpenExplorer}
@@ -144,7 +156,9 @@ export function Loadout({ loadout }: { loadout: LoadoutJSON }) {
           {t('servers.loadouts.loadout.openExplorer')}
           <Folder />
         </div>
-        {data.show_multiple_account_join && <ChooseAccountSheet loadoutName={loadout.name} />}
+        {data.preferences.show_multiple_account_join && (
+          <ChooseAccountSheet loadoutName={loadoutName} />
+        )}
       </div>
     </div>
   )

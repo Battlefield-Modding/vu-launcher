@@ -1,4 +1,4 @@
-import { Book, Home, Server, Settings } from 'lucide-react'
+import { Book, Home, Loader, Server, Settings } from 'lucide-react'
 import vuIconRed from '@/assets/vu-icon-red.svg'
 
 import {
@@ -12,9 +12,11 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
 import { Link, useLocation } from 'react-router'
-import { routes } from '@/config/config'
+import { QueryKey, routes, STALE } from '@/config/config'
 import clsx from 'clsx'
 import { useTranslation } from 'react-i18next'
+import { useQuery } from '@tanstack/react-query'
+import { getAllLoadoutNames } from '@/api'
 
 // Menu items.
 const items = [
@@ -43,6 +45,17 @@ const items = [
 export function AppSidebar() {
   const { pathname } = useLocation()
   const { t } = useTranslation()
+
+  const { isPending, isError, data, error } = useQuery({
+    queryKey: [QueryKey.GetAllLoadoutNames],
+    queryFn: getAllLoadoutNames,
+    staleTime: STALE.never,
+  })
+
+  if (!data) {
+    return <Loader />
+  }
+
   return (
     <Sidebar>
       <SidebarContent>
@@ -65,7 +78,15 @@ export function AppSidebar() {
                       pathname === item.url ? 'opacity-70' : 'opacity-100',
                     )}
                   >
-                    <Link to={item.url} className="flex" viewTransition>
+                    <Link
+                      to={
+                        data.length > 0 && item.url === routes.SERVERS
+                          ? `${routes.SERVERS}/${data[0]}`
+                          : item.url
+                      }
+                      className="flex"
+                      viewTransition
+                    >
                       <div>
                         <item.icon />
                       </div>

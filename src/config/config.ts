@@ -25,12 +25,12 @@ export enum rust_fns {
   is_vu_dev_installed = 'is_vu_dev_installed',
   get_vu_data = 'get_vu_data',
   download_game = 'download_game',
-  create_server_loadout = 'create_server_loadout',
+  create_loadout = 'create_loadout',
   get_loadout_names = 'get_loadout_names',
-  delete_server_loadout = 'delete_server_loadout',
+  delete_loadout = 'delete_loadout',
   server_key_exists = 'server_key_exists',
   server_key_setup = 'server_key_setup',
-  start_server_loadout = 'start_server_loadout',
+  start_loadout = 'start_loadout',
   save_server_guid = 'save_server_guid',
   set_vu_install_location_registry = 'set_vu_install_location_registry',
   set_vu_dev_branch_install_location_registry = 'set_vu_dev_branch_install_location_registry',
@@ -38,7 +38,7 @@ export enum rust_fns {
   get_mod_names_in_cache = 'get_mod_names_in_cache',
   import_mod_to_cache = 'import_mod_to_cache',
   remove_mod_from_cache = 'remove_mod_from_cache',
-  edit_server_loadout = 'edit_server_loadout',
+  edit_loadout = 'edit_loadout',
   import_loadout_from_path = 'import_loadout_from_path',
   get_mod_names_in_loadout = 'get_mod_names_in_loadout',
   remove_mod_from_loadout = 'remove_mod_from_loadout',
@@ -52,6 +52,8 @@ export enum rust_fns {
   add_vu_credentials = 'add_vu_credentials',
   remove_vu_credentials = 'remove_vu_credentials',
   install_zipped_mod_to_loadout = 'install_zipped_mod_to_loadout',
+  get_all_loadout_names = 'get_all_loadout_names',
+  get_loadout_json = 'get_loadout_json',
 }
 
 export enum QueryKey {
@@ -67,6 +69,8 @@ export enum QueryKey {
   UserPreferences = 'UserPreferences',
   GetAllLoadoutJSON = 'GetAllLoadoutJSON',
   GetAllModNames = 'GetAllModNames',
+  GetAllLoadoutNames = 'GetAllLoadoutNames',
+  GetLoadoutJSON = 'GetLoadoutJSON',
 }
 
 export enum routes {

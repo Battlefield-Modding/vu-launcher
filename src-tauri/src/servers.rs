@@ -104,7 +104,7 @@ fn get_admin_path(loadout_name: &String) -> PathBuf {
 }
 
 #[tauri::command]
-pub async fn create_server_loadout(mut loadout: LoadoutJson) -> Result<bool, String> {
+pub async fn create_loadout(mut loadout: LoadoutJson) -> Result<bool, String> {
     let server_path = get_server_path(&loadout.name);
     let admin_path = get_admin_path(&loadout.name);
 
@@ -169,7 +169,7 @@ pub async fn create_server_loadout(mut loadout: LoadoutJson) -> Result<bool, Str
 }
 
 #[tauri::command]
-pub async fn edit_server_loadout(loadout: LoadoutJson) -> Result<bool, String> {
+pub async fn edit_loadout(loadout: LoadoutJson) -> Result<bool, String> {
     match write_loadout_json(&loadout) {
         Ok(_) => {}
         Err(err) => {
@@ -227,7 +227,7 @@ pub fn get_loadout_names() -> Vec<String> {
 }
 
 #[tauri::command]
-pub async fn delete_server_loadout(name: String) -> bool {
+pub async fn delete_loadout(name: String) -> bool {
     let mut loadout_path = get_loadouts_path();
     loadout_path.push(&name);
 
@@ -254,7 +254,7 @@ pub async fn delete_server_loadout(name: String) -> bool {
 }
 
 #[tauri::command]
-pub async fn start_server_loadout(name: String) -> bool {
+pub async fn start_loadout(name: String) -> bool {
     let mut args: Vec<&str> = Vec::new();
 
     args.push("/C");

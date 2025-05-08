@@ -17,7 +17,7 @@ import { toast } from 'sonner'
 import { createServerLoadout } from '@/api'
 import { useQueryClient } from '@tanstack/react-query'
 import { defaultServerConfig } from './Setup/defaultServerConfig'
-import { LoadoutJSON, QueryKey } from '@/config/config'
+import { LoadoutJSON, QueryKey, routes } from '@/config/config'
 import { useState } from 'react'
 import { LoaderComponent } from '@/components/LoaderComponent'
 import { Banlist } from './components/Forms/Banlist'
@@ -27,6 +27,7 @@ import { Startup } from './components/Forms/Startup'
 import { defaultStartupArguments } from '../Startup/Setup/DefaultStartupConfig'
 import { defaultLaunchArguments } from '../LaunchArguments/setup/LaunchArguments'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router'
 
 const formSchema = z.object({
   name: z
@@ -88,6 +89,7 @@ export type CreateLoadoutFormType = UseFormReturn<
 export function CreateLoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any; mods: string[] }) {
   const queryClient = useQueryClient()
   const [submitLoading, setSubmitLoading] = useState(false)
+  const navigate = useNavigate()
   const { t } = useTranslation()
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -132,10 +134,12 @@ export function CreateLoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any; m
     if (status) {
       toast(`${t('servers.loadouts.createLoadout.form.toast.success')}: ${values.name}`)
       queryClient.invalidateQueries({
-        queryKey: [QueryKey.GetAllLoadoutJSON],
+        queryKey: [QueryKey.GetAllLoadoutNames],
         refetchType: 'all',
       })
       setSheetOpen(() => false)
+
+      navigate(`${routes.SERVERS}/${loadout.name}`)
     } else {
       toast(t('servers.loadouts.createLoadout.form.toast.failure'))
     }

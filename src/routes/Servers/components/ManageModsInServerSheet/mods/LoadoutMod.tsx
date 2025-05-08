@@ -56,7 +56,10 @@ export function LoadoutMod({
 
     if (status) {
       toast(message)
-      queryClient.invalidateQueries({ queryKey: [QueryKey.GetAllLoadoutJSON], refetchType: 'all' })
+      queryClient.invalidateQueries({
+        queryKey: [QueryKey.GetLoadoutJSON],
+        refetchType: 'all',
+      })
       queryClient.invalidateQueries({ queryKey: [queryKey], refetchType: 'all' })
     } else {
       toast(`${t('servers.loadouts.loadout.mods.loadoutMod.toast.modFailure')}: ${mod.name}`)

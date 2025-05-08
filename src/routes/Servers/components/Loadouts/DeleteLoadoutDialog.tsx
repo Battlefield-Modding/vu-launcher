@@ -9,26 +9,21 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { QueryKey } from '@/config/config'
+import { QueryKey, routes } from '@/config/config'
 import { useQueryClient } from '@tanstack/react-query'
 import { Trash, X } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate, useParams } from 'react-router'
 import { toast } from 'sonner'
 
-export function DeleteLoadoutDialog({
-  name,
-  setActiveLoadout,
-  shouldRefreshActiveLoadout,
-}: {
-  name: string
-  setActiveLoadout: (e: any) => void
-  shouldRefreshActiveLoadout: boolean
-}) {
+export function DeleteLoadoutDialog({ name }: { name: string }) {
   const { t } = useTranslation()
   const queryClient = useQueryClient()
   const [submitLoading, setSubmitLoading] = useState(false)
   const dialogCloseRef = useRef(null)
+  const navigate = useNavigate()
+  const { loadoutName } = useParams()
 
   async function handleDelete() {
     setSubmitLoading(() => true)
@@ -41,11 +36,14 @@ export function DeleteLoadoutDialog({
         element.click()
         toast(`${t('servers.loadouts.deleteDialog.toast.success')}: ${name}`)
         queryClient.invalidateQueries({
-          queryKey: [QueryKey.GetAllLoadoutJSON],
+          queryKey: [QueryKey.GetAllLoadoutNames],
           refetchType: 'all',
         })
-        if (shouldRefreshActiveLoadout) {
-          setActiveLoadout(() => null)
+
+        queryClient.removeQueries({ queryKey: [QueryKey.GetLoadoutJSON, loadoutName] })
+
+        if (loadoutName && loadoutName === name) {
+          navigate(routes.SERVERS)
         }
       }
     } else {
