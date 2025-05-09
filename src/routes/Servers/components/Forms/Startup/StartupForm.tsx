@@ -114,9 +114,14 @@ export function StartupForm({
   const [realityModActive, SetRealityModActive] = useState(false)
   const { t } = useTranslation()
 
+  const rm = existingLoadout.startup.RM
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: existingLoadout.startup,
+    defaultValues: {
+      ...existingLoadout.startup,
+      RM: rm === null || rm === undefined ? undefined : rm,
+    },
   })
 
   useEffect(() => {
