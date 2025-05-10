@@ -685,5 +685,9 @@
       "TimeScale": "Slow down or speed up game [0.0, 2.0]",
       "VehicleDisablingEnabled": "Enable mobility hits on vehicles"
     }
+  },
+  "toggleDevBranch": {
+    "failure": "Failed to update preference",
+    "success": "Saved preference"
   }
 }

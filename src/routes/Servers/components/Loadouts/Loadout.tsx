@@ -118,11 +118,17 @@ export function Loadout() {
           <Switch
             defaultChecked={data.preferences.use_dev_branch}
             onCheckedChange={async (e) => {
-              await toggleDevBranch(e)
-              queryClient.invalidateQueries({
-                queryKey: [QueryKey.UserPreferences],
-                refetchType: 'all',
-              })
+              const status = await toggleDevBranch(e)
+              if (status) {
+                queryClient.invalidateQueries({
+                  queryKey: [QueryKey.UserPreferences],
+                  refetchType: 'all',
+                })
+
+                toast(t('toggleDevBranch.success'))
+              } else {
+                toast(t('toggleDevBranch.failure'))
+              }
             }}
           />
         </div>

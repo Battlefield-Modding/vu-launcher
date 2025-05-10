@@ -685,5 +685,9 @@
       "TimeScale": "Spiel verlangsamen oder beschleunigen [0,0, 2,0]",
       "VehicleDisablingEnabled": "Mobilitätstreffer für Fahrzeuge aktivieren"
     }
+  },
+  "toggleDevBranch": {
+    "failure": "Die Präferenz nicht aktualisieren",
+    "success": "Präferenz gespeichert"
   }
 }

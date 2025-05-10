@@ -685,5 +685,9 @@
       "TimeScale": "减慢或加快游戏速度 [0.0，2.0]",
       "VehicleDisablingEnabled": "启用对车辆的移动命中"
     }
+  },
+  "toggleDevBranch": {
+    "failure": "无法更新偏好",
+    "success": "保存的偏好"
   }
 }
