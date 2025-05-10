@@ -198,7 +198,7 @@ pub fn get_mod_names_in_cache() -> Vec<String> {
 }
 
 #[tauri::command]
-pub fn import_mod_to_cache(mod_location: String) -> bool {
+pub fn import_zipped_mod_to_cache(mod_location: String) -> bool {
     let mut target_path = get_mod_cache_path();
 
     let mod_location_as_path = PathBuf::from(mod_location);
@@ -225,6 +225,40 @@ pub fn import_mod_to_cache(mod_location: String) -> bool {
             return false;
         }
     };
+}
+
+#[tauri::command]
+pub fn import_mod_folder_to_cache(mod_location: String) -> bool {
+    let mut target_path = get_mod_cache_path();
+
+    let mod_location_as_path = PathBuf::from(mod_location);
+    if mod_location_as_path.is_dir() {
+        let mut mod_json_path = PathBuf::from(&mod_location_as_path);
+        mod_json_path.push("mod.json");
+        if mod_json_path.exists(){
+            // this is a proper mod. Let's import it
+            match mod_location_as_path.file_name(){
+                Some(mod_name) => {
+                    target_path.push(mod_name);
+
+                    match dircpy::copy_dir(mod_location_as_path, target_path){
+                        Ok(_) => {
+                            return true
+                        },
+                        Err(err) => {
+                            println!("Failed to copy mod folder into mod_cach due to error:\n{:?}", err);
+                        }
+                    }
+                },
+                None => {
+                    return false
+                }
+            }
+            
+        } 
+        return false
+    }
+    return false
 }
 
 #[tauri::command]
@@ -274,8 +308,6 @@ pub fn get_mod_names_in_loadout(name: String) -> Vec<GameMod> {
         }
     }
 }
-
-
 
 #[tauri::command]
 pub fn install_zipped_mod_to_loadout(loadout_name: String, mod_name: String) -> bool {

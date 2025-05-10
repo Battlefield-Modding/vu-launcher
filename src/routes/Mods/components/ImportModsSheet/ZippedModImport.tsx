@@ -2,15 +2,15 @@ import { useEffect, useState } from 'react'
 
 import { listen, UnlistenFn } from '@tauri-apps/api/event'
 import clsx from 'clsx'
-import { Search, Upload } from 'lucide-react'
+import { FolderArchive, Search, Upload } from 'lucide-react'
 import { useQueryClient } from '@tanstack/react-query'
 import { QueryKey, DragDropEventTauri } from '@/config/config'
 import { toast } from 'sonner'
 import { open } from '@tauri-apps/plugin-dialog'
-import { importModToCache } from '@/api'
+import { importZippedModToCache } from '@/api'
 import { useTranslation } from 'react-i18next'
 
-export default function ModUpload() {
+export function ZippedModImport() {
   const [isDraggingOver, setIsDraggingOver] = useState(false)
   const { t } = useTranslation()
   let handleDrop: UnlistenFn | undefined
@@ -43,7 +43,7 @@ export default function ModUpload() {
 
         if (payload && payload.paths[0] && payload.paths[0].includes('.zip')) {
           const info = payload.paths[0]
-          const result = await importModToCache(info)
+          const result = await importZippedModToCache(info)
           if (result) {
             queryClient.invalidateQueries({
               queryKey: [QueryKey.GetModNamesInCache],
@@ -85,7 +85,7 @@ export default function ModUpload() {
         const confirmed = await confirm(`${t('mods.import.form.confirm')}: ${installPath}`)
 
         if (confirmed) {
-          const result = await importModToCache(installPath)
+          const result = await importZippedModToCache(installPath)
           if (result) {
             queryClient.invalidateQueries({
               queryKey: [QueryKey.GetModNamesInCache],
@@ -120,12 +120,9 @@ export default function ModUpload() {
         </div>
       ) : (
         <div className="text-md m-auto flex flex-col gap-8">
-          <div className="flex gap-4">
-            <p>
-              {t('mods.import.form.drag')}
-              <code className="rounded-md bg-black p-1 text-white">.zip</code>
-            </p>
-            <Upload />
+          <div className="flex gap-2">
+            <p>{t('mods.import.form.drag')}</p>
+            <FolderArchive />
           </div>
           <div className="flex gap-2">
             <p>{t('mods.import.form.click')}</p>

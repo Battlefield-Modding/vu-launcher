@@ -168,6 +168,14 @@
         "trigger": "Import Mods"
       }
     },
+    "importFolder": {
+      "form": {
+        "drag": "Drag n Drop your mod folder here",
+        "toast": {
+          "invalid": "Only directories are accepted"
+        }
+      }
+    },
     "manage": {
       "deleteDialog": {
         "cancel": "Cancel",

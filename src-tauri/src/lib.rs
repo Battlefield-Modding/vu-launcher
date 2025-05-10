@@ -36,9 +36,9 @@ use servers::{
 
 mod mods;
 use mods::{
-    get_mod_names_in_cache, get_mod_names_in_loadout, import_mod_to_cache,
-    install_zipped_mod_to_loadout, open_mod_with_vscode, remove_mod_from_cache,
-    remove_mod_from_loadout,
+    get_mod_names_in_cache, get_mod_names_in_loadout, import_mod_folder_to_cache,
+    import_zipped_mod_to_cache, install_zipped_mod_to_loadout, open_mod_with_vscode,
+    remove_mod_from_cache, remove_mod_from_loadout,
 };
 
 mod speed_calc;
@@ -938,7 +938,8 @@ pub fn run() {
             set_vu_install_location_registry,
             open_explorer_for_loadout,
             get_mod_names_in_cache,
-            import_mod_to_cache,
+            import_zipped_mod_to_cache,
+            import_mod_folder_to_cache,
             remove_mod_from_cache,
             edit_loadout,
             import_loadout_from_path,

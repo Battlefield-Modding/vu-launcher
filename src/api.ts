@@ -162,8 +162,13 @@ export async function getModNamesInCache(): Promise<string[]> {
   return names
 }
 
-export async function importModToCache(modLocation: string): Promise<boolean> {
-  const status = (await invoke(rust_fns.import_mod_to_cache, { modLocation })) as boolean
+export async function importZippedModToCache(modLocation: string): Promise<boolean> {
+  const status = (await invoke(rust_fns.import_zipped_mod_to_cache, { modLocation })) as boolean
+  return status
+}
+
+export async function importModFolderToCache(modLocation: string): Promise<boolean> {
+  const status = (await invoke(rust_fns.import_mod_folder_to_cache, { modLocation })) as boolean
   return status
 }
 
