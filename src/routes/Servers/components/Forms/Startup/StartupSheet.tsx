@@ -11,6 +11,7 @@ import { useRef, useState } from 'react'
 import { StartupForm } from './StartupForm'
 import { LoadoutJSON } from '@/config/config'
 import { useTranslation } from 'react-i18next'
+import { TooltipWrapper } from '@/components/TooltipWrapper'
 
 export function StartupSheet({ existingLoadout }: { existingLoadout: LoadoutJSON }) {
   const [sheetOpen, setSheetOpen] = useState(false)
@@ -21,10 +22,11 @@ export function StartupSheet({ existingLoadout }: { existingLoadout: LoadoutJSON
   return (
     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
       <SheetTrigger>
-        <div className="flex items-center justify-center gap-2 rounded-md bg-secondary p-2 text-xl text-primary hover:bg-secondary/80">
-          {t('servers.loadouts.loadout.startup.sheet.trigger')}
-          <Wrench />
-        </div>
+        <TooltipWrapper text={t('servers.loadouts.loadout.startup.sheet.trigger')}>
+          <div className="flex items-center justify-center gap-2 rounded-md bg-secondary p-2 text-xl text-primary hover:bg-secondary/80">
+            <Wrench />
+          </div>
+        </TooltipWrapper>
       </SheetTrigger>
       <SheetContent
         className="overflow-y-scroll"

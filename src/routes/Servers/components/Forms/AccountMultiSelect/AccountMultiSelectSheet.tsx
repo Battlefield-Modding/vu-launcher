@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/sheet'
 import { AccountMultiSelectForm } from './AccountMultiSelectForm'
 import { useTranslation } from 'react-i18next'
+import { TooltipWrapper } from '@/components/TooltipWrapper'
 
 export function ChooseAccountSheet({ loadoutName }: { loadoutName: string }) {
   const [sheetOpen, setSheetOpen] = useState(false)
@@ -71,11 +72,12 @@ export function ChooseAccountSheet({ loadoutName }: { loadoutName: string }) {
     return (
       <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
         <SheetTrigger>
-          <div className="flex items-center justify-between gap-2 rounded-md bg-green-800 p-2 text-xl text-primary hover:cursor-pointer hover:bg-green-800/80">
-            {t('servers.loadouts.loadout.multiAccount.sheet.trigger')}
-            <Server />
-            <UserCheck />
-          </div>
+          <TooltipWrapper text={t('servers.loadouts.loadout.multiAccount.sheet.trigger')}>
+            <div className="flex items-center justify-between gap-2 rounded-md bg-green-800 p-2 text-xl text-primary hover:cursor-pointer hover:bg-green-800/80">
+              <Server />
+              <UserCheck />
+            </div>
+          </TooltipWrapper>
         </SheetTrigger>
         <SheetContent>
           <SheetHeader className="m-auto w-96">

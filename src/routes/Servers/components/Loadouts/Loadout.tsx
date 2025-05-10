@@ -22,6 +22,7 @@ import { Switch } from '@/components/ui/switch'
 import clsx from 'clsx'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
+import { TooltipWrapper } from '@/components/TooltipWrapper'
 
 export function Loadout() {
   let { loadoutName } = useParams()
@@ -127,38 +128,53 @@ export function Loadout() {
         </div>
       </div>
 
-      <div className="m-auto grid w-fit grid-cols-1 gap-1.5 lg:grid-cols-2 lg:gap-8 xl:grid-cols-3">
-        <div
-          onClick={handleServer}
-          className="flex items-center justify-center gap-2 rounded-md bg-green-800 p-2 text-xl text-primary hover:cursor-pointer hover:bg-green-800/80"
-        >
-          {t('servers.loadouts.loadout.startServer')}
-          <Server />
-        </div>
-        <div
-          onClick={handlePlay}
-          className="flex items-center justify-center gap-2 rounded-md bg-green-700 p-2 text-xl text-primary hover:cursor-pointer hover:bg-green-700/80"
-        >
-          {t('servers.loadouts.loadout.startServerAndClient')}
-          <Server />
-          <User />
+      <div className="flex flex-col gap-8">
+        <div className="flex gap-8 border-b-4 border-red-500">
+          <TooltipWrapper text={t('servers.loadouts.loadout.startServer')}>
+            <div
+              onClick={handleServer}
+              className="flex items-center justify-center gap-2 rounded-md bg-green-800 p-2 text-xl text-primary hover:cursor-pointer hover:bg-green-800/80"
+            >
+              <Server />
+            </div>
+          </TooltipWrapper>
+          <TooltipWrapper text={t('servers.loadouts.loadout.startServerAndClient')}>
+            <div
+              onClick={handlePlay}
+              className="flex items-center justify-center gap-2 rounded-md bg-green-700 p-2 text-xl text-primary hover:cursor-pointer hover:bg-green-700/80"
+            >
+              <Server />
+              <User />
+            </div>
+          </TooltipWrapper>
+          {data.preferences.show_multiple_account_join && (
+            <ChooseAccountSheet loadoutName={loadoutName} />
+          )}
         </div>
 
-        <LaunchArgumentSheet existingLoadout={data.loadout} />
-        <StartupSheet existingLoadout={data.loadout} />
-        <MaplistSheet loadout={data.loadout} />
-        <BanlistSheet loadout={data.loadout} />
-        <ManageModsInServerSheet loadout={data.loadout} />
-        <div
-          className="flex items-center justify-center gap-2 rounded-md bg-secondary p-2 text-xl text-primary hover:cursor-pointer hover:bg-secondary/80"
-          onClick={handleOpenExplorer}
-        >
-          {t('servers.loadouts.loadout.openExplorer')}
-          <Folder />
+        <div className="flex gap-8 border-b-4 border-red-500">
+          <LaunchArgumentSheet existingLoadout={data.loadout} />
+          <StartupSheet existingLoadout={data.loadout} />
+          {/* CONFIG Section */}
         </div>
-        {data.preferences.show_multiple_account_join && (
-          <ChooseAccountSheet loadoutName={loadoutName} />
-        )}
+
+        <div className="flex gap-8 border-b-4 border-red-500">
+          <MaplistSheet loadout={data.loadout} />
+          <ManageModsInServerSheet loadout={data.loadout} />
+          <BanlistSheet loadout={data.loadout} />
+          {/* MAPLIST / MODLIST / BANLIST */}
+        </div>
+
+        <div className="flex">
+          <TooltipWrapper text={t('servers.loadouts.loadout.openExplorer')}>
+            <div
+              className="flex items-center justify-center gap-2 rounded-md bg-secondary p-2 text-xl text-primary hover:cursor-pointer hover:bg-secondary/80"
+              onClick={handleOpenExplorer}
+            >
+              <Folder />
+            </div>
+          </TooltipWrapper>
+        </div>
       </div>
     </div>
   )
