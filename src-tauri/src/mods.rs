@@ -295,15 +295,27 @@ pub fn remove_mod_from_cache(mod_name: String) -> bool {
     target_path.push(mod_name);
 
     if target_path.exists() {
-        match fs::remove_file(target_path) {
-            Ok(_) => {
-                return true;
-            }
-            Err(err) => {
-                println!("{:?}", err);
-                return false;
-            }
-        };
+        if target_path.is_dir(){
+            match fs::remove_dir_all(target_path) {
+                Ok(_) => {
+                    return true;
+                }
+                Err(err) => {
+                    println!("{:?}", err);
+                    return false;
+                }
+            };
+        } else {
+            match fs::remove_file(target_path) {
+                Ok(_) => {
+                    return true;
+                }
+                Err(err) => {
+                    println!("{:?}", err);
+                    return false;
+                }
+            };
+        }
     } else {
         return false;
     }
