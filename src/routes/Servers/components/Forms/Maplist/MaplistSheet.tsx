@@ -21,7 +21,7 @@ export function MaplistSheet({ loadout }: { loadout: LoadoutJSON }) {
     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
       <SheetTrigger>
         <TooltipWrapper text={t('servers.loadouts.loadout.maplist.sheet.trigger')}>
-          <div className="flex items-center justify-center gap-2 rounded-md bg-secondary p-2 text-xl text-primary hover:bg-secondary/80">
+          <div className="flex items-center justify-center gap-2 rounded-md bg-secondary p-4 text-xl text-primary hover:bg-secondary/80">
             <Map />
           </div>
         </TooltipWrapper>

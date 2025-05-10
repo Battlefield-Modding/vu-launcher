@@ -99,7 +99,7 @@ export function Loadout() {
   }
 
   return (
-    <div className="m-auto flex flex-col pl-4 pr-4">
+    <div className="m-auto flex flex-col rounded-md bg-sidebar p-8">
       <div className="mb-4 ml-auto mr-auto flex max-w-80 items-center gap-2 lg:max-w-lg xl:max-w-screen-md">
         <h1 className="text-primary xl:text-2xl">{loadoutName} </h1>
         <div onClick={handleRefreshLoadout} className="w-fit">
@@ -128,12 +128,12 @@ export function Loadout() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-8">
-        <div className="flex gap-8 border-b-4 border-red-500">
+      <div className="m-auto flex flex-col gap-8">
+        <div className="flex justify-center gap-4">
           <TooltipWrapper text={t('servers.loadouts.loadout.startServer')}>
             <div
               onClick={handleServer}
-              className="flex items-center justify-center gap-2 rounded-md bg-green-800 p-2 text-xl text-primary hover:cursor-pointer hover:bg-green-800/80"
+              className="rounded-md bg-green-800 p-4 text-xl text-primary hover:cursor-pointer hover:bg-green-800/80"
             >
               <Server />
             </div>
@@ -141,7 +141,7 @@ export function Loadout() {
           <TooltipWrapper text={t('servers.loadouts.loadout.startServerAndClient')}>
             <div
               onClick={handlePlay}
-              className="flex items-center justify-center gap-2 rounded-md bg-green-700 p-2 text-xl text-primary hover:cursor-pointer hover:bg-green-700/80"
+              className="flex items-center justify-center gap-2 rounded-md bg-green-800 p-4 text-xl text-primary hover:cursor-pointer hover:bg-green-800/80"
             >
               <Server />
               <User />
@@ -152,23 +152,21 @@ export function Loadout() {
           )}
         </div>
 
-        <div className="flex gap-8 border-b-4 border-red-500">
-          <LaunchArgumentSheet existingLoadout={data.loadout} />
-          <StartupSheet existingLoadout={data.loadout} />
-          {/* CONFIG Section */}
-        </div>
-
-        <div className="flex gap-8 border-b-4 border-red-500">
+        <div className="flex justify-center gap-4">
           <MaplistSheet loadout={data.loadout} />
           <ManageModsInServerSheet loadout={data.loadout} />
           <BanlistSheet loadout={data.loadout} />
-          {/* MAPLIST / MODLIST / BANLIST */}
         </div>
 
-        <div className="flex">
+        <div className="flex justify-center gap-4">
+          <LaunchArgumentSheet existingLoadout={data.loadout} />
+          <StartupSheet existingLoadout={data.loadout} />
+        </div>
+
+        <div className="flex justify-center gap-4">
           <TooltipWrapper text={t('servers.loadouts.loadout.openExplorer')}>
             <div
-              className="flex items-center justify-center gap-2 rounded-md bg-secondary p-2 text-xl text-primary hover:cursor-pointer hover:bg-secondary/80"
+              className="flex items-center justify-center gap-2 rounded-md bg-secondary p-4 text-xl text-primary hover:cursor-pointer hover:bg-secondary/80"
               onClick={handleOpenExplorer}
             >
               <Folder />
