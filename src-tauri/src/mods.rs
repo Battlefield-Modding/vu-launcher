@@ -183,11 +183,27 @@ pub fn get_mod_names_in_cache() -> Vec<String> {
                     Ok(info) => {
                         match info.path().extension() {
                             Some(file_type) => {
-                                if file_type == "zip" {
-                                    let temp = info.file_name();
-                                    let temp_as_str = String::from(temp.to_string_lossy());
-                                    mod_names.push(temp_as_str);
+
+                                match info.path().file_name(){
+                                    Some(file_name) => {
+                                        if file_type == "zip" {
+                                            let temp = info.file_name();
+                                            let temp_as_str = String::from(temp.to_string_lossy());
+                                            mod_names.push(temp_as_str);
+                                        } else {
+                                            let mod_name = String::from(file_name.to_string_lossy());
+                                            match get_mod_json_for_mod_in_cache(&mod_name){
+                                                Ok(_) => {
+                                                    mod_names.push(mod_name);
+                                                },
+                                                Err(_) => {}
+                                            }
+                                        }
+                                    },
+                                    None => {}
                                 }
+
+                                
                             }
                             None => {}
                         };
@@ -618,7 +634,7 @@ pub fn make_cache_folder_names_same_as_mod_json_names() -> io::Result<Vec<GameMo
                         };
 
                         match file_name.split_once("."){
-                            Some((mod_name, extension)) => {
+                            Some((mod_name, _)) => {
                                 println!("Trying to get mod json for: {:?}", &mod_name);
                                 match get_mod_json_for_mod_in_cache(&mod_name.to_owned()){
                                     Ok(mod_json) => {
@@ -669,11 +685,33 @@ pub fn make_cache_folder_names_same_as_mod_json_names() -> io::Result<Vec<GameMo
                             let mut new_mod_path = mods_path.clone();
                             new_mod_path.push(&new_mod_name);
     
-                            fs::rename(original_mod_path, new_mod_path);
+                            match fs::rename(&original_mod_path, &new_mod_path){
+                                Ok(_)=>{
+                                    println!("Successfully renamed extracted mod folder!")
+                                },
+                                Err(err) => {
+                                    println!("Failed to rename {:?} into {:?} due to error\n{:?}", original_mod_path, new_mod_path, err);
+                                    match fs::remove_dir_all(&original_mod_path){
+                                        Ok(_)=>{
+                                            println!("Successfully deleted un-renamable mod folder: {:?}", &original_mod_path)
+                                        },
+                                        Err(err) => {
+                                            println!("Failed to delete {:?}  due to error\n{:?}", &original_mod_path, err)
+                                        }
+                                    }
+                                }   
+                            }
                         },
                         Err(err) => {
                             println!("Failed to rename the folder mod {} into its mod JSON name due to error:\n{:?}", mod_name, err);
-                            fs::remove_dir_all(&original_mod_path);
+                            match fs::remove_dir_all(&original_mod_path){
+                                Ok(_)=>{
+                                    println!("Successfully deleted un-renamable mod folder: {:?}", &original_mod_path)
+                                },
+                                Err(err) => {
+                                    println!("Failed to delete {:?}  due to error\n{:?}", &original_mod_path, err)
+                                }
+                            }
                         }
                      }
                 }
