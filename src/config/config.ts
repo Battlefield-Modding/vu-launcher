@@ -137,6 +137,7 @@ export type UserPreferences = {
   use_dev_branch: boolean
   preferred_player_index: number
   preferred_server_index: number
+  last_visted_route: string
 }
 
 export type SavedServer = {

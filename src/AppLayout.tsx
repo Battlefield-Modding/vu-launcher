@@ -1,17 +1,19 @@
 import './App.css'
-import { Outlet } from 'react-router'
+import { Outlet, useLocation, useNavigate } from 'react-router'
 import { SidebarProvider, SidebarTrigger } from './components/ui/sidebar'
 import { AppSidebar } from './components/AppSidebar'
 
 import { Toaster } from 'sonner'
 import { useEffect, useState } from 'react'
-import { firstTimeSetup, getUserPreferences } from './api'
+import { firstTimeSetup, getUserPreferences, saveUserPreferences } from './api'
 
 import { invoke } from '@tauri-apps/api/core'
 import { Onboarding } from './components/Onboarding/Onboarding'
 
 function AppLayout() {
   const [onboarding, setOnboarding] = useState(false)
+  const { pathname } = useLocation()
+  const navigate = useNavigate()
 
   useEffect(() => {
     async function handleOnboarding() {
@@ -22,8 +24,30 @@ function AppLayout() {
       }
     }
     handleOnboarding()
+
+    async function navigateToPreviousRoute() {
+      const preferences = await getUserPreferences()
+
+      if (preferences.last_visted_route !== '') {
+        navigate(preferences.last_visted_route)
+      }
+    }
+
+    navigateToPreviousRoute()
+
     invoke('show_window')
   }, [])
+
+  useEffect(() => {
+    async function storeLatestRoute() {
+      const preferences = await getUserPreferences()
+      preferences.last_visted_route = pathname
+
+      await saveUserPreferences(preferences)
+    }
+    storeLatestRoute()
+    // update the latest pathname in preferences
+  }, [pathname])
 
   return (
     <>

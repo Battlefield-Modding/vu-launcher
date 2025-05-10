@@ -75,6 +75,7 @@ struct UserPreferences {
     use_dev_branch: bool,
     preferred_player_index: i32,
     preferred_server_index: i32,
+    last_visted_route: String,
 }
 
 fn set_default_preferences() -> bool {
@@ -100,6 +101,7 @@ fn set_default_preferences() -> bool {
         use_dev_branch: false,
         preferred_player_index: 9001,
         preferred_server_index: 9001,
+        last_visted_route: String::from(""),
     };
 
     match save_user_preferences(sample_preferences) {
