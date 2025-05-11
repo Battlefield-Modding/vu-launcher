@@ -157,8 +157,8 @@ export async function openExplorerAtLoadout(loadoutName: string) {
   await invoke(rust_fns.open_explorer_for_loadout, { loadoutName })
 }
 
-export async function getModNamesInCache(): Promise<string[]> {
-  const names = (await invoke(rust_fns.get_mod_names_in_cache)) as string[]
+export async function getModNamesInCache(): Promise<GameMod[]> {
+  const names = (await invoke(rust_fns.get_mod_names_in_cache)) as GameMod[]
   return names
 }
 
@@ -317,14 +317,25 @@ export async function setPreferredServer(index: number): Promise<boolean> {
   return status
 }
 
-export async function installZippedModToLoadout({
+export async function installModToLoadoutFromCache({
+  loadoutName,
+  gameMod,
+}: {
+  loadoutName: string
+  gameMod: GameMod
+}) {
+  const status = await invoke(rust_fns.install_mod_to_loadout_from_cache, { loadoutName, gameMod })
+  return status
+}
+
+export async function installModToLoadout({
   loadoutName,
   modName,
 }: {
   loadoutName: string
   modName: string
 }) {
-  const status = await invoke(rust_fns.install_zipped_mod_to_loadout, { loadoutName, modName })
+  const status = await invoke(rust_fns.install_mod_to_loadout_from_cache, { loadoutName, modName })
   return status
 }
 

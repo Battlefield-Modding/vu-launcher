@@ -168,10 +168,10 @@ fn get_mod_path_for_loadout(name: &String) -> PathBuf {
 }
 
 #[tauri::command]
-pub fn get_mod_names_in_cache() -> Vec<String> {
+pub fn get_mod_names_in_cache() -> Vec<GameMod> {
     let mod_cache_path = get_mod_cache_path();
     let dir_reader = fs::read_dir(&mod_cache_path);
-    let mut mod_names: Vec<String> = Vec::new();
+    let mut mod_names: Vec<GameMod> = Vec::new();
     match dir_reader {
         Ok(reader) => {
             reader.for_each(|item| {
@@ -182,15 +182,11 @@ pub fn get_mod_names_in_cache() -> Vec<String> {
 
                                 match info.path().file_name(){
                                     Some(file_name) => {
-                                        if file_type == "zip" {
-                                            let temp = info.file_name();
-                                            let temp_as_str = String::from(temp.to_string_lossy());
-                                            mod_names.push(temp_as_str);
-                                        } else {
+                                        if file_type != "zip" {
                                             let mod_name = String::from(file_name.to_string_lossy());
                                             match get_mod_json_for_mod_in_cache(&mod_name){
-                                                Ok(_) => {
-                                                    mod_names.push(mod_name);
+                                                Ok(mod_json) => {
+                                                    mod_names.push(GameMod { name: mod_json.Name, version: mod_json.Version, image: None, src: mod_json.URL, enabled: false });
                                                 },
                                                 Err(_) => {}
                                             }
@@ -332,28 +328,11 @@ pub fn get_mod_names_in_loadout(name: String) -> Vec<GameMod> {
 }
 
 #[tauri::command]
-pub fn install_zipped_mod_to_loadout(loadout_name: String, mod_name: String) -> bool {
-    if copy_mod_to_loadout_from_cache(&mod_name, get_mod_path_for_loadout(&loadout_name)) {
+pub fn install_mod_to_loadout_from_cache(loadout_name: String, game_mod: GameMod) -> bool {
+    if copy_mod_to_loadout_from_cache(&game_mod, &loadout_name) {
         match make_folder_names_same_as_mod_json_names(&loadout_name){
-            Ok(new_modlist) => {
-                match get_loadout_json_as_struct(&loadout_name){
-                    Ok(mut loadout_json) => {
-                        loadout_json.modlist = new_modlist;
-                        match write_loadout_json(&loadout_json){
-                            Ok(_) => {
-                                return true
-                            },
-                            Err(err) => {
-                                println!("Failed to write to loadoutJSON after installing a mod due to reason:\n{:?}",err);
-                                return false
-                            }
-                        }
-                    },
-                    Err(err) => {
-                        println!("Failed to fetch loadoutJSON while installing mod due to error:\n{:?}", err);
-                        return false
-                    }
-                }
+            Ok(_) => {
+                return true
             }, 
             Err(err) => {
                 println!("Failed make_folder_names_same_as_mod_json_names due to reason:\n{:?}", err);
@@ -366,11 +345,9 @@ pub fn install_zipped_mod_to_loadout(loadout_name: String, mod_name: String) -> 
 }
 
 pub fn install_mods_on_loadout_creation(loadout: &LoadoutJson) -> Vec<GameMod> {
-    let path_to_mods_folder = get_mod_path_for_loadout(&loadout.name);
-
     let mut mod_names: Vec<GameMod> = Vec::new();
     for mod_info in &loadout.modlist {
-        if !copy_mod_to_loadout_from_cache(&mod_info.name, path_to_mods_folder.clone()){
+        if !copy_mod_to_loadout_from_cache(mod_info, &loadout.name){
             println!("Failed to install mod:\n${:?}", &mod_info.name);
         }
     }
@@ -387,21 +364,42 @@ pub fn install_mods_on_loadout_creation(loadout: &LoadoutJson) -> Vec<GameMod> {
     mod_names
 }
 
-fn copy_mod_to_loadout_from_cache(mod_name: &String, path_to_mods_folder: PathBuf) -> bool {
+fn copy_mod_to_loadout_from_cache(mod_info: &GameMod, loadout_name: &String) -> bool {
     let mut path_to_mod = get_mod_cache_path();
-    path_to_mod.push(mod_name);
+    let mut string_mod_name = String::from("");
+    string_mod_name.push_str(&mod_info.name);
+    string_mod_name.push_str("-");
+    string_mod_name.push_str(&mod_info.version);
 
-    let destination = path_to_mods_folder.clone();
+    path_to_mod.push(&string_mod_name);
 
-    match extract_zip(path_to_mod.as_path(), destination.as_path()) {
+    let mut destination = get_mod_path_for_loadout(&loadout_name);
+    destination.push(&mod_info.name);
+
+    match dircpy::copy_dir(path_to_mod, destination){
         Ok(_) => {
-            println!("Zip successfully extracted!");
-            return true
+
+            match get_loadout_json_as_struct(&loadout_name){
+                Ok(mut loadout_json) => {
+                    let new_struct = GameMod {
+                        enabled: mod_info.enabled,
+                        image: None,
+                        name: mod_info.name.clone(),
+                        src: mod_info.src.clone(),
+                        version: mod_info.version.clone()
+                    };
+                    loadout_json.modlist.push(new_struct);
+                    let _ = write_loadout_json(&loadout_json);
+                    return true
+                },
+                Err(err) => {
+                    println!("Failed to insert newly installed mod into loadoutJSON modlist due to error:\n{:?}", err);
+                    return false
+                }
+            }
+
         }
-        Err(err) => {
-            println!("Error while extracting copied mod:\n${:?}", err);
-            return false
-        }
+        Err(err)=>{println!("Failed to install mod to loadout due to error:\n{:?}", err); return false}
     }
 }
 
@@ -412,6 +410,15 @@ pub fn remove_mod_from_loadout(name: String, modname: String) -> bool {
     }
     let mut mod_path = get_mod_path_for_loadout(&name);
     mod_path.push(&modname);
+    if !mod_path.exists() {
+        match remove_mod_from_modlist(&name, &modname) {
+                true => {
+                    println!("Successfully deleted mod from loadout");
+                    return true;
+                }
+                false => return false,
+            };
+    }
     match fs::remove_dir_all(mod_path) {
         Ok(_) => {
             match remove_mod_from_modlist(&name, &modname) {

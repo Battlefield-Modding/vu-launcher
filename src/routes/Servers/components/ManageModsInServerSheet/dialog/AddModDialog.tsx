@@ -1,4 +1,4 @@
-import { editServerLoadout, installZippedModToLoadout } from '@/api'
+import { editServerLoadout, installModToLoadoutFromCache } from '@/api'
 import {
   Dialog,
   DialogClose,
@@ -8,18 +8,18 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { LoadoutJSON, QueryKey } from '@/config/config'
+import { GameMod, LoadoutJSON, QueryKey } from '@/config/config'
 import { useQueryClient } from '@tanstack/react-query'
 import { Plus, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
 export function AddModDialog({
-  modName,
+  mod,
   loadout,
   queryKey,
 }: {
-  modName: string
+  mod: GameMod
   loadout: LoadoutJSON
   queryKey: string
 }) {
@@ -27,10 +27,10 @@ export function AddModDialog({
   const { t } = useTranslation()
 
   async function handleClick() {
-    const status = await installZippedModToLoadout({ loadoutName: loadout.name, modName })
+    const status = await installModToLoadoutFromCache({ loadoutName: loadout.name, gameMod: mod })
 
     if (status) {
-      toast(`${t('servers.loadouts.loadout.mods.addModDialog.toast.success')}: ${modName}`)
+      toast(`${t('servers.loadouts.loadout.mods.addModDialog.toast.success')}: ${mod.name}`)
       queryClient.invalidateQueries({
         queryKey: [queryKey],
         refetchType: 'all',
@@ -40,7 +40,7 @@ export function AddModDialog({
         refetchType: 'all',
       })
     } else {
-      toast(`${t('servers.loadouts.loadout.mods.addModDialog.toast.failure')}: ${modName}`)
+      toast(`${t('servers.loadouts.loadout.mods.addModDialog.toast.failure')}: ${mod.name}`)
     }
   }
 
@@ -56,11 +56,11 @@ export function AddModDialog({
           <DialogTitle className="pb-4">
             {t('servers.loadouts.loadout.mods.addModDialog.title')}{' '}
             <code className="text-md rounded-md bg-gray-800 p-1 pl-2 pr-2">
-              {modName.length >= 20 ? `${modName.substring(0, 20)}...` : modName}
+              {mod.name.length >= 20 ? `${mod.name.substring(0, 20)}...` : mod.name}
             </code>
           </DialogTitle>
           <DialogDescription>
-            {t('servers.loadouts.loadout.mods.addModDialog.description')} {loadout.name}/{modName}?
+            {t('servers.loadouts.loadout.mods.addModDialog.description')} {loadout.name}/{mod.name}?
           </DialogDescription>
         </DialogHeader>
         <div className="flex justify-center gap-8">
@@ -73,7 +73,7 @@ export function AddModDialog({
           <DialogClose onClick={handleClick}>
             <p className="flex gap-4 rounded-md bg-green-600 p-2 hover:bg-green-600/80">
               <Plus /> {t('servers.loadouts.loadout.mods.addModDialog.confirm')}:{' '}
-              {modName.length >= 20 ? `${modName.substring(0, 20)}...` : modName}
+              {mod.name.length >= 20 ? `${mod.name.substring(0, 20)}...` : mod.name}
             </p>
           </DialogClose>
         </div>

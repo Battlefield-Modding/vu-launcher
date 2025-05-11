@@ -52,7 +52,7 @@ export enum rust_fns {
   copy_vu_prod_to_folder = 'copy_vu_prod_to_folder',
   add_vu_credentials = 'add_vu_credentials',
   remove_vu_credentials = 'remove_vu_credentials',
-  install_zipped_mod_to_loadout = 'install_zipped_mod_to_loadout',
+  install_mod_to_loadout_from_cache = 'install_mod_to_loadout_from_cache',
   get_all_loadout_names = 'get_all_loadout_names',
   get_loadout_json = 'get_loadout_json',
   make_cache_folder_names_same_as_mod_json_names = 'make_cache_folder_names_same_as_mod_json_names',
