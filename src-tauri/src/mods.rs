@@ -370,10 +370,8 @@ pub fn install_mods_on_loadout_creation(loadout: &LoadoutJson) -> Vec<GameMod> {
 
     let mut mod_names: Vec<GameMod> = Vec::new();
     for mod_info in &loadout.modlist {
-        if mod_info.name.contains(".zip") {
-            if !copy_mod_to_loadout_from_cache(&mod_info.name, path_to_mods_folder.clone()){
-                println!("Failed to install mod:\n${:?}", &mod_info.name);
-            }
+        if !copy_mod_to_loadout_from_cache(&mod_info.name, path_to_mods_folder.clone()){
+            println!("Failed to install mod:\n${:?}", &mod_info.name);
         }
     }
 
