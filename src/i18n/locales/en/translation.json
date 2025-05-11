@@ -201,6 +201,13 @@
           }
         },
         "title": "Installed Mods Appear Here",
+        "toast": {
+          "failure": "Failed to refresh mod folder names",
+          "success": "Successfully refreshed folder names"
+        },
+        "tooltip": {
+          "refresh": "Extract and rename folders based on their mod.json file"
+        },
         "trigger": "Manage Mods"
       }
     }

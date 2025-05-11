@@ -1,13 +1,9 @@
 use std::{
-    env,
-    fs::{self},
-    io::{self},
-    path::{Path, PathBuf},
-    process::Command,
-    os::windows::process::CommandExt,
+    env, fs::{self, File}, io::{self, BufReader}, os::windows::process::CommandExt, path::{Path, PathBuf}, process::Command
 };
 
 use serde_json::Error;
+use zip::{read::{root_dir_common_filter, ZipFile}, ZipArchive};
 
 use crate::{
     loadouts::{get_all_mod_json_in_loadout, get_loadout_json_as_struct, loadout_structs::{GameMod, LoadoutJson, ModJson}, write_loadout_json, write_to_txt_from_loadout}, reg_functions, servers::get_loadouts_path, CREATE_NO_WINDOW
@@ -224,34 +220,20 @@ pub fn get_mod_names_in_cache() -> Vec<String> {
 
 #[tauri::command]
 pub fn import_zipped_mod_to_cache(mod_location: String) -> bool {
-    let mut target_path = get_mod_cache_path();
+    let target_path = get_mod_cache_path();
 
     let mod_location_as_path = PathBuf::from(mod_location);
 
-    let mod_name = mod_location_as_path.file_name();
-    match mod_name {
-        Some(info) => {
-            target_path.push(info);
-            if target_path.exists() {
-                println!("Could not copy. File with exact name already exists.");
-                return false;
-            }
-        }
-        None => {
-            println!("Could not get mod's file name.");
-            return false;
-        }
-    };
-
-    match fs::copy(mod_location_as_path, target_path) {
-        Ok(_) => {
+    match extract_zip(&mod_location_as_path, &target_path){
+            Ok(_) => {
             make_cache_folder_names_same_as_mod_json_names();
-            return true},
+            return true
+        },
         Err(err) => {
             println!("{:?}", err);
             return false;
         }
-    };
+    }
 }
 
 #[tauri::command]
@@ -624,85 +606,85 @@ fn extract_zip(zip_path: &Path, path: &Path) -> Result<(), String> {
     Ok(())
 }
 
-pub fn make_cache_folder_names_same_as_mod_json_names() -> io::Result<Vec<GameMod>> {
+pub fn extract_mod_cache_zip_folders() -> bool {
     let mods_path = get_mod_cache_path();
-    let mut mod_list: Vec<GameMod> = Vec::new();
+    match fs::read_dir(&mods_path){
+        Ok(data) => {
+            data.for_each(|item| {
+                match item {
+                    Ok(info) => {
+                        let original_mod_path = info.path().clone();
+                        if original_mod_path.is_file(){
+                            let file_name = original_mod_path.file_name().unwrap().to_str().unwrap();
+                            if info.path().extension().unwrap() == "zip" {
+                                let target_path = mods_path.clone();
 
-    fs::read_dir(&mods_path)?.for_each(|item| {
-        match item {
-            Ok(info) => {
-                let original_mod_path = info.path().clone();
-                if original_mod_path.is_file(){
-                    let file_name = original_mod_path.file_name().unwrap().to_str().unwrap();
-                    if file_name.contains(".zip"){
-                        let mut target_path = mods_path.clone();
+                                let mut zip_path = mods_path.clone();
+                                zip_path.push(file_name);
 
-                        let mut zip_path = mods_path.clone();
-                        zip_path.push(file_name);
-
-                        match extract_zip(&zip_path, &target_path){
-                            Ok(_) => {},
-                            Err(err) => {println!("Failed to extract zip at {:?} due to error:\n{:?}", zip_path, err); return}
-                        };
-
-                        match file_name.split_once("."){
-                            Some((mod_name, _)) => {
-                                println!("Trying to get mod json for: {:?}", &mod_name);
-                                match get_mod_json_for_mod_in_cache(&mod_name.to_owned()){
-                                    Ok(mod_json) => {
-                                        let mut new_mod_name = mod_json.Name.clone();
-                                        new_mod_name.push_str("-");
-                                        new_mod_name.push_str(&mod_json.Version);
-                                        let mut new_mod_path = mods_path.clone();
-                                        new_mod_path.push(&new_mod_name);
-
-                                        target_path.push(mod_name);
-        
-                                        match fs::rename(&target_path, &new_mod_path) {
-                                            Ok(_)=>{println!("Successfully renamed extracted mod folder!")},
-                                            Err(err) => {println!("Failed to rename {:?} into {:?} due to error\n{:?}", target_path, new_mod_path, err)}
-                                        }
+                                match extract_zip(&zip_path, &target_path){
+                                    Ok(_) => {
+                                        println!("Extraction of {:?} is successfull!", &zip_path);
                                         match fs::remove_file(&zip_path){
-                                            Ok(_) => println!("Successfully deleted original zipmod folder: {:?}", zip_path),
-                                            Err(err)=>println!("Failed to delete original zipmod folder: {:?}", zip_path)
+                                            Ok(_) => {println!("Successfully removed zip file: {:?}", &zip_path)},
+                                            Err(err) => {println!("Failed to remove zip filed at {:?} due to error:\n{:?}", &zip_path, err)}
                                         }
                                     },
-                                    Err(err) => {
-                                        println!("Failed to rename the extracted mod {} into its mod JSON name due to error:\n{:?}", file_name, err);
-                                        target_path.push(mod_name);
-                                        match fs::remove_dir_all(&target_path){
-                                            Ok(_) => println!("Successfully deleted un-renamable mod folder: {:?}", mod_name),
-                                            Err(err)=>println!("Failed to delete un-renamable mod folder: {:?}", mod_name)
-                                        };
-                                        match fs::remove_file(&zip_path){
-                                            Ok(_) => println!("Successfully deleted un-renamable zipmod folder: {:?}", zip_path),
-                                            Err(err)=>println!("Failed to delete un-renamable zipmod folder: {:?}", zip_path)
-                                        }
-                                    }
-                                 }
-         
-                            },
-                            None => {
-
+                                    Err(err) => {println!("Failed to extract zip at {:?} due to error:\n{:?}", zip_path, err); return}
+                                };
                             }
                         }
+                    },
+                    Err(_) => {
+                        println!("Error when trying to extract zips");
                     }
-                } else { 
-                    let mod_name = original_mod_path.file_name().unwrap().to_str().unwrap().to_owned();
-                    match get_mod_json_for_mod_in_cache(&mod_name){
-                        Ok(mod_json) => {
-                            let mut new_mod_name = mod_json.Name.clone();
-                            new_mod_name.push_str("-");
-                            new_mod_name.push_str(&mod_json.Version);
-                            let mut new_mod_path = mods_path.clone();
-                            new_mod_path.push(&new_mod_name);
-    
-                            match fs::rename(&original_mod_path, &new_mod_path){
-                                Ok(_)=>{
-                                    println!("Successfully renamed extracted mod folder!")
+                };
+            });
+        },
+        Err(_) => return false
+    }
+    true
+}
+
+#[tauri::command]
+pub fn make_cache_folder_names_same_as_mod_json_names() -> bool {
+    extract_mod_cache_zip_folders();
+    let mods_path = get_mod_cache_path();
+    match fs::read_dir(&mods_path){
+        Ok(data) => {
+            data.for_each(|item| {
+                match item {
+                    Ok(info) => {
+                        let original_mod_path = info.path().clone();
+                        if original_mod_path.is_dir() { 
+                            let mod_name = original_mod_path.file_name().unwrap().to_str().unwrap().to_owned();
+                            match get_mod_json_for_mod_in_cache(&mod_name){
+                                Ok(mod_json) => {
+                                    let mut new_mod_name = mod_json.Name.clone();
+                                    new_mod_name.push_str("-");
+                                    new_mod_name.push_str(&mod_json.Version);
+                                    let mut new_mod_path = mods_path.clone();
+                                    new_mod_path.push(&new_mod_name);
+            
+                                    match fs::rename(&original_mod_path, &new_mod_path){
+                                        Ok(_)=>{
+                                            println!("Successfully renamed mod folder from {:?} to {:?}!", &original_mod_path, &new_mod_path);
+                                        },
+                                        Err(err) => {
+                                            println!("Failed to rename {:?} into {:?} due to error\n{:?}", original_mod_path, new_mod_path, err);
+                                            match fs::remove_dir_all(&original_mod_path){
+                                                Ok(_)=>{
+                                                    println!("Successfully deleted un-renamable mod folder: {:?}", &original_mod_path)
+                                                },
+                                                Err(err) => {
+                                                    println!("Failed to delete {:?}  due to error\n{:?}", &original_mod_path, err)
+                                                }
+                                            }
+                                        }   
+                                    }
                                 },
                                 Err(err) => {
-                                    println!("Failed to rename {:?} into {:?} due to error\n{:?}", original_mod_path, new_mod_path, err);
+                                    println!("Failed to rename the folder mod {} into its mod JSON name due to error:\n{:?}", mod_name, err);
                                     match fs::remove_dir_all(&original_mod_path){
                                         Ok(_)=>{
                                             println!("Successfully deleted un-renamable mod folder: {:?}", &original_mod_path)
@@ -711,27 +693,17 @@ pub fn make_cache_folder_names_same_as_mod_json_names() -> io::Result<Vec<GameMo
                                             println!("Failed to delete {:?}  due to error\n{:?}", &original_mod_path, err)
                                         }
                                     }
-                                }   
-                            }
-                        },
-                        Err(err) => {
-                            println!("Failed to rename the folder mod {} into its mod JSON name due to error:\n{:?}", mod_name, err);
-                            match fs::remove_dir_all(&original_mod_path){
-                                Ok(_)=>{
-                                    println!("Successfully deleted un-renamable mod folder: {:?}", &original_mod_path)
-                                },
-                                Err(err) => {
-                                    println!("Failed to delete {:?}  due to error\n{:?}", &original_mod_path, err)
                                 }
                             }
                         }
-                     }
-                }
-            }
-            Err(_) => {
-                println!("Error when reading mod JSONs")
-            }
-        };
-    });
-    Ok(mod_list)
+                    }
+                    Err(_) => {
+                        println!("Error when reading mod JSONs")
+                    }
+                };
+            });
+        },
+        Err(_) => return false
+    }
+    true
 }

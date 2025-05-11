@@ -340,3 +340,8 @@ export async function getLoadoutJson(loadoutName: string): Promise<Array<Loadout
 
   return loadoutJson
 }
+
+export async function refreshModCacheFolderNames() {
+  const status = await invoke(rust_fns.make_cache_folder_names_same_as_mod_json_names, {})
+  return status
+}

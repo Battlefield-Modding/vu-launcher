@@ -1,14 +1,23 @@
-import { getLoadoutNames, getModNamesInCache, getModNamesInLoadout } from '@/api'
+import {
+  getLoadoutNames,
+  getModNamesInCache,
+  getModNamesInLoadout,
+  refreshModCacheFolderNames,
+} from '@/api'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { GameMod, QueryKey, STALE } from '@/config/config'
-import { useQuery } from '@tanstack/react-query'
-import { Book, Loader } from 'lucide-react'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { Book, Loader, RefreshCcw } from 'lucide-react'
 import { useState } from 'react'
 import Mod from './Mod'
 import clsx from 'clsx'
 import { useTranslation } from 'react-i18next'
+import { Button } from '@/components/ui/button'
+import { TooltipWrapper } from '@/components/TooltipWrapper'
+import { toast } from 'sonner'
 
 export default function ManageModsSheet() {
+  const queryClient = useQueryClient()
   const [sheetOpen, setSheetOpen] = useState(false)
   const { t } = useTranslation()
 
@@ -64,6 +73,23 @@ export default function ManageModsSheet() {
     )
   }
 
+  async function handleClick() {
+    const status = await refreshModCacheFolderNames()
+    if (status) {
+      queryClient.invalidateQueries({
+        queryKey: [QueryKey.GetModNamesInCache],
+        refetchType: 'all',
+      })
+      queryClient.invalidateQueries({
+        queryKey: [QueryKey.GetAllModNames],
+        refetchType: 'all',
+      })
+      toast(t('mods.manage.sheet.toast.success'))
+    } else {
+      toast(t('mods.manage.sheet.toast.failure'))
+    }
+  }
+
   return (
     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
       <SheetTrigger>
@@ -86,6 +112,11 @@ export default function ManageModsSheet() {
                 >
                   <SheetTitle>
                     <code className="underline">{loadout.name}</code>
+                    <TooltipWrapper text={t('mods.manage.sheet.tooltip.refresh')}>
+                      <Button onClick={handleClick}>
+                        <RefreshCcw />
+                      </Button>
+                    </TooltipWrapper>
                   </SheetTitle>
                   <div>
                     {loadout.mods.map((modName, modIndex) => (
