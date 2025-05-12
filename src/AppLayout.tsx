@@ -10,7 +10,7 @@ import { firstTimeSetup, getUserPreferences, saveUserPreferences } from './api'
 import { invoke } from '@tauri-apps/api/core'
 import { Onboarding } from './components/Onboarding/Onboarding'
 
-function AppLayout() {
+export function AppLayout() {
   const [onboarding, setOnboarding] = useState(false)
   const { pathname } = useLocation()
   const navigate = useNavigate()
@@ -69,5 +69,3 @@ function AppLayout() {
     </>
   )
 }
-
-export default AppLayout

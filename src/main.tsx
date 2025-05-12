@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import AppLayout from './AppLayout'
+import { AppLayout } from './AppLayout'
 
 // import i18n (needs to be bundled ;))
 import './i18n/config'
