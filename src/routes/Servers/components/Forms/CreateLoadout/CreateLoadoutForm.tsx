@@ -17,7 +17,7 @@ import { toast } from 'sonner'
 import { createServerLoadout } from '@/api'
 import { useQueryClient } from '@tanstack/react-query'
 import { defaultServerConfig } from './Setup/defaultServerConfig'
-import { LoadoutJSON, QueryKey, routes } from '@/config/config'
+import { GameMod, LoadoutJSON, QueryKey, routes } from '@/config/config'
 import { useState } from 'react'
 import { LoaderComponent } from '@/components/LoaderComponent'
 import { Banlist } from './components/Forms/Banlist'
@@ -86,7 +86,7 @@ export type CreateLoadoutFormType = UseFormReturn<
   undefined
 >
 
-export function CreateLoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any; mods: string[] }) {
+export function CreateLoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any; mods: GameMod[] }) {
   const queryClient = useQueryClient()
   const [submitLoading, setSubmitLoading] = useState(false)
   const navigate = useNavigate()
@@ -97,24 +97,17 @@ export function CreateLoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any; m
     defaultValues: { ...defaultServerConfig },
   })
 
-  function onlyIncludeSelectedMods(mods: { string: boolean }) {
-    const correctedMods = []
-    if (mods) {
-      for (const [key, value] of Object.entries(mods)) {
-        if (value) {
-          // this is to undo the zod workaround of converting . to *
-          let mod_name_with_dots = key.split('*').join('.')
-          correctedMods.push(mod_name_with_dots)
-        }
-      }
-    }
-    return correctedMods
-  }
-
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    let correctedMods = onlyIncludeSelectedMods(values.modlist)
+    const correctedModlist: Array<GameMod> = []
+    if (values.modlist && values.modlist.length > 0) {
+      values.modlist.map((isEnabled: boolean, index: number) => {
+        if (isEnabled) {
+          correctedModlist.push(mods[index])
+        }
+      })
+    }
 
-    let correctedStartup = {
+    const correctedStartup = {
       admin: { ...defaultStartupArguments.admin, ...values.startup.admin },
       vars: { ...defaultStartupArguments.vars, ...values.startup.vars },
       vu: defaultStartupArguments.vu,
@@ -122,8 +115,8 @@ export function CreateLoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any; m
 
     const loadout: LoadoutJSON = {
       ...values,
+      modlist: correctedModlist,
       launch: defaultLaunchArguments,
-      modlist: correctedMods,
       startup: correctedStartup,
     }
 
