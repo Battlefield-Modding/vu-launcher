@@ -68,13 +68,13 @@ fn is_loadout(path: &PathBuf) -> bool {
     return loadout_json_path.exists();
 }
 
-fn has_loadout_json(path: &PathBuf) -> bool {
+pub fn has_loadout_json(path: &PathBuf) -> bool {
     let mut server_path = path.clone();
     server_path.push("loadout.json");
     return server_path.exists();
 }
 
-fn make_loadout_json_from_txt_files(loadout_name: &String) -> io::Result<bool> {
+pub fn make_loadout_json_from_txt_files(loadout_name: &String) -> io::Result<bool> {
     let startup_args = import_startup_txt_into_loadout(&loadout_name)?;
     let maplist_args = match import_maplist_txt_into_loadout(&loadout_name) {
         Ok(info) => info,

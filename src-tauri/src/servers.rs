@@ -10,9 +10,9 @@ use serde::{Deserialize, Serialize};
 use crate::{
     get_user_preferences_as_struct,
     loadouts::{
-        get_loadout_json_as_struct, loadout_common_launch_args_to_vec,
-        loadout_server_launch_args_to_vec, loadout_structs::LoadoutJson, write_loadout_json,
-        write_to_txt_from_loadout,
+        get_loadout_json_as_struct, has_loadout_json, loadout_common_launch_args_to_vec,
+        loadout_server_launch_args_to_vec, loadout_structs::LoadoutJson,
+        make_loadout_json_from_txt_files, write_loadout_json, write_to_txt_from_loadout,
     },
     mods::{
         get_mod_names_in_loadout, install_mods_on_loadout_creation,
@@ -207,6 +207,22 @@ pub fn get_loadout_names() -> Vec<String> {
                         if info.path().is_dir() {
                             let temp = info.file_name();
                             let temp_as_str = String::from(temp.to_string_lossy());
+                            match has_loadout_json(&info.path()) {
+                                true => {}
+                                false => {
+                                    println!("Trying to make loadoutJSON from txt files");
+                                    match make_loadout_json_from_txt_files(&temp_as_str) {
+                                        Ok(_) => println!(
+                                            "Succesfully made loadout_json for {:?}",
+                                            &temp_as_str
+                                        ),
+                                        Err(err) => println!(
+                                            "Failed to make loadout_json for {:?} due to error:\n{:?}",
+                                            &temp_as_str, err
+                                        ),
+                                    }
+                                }
+                            }
                             loadout_dirs.push(temp_as_str);
                         }
                     }
