@@ -34,7 +34,7 @@ export function Banlist({ form, alwaysAutoFocus }: { form: any; alwaysAutoFocus:
           {t('servers.loadouts.createLoadout.form.banlist.button.addFirstPlayer')}
         </Button>
       )}
-      <div className="flex flex-col gap-4">
+      <div className="ml-4 flex flex-col gap-4">
         {fieldArray.fields.map((x, index) => {
           return (
             <div className="flex flex-col gap-4" key={`${x.id}`}>

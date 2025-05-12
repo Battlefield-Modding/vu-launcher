@@ -11,6 +11,7 @@ export function StartupSearch({
   setFilteredArgs: any
 }) {
   const { t } = useTranslation()
+  // @ts-ignore
   const [translations, setTranslations] = useState(
     t('startupDescriptions', { returnObjects: true }),
   )
@@ -20,7 +21,9 @@ export function StartupSearch({
       // @ts-ignore
       const filtered_fields = Object.keys(defaultStartupArguments[x])
         .filter((key) => {
+          // @ts-ignore
           if (translations[x] && translations[x][key]) {
+            // @ts-ignore
             return translations[x][key].toLowerCase().includes(e.target.value.toLowerCase())
           }
         })

@@ -10,7 +10,6 @@ import { LoaderComponent } from '@/components/LoaderComponent'
 import { LoadoutJSON, QueryKey } from '@/config/config'
 import { editServerLoadout } from '@/api'
 import { toast } from 'sonner'
-import { defaultLaunchArguments } from './setup/LaunchArguments'
 import { LaunchArgumentFormBuilder } from './LaunchArgumentFormBuilder/LaunchArgumentFormBuilder'
 import { LaunchArgumentsSearch } from './LaunchArgumentsSearch'
 import { useTranslation } from 'react-i18next'
@@ -111,6 +110,7 @@ export function LaunchArgumentForm({
         <LaunchArgumentsSearch searchRef={searchRef} setFilteredArgs={setFilteredArgs} />
 
         <div className="flex flex-col gap-6 pt-12">
+          {/* @ts-ignore */}
           <LaunchArgumentFormBuilder
             form={form}
             filteredArguments={filteredArgs}

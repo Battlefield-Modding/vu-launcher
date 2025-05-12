@@ -11,6 +11,7 @@ export function LaunchArgumentsSearch({
   setFilteredArgs: any
 }) {
   const { t } = useTranslation()
+  // @ts-expect-error
   const [translations, setTranslations] = useState(
     t('launchArgumentDescriptions', { returnObjects: true }),
   )
@@ -19,6 +20,7 @@ export function LaunchArgumentsSearch({
     const info = Object.keys(defaultLaunchArguments).map((x) => {
       // @ts-ignore
       const filtered_fields = Object.keys(defaultLaunchArguments[x])
+        // @ts-ignore
         .filter((key) => translations[x][key].toLowerCase().includes(e.target.value.toLowerCase()))
         .reduce((obj, key) => {
           // @ts-ignore

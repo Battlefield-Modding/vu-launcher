@@ -80,7 +80,6 @@ export function FormBuilder({
         return (
           <StringArrayComponent
             key={key}
-            defaultvalue={value}
             sectionName={sectionName}
             label={label}
             form={form}
@@ -94,6 +93,7 @@ export function FormBuilder({
       if (fieldType === 'none') {
         return <div key={key}></div>
       }
+      return <></>
     })
   })
 }

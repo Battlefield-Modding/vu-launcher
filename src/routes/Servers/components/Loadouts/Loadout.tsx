@@ -36,7 +36,7 @@ export function Loadout() {
   const { isPending, isError, data, error } = useQuery({
     queryKey: [QueryKey.GetLoadoutJSON, loadoutName],
     queryFn: async (): Promise<{ preferences: UserPreferences; loadout: LoadoutJSON }> => {
-      const loadout = (await getLoadoutJson(loadoutName))[0]
+      const loadout = (await getLoadoutJson(loadoutName as string))[0]
       const preferences = await getUserPreferences()
 
       return { preferences, loadout }
@@ -63,11 +63,11 @@ export function Loadout() {
   }
 
   async function handlePlay() {
-    let status = await startServerLoadout(loadoutName)
+    let status = await startServerLoadout(loadoutName as string)
     if (status) {
       toast(t('servers.loadouts.loadout.toast.playSuccess'))
       setTimeout(() => {
-        playVUOnLocalServer(loadoutName)
+        playVUOnLocalServer(loadoutName as string)
       }, 1000)
     } else {
       toast(`${t('servers.loadouts.loadout.toast.playFailure')}: ${loadoutName}`)
@@ -75,7 +75,7 @@ export function Loadout() {
   }
 
   async function handleServer() {
-    let status = await startServerLoadout(loadoutName)
+    let status = await startServerLoadout(loadoutName as string)
     if (status) {
       toast(t('servers.loadouts.loadout.toast.serverSuccess'))
     } else {
@@ -85,11 +85,11 @@ export function Loadout() {
 
   async function handleOpenExplorer() {
     toast(`${t('servers.loadouts.loadout.toast.openExplorer')}: ${loadoutName}`)
-    await openExplorerAtLoadout(loadoutName)
+    await openExplorerAtLoadout(loadoutName as string)
   }
 
   async function handleRefreshLoadout() {
-    const status = await refreshLoadout(loadoutName)
+    const status = await refreshLoadout(loadoutName as string)
     if (status) {
       //servers.loadouts.loadout.toast.serverFailure
       toast(`${t('servers.loadouts.loadout.toast.refreshSuccess')}: ${loadoutName}`)

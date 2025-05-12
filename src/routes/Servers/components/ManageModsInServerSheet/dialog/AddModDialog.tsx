@@ -1,4 +1,4 @@
-import { editServerLoadout, installModToLoadoutFromCache } from '@/api'
+import { installModToLoadoutFromCache } from '@/api'
 import {
   Dialog,
   DialogClose,

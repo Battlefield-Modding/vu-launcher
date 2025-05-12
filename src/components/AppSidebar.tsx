@@ -46,7 +46,7 @@ export function AppSidebar() {
   const { pathname } = useLocation()
   const { t } = useTranslation()
 
-  const { isPending, isError, data, error } = useQuery({
+  const { data } = useQuery({
     queryKey: [QueryKey.GetAllLoadoutNames],
     queryFn: getAllLoadoutNames,
     staleTime: STALE.never,

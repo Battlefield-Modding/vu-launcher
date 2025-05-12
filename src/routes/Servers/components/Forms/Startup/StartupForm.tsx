@@ -173,6 +173,7 @@ export function StartupForm({
         <StartupSearch setFilteredArgs={setFilteredArgs} searchRef={searchRef} />
 
         <div className="flex flex-col gap-6 pt-12">
+          {/* @ts-ignore */}
           <FormBuilder form={form} filteredArguments={filteredArgs} sectionNames={sectionNames} />
         </div>
 
