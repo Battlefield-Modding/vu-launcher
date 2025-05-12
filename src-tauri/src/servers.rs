@@ -304,9 +304,20 @@ pub async fn start_loadout(name: String) -> bool {
     let mut common = loadout_common_launch_args_to_vec(&loadout.launch.common);
     args.append(&mut common);
 
+    let mut console_status = CREATE_NO_WINDOW;
+
+    match loadout.launch.server.headless {
+        Some(status) => {
+            if status {
+                console_status = CREATE_NEW_CONSOLE
+            }
+        }
+        None => {}
+    }
+
     Command::new("cmd")
         .args(args)
-        .creation_flags(CREATE_NEW_CONSOLE)
+        .creation_flags(console_status)
         .spawn()
         .expect("failed to execute process");
 
