@@ -591,10 +591,26 @@
         "title": "BF3 aktivieren"
       }
     },
+    "automaticUpdate": {
+      "title": "Aktivieren Sie automatische Updates zum Start des Launchers",
+      "toast": {
+        "disable": "Deaktivierte automatische Updates zum Start von Launcher",
+        "enable": "Aktivierte automatische Updates zum Start des Launchers"
+      }
+    },
+    "checkUpdates": {
+      "title": "Aktivieren Sie die Überprüfung nach Updates zum Launcher -Startup",
+      "toast": {
+        "disable": "Deaktivierte Überprüfung nach Updates zum Start von Launcher",
+        "enable": "Aktivierte Überprüfung nach Updates zum Start des Launchers"
+      }
+    },
+    "error": "Einstellungen nicht laden",
     "languageSelector": {
       "title": "Wählen Sie Ihre Sprache",
       "toast": "Sprache geändert in"
     },
+    "loading": "Ladeeinstellungen",
     "multiAccount": {
       "title": "Multi-Account Join zeigen?",
       "toast": {
@@ -612,7 +628,10 @@
         "success": "Server GUID erfolgreich aktualisiert!"
       }
     },
-    "title": "Einstellungen"
+    "title": "Einstellungen",
+    "toast": {
+      "failed": "Die Benutzereinstellungen nicht aktualisieren"
+    }
   },
   "sidebar": {
     "header": "Inoffizieller VU -Launcher",
@@ -706,5 +725,9 @@
   "toggleDevBranch": {
     "failure": "Die Präferenz nicht aktualisieren",
     "success": "Präferenz gespeichert"
+  },
+  "update": {
+    "header": "Update installieren",
+    "install": "Neues Update gefunden! \nJetzt installieren?"
   }
 }

@@ -10,49 +10,13 @@ import { firstTimeSetup, getUserPreferences, saveUserPreferences } from './api'
 import { invoke } from '@tauri-apps/api/core'
 import { Onboarding } from './components/Onboarding/Onboarding'
 
-import { check } from '@tauri-apps/plugin-updater'
-import { relaunch } from '@tauri-apps/plugin-process'
+import { Updating } from './components/Updating'
 export function AppLayout() {
   const [onboarding, setOnboarding] = useState(false)
   const { pathname } = useLocation()
   const navigate = useNavigate()
 
   useEffect(() => {
-    async function checkForUpdates() {
-      try {
-        const update = await check()
-        if (update) {
-          console.log(
-            `found update ${update.version} from ${update.date} with notes ${update.body}`,
-          )
-          let downloaded = 0
-          let contentLength = 0
-          // alternatively we could also call update.download() and update.install() separately
-          await update.downloadAndInstall((event) => {
-            switch (event.event) {
-              case 'Started':
-                // @ts-ignore
-                contentLength = event.data.contentLength
-                console.log(`started downloading ${event.data.contentLength} bytes`)
-                break
-              case 'Progress':
-                downloaded += event.data.chunkLength
-                console.log(`downloaded ${downloaded} from ${contentLength}`)
-                break
-              case 'Finished':
-                console.log('download finished')
-                break
-            }
-          })
-
-          console.log('update installed')
-          await relaunch()
-        }
-      } catch (err) {
-        console.log(`Failed to check for updates due to error:\n[${err}]`)
-      }
-    }
-
     async function handleOnboarding() {
       await firstTimeSetup()
       const preferences = await getUserPreferences()
@@ -73,8 +37,6 @@ export function AppLayout() {
     navigateToPreviousRoute()
 
     invoke('show_window')
-
-    checkForUpdates()
   }, [])
 
   useEffect(() => {
@@ -103,6 +65,7 @@ export function AppLayout() {
             <Outlet />
           </main>
           <Toaster />
+          <Updating />
         </SidebarProvider>
       )}
     </>

@@ -77,6 +77,8 @@ struct UserPreferences {
     preferred_player_index: i32,
     preferred_server_index: i32,
     last_visted_route: String,
+    automatically_check_for_updates: bool,
+    automatically_install_update_if_found: bool,
 }
 
 impl UserPreferences {
@@ -94,6 +96,8 @@ impl UserPreferences {
             preferred_player_index: 9001,
             preferred_server_index: 9001,
             last_visted_route: String::from(""),
+            automatically_check_for_updates: false,
+            automatically_install_update_if_found: false,
         }
     }
 }
@@ -112,6 +116,8 @@ struct OptionalUserPreferences {
     preferred_player_index: Option<i32>,
     preferred_server_index: Option<i32>,
     last_visted_route: Option<String>,
+    automatically_check_for_updates: Option<bool>,
+    automatically_install_update_if_found: Option<bool>,
 }
 
 fn set_default_preferences() -> bool {
@@ -367,6 +373,18 @@ fn upgrade_preferences_object(old_preferences: OptionalUserPreferences) -> UserP
     match old_preferences.usernames {
         Some(info) => {
             new_preferences.usernames = info;
+        }
+        None => {}
+    }
+    match old_preferences.automatically_check_for_updates {
+        Some(info) => {
+            new_preferences.automatically_check_for_updates = info;
+        }
+        None => {}
+    }
+    match old_preferences.automatically_install_update_if_found {
+        Some(info) => {
+            new_preferences.automatically_install_update_if_found = info;
         }
         None => {}
     }

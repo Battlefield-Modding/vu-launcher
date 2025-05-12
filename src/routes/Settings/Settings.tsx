@@ -8,6 +8,9 @@ import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
 import { LanguageSelector } from './components/LanguageSelector'
 import { useTranslation } from 'react-i18next'
+import { MultiAccountToggle } from './components/MultiAccountToggle'
+import { AutomaticallyUpdateToggle } from './components/AutomaticallyUpdateToggle'
+import { CheckForUpdatesToggle } from './components/CheckForUpdatesToggle'
 
 export default function Settings() {
   const queryClient = useQueryClient()
@@ -39,7 +42,7 @@ export default function Settings() {
 
   return (
     <div className="flex min-h-[100vh] flex-col">
-      <div className="flex flex-col gap-16 rounded-md p-8 text-white">
+      <div className="flex flex-col gap-4 rounded-md p-8 text-white">
         <h1 className="text-center text-4xl">{t('settings.title')}</h1>
         <div>
           <ActivateBF3Sheet />
@@ -51,39 +54,9 @@ export default function Settings() {
 
         <LocalServerGuidForm guid={data.server_guid} />
 
-        <div className="flex">
-          <label className="flex flex-col justify-center rounded-md text-xl leading-10 text-white">
-            {t('settings.multiAccount.title')}
-          </label>
-          <Input
-            type={'checkbox'}
-            className="max-w-16"
-            defaultChecked={data.show_multiple_account_join}
-            onClick={async (e) => {
-              const target = e.target as HTMLInputElement
-              const preferences = {
-                ...data,
-                show_multiple_account_join: target.checked,
-              }
-
-              const status = await saveUserPreferences(preferences)
-
-              if (status) {
-                if (target.checked) {
-                  toast(t('settings.multiAccount.toast.enable'))
-                } else {
-                  toast(t('settings.multiAccount.toast.disable'))
-                }
-                queryClient.invalidateQueries({
-                  queryKey: [QueryKey.UserPreferences],
-                  refetchType: 'all',
-                })
-              } else {
-                toast(t('settings.multiAccount.toast.failed'))
-              }
-            }}
-          />
-        </div>
+        <MultiAccountToggle data={data} />
+        <CheckForUpdatesToggle data={data} />
+        {data.automatically_check_for_updates && <AutomaticallyUpdateToggle data={data} />}
       </div>
     </div>
   )

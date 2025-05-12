@@ -140,6 +140,8 @@ export type UserPreferences = {
   preferred_player_index: number
   preferred_server_index: number
   last_visted_route: string
+  automatically_check_for_updates: boolean
+  automatically_install_update_if_found: boolean
 }
 
 export type SavedServer = {
