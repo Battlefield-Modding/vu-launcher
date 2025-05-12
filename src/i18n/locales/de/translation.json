@@ -164,8 +164,17 @@
       },
       "sheet": {
         "description": "Akzeptiert .zip -Dateien",
+        "folder": "Ordner",
         "title": "Importieren Sie ein Venedig -MOD, der mod entfesselt wurde",
         "trigger": "Mods importieren"
+      }
+    },
+    "importFolder": {
+      "form": {
+        "drag": "Ziehen Sie n Ihren Mod -Ordner hier ab.",
+        "toast": {
+          "invalid": "Es werden nur Verzeichnisse akzeptiert"
+        }
       }
     },
     "manage": {
@@ -193,6 +202,13 @@
           }
         },
         "title": "Installierte Mods werden hier angezeigt",
+        "toast": {
+          "failure": "Es wurde nicht aufgegriffen, Modordnernamen zu aktualisieren",
+          "success": "Erfolgreich aktualisierte Ordneramen"
+        },
+        "tooltip": {
+          "refresh": "Ordner und benennen Sie Ordner basierend auf ihrer Mod.json -Datei aus"
+        },
         "trigger": "Mods verwalten"
       }
     }

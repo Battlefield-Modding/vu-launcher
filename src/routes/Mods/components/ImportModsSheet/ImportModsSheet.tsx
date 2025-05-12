@@ -51,7 +51,7 @@ export default function ImportModsSheet() {
               setZipActive(() => false)
             }}
           >
-            Folder <Folder />
+            {t('mods.import.sheet.folder')} <Folder />
           </div>
         </div>
         {zipActive && <ZippedModImport />}

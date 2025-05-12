@@ -164,6 +164,7 @@
       },
       "sheet": {
         "description": "Accepts .zip files",
+        "folder": "Folder",
         "title": "Import a Venice Unleashed Mod",
         "trigger": "Import Mods"
       }
