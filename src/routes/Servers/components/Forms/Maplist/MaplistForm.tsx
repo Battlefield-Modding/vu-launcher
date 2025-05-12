@@ -15,7 +15,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useFieldArray, useForm } from 'react-hook-form'
-import { allMaps } from './Setup/allMaps'
+import { allMaps, RealityModGameModes } from './Setup/allMaps'
 import { Trash } from 'lucide-react'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -23,7 +23,7 @@ import { LoadoutJSON, QueryKey } from '@/config/config'
 import { editServerLoadout } from '@/api'
 import { toast } from 'sonner'
 import { useQueryClient } from '@tanstack/react-query'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { LoaderComponent } from '@/components/LoaderComponent'
 import { useTranslation } from 'react-i18next'
 
@@ -44,6 +44,7 @@ export function MaplistForm({
   loadout: LoadoutJSON
 }) {
   const [submitLoading, setSubmitLoading] = useState(false)
+  const [realityModActive, SetRealityModActive] = useState(false)
   const queryClient = useQueryClient()
   const { t } = useTranslation()
 
@@ -52,12 +53,29 @@ export function MaplistForm({
     defaultValues: { maplist: loadout.maplist },
   })
 
+  useEffect(() => {
+    function isRealityModActive() {
+      loadout.modlist?.forEach((mod) => {
+        if (mod.name.toLowerCase() === 'realitymod') {
+          if (mod.enabled) {
+            SetRealityModActive(() => true)
+            return
+          } else {
+            SetRealityModActive(() => false)
+            return
+          }
+        }
+      })
+    }
+
+    isRealityModActive()
+  }, [SetRealityModActive, loadout])
+
   function clearGamemode(index: number) {
     form.resetField(`maplist.${index}.gameMode`)
   }
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
     const finalLoadout: LoadoutJSON = {
       ...loadout,
       maplist: values.maplist,
@@ -70,7 +88,7 @@ export function MaplistForm({
     if (status) {
       toast(`${t('servers.loadouts.loadout.maplist.form.toast.success')} ${loadout.name}`)
       queryClient.invalidateQueries({
-        queryKey: [QueryKey.GetAllLoadoutJSON],
+        queryKey: [QueryKey.GetLoadoutJSON],
         refetchType: 'all',
       })
       setSheetOpen(false)
@@ -156,18 +174,29 @@ export function MaplistForm({
                               />
                             </SelectTrigger>
                           </FormControl>
+
                           <SelectContent>
-                            {allMaps
-                              .filter(
-                                (x) => x.mapCode === form.getValues(`maplist.${index}.mapCode`),
-                              )[0]
-                              ?.gameModes.map((x, index) => {
+                            {realityModActive &&
+                              RealityModGameModes.map((x, index) => {
                                 return (
                                   <SelectItem key={`chosen-gamemode-${index}`} value={x}>
                                     {x}
                                   </SelectItem>
                                 )
                               })}
+
+                            {!realityModActive &&
+                              allMaps
+                                .filter(
+                                  (x) => x.mapCode === form.getValues(`maplist.${index}.mapCode`),
+                                )[0]
+                                ?.gameModes.map((x, index) => {
+                                  return (
+                                    <SelectItem key={`chosen-gamemode-${index}`} value={x}>
+                                      {x}
+                                    </SelectItem>
+                                  )
+                                })}
                           </SelectContent>
                         </Select>
                         <FormMessage />

@@ -11,6 +11,8 @@ import { Servers } from './routes/Servers/Servers'
 import Mods from './routes/Mods/Mods'
 import Settings from './routes/Settings/Settings'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { LoadoutContainer } from './routes/Servers/components/Loadouts/LoadoutContainer'
+import { Loadout } from './routes/Servers/components/Loadouts/Loadout'
 
 const router = createBrowserRouter([
   {
@@ -18,7 +20,17 @@ const router = createBrowserRouter([
     element: <AppLayout />,
     children: [
       { path: routes.HOME, element: <Home /> },
-      { path: routes.SERVERS, element: <Servers /> },
+      {
+        path: routes.SERVERS,
+        element: <Servers />,
+        children: [
+          {
+            path: routes.SERVERS,
+            element: <LoadoutContainer />,
+            children: [{ path: `${routes.SERVERS}/:loadoutName`, element: <Loadout /> }],
+          },
+        ],
+      },
       { path: routes.MODS, element: <Mods /> },
       { path: routes.SETTINGS, element: <Settings /> },
     ],

@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 import { Form } from '@/components/ui/form'
 import { useQueryClient } from '@tanstack/react-query'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { LoaderComponent } from '@/components/LoaderComponent'
 import { FormBuilder } from './FormBuilder/FormBuilder'
 import { LoadoutJSON, QueryKey } from '@/config/config'
@@ -111,12 +111,36 @@ export function StartupForm({
   const queryClient = useQueryClient()
   const [submitLoading, setSubmitLoading] = useState(false)
   const [filteredArgs, setFilteredArgs] = useState<{}>({ ...existingLoadout.startup })
+  const [realityModActive, SetRealityModActive] = useState(false)
   const { t } = useTranslation()
+
+  const rm = existingLoadout.startup.RM
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: existingLoadout.startup,
+    defaultValues: {
+      ...existingLoadout.startup,
+      RM: rm === null || rm === undefined ? undefined : rm,
+    },
   })
+
+  useEffect(() => {
+    function isRealityModActive() {
+      existingLoadout.modlist?.forEach((mod) => {
+        if (mod.name.toLowerCase() === 'realitymod') {
+          if (mod.enabled) {
+            SetRealityModActive(() => true)
+            return
+          } else {
+            SetRealityModActive(() => false)
+            return
+          }
+        }
+      })
+    }
+
+    isRealityModActive()
+  }, [SetRealityModActive, existingLoadout])
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const payload = { ...existingLoadout, startup: values }
@@ -127,19 +151,16 @@ export function StartupForm({
 
     if (status) {
       toast(`${t('servers.loadouts.loadout.startup.form.toast.success')} ${existingLoadout.name}`)
-      queryClient.invalidateQueries({ queryKey: [QueryKey.GetAllLoadoutJSON], refetchType: 'all' })
+      queryClient.invalidateQueries({ queryKey: [QueryKey.GetLoadoutJSON], refetchType: 'all' })
       setSheetOpen(() => false)
     } else {
       toast(`${t('servers.loadouts.loadout.startup.form.toast.failure')} ${existingLoadout.name}`)
     }
   }
 
-  const sectionNames = ['admin', 'vars', 'vu', 'reservedSlots']
+  const sectionNames = ['admin', 'vars', 'vu', 'reservedSlots'] as Array<keyof StartupArgs>
   if (existingLoadout && existingLoadout.modlist) {
-    if (
-      existingLoadout.modlist.includes('RealityMod') ||
-      existingLoadout.modlist.includes('realitymod')
-    ) {
+    if (realityModActive) {
       if (!sectionNames.includes('RM')) {
         sectionNames.push('RM')
       }
@@ -152,6 +173,7 @@ export function StartupForm({
         <StartupSearch setFilteredArgs={setFilteredArgs} searchRef={searchRef} />
 
         <div className="flex flex-col gap-6 pt-12">
+          {/* @ts-ignore */}
           <FormBuilder form={form} filteredArguments={filteredArgs} sectionNames={sectionNames} />
         </div>
 

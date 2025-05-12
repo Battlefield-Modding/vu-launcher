@@ -37,7 +37,7 @@ export function DeleteModDialog({
         refetchType: 'all',
       })
       queryClient.invalidateQueries({
-        queryKey: [QueryKey.GetAllLoadoutJSON],
+        queryKey: [QueryKey.GetLoadoutJSON],
         refetchType: 'all',
       })
     } else {

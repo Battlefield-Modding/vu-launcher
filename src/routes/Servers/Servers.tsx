@@ -3,9 +3,9 @@ import { QueryKey, STALE } from '@/config/config'
 import { getUserPreferences, serverKeyExists } from '@/api'
 import { useQuery } from '@tanstack/react-query'
 import { FirstTimeSetup } from './components/Forms/FirstTimeSetup/FirstTimeSetup'
-import { LoadoutContainer } from './components/Loadouts/LoadoutContainer'
 import LocalServerGuidForm from '../Settings/components/LocalServerGuidForm'
 import { useTranslation } from 'react-i18next'
+import { Outlet } from 'react-router'
 
 export function Servers() {
   const { t } = useTranslation()
@@ -54,7 +54,7 @@ export function Servers() {
 
   return (
     <div className="m-auto flex min-h-[100vh] flex-col justify-center">
-      <LoadoutContainer />
+      <Outlet />
     </div>
   )
 }

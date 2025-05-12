@@ -83,6 +83,8 @@ export function LaunchArgumentFormBuilder({
       if (fieldType === 'none') {
         return <div key={key}></div>
       }
+
+      return <></>
     })
   })
 }

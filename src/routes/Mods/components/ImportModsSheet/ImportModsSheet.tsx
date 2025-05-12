@@ -1,18 +1,14 @@
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet'
-import ModUpload from './ModUpload'
-import { Upload } from 'lucide-react'
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+import { Folder, FolderArchive, Upload } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { ModFolderImport } from './ModFolderImport'
+import { ZippedModImport } from './ZippedModImport'
+import clsx from 'clsx'
 
 export default function ImportModsSheet() {
   const [sheetOpen, setSheetOpen] = useState(false)
+  const [zipActive, setZipActive] = useState(false)
   const { t } = useTranslation()
 
   return (
@@ -23,12 +19,36 @@ export default function ImportModsSheet() {
         </div>
       </SheetTrigger>
       <SheetContent className="flex flex-col">
-        <SheetHeader className="m-auto w-96">
-          <SheetTitle>{t('mods.import.sheet.title')}</SheetTitle>
-          <SheetDescription>{t('mods.import.sheet.description')}</SheetDescription>
+        <SheetHeader>
+          <SheetTitle className="text-center">{t('mods.import.sheet.title')}</SheetTitle>
         </SheetHeader>
         <br />
-        <ModUpload />
+        <div className="flex justify-center gap-8">
+          <div
+            className={clsx(
+              'flex min-h-20 min-w-20 flex-col items-center justify-center rounded-md border bg-secondary p-4 transition hover:cursor-pointer hover:bg-secondary/80',
+              zipActive && 'border-cyan-500',
+            )}
+            onClick={() => {
+              setZipActive(() => true)
+            }}
+          >
+            .zip <FolderArchive />
+          </div>
+          <div
+            className={clsx(
+              'flex min-h-20 min-w-20 flex-col items-center justify-center rounded-md border bg-secondary p-4 transition hover:cursor-pointer hover:bg-secondary/80',
+              !zipActive && 'border-cyan-500',
+            )}
+            onClick={() => {
+              setZipActive(() => false)
+            }}
+          >
+            {t('mods.import.sheet.folder')} <Folder />
+          </div>
+        </div>
+        {zipActive && <ZippedModImport />}
+        {!zipActive && <ModFolderImport />}
       </SheetContent>
     </Sheet>
   )

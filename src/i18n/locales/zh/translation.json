@@ -164,8 +164,17 @@
       },
       "sheet": {
         "description": "接受.zip文件",
+        "folder": "文件夹",
         "title": "导入威尼斯释放mod",
         "trigger": "导入mod"
+      }
+    },
+    "importFolder": {
+      "form": {
+        "drag": "在此处拖动n放置您的mod文件夹",
+        "toast": {
+          "invalid": "只接受目录"
+        }
       }
     },
     "manage": {
@@ -193,6 +202,13 @@
           }
         },
         "title": "安装的mod出现在这里",
+        "toast": {
+          "failure": "无法刷新mod文件夹名称",
+          "success": "成功刷新文件夹名称"
+        },
+        "tooltip": {
+          "refresh": "根据其mod.json文件提取和重命名文件夹"
+        },
         "trigger": "管理mod"
       }
     }
@@ -476,6 +492,7 @@
           },
           "sheet": {
             "modCache": "mod-cache",
+            "noMods": "mod_cache中没有mods",
             "trigger": "mods"
           }
         },
@@ -685,5 +702,9 @@
       "TimeScale": "减慢或加快游戏速度 [0.0，2.0]",
       "VehicleDisablingEnabled": "启用对车辆的移动命中"
     }
+  },
+  "toggleDevBranch": {
+    "failure": "无法更新偏好",
+    "success": "保存的偏好"
   }
 }

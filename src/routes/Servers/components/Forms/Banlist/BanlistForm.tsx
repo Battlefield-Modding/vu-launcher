@@ -49,7 +49,7 @@ export function BanlistForm({
     if (status) {
       toast(`${t('servers.loadouts.loadout.banlist.form.toast.success')}: ${loadout.name}`)
       queryClient.invalidateQueries({
-        queryKey: [QueryKey.GetAllLoadoutJSON],
+        queryKey: [QueryKey.GetLoadoutJSON],
         refetchType: 'all',
       })
       setSheetOpen(false)

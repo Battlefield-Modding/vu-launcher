@@ -18,10 +18,11 @@ import { importLoadoutFromPath } from '@/api'
 import { useState } from 'react'
 import { LoadoutDragDrop } from './LoadoutDragDrop'
 import { useQueryClient } from '@tanstack/react-query'
-import { QueryKey } from '@/config/config'
+import { QueryKey, routes } from '@/config/config'
 import clsx from 'clsx'
 import { LoaderComponent } from '@/components/LoaderComponent'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router'
 
 const formSchema = z.object({
   name: z
@@ -47,6 +48,7 @@ export function UploadLoadoutForm({
   const { t } = useTranslation()
   const queryClient = useQueryClient()
   const [path, setPath] = useState('')
+  const navigate = useNavigate()
   const [submitLoading, setSubmitLoading] = useState(false)
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -68,10 +70,11 @@ export function UploadLoadoutForm({
     if (status) {
       toast(`${t('servers.loadouts.importLoadout.form.toast.success')}: ${values.name}`)
       queryClient.invalidateQueries({
-        queryKey: [QueryKey.GetAllLoadoutJSON],
+        queryKey: [QueryKey.GetAllLoadoutNames],
         refetchType: 'all',
       })
       setSheetOpen(false)
+      navigate(`${routes.SERVERS}/${values.name}`)
     } else {
       toast(t('servers.loadouts.importLoadout.form.toast.failure'))
     }

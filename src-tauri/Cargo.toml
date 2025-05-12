@@ -28,7 +28,7 @@ winreg = "0.52.0"
 dirs-next = "2.0.0"
 reqwest = { version = "0.12.9", features = ["blocking"] }
 tauri-plugin-dialog = "2"
-zip = "2.2.2"
+zip = "2.6.1"
 tokio = { version = "1.42.0"}
 futures-util = "0.3.31"
 tauri-plugin-positioner = "2.2.0"

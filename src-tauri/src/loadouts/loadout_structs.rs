@@ -5,9 +5,59 @@ pub struct LoadoutJson {
     pub name: String,
     pub maplist: Vec<Map>,
     pub banlist: Vec<String>,
-    pub modlist: Vec<String>,
+    pub modlist: Vec<GameMod>,
     pub startup: StartupArgs,
     pub launch: LaunchArguments,
+}
+
+#[allow(non_snake_case)]
+#[derive(Serialize, Deserialize, Debug)]
+pub struct ModJson {
+    pub Name: String,
+    pub Authors: Vec<String>,
+    pub Description: String,
+    pub URL: Option<String>,
+    pub Version: String,
+    pub HasWebUI: bool,
+    pub HasVeniceEXT: bool,
+    pub Tags: Option<Vec<String>>,
+    // Dependencies // Ignoring dependencies for now...
+}
+
+impl ModJson {
+    pub fn default() -> ModJson {
+        ModJson {
+            Name: String::from(""),
+            Authors: Vec::new(),
+            Description: String::from(""),
+            URL: Some(String::from("")),
+            Version: String::from(""),
+            HasWebUI: false,
+            HasVeniceEXT: false,
+            Tags: Some(Vec::new()),
+        }
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct GameMod {
+    pub name: String,
+    pub version: String,
+    pub image: Option<String>,
+    pub src: Option<String>,
+    pub enabled: bool,
+}
+
+impl GameMod {
+    pub fn default() -> GameMod {
+        GameMod {
+            name: String::from(""),
+            version: String::from(""),
+            image: Some(String::from("")),
+            src: Some(String::from("")),
+            enabled: false,
+        }
+    }
 }
 
 #[allow(non_snake_case)]

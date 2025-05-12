@@ -1,14 +1,17 @@
 use std::{
     f64,
-    fs::{read_dir, read_to_string, write},
-    io,
+    fs::{self, read_dir, read_to_string, write},
+    io::{self},
+    ops::Index,
     path::PathBuf,
+    thread::sleep,
+    time::Duration,
 };
 
 use loadout_structs::{
-    Admin, ClientLaunchArguments, CommonLaunchArguments, LaunchArguments, LoadoutJson, Map,
-    ParsedStartupTxtLine, RM_Commands, ServerLaunchArguments, SetTeamTicketCount, StartupArgs,
-    VU_Commands, Vars,
+    Admin, ClientLaunchArguments, CommonLaunchArguments, GameMod, LaunchArguments, LoadoutJson,
+    Map, ModJson, ParsedStartupTxtLine, RM_Commands, ServerLaunchArguments, SetTeamTicketCount,
+    StartupArgs, VU_Commands, Vars,
 };
 use serde_json::Value;
 use serde_json::{to_value, Error};
@@ -90,7 +93,7 @@ fn make_loadout_json_from_txt_files(loadout_name: &String) -> io::Result<bool> {
     let modlist_args = match import_modlist_txt_into_loadout(&loadout_name) {
         Ok(info) => info,
         Err(_) => {
-            let empty_vec: Vec<String> = Vec::new();
+            let empty_vec = Vec::new();
             empty_vec
         }
     };
@@ -118,11 +121,11 @@ fn make_loadout_json_from_txt_files(loadout_name: &String) -> io::Result<bool> {
     Ok(true)
 }
 
-fn import_modlist_txt_into_loadout(loadout_name: &String) -> io::Result<Vec<String>> {
+fn import_modlist_txt_into_loadout(loadout_name: &String) -> io::Result<Vec<GameMod>> {
     let mut modlist_txt_path = get_loadout_admin_path(loadout_name);
     modlist_txt_path.push("modlist.txt");
 
-    let mut modlist_vec: Vec<String> = Vec::new();
+    let mut mods = get_all_mod_json_in_loadout(loadout_name);
 
     match read_to_string(modlist_txt_path) {
         Ok(info) => {
@@ -130,7 +133,16 @@ fn import_modlist_txt_into_loadout(loadout_name: &String) -> io::Result<Vec<Stri
                 if item.starts_with("#") {
                     continue;
                 }
-                modlist_vec.push(String::from(item.trim()));
+
+                match mods
+                    .iter()
+                    .position(|game_mod| game_mod.name.to_lowercase().eq(&item.to_lowercase()))
+                {
+                    Some(index) => {
+                        mods[index].enabled = true;
+                    }
+                    None => {}
+                }
             }
         }
         Err(err) => {
@@ -138,7 +150,70 @@ fn import_modlist_txt_into_loadout(loadout_name: &String) -> io::Result<Vec<Stri
         }
     };
 
-    Ok(modlist_vec)
+    Ok(mods)
+}
+
+pub fn get_all_mod_json_in_loadout(loadout_name: &String) -> Vec<GameMod> {
+    let mut loadout_path = get_loadouts_path();
+    loadout_path.push(&loadout_name);
+    loadout_path.push("Server");
+    loadout_path.push("Admin");
+    loadout_path.push("Mods");
+
+    let dir_reader = fs::read_dir(&loadout_path);
+    let mut mod_data: Vec<GameMod> = Vec::new();
+    match dir_reader {
+        Ok(reader) => {
+            reader.for_each(|item| {
+                match item {
+                    Ok(info) => {
+                        match info.path().is_dir() {
+                            true => {
+                                let mut path_to_mod_json = info.path().clone();
+                                path_to_mod_json.push("mod.json");
+
+                                match read_to_string(path_to_mod_json) {
+                                    Ok(info) => {
+                                        let game_mod: Result<ModJson, Error> =
+                                            serde_json::from_str(&info);
+                                        match game_mod {
+                                            Ok(mod_info) => {
+                                                let mod_info = GameMod {
+                                                    name: mod_info.Name,
+                                                    version: mod_info.Version,
+                                                    image: None,
+                                                    src: mod_info.URL,
+                                                    enabled: false,
+                                                };
+                                                mod_data.push(mod_info);
+                                            }
+                                            Err(err) => {
+                                                println!(
+                                                    "Failed to read Game Mod due to error:\n{:?}",
+                                                    err
+                                                );
+                                            }
+                                        }
+                                    }
+                                    Err(_) => {
+                                        println!("No mod.json in this folder. Ignoring.")
+                                    }
+                                }
+                            }
+                            false => {}
+                        };
+                    }
+                    Err(_) => {
+                        println!("Error when reading mod names.")
+                    }
+                };
+            });
+        }
+        Err(err) => {
+            println!("{:?}", err);
+        }
+    };
+    mod_data
 }
 
 fn import_banlist_txt_into_loadout(loadout_name: &String) -> io::Result<Vec<String>> {
@@ -536,7 +611,7 @@ pub fn write_to_txt_from_loadout(loadout_name: &String) -> io::Result<bool> {
     let startup_vec = get_startup_as_string_array(&loadout);
     let maplist_vec = get_maplist_as_string_array(&loadout);
     let banlist_vec = &loadout.banlist.clone();
-    let modlist_vec = &loadout.modlist;
+    let modlist_vec = get_modlist_as_string_array(&loadout);
     // TODO: make sure modlist is of pure names...
 
     write(startup_path, startup_vec.join("\n"))?;
@@ -729,6 +804,98 @@ fn get_maplist_as_string_array(loadout: &LoadoutJson) -> Vec<String> {
     }
 
     string_vec
+}
+
+fn get_modlist_as_string_array(loadout: &LoadoutJson) -> Vec<String> {
+    let mut simple_mod_vec: Vec<String> = Vec::new();
+
+    loadout.modlist.iter().for_each(|game_mod| {
+        if game_mod.enabled {
+            simple_mod_vec.push(String::from(game_mod.name.clone()))
+        }
+    });
+
+    simple_mod_vec
+}
+
+#[tauri::command]
+pub fn get_all_loadout_names() -> Vec<String> {
+    let loadout_path = get_loadouts_path();
+
+    let dir_reader = read_dir(&loadout_path);
+    let mut loadouts: Vec<String> = Vec::new();
+    match dir_reader {
+        Ok(reader) => {
+            reader.for_each(|item| {
+                match item {
+                    Ok(info) => {
+                        if info.path().is_dir() {
+                            if is_loadout(&info.path()) {
+                                let temp = info.file_name();
+                                let loadout_name = String::from(temp.to_string_lossy());
+                                if has_loadout_json(&info.path()) {
+                                    loadouts.push(loadout_name);
+                                }
+                            }
+                        }
+                    }
+                    Err(_) => {
+                        println!("Error when reading loadout Json.")
+                    }
+                };
+            });
+        }
+        Err(err) => {
+            println!(
+                "Failed to get loadout JSON at path {:?} due to reason: \n{:?}",
+                &loadout_path, err
+            );
+        }
+    };
+    println!("{:?}", loadouts);
+    loadouts
+}
+
+#[tauri::command]
+pub fn get_loadout_json(loadout_name: String) -> Vec<LoadoutJson> {
+    let mut loadout_json = Vec::new();
+    match get_loadout_json_as_struct(&loadout_name) {
+        Ok(loadout) => {
+            loadout_json.push(loadout);
+            return loadout_json;
+        }
+        Err(err) => {
+            println!(
+                "Failed to get loadout json for {} due to error: \n{:?}",
+                loadout_name, err
+            );
+            // sleep for 100ms to allow for creation of new maplist/modlist/etc
+            match make_loadout_json_from_txt_files(&loadout_name) {
+                Ok(_) => {
+                    println!("Successfully made loadout JSON from txt files.");
+
+                    match get_loadout_json_as_struct(&loadout_name) {
+                        Ok(loadout) => {
+                            loadout_json.push(loadout);
+                        }
+                        Err(err) => {
+                            println!(
+                                "Failed to get loadout json for {} due to error: \n{:?}",
+                                loadout_name, err
+                            );
+                        }
+                    }
+                }
+                Err(err) => {
+                    println!(
+                        "Failed to create loadout JSON from txt files due to error:\n{:?}",
+                        err
+                    );
+                }
+            };
+        }
+    }
+    loadout_json
 }
 
 #[tauri::command]

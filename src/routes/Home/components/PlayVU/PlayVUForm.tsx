@@ -221,11 +221,17 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
                   {...field}
                   checked={field.value}
                   onCheckedChange={async (e) => {
-                    await toggleDevBranch(e)
-                    queryClient.invalidateQueries({
-                      queryKey: [QueryKey.UserPreferences],
-                      refetchType: 'all',
-                    })
+                    const status = await toggleDevBranch(e)
+                    if (status) {
+                      queryClient.invalidateQueries({
+                        queryKey: [QueryKey.UserPreferences],
+                        refetchType: 'all',
+                      })
+                      toast(t('toggleDevBranch.success'))
+                    } else {
+                      toast(t('toggleDevBranch.failure'))
+                    }
+
                     field.onChange(e)
                   }}
                 />

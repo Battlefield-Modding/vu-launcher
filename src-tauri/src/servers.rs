@@ -14,7 +14,10 @@ use crate::{
         loadout_server_launch_args_to_vec, loadout_structs::LoadoutJson, write_loadout_json,
         write_to_txt_from_loadout,
     },
-    mods::{get_mod_names_in_loadout, install_mods, make_folder_names_same_as_mod_json_names},
+    mods::{
+        get_mod_names_in_loadout, install_mods_on_loadout_creation,
+        make_folder_names_same_as_mod_json_names,
+    },
     reg_functions, save_user_preferences, CREATE_NEW_CONSOLE, CREATE_NO_WINDOW,
 };
 
@@ -65,40 +68,50 @@ pub fn server_key_setup(path: String) -> bool {
 }
 
 fn copy_server_key(path: &PathBuf) {
-    let install_path = match reg_functions::get_install_path_registry() {
-        Ok(val) => val,
-        Err(err) => err.to_string(),
-    };
+    match reg_functions::get_install_path_registry() {
+        Ok(install_path) => {
+            let mut key_path = PathBuf::new();
+            key_path.push(install_path);
+            key_path.push("server.key");
 
-    let mut key_path = PathBuf::new();
-    key_path.push(install_path);
-    key_path.push("server.key");
+            let mut copied_key_path = path.clone();
+            let _ = copied_key_path.push("server.key");
+            println!("{:?}", copied_key_path);
 
-    let mut copied_key_path = path.clone();
-    let _ = copied_key_path.push("server.key");
-    println!("{:?}", copied_key_path);
-
-    match fs::copy(key_path, copied_key_path) {
-        Ok(_) => println!("Copied successfully"),
-        Err(err) => println!("{:?}", err),
+            match fs::copy(key_path, copied_key_path) {
+                Ok(_) => println!("Copied server.key successfully"),
+                Err(err) => println!("Failed to copy server.key due to error {:?}", err),
+            };
+        }
+        Err(err) => println!(
+            "Failed to copy server.key because fetching registry key failed due to error:\n{:?}",
+            err
+        ),
     };
 }
 
+fn get_server_path(loadout_name: &String) -> PathBuf {
+    let mut server_path = get_loadouts_path();
+    server_path.push(loadout_name);
+    server_path.push("Server");
+    server_path
+}
+
+fn get_admin_path(loadout_name: &String) -> PathBuf {
+    let mut admin_path = get_server_path(&loadout_name);
+    admin_path.push("Admin");
+    admin_path
+}
+
 #[tauri::command]
-pub async fn create_server_loadout(mut loadout: LoadoutJson) -> Result<bool, String> {
-    let mut loadout_path = get_loadouts_path();
-    loadout_path.push(&loadout.name);
-    let mut loadout_json_path = loadout_path.clone();
-    loadout_json_path.push("loadout.json");
+pub async fn create_loadout(mut loadout: LoadoutJson) -> Result<bool, String> {
+    let server_path = get_server_path(&loadout.name);
+    let admin_path = get_admin_path(&loadout.name);
 
-    loadout_path.push("Server");
-    let server_path = loadout_path.clone();
-    loadout_path.push("Admin");
-
-    match fs::exists(&loadout_path) {
+    match fs::exists(&admin_path) {
         Ok(boolean) => {
             if !boolean {
-                _ = fs::create_dir_all(&loadout_path);
+                _ = fs::create_dir_all(&admin_path);
             } else {
                 println!("Couldn't create loadout: {}", &loadout.name);
                 return Ok(false);
@@ -110,11 +123,10 @@ pub async fn create_server_loadout(mut loadout: LoadoutJson) -> Result<bool, Str
     // move the server key over once folders are made
     copy_server_key(&server_path);
 
-    let mut modlist_path = loadout_path.clone();
+    let mut modlist_path = admin_path.clone();
     modlist_path.push("modlist.txt");
-    println!("{:?}", modlist_path);
 
-    let mut mods_path = loadout_path.clone();
+    let mut mods_path = admin_path.clone();
     mods_path.push("Mods");
 
     match fs::create_dir(mods_path) {
@@ -127,7 +139,7 @@ pub async fn create_server_loadout(mut loadout: LoadoutJson) -> Result<bool, Str
             return Err(err.to_string());
         }
     };
-    let mod_list = install_mods(&loadout);
+    let mod_list = install_mods_on_loadout_creation(&loadout);
 
     loadout.launch.server.serverInstancePath = Some(String::from(server_path.to_str().unwrap()));
 
@@ -157,11 +169,7 @@ pub async fn create_server_loadout(mut loadout: LoadoutJson) -> Result<bool, Str
 }
 
 #[tauri::command]
-pub async fn edit_server_loadout(mut loadout: LoadoutJson) -> Result<bool, String> {
-    let mod_list = install_mods(&loadout);
-
-    loadout.modlist = mod_list;
-
+pub async fn edit_loadout(loadout: LoadoutJson) -> Result<bool, String> {
     match write_loadout_json(&loadout) {
         Ok(_) => {}
         Err(err) => {
@@ -188,12 +196,10 @@ pub async fn edit_server_loadout(mut loadout: LoadoutJson) -> Result<bool, Strin
 
 #[tauri::command]
 pub fn get_loadout_names() -> Vec<String> {
-    // this function will return content from all server loadouts
     let loadout_path = get_loadouts_path();
 
-    let dir_reader = fs::read_dir(&loadout_path);
     let mut loadout_dirs: Vec<String> = Vec::new();
-    match dir_reader {
+    match fs::read_dir(&loadout_path) {
         Ok(reader) => {
             reader.for_each(|item| {
                 match item {
@@ -221,75 +227,9 @@ pub fn get_loadout_names() -> Vec<String> {
 }
 
 #[tauri::command]
-pub async fn get_server_loadout(name: String) -> String {
-    let mut loadout_path: PathBuf = get_loadouts_path();
-    loadout_path.push(&name);
-
-    loadout_path.push("Server");
-    loadout_path.push("Admin");
-
-    let mut startup_path = loadout_path.clone();
-    let _ = startup_path.push("startup.txt");
-    println!("{:?}", startup_path);
-    let mut maplist_path = loadout_path.clone();
-    let _ = maplist_path.push("maplist.txt");
-    println!("{:?}", maplist_path);
-    let mut modlist_path = loadout_path.clone();
-    let _ = modlist_path.push("modlist.txt");
-    println!("{:?}", modlist_path);
-    let mut banlist_path = loadout_path.clone();
-    let _ = banlist_path.push("banlist.txt");
-    println!("{:?}", banlist_path);
-
-    let startup_string = match read_to_string(startup_path) {
-        Ok(info) => info,
-        Err(err) => {
-            println!("{:?}", err);
-            err.to_string()
-        }
-    };
-    let modlist_string = match read_to_string(modlist_path) {
-        Ok(info) => info,
-        Err(err) => {
-            println!("{:?}", err);
-            err.to_string()
-        }
-    };
-    let maplist_string = match read_to_string(maplist_path) {
-        Ok(info) => info,
-        Err(err) => {
-            println!("{:?}", err);
-            err.to_string()
-        }
-    };
-    let banlist_string = match read_to_string(banlist_path) {
-        Ok(info) => info,
-        Err(err) => {
-            println!("{:?}", err);
-            err.to_string()
-        }
-    };
-
-    let mods = get_mod_names_in_loadout(name.clone());
-    let my_loadout = ServerLoadout {
-        name,
-        banlist: banlist_string,
-        modlist: modlist_string,
-        maplist: maplist_string,
-        startup: startup_string,
-        mods,
-    };
-
-    serde_json::to_string(&my_loadout).unwrap()
-}
-
-#[tauri::command]
-pub async fn delete_server_loadout(name: String) -> bool {
-    // this function will return content from all server loadouts
+pub async fn delete_loadout(name: String) -> bool {
     let mut loadout_path = get_loadouts_path();
-    println!("{:?}", loadout_path);
     loadout_path.push(&name);
-    println!("{:?}", loadout_path);
 
     match fs::exists(&loadout_path) {
         Ok(folder_exists) => {
@@ -314,7 +254,7 @@ pub async fn delete_server_loadout(name: String) -> bool {
 }
 
 #[tauri::command]
-pub async fn start_server_loadout(name: String) -> bool {
+pub async fn start_loadout(name: String) -> bool {
     let mut args: Vec<&str> = Vec::new();
 
     args.push("/C");

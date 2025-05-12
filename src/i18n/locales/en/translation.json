@@ -164,8 +164,17 @@
       },
       "sheet": {
         "description": "Accepts .zip files",
+        "folder": "Folder",
         "title": "Import a Venice Unleashed Mod",
         "trigger": "Import Mods"
+      }
+    },
+    "importFolder": {
+      "form": {
+        "drag": "Drag n Drop your mod folder here",
+        "toast": {
+          "invalid": "Only directories are accepted"
+        }
       }
     },
     "manage": {
@@ -193,6 +202,13 @@
           }
         },
         "title": "Installed Mods Appear Here",
+        "toast": {
+          "failure": "Failed to refresh mod folder names",
+          "success": "Successfully refreshed folder names"
+        },
+        "tooltip": {
+          "refresh": "Extract and rename folders based on their mod.json file"
+        },
         "trigger": "Manage Mods"
       }
     }
@@ -476,6 +492,7 @@
           },
           "sheet": {
             "modCache": "mod-cache",
+            "noMods": "No mods in mod_cache",
             "trigger": "Mods"
           }
         },
@@ -685,5 +702,9 @@
       "TimeScale": "Slow down or speed up game [0.0, 2.0]",
       "VehicleDisablingEnabled": "Enable mobility hits on vehicles"
     }
+  },
+  "toggleDevBranch": {
+    "failure": "Failed to update preference",
+    "success": "Saved preference"
   }
 }
