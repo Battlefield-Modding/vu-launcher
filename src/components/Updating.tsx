@@ -26,7 +26,7 @@ export function Updating() {
           )
 
           if (!preferences.automatically_install_update_if_found) {
-            const install = confirm(`${t('update.install')} [${update.version}]`)
+            const install = await confirm(`${t('update.install')} [${update.version}]`)
             if (!install) {
               return
             }
