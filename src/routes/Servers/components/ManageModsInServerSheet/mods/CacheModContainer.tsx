@@ -1,10 +1,12 @@
 import { SheetTitle } from '@/components/ui/sheet'
-import { GameMod, LoadoutJSON, QueryKey, STALE } from '@/config/config'
+import { GameMod, LoadoutJSON, QueryKey, routes, STALE } from '@/config/config'
 import { Loader } from 'lucide-react'
 import { getModNamesInCache } from '@/api'
 import { useQuery } from '@tanstack/react-query'
 import { ModCacheMod } from './ModCacheMod'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router'
+import { Button } from '@/components/ui/button'
 
 export function CacheModContainer({ loadout }: { loadout: LoadoutJSON }) {
   const { t } = useTranslation()
@@ -54,6 +56,14 @@ export function CacheModContainer({ loadout }: { loadout: LoadoutJSON }) {
           <code className="underline">{t('servers.loadouts.loadout.mods.sheet.modCache')}</code>
         </p>
       </SheetTitle>
+      {data.length == 0 && (
+        <div className="flex items-center gap-4">
+          <h1>{t('servers.loadouts.loadout.mods.sheet.noMods')}</h1>
+          <Link to={routes.MODS}>
+            <Button variant={'outline'}>{t('sidebar.routes.mods')}</Button>
+          </Link>
+        </div>
+      )}
       <div>
         {data.map((x, index) => {
           return (

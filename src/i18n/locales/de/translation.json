@@ -492,6 +492,7 @@
           },
           "sheet": {
             "modCache": "Mod-Cache",
+            "noMods": "Keine Mods in mod_cache",
             "trigger": "Mods"
           }
         },
