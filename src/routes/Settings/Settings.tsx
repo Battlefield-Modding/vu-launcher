@@ -1,11 +1,9 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { QueryKey, STALE } from '@/config/config'
-import { getUserPreferences, saveUserPreferences } from '@/api'
+import { getUserPreferences } from '@/api'
 import { Loader } from 'lucide-react'
 import LocalServerGuidForm from './components/LocalServerGuidForm'
 import { ActivateBF3Sheet } from './components/ActivateBF3/ActivateBF3Sheet'
-import { Input } from '@/components/ui/input'
-import { toast } from 'sonner'
 import { LanguageSelector } from './components/LanguageSelector'
 import { useTranslation } from 'react-i18next'
 import { MultiAccountToggle } from './components/MultiAccountToggle'
@@ -13,7 +11,6 @@ import { AutomaticallyUpdateToggle } from './components/AutomaticallyUpdateToggl
 import { CheckForUpdatesToggle } from './components/CheckForUpdatesToggle'
 
 export default function Settings() {
-  const queryClient = useQueryClient()
   const { t } = useTranslation()
 
   const { isPending, isError, data, error } = useQuery({
