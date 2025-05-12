@@ -10,7 +10,7 @@ import { Archive, Folder, FolderArchive, FolderCheck, Upload } from 'lucide-reac
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ModFolderImport } from './ModFolderImport'
-import { ZippedModImport } from './ZippedModimport'
+import { ZippedModImport } from './ZippedModImport'
 import clsx from 'clsx'
 
 export default function ImportModsSheet() {
