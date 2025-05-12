@@ -27,9 +27,14 @@
   },
   "bundle": {
     "active": true,
+    "createUpdaterArtifacts": true,
     "targets": "nsis",
-    "icon": [
-      "icons/VULauncher.ico"
-    ]
+    "icon": ["icons/VULauncher.ico"]
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEE5M0MzRjBFNkY3QkU3MUEKUldRYTUzdHZEajg4cWZNbzNwZlhJbFVJMm5nby9XNWk2MXdkcCtWMy8xdllVR2xuazgwLzR0dEwK",
+      "endpoints": ["https://github.com/user/repo/releases/latest/download/latest.json"]
+    }
   }
 }
