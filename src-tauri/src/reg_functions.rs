@@ -1,41 +1,76 @@
-use std::{ffi::OsString, io};
+use std::{ffi::OsString, fs::create_dir_all, io, path::PathBuf};
 
+use dirs_next::cache_dir;
 use winreg::{enums::HKEY_CURRENT_USER, RegKey};
 
-use crate::{
-    get_user_preferences_as_struct, update_vu_dev_shortcut_preference,
-    update_vu_shortcut_preference,
-};
+use crate::{update_vu_dev_shortcut_preference, update_vu_shortcut_preference};
 
-pub fn get_settings_json_path_registry() -> io::Result<String> {
-    let install_path = get_reg_value("SettingsJson");
-    install_path
+fn set_launcher_install_path() -> io::Result<String> {
+    let hklm = RegKey::predef(HKEY_CURRENT_USER);
+    let path = r"SOFTWARE\vu-launcher\vu-launcher";
+
+    let (key, _disp) = hklm.create_subkey(&path)?;
+
+    // should always exist
+    let mut appdata_path = cache_dir().unwrap();
+    appdata_path.push("vu-launcher");
+
+    let string_form = appdata_path.as_os_str();
+    let actual_string = string_form.to_str().unwrap().to_owned();
+
+    key.set_value(String::from(""), &actual_string)?;
+    key.get_value(String::from(""))
 }
 
-pub fn set_settings_json_path_registry() -> bool {
-    let path_to_folder = get_install_path_registry();
-    let mut path_to_settings_json = match path_to_folder {
-        Ok(path) => path,
-        Err(_) => return false,
-    };
-    path_to_settings_json.push_str("\\settings.json");
+pub fn make_default_install_folder() {
+    let mut default_install_folder = cache_dir().unwrap();
+    default_install_folder.push("vu-launcher");
 
-    match set_reg_value("SettingsJson", &OsString::from(path_to_settings_json)) {
-        Ok(_) => return true,
-        Err(err) => {
-            println!(
-                "Failed to set SettingsJSON reg value due to error:\n{:?}",
-                err
-            );
-            return false;
+    if !default_install_folder.exists() {
+        match create_dir_all(default_install_folder) {
+            Ok(_) => {
+                println!("Successfully created default launcher install folder.");
+            }
+            Err(err) => {
+                println!(
+                    "Failed to create default launcher install folder due to error:\n{:?}",
+                    err
+                );
+            }
         }
     }
 }
 
+pub fn install_path_folder_exists() -> bool {
+    match get_reg_value("") {
+        Ok(install_path) => {
+            let path = PathBuf::from(&install_path);
+            return path.exists();
+        }
+        Err(_) => return false,
+    }
+}
+
 pub fn get_install_path_registry() -> io::Result<String> {
-    // TODO: make the .exe installer make installDir/installPath regkey
-    let install_path = get_reg_value("");
-    install_path
+    match get_reg_value("") {
+        Ok(install_path) => {
+            if install_path.is_empty() {
+                println!("Install_path was an empty string. Creating manually...");
+                make_default_install_folder();
+                return set_launcher_install_path();
+            }
+            if !install_path_folder_exists() {
+                make_default_install_folder();
+                return set_launcher_install_path();
+            }
+            return Ok(install_path);
+        }
+        Err(_) => {
+            println!("Error reading install_path. Creating manually...");
+            make_default_install_folder();
+            return set_launcher_install_path();
+        }
+    }
 }
 
 fn get_reg_value(keyname: &str) -> io::Result<String> {

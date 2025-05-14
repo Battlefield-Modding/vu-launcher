@@ -21,7 +21,6 @@ use dirs_next;
 mod reg_functions;
 use reg_functions::{
     get_install_path_registry, get_reg_vu_dev_branch_install_location, get_reg_vu_install_location,
-    get_settings_json_path_registry, set_settings_json_path_registry,
     set_vu_dev_branch_install_location_registry, set_vu_install_location_registry,
 };
 
@@ -225,11 +224,9 @@ pub fn update_vu_dev_shortcut_preference() -> bool {
 
 fn save_user_preferences(preferences: UserPreferences) -> io::Result<()> {
     let str = serde_json::to_string_pretty(&preferences);
+    let settings_json_path = get_settings_json_path()?;
 
-    let path_string = get_settings_json_path_registry()?;
-    let new_path = Path::new(&path_string);
-
-    let result = fs::write(new_path, str.unwrap())?;
+    let result = fs::write(settings_json_path, str.unwrap())?;
 
     Ok(result)
 }
@@ -258,7 +255,7 @@ fn first_time_setup() -> bool {
         }
         false => {
             println!("Settings JSON does not exist. Doing first time setup now...");
-            if set_settings_json_path_registry() && set_default_preferences() {
+            if set_default_preferences() {
                 return true;
             } else {
                 println!("Failed to complete first time setup.");
@@ -268,11 +265,17 @@ fn first_time_setup() -> bool {
     }
 }
 
-fn get_user_preferences_as_struct() -> io::Result<UserPreferences> {
-    let settings_string = get_settings_json_path_registry()?;
-    let settings_path = Path::new(&settings_string);
+fn get_settings_json_path() -> io::Result<PathBuf> {
+    let install_path = get_install_path_registry()?;
+    let mut path_to_settings_json = PathBuf::from(&install_path);
+    path_to_settings_json.push("settings.json");
+    return Ok(path_to_settings_json);
+}
 
-    let info = fs::read_to_string(settings_path)?;
+fn get_user_preferences_as_struct() -> io::Result<UserPreferences> {
+    let settings_path = get_settings_json_path()?;
+
+    let info = fs::read_to_string(&settings_path)?;
     let info_for_rust = serde_json::from_str(&info);
 
     match info_for_rust {
@@ -283,7 +286,7 @@ fn get_user_preferences_as_struct() -> io::Result<UserPreferences> {
                     let new_preferences = upgrade_preferences_object(old_preferences);
                     save_user_preferences(new_preferences)?;
 
-                    let info_attempt = fs::read_to_string(settings_path)?;
+                    let info_attempt = fs::read_to_string(&settings_path)?;
                     let info_for_rust_attempt = serde_json::from_str(&info_attempt)?;
 
                     return Ok(info_for_rust_attempt);
@@ -292,7 +295,7 @@ fn get_user_preferences_as_struct() -> io::Result<UserPreferences> {
                     println!("Failed to upgrade {:?}", err);
                     set_default_preferences();
 
-                    let info_attempt = fs::read_to_string(settings_path)?;
+                    let info_attempt = fs::read_to_string(&settings_path)?;
                     let info_for_rust_attempt = serde_json::from_str(&info_attempt)?;
 
                     return Ok(info_for_rust_attempt);
@@ -393,10 +396,9 @@ fn upgrade_preferences_object(old_preferences: OptionalUserPreferences) -> UserP
 }
 
 fn get_user_preferences_as_string() -> io::Result<String> {
-    let settings_string = get_settings_json_path_registry()?;
-    let settings_path = Path::new(&settings_string);
+    let settings_path = get_settings_json_path()?;
 
-    let info = fs::read_to_string(settings_path)?;
+    let info = fs::read_to_string(&settings_path)?;
     let info_for_rust: Result<UserPreferences, serde_json::Error> = serde_json::from_str(&info);
     match info_for_rust {
         Ok(clean_info) => {
@@ -406,10 +408,11 @@ fn get_user_preferences_as_string() -> io::Result<String> {
         Err(_) => {
             match serde_json::from_str(&info) {
                 Ok(old_preferences) => {
-                    let new_preferences = upgrade_preferences_object(old_preferences);
+                    let new_preferences: UserPreferences =
+                        upgrade_preferences_object(old_preferences);
                     save_user_preferences(new_preferences)?;
 
-                    let info_attempt = fs::read_to_string(settings_path)?;
+                    let info_attempt = fs::read_to_string(&settings_path)?;
 
                     return Ok(info_attempt);
                 }
@@ -417,7 +420,7 @@ fn get_user_preferences_as_string() -> io::Result<String> {
                     println!("Failed to upgrade {:?}", err);
                     set_default_preferences();
 
-                    let info_attempt = fs::read_to_string(settings_path)?;
+                    let info_attempt = fs::read_to_string(&settings_path)?;
 
                     return Ok(info_attempt);
                 }
