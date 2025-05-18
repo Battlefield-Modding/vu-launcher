@@ -374,6 +374,6 @@ export const RealityModGameModes = [
   'AdvanceAndSecureStd',
   'AdvanceAndSecureAlt',
   'InsurgencyStd',
-  'Skirmish',
-  'Training',
+  'SkirmishStd',
+  'TrainingStd',
 ]
