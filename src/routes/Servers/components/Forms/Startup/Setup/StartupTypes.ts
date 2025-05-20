@@ -65,6 +65,7 @@ export type RM_Commands = {
   defaultPreRoundTime: number // time before round starts
   setAutoBalancer: boolean // autobalance
   battleCryLink: string // link to your battlecry JSON endpoint
+  enableEnemyLocalVoip: boolean
 }
 
 export type VU_Commands = {

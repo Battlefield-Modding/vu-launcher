@@ -192,6 +192,7 @@ pub struct RM_Commands {
     pub defaultPreRoundTime: u32,   // time before round starts
     pub setAutoBalancer: bool,      // autobalance
     pub battleCryLink: String,      // link to your battlecry JSON endpoint
+    pub enableEnemyLocalVoip: bool, // turn on enemy-voip feature
 }
 
 impl RM_Commands {
@@ -212,6 +213,7 @@ impl RM_Commands {
             defaultPreRoundTime: 300,
             setAutoBalancer: false,
             battleCryLink: String::from(""),
+            enableEnemyLocalVoip: false,
         }
     }
 }

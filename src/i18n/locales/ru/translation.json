@@ -648,6 +648,7 @@
       "autoPerfMaxPlayers": "Установить максимальные игроки для Auto Perf",
       "battleCryLink": "Установите Battlecry JSON Endpoint Link",
       "defaultPreRoundTime": "Установить время перед началом раунда",
+      "enableEnemyLocalVoip": "Включить локальный VoIP с перекрестной командой",
       "ingameBanner": "Установите ссылку на Ingame Banner Image",
       "pingLimitEnable": "Включить предел пинга",
       "pingLimitInMs": "Установите предел пинга в MS",

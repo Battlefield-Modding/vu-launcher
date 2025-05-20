@@ -648,6 +648,7 @@
       "autoPerfMaxPlayers": "将最大播放器设置为Auto Perf",
       "battleCryLink": "设置Battlecry JSON端点链接",
       "defaultPreRoundTime": "在回合开始前设定时间",
+      "enableEnemyLocalVoip": "启用跨团队本地VoIP",
       "ingameBanner": "将链接链接到Ingame横幅图像",
       "pingLimitEnable": "启用ping限制",
       "pingLimitInMs": "在MS中设置ping限制",

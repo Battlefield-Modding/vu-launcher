@@ -58,6 +58,7 @@ export const formBuilderInputTypes = {
     setLightAdmins: 'stringArray',
     tempReservedSlotsEnabled: 'checkbox',
     tempReservedSlotsRejoinTime: 'number',
+    enableEnemyLocalVoip: 'checkbox',
   },
   vu: {
     ColorCorrectionEnabled: 'checkbox',
@@ -136,6 +137,7 @@ export const defaultStartupArguments: StartupArgs = {
     setLightAdmins: [],
     tempReservedSlotsEnabled: true,
     tempReservedSlotsRejoinTime: 180,
+    enableEnemyLocalVoip: false,
   },
   vu: {
     ColorCorrectionEnabled: true,

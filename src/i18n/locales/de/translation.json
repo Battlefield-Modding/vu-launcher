@@ -648,6 +648,7 @@
       "autoPerfMaxPlayers": "Setzen Sie maximale Spieler für automatische Perf",
       "battleCryLink": "Legen Sie den Battlecry JSON -Endpunkt -Link fest",
       "defaultPreRoundTime": "Zeit setzen, bevor die Runde beginnt",
+      "enableEnemyLocalVoip": "Aktivieren Sie das lokale voIP des Cross-Teams",
       "ingameBanner": "Setzen Sie den Link zum Ingame -Bannerbild",
       "pingLimitEnable": "Aktivieren Sie die Ping -Grenze",
       "pingLimitInMs": "Stellen Sie die Ping -Grenze in MS ein",

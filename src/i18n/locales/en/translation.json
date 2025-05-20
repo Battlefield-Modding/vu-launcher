@@ -648,6 +648,7 @@
       "autoPerfMaxPlayers": "Set max players for auto perf",
       "battleCryLink": "Set battlecry JSON endpoint link",
       "defaultPreRoundTime": "Set time before round starts",
+      "enableEnemyLocalVoip": "Enable cross-team local voip",
       "ingameBanner": "Set link to ingame banner image",
       "pingLimitEnable": "Enable ping limit",
       "pingLimitInMs": "Set ping limit in ms",

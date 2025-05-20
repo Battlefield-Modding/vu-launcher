@@ -74,6 +74,7 @@ const formSchema = z.object({
       defaultPreRoundTime: z.number(),
       setAutoBalancer: z.boolean(),
       battleCryLink: z.string(),
+      enableEnemyLocalVoip: z.boolean(),
     })
     .optional(),
   vu: z.object({
