@@ -232,7 +232,8 @@ pub fn get_mod_names_in_cache() -> Vec<GameMod> {
 
 #[tauri::command]
 pub fn import_zipped_mod_to_cache(mod_location: String) -> bool {
-    let target_path = get_mod_cache_path();
+    let mut target_path = get_mod_cache_path();
+    target_path.push("temporary_zip_folder");
 
     let mod_location_as_path = PathBuf::from(mod_location);
 
