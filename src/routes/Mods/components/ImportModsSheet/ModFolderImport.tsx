@@ -41,7 +41,7 @@ export function ModFolderImport() {
         setIsDraggingOver(() => false)
         const payload = event.payload
 
-        if (payload && payload.paths[0] && payload.paths[0].includes('.zip')) {
+        if (payload && payload.paths[0]) {
           const info = payload.paths[0]
           const result = await importModFolderToCache(info)
           if (result) {
@@ -58,7 +58,7 @@ export function ModFolderImport() {
             toast(t('mods.import.form.toast.failure'))
           }
         } else {
-          toast(t('mods.import.form.toast.invalid'))
+          toast(t('mods.import.form.toast.failure'))
         }
       })
 
