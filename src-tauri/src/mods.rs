@@ -61,103 +61,187 @@ pub fn get_mod_json_for_mod_in_cache(mod_name: &String) -> io::Result<ModJson> {
     Ok(final_struct)
 }
 
+pub fn get_mod_json_path(loadout_name: &String, dir_entry: &fs::DirEntry) -> io::Result<PathBuf> {
+    let meta_data = dir_entry.metadata()?;
+    if meta_data.is_dir() {
+        let mut default_mod_json_path = dir_entry.path();
+        default_mod_json_path.push("mod.json");
+
+        if default_mod_json_path.exists() {
+            Ok(default_mod_json_path)
+        } else {
+            // If I want to check for nested modJson at the same time?
+            // let dir_reader = fs::read_dir(&dir_entry.path()).unwrap();
+            // let mut number_of_files = 0;
+            // let mut last_path = PathBuf::new();
+            // for path_result in dir_reader {
+            //     last_path = path_result.unwrap().path();
+            //     number_of_files += 1;
+            // }
+
+            // if number_of_files == 1 {
+            //     // there's a nested folder. Grab that nested folder, shift contents up one?
+            //     last_path.push("mod.json");
+            //     if last_path.exists() {
+            //         return Ok(last_path);
+            //     } else {
+            //         return Ok(PathBuf::new());
+            //     }
+            // }
+            return Ok(PathBuf::new());
+        }
+    } else {
+        return Ok(PathBuf::new());
+    }
+}
+
 pub fn make_folder_names_same_as_mod_json_names(loadout_name: &String) -> io::Result<Vec<GameMod>> {
     let mods_path = get_mod_path_for_loadout(&loadout_name);
     let mut mod_list: Vec<GameMod> = Vec::new();
+
+    let empty_path_buf = PathBuf::new();
 
     fs::read_dir(&mods_path)?.for_each(|item| {
         match item {
             Ok(info) => {
                 let original_mod_path = info.path().clone();
-                let mut mod_json_path = info.path().clone();
-                mod_json_path.push("mod.json");
+                match get_mod_json_path(loadout_name, &info){
+                    Ok(mod_json_path) => {
+                        if mod_json_path != empty_path_buf {
+                            let mod_folder_name: String = match info.path().file_name().unwrap().to_str() {
+                                Some(name) => name.to_owned(),
+                                None => {
+                                    println!("Could not find folder name. Aborting renaming");
+                                    return;
+                                }
+                            };
 
-                if mod_json_path.exists() {
-                    let mod_folder_name = match info.path().file_name().unwrap().to_str() {
-                        Some(name) => name.to_owned(),
-                        None => {
-                            println!("Could not find folder name. Aborting renaming");
-                            return;
-                        }
-                    };
+                            let mod_json_contents_string = match fs::read_to_string(mod_json_path) {
+                                Ok(text) => text,
+                                Err(err) => {
+                                    println!("Failed to read modJSON for mod: {} due to reason: \n {:?}", &mod_folder_name, err);
+                                    return;
+                                }
+                            };
+                            let mod_json_contents_struct: Result<ModJson, Error> =
+                                serde_json::from_str(&mod_json_contents_string);
 
-                    let mod_json_contents_string = match fs::read_to_string(mod_json_path) {
-                        Ok(text) => text,
-                        Err(err) => {
-                            println!("Failed to read modJSON for mod: {} due to reason: \n {:?}", &mod_folder_name, err);
-                            return;
-                        }
-                    };
-                    let mod_json_contents_struct: Result<ModJson, Error> =
-                        serde_json::from_str(&mod_json_contents_string);
+                            match mod_json_contents_struct {
+                                Ok(mod_json) => {
+                                    if !mod_folder_name.eq(&mod_json.Name) {
+                                        let mut renamed_mod_path = mods_path.clone();
+                                        renamed_mod_path.push(&mod_json.Name);
 
-                    match mod_json_contents_struct {
-                        Ok(mod_json) => {
-                            if !mod_folder_name.eq(&mod_json.Name) {
-                                let mut renamed_mod_path = mods_path.clone();
-                                renamed_mod_path.push(&mod_json.Name);
-
-                                match fs::rename(&original_mod_path, renamed_mod_path) {
-                                    Ok(_) => {
-                                        println!(
-                                            "Successfully renamed mod folder for: {}",
-                                            &mod_json.Name
-                                        );
-                                        mod_list.push(GameMod{
-                                            name: mod_json.Name,
-                                            enabled: false,
-                                            version: mod_json.Version,
-                                            image: None,
-                                            src: mod_json.URL
-                                        });
-                                    }
-                                    Err(_) => {
-                                        println!("Failed to rename {}. Attempting to store inside MOD_DUMP", &mod_json.Name);
-
-                                        let mut mod_dump_folder_path = mods_path.clone();
-                                        mod_dump_folder_path.push("FAILED_TO_RENAME");
-
-                                        if !mod_dump_folder_path.exists(){
-                                            match fs::create_dir(&mod_dump_folder_path) {
-                                                Ok(_) => {
-                                                    println!("Created MOD_DUMP folder path");
-                                                },
-                                                Err(err) => {
-                                                    println!("{:?}", err);
-                                                    return;
-                                                }                     
-                                            }
-                                        }
-                                        
-                                        mod_dump_folder_path.push(&mod_folder_name);
-
-                                        match fs::rename(&original_mod_path, mod_dump_folder_path) {
+                                        match fs::rename(&original_mod_path, renamed_mod_path) {
                                             Ok(_) => {
-                                                println!("Successfully moved {} into FAILED_TO_RENAME folder.", &mod_folder_name);
+                                                println!(
+                                                    "Successfully renamed mod folder for: {}",
+                                                    &mod_json.Name
+                                                );
+                                                mod_list.push(GameMod{
+                                                    name: mod_json.Name,
+                                                    enabled: false,
+                                                    version: mod_json.Version,
+                                                    image: None,
+                                                    src: mod_json.URL
+                                                });
                                             }
                                             Err(_) => {
-                                                println!("Error. Could not move {} into FAILED_TO_RENAME folder. DELETING!", &mod_folder_name);
+                                                println!("Failed to rename {}. Attempting to store inside MOD_DUMP", &mod_json.Name);
 
-                                                match fs::remove_dir_all(&original_mod_path){
+                                                let mut mod_dump_folder_path = mods_path.clone();
+                                                mod_dump_folder_path.push("FAILED_TO_RENAME");
+
+                                                if !mod_dump_folder_path.exists(){
+                                                    match fs::create_dir(&mod_dump_folder_path){
+                                                        Ok(_) => {
+                                                            println!("Created MOD_DUMP folder path");
+                                                        },
+                                                        Err(err) => {
+                                                            println!("{:?}", err);
+                                                            return;
+                                                        }
+                                                    }
+                                                }
+
+                                                mod_dump_folder_path.push(&mod_folder_name);
+
+                                                match fs::rename(&original_mod_path, mod_dump_folder_path) {
                                                     Ok(_) => {
-                                                        println!("Deleted unrenamable mod: {}", &mod_folder_name)
-                                                    }, 
-                                                    Err(err) => {
-                                                        println!("{:?}", err);
+                                                        println!("Successfully moved {} into FAILED_TO_RENAME folder.", &mod_folder_name);
+                                                    }
+                                                    Err(_) => {
+                                                        println!("Error. Could not move {} into FAILED_TO_RENAME folder. DELETING!", &mod_folder_name);
+
+                                                        match fs::remove_dir_all(&original_mod_path){
+                                                            Ok(_) => {
+                                                                println!("Deleted unrenamable mod: {}", &mod_folder_name)
+                                                            },
+                                                            Err(err) => {
+                                                                println!("{:?}", err);
+                                                            }
+                                                        };
                                                     }
                                                 };
                                             }
                                         };
                                     }
-                                };
+                                }
+                                Err(err) => {
+                                    println!("Mod JSON failed to convert to struct for {:?} due to reason: \n {:?}", info.path(), err);
+                                }
+                            }
+                        } else {
+                            println!("Mod JSON does not exist at {:?}. Attempting to search ONE level deeper...", mod_json_path);
+
+                            let mut num_dirs = 0;
+                            let mut is_dir = false;
+                            let mut path = PathBuf::new();
+
+                            fs::read_dir(&info.path().clone()).unwrap().for_each(|item| {
+                                match item {
+                                    Ok(inner) => {
+                                        if inner.metadata().unwrap().is_dir(){
+                                            is_dir = true;
+                                            path = inner.path();
+                                        }
+                                        num_dirs += 1;
+                                    },
+                                    Err(_) => {}
+                                }
+                            });
+
+                            if num_dirs == 1 && is_dir {
+                                // move the contents of the folder up one level. Delete the original subfolder that contained the stuff.
+                                let mut nested_mod_json_path = path.clone();
+                                nested_mod_json_path.push("mod.json");
+                                if nested_mod_json_path.exists() {
+                                    // do stuff
+                                    let string = fs::read_to_string(nested_mod_json_path).unwrap();
+                                    let mod_json_result: Result<ModJson, Error> = serde_json::from_str(&string);
+                                    match mod_json_result {
+                                        Ok(mod_json_struct) => {
+                                            let mut final_path = mods_path.clone();
+                                            final_path.push(mod_json_struct.Name);
+
+                                            let _ = dircpy::copy_dir(&path, &final_path);
+                                            // rename stuff
+                                            println!("Successfully copied files over. Removing old mod folder: {:?}", &info);
+                                            let _ = fs::remove_dir_all(info.path());
+                                        },
+                                        Err(err) => {
+
+                                        }
+                                    }
+                                } else {
+                                    println!("There was no modJSON in the nested folder. Deleting the folder: {:?}", &info);
+                                    let _ = fs::remove_dir_all(info.path());
+                                }
                             }
                         }
-                        Err(err) => {
-                            println!("Mod JSON failed to convert to struct for {:?} due to reason: \n {:?}", info.path(), err);
-                        }
+                    },
+                    Err(err) => {
                     }
-                } else {
-                    println!("Mod JSON does not exist for {:?}", mod_json_path);
                 }
             }
             Err(_) => {
@@ -690,7 +774,7 @@ pub fn make_cache_folder_names_same_as_mod_json_names() -> bool {
                 match item {
                     Ok(info) => {
                         let original_mod_path = info.path().clone();
-                        if original_mod_path.is_dir() { 
+                        if original_mod_path.is_dir() {
                             let mod_name = original_mod_path.file_name().unwrap().to_str().unwrap().to_owned();
                             match get_mod_json_for_mod_in_cache(&mod_name){
                                 Ok(mod_json) => {
@@ -699,7 +783,6 @@ pub fn make_cache_folder_names_same_as_mod_json_names() -> bool {
                                     new_mod_name.push_str(&mod_json.Version);
                                     let mut new_mod_path = mods_path.clone();
                                     new_mod_path.push(&new_mod_name);
-            
                                     match fs::rename(&original_mod_path, &new_mod_path){
                                         Ok(_)=>{
                                             println!("Successfully renamed mod folder from {:?} to {:?}!", &original_mod_path, &new_mod_path);
@@ -714,7 +797,7 @@ pub fn make_cache_folder_names_same_as_mod_json_names() -> bool {
                                                     println!("Failed to delete {:?}  due to error\n{:?}", &original_mod_path, err)
                                                 }
                                             }
-                                        }   
+                                        }
                                     }
                                 },
                                 Err(err) => {
