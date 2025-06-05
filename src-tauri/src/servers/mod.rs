@@ -18,7 +18,7 @@ use crate::{
         get_mod_names_in_loadout, install_mods_on_loadout_creation,
         make_folder_names_same_as_mod_json_names,
     },
-    reg_functions, save_user_preferences, CREATE_NEW_CONSOLE, CREATE_NO_WINDOW,
+    preferences, registry, CREATE_NEW_CONSOLE, CREATE_NO_WINDOW,
 };
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -33,7 +33,7 @@ pub struct ServerLoadout {
 
 #[tauri::command]
 pub fn server_key_exists() -> bool {
-    let install_path = match reg_functions::get_install_path_registry() {
+    let install_path = match registry::get_install_path_registry() {
         Ok(val) => val,
         Err(_) => return false,
     };
@@ -50,7 +50,7 @@ pub fn server_key_setup(path: String) -> bool {
     let mut path_to_key = PathBuf::new();
     path_to_key.push(path);
 
-    let install_path = match reg_functions::get_install_path_registry() {
+    let install_path = match registry::get_install_path_registry() {
         Ok(val) => val,
         Err(err) => err.to_string(),
     };
@@ -68,7 +68,7 @@ pub fn server_key_setup(path: String) -> bool {
 }
 
 fn copy_server_key(path: &PathBuf) {
-    match reg_functions::get_install_path_registry() {
+    match registry::get_install_path_registry() {
         Ok(install_path) => {
             let mut key_path = PathBuf::new();
             key_path.push(install_path);
@@ -346,7 +346,7 @@ pub fn save_server_guid(guid: String) -> bool {
     match preferences {
         Ok(mut pref) => {
             pref.server_guid = guid;
-            match save_user_preferences(pref) {
+            match preferences::save_user_preferences(pref) {
                 Ok(_) => return true,
                 Err(err) => {
                     println!("{:?}", err);
@@ -362,7 +362,7 @@ pub fn save_server_guid(guid: String) -> bool {
 }
 
 pub fn get_loadouts_path() -> PathBuf {
-    let install_path = match reg_functions::get_install_path_registry() {
+    let install_path = match registry::get_install_path_registry() {
         Ok(val) => val,
         Err(err) => err.to_string(),
     };

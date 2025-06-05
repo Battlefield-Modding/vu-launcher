@@ -19,13 +19,13 @@ use crate::{
         loadout_structs::{GameMod, LoadoutJson, ModJson},
         write_loadout_json, write_to_txt_from_loadout,
     },
-    reg_functions,
+    registry,
     servers::get_loadouts_path,
     CREATE_NO_WINDOW,
 };
 
 pub fn get_mod_cache_path() -> PathBuf {
-    let install_path = match reg_functions::get_install_path_registry() {
+    let install_path = match registry::get_install_path_registry() {
         Ok(val) => val,
         Err(err) => err.to_string(),
     };
