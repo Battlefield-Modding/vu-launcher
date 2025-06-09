@@ -126,7 +126,7 @@ async fn get_vu_data() -> String {
 }
 
 #[tauri::command]
-async fn play_vu(account_index: usize, server_index: usize, use_dev_branch: bool) -> bool {
+async fn play_vu(account_index: usize, use_dev_branch: bool) -> bool {
     let preferences_prematch = get_user_preferences_as_struct();
     let preferences = match preferences_prematch {
         Ok(info) => info,
@@ -159,23 +159,28 @@ async fn play_vu(account_index: usize, server_index: usize, use_dev_branch: bool
         0 => {
             println!("No server GUID supplied.")
         }
-        _ => match server_index {
+        _ => match preferences.preferred_server_index {
             9001 => {
                 println!("Continuing without an Quick-Join.");
             }
             _ => {
-                let server = &preferences.servers[server_index];
-                server_join_string.push_str(&server.guid);
-                server_join_string.push_str("/");
+                let mut index = 0;
+                for server in preferences.servers {
+                    if index == preferences.preferred_server_index {
+                        server_join_string.push_str(&server.guid);
+                        server_join_string.push_str("/");
 
-                match &server.password.len() {
-                    0 => {
-                        println!("No server password supplied")
+                        match &server.password.len() {
+                            0 => {
+                                println!("No server password supplied")
+                            }
+                            _ => {
+                                server_join_string.push_str(&server.password);
+                            }
+                        };
                     }
-                    _ => {
-                        server_join_string.push_str(&server.password);
-                    }
-                };
+                    index += 1;
+                }
             }
         },
     };
