@@ -4,15 +4,14 @@ import { SidebarProvider, SidebarTrigger } from './components/ui/sidebar'
 import { AppSidebar } from './components/AppSidebar'
 
 import { Toaster } from 'sonner'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { firstTimeSetup, getUserPreferences, saveUserPreferences } from './api'
 
 import { invoke } from '@tauri-apps/api/core'
-import { Onboarding } from './components/Onboarding/Onboarding'
 
 import { Updating } from './components/Updating'
+import { routes } from './config/config'
 export function AppLayout() {
-  const [onboarding, setOnboarding] = useState(false)
   const { pathname } = useLocation()
   const navigate = useNavigate()
 
@@ -21,7 +20,7 @@ export function AppLayout() {
       await firstTimeSetup()
       const preferences = await getUserPreferences()
       if (!preferences.is_onboarded) {
-        setOnboarding(() => true)
+        navigate(routes.ONBOARDING)
       }
     }
     handleOnboarding()
@@ -29,7 +28,7 @@ export function AppLayout() {
     async function navigateToPreviousRoute() {
       const preferences = await getUserPreferences()
 
-      if (preferences.last_visted_route !== '') {
+      if (preferences.last_visted_route !== '' && preferences.is_onboarded) {
         navigate(preferences.last_visted_route)
       }
     }
@@ -52,22 +51,15 @@ export function AppLayout() {
 
   return (
     <>
-      {onboarding ? (
-        <>
-          <Onboarding setOnboarding={setOnboarding} />
-          <Toaster />
-        </>
-      ) : (
-        <SidebarProvider>
-          <AppSidebar />
-          <SidebarTrigger className="fixed bottom-0 left-0 z-10 h-[max(2vw,2rem)] w-[max(2vw,2rem)]" />
-          <main className="min-h-[100vh] w-full bg-black">
-            <Outlet />
-          </main>
-          <Toaster />
-          <Updating />
-        </SidebarProvider>
-      )}
+      <SidebarProvider>
+        <AppSidebar />
+        <SidebarTrigger className="fixed bottom-0 left-0 z-10 h-[max(2vw,2rem)] w-[max(2vw,2rem)]" />
+        <main className="min-h-[100vh] w-full bg-black">
+          <Outlet />
+        </main>
+        <Toaster />
+        <Updating />
+      </SidebarProvider>
     </>
   )
 }

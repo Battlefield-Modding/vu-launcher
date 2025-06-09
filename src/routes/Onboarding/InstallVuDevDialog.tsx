@@ -12,7 +12,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { invoke } from '@tauri-apps/api/core'
 import { Check, X } from 'lucide-react'
 import { useState } from 'react'
-import { LoaderComponent } from '../LoaderComponent'
+import { LoaderComponent } from '../../components/LoaderComponent'
 import { toast } from 'sonner'
 import { useTranslation } from 'react-i18next'
 

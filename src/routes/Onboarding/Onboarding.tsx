@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Download, Loader } from 'lucide-react'
 import { activateBf3LSX, finishOnboarding, vuDevIsInstalled, vuProdIsInstalled } from '@/api'
 import { useQuery } from '@tanstack/react-query'
-import { QueryKey, STALE } from '@/config/config'
+import { QueryKey, routes, STALE } from '@/config/config'
 import { InstallVU } from '@/routes/Home/components/InstallVU/InstallVU'
 import { open } from '@tauri-apps/plugin-dialog'
 import { InstallVuDevDialog } from './InstallVuDevDialog'
@@ -12,12 +12,20 @@ import { toast } from 'sonner'
 import PlayerCredentialsSheet from '@/routes/Home/components/PlayerCredentialsSheet/PlayerCredentialsSheet'
 import { useTranslation } from 'react-i18next'
 import { LanguageSelector } from '@/routes/Settings/components/LanguageSelector'
+import { useSidebar } from '../../components/ui/sidebar'
+import { useNavigate } from 'react-router'
 
-export function Onboarding({ setOnboarding }: { setOnboarding: (t: () => boolean) => void }) {
+export function Onboarding() {
   const { t } = useTranslation()
   const [progress, setProgress] = useState(0)
   const [vuDevInstallPath, setVuDevInstallPath] = useState('')
+  const navigate = useNavigate()
   const dialogRef = useRef(null)
+  const sidebar = useSidebar()
+
+  useEffect(() => {
+    sidebar.toggleSidebar()
+  }, [])
 
   const { isPending, isError, data, error } = useQuery({
     queryKey: [QueryKey.IsVuInstalled],
@@ -101,7 +109,8 @@ export function Onboarding({ setOnboarding }: { setOnboarding: (t: () => boolean
               onClick={async (e) => {
                 e.preventDefault()
                 const status = await finishOnboarding()
-                setOnboarding(() => status)
+                sidebar.toggleSidebar()
+                navigate(routes.HOME)
               }}
             >
               {t('onboarding.button.complete')}

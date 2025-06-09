@@ -13,12 +13,14 @@ import Settings from './routes/Settings/Settings'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { LoadoutContainer } from './routes/Servers/components/Loadouts/LoadoutContainer'
 import { Loadout } from './routes/Servers/components/Loadouts/Loadout'
+import { Onboarding } from './routes/Onboarding/Onboarding'
 
 const router = createBrowserRouter([
   {
     path: routes.HOME,
     element: <AppLayout />,
     children: [
+      { path: routes.ONBOARDING, element: <Onboarding /> },
       { path: routes.HOME, element: <Home /> },
       {
         path: routes.SERVERS,

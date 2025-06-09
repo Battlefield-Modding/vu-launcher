@@ -80,6 +80,7 @@ export enum routes {
   SERVERS = '/servers',
   MODS = '/mods',
   SETTINGS = '/settings',
+  ONBOARDING = '/onboarding',
 }
 
 export type Loadout = {
