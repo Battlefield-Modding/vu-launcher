@@ -15,13 +15,11 @@ use zip::{
 
 use crate::{
     loadouts::{
-        get_all_mod_json_in_loadout, get_loadout_json_as_struct,
+        get_all_mod_json_in_loadout, get_loadout_json_as_struct, get_loadouts_path,
         loadout_structs::{GameMod, LoadoutJson, ModJson},
         write_loadout_json, write_to_txt_from_loadout,
     },
-    registry,
-    servers::get_loadouts_path,
-    CREATE_NO_WINDOW,
+    registry, CREATE_NO_WINDOW,
 };
 
 pub fn get_mod_cache_path() -> PathBuf {

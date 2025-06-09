@@ -30,12 +30,6 @@ use registry::{
 mod web;
 use web::{download_game, get_vu_info, VeniceEndpointData};
 
-mod servers;
-use servers::{
-    create_loadout, delete_loadout, edit_loadout, get_loadout_names, get_loadouts_path,
-    import_loadout_from_path, save_server_guid, server_key_exists, server_key_setup, start_loadout,
-};
-
 mod mods;
 use mods::{
     get_mod_names_in_cache, get_mod_names_in_loadout, import_mod_folder_to_cache,
@@ -48,8 +42,10 @@ mod speed_calc;
 
 mod loadouts;
 use loadouts::{
-    get_all_loadout_json, get_all_loadout_names, get_loadout_json, get_loadout_json_as_struct,
-    loadout_client_launch_args_to_vec, loadout_common_launch_args_to_vec, refresh_loadout,
+    create_loadout, delete_loadout, edit_loadout, get_all_loadout_json, get_all_loadout_names,
+    get_loadout_json, get_loadout_json_as_struct, get_loadout_names, get_loadouts_path,
+    import_loadout_from_path, loadout_client_launch_args_to_vec, loadout_common_launch_args_to_vec,
+    refresh_loadout, save_server_guid, server_key_exists, server_key_setup, start_loadout,
 };
 
 use keyring::Entry;
