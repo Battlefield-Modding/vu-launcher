@@ -1,23 +1,20 @@
 use std::{
     env,
-    fs::{self, File},
-    io::{self, BufReader},
+    fs::{self},
+    io::{self},
     os::windows::process::CommandExt,
     path::{Path, PathBuf},
     process::Command,
 };
 
 use serde_json::Error;
-use zip::{
-    read::{root_dir_common_filter, ZipFile},
-    ZipArchive,
-};
 
 use crate::{
     loadouts::{
         get_all_mod_json_in_loadout, get_loadout_json_as_struct, get_loadouts_path,
         loadout_structs::{GameMod, LoadoutJson, ModJson},
-        write_loadout_json, write_to_txt_from_loadout,
+        loadout_txt_handlers::write_to_txt_from_loadout,
+        write_loadout_json,
     },
     registry, CREATE_NO_WINDOW,
 };

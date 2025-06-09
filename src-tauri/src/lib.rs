@@ -42,10 +42,12 @@ mod speed_calc;
 
 mod loadouts;
 use loadouts::{
-    create_loadout, delete_loadout, edit_loadout, get_all_loadout_json, get_all_loadout_names,
-    get_loadout_json, get_loadout_json_as_struct, get_loadout_names, get_loadouts_path,
-    import_loadout_from_path,
+    get_all_loadout_json, get_all_loadout_names, get_loadout_json, get_loadout_json_as_struct,
+    get_loadout_names, get_loadouts_path,
     launch_arg_selector::{loadout_client_launch_args_to_vec, loadout_common_launch_args_to_vec},
+    loadout_modification::{
+        create_loadout, delete_loadout, edit_loadout, import_loadout_from_path,
+    },
     refresh_loadout, save_server_guid, server_key_exists, server_key_setup, start_loadout,
 };
 
