@@ -3,7 +3,7 @@ use std::{ffi::OsString, fs::create_dir_all, io, path::PathBuf};
 use dirs_next::cache_dir;
 use winreg::{enums::HKEY_CURRENT_USER, RegKey};
 
-use crate::{update_vu_dev_shortcut_preference, update_vu_shortcut_preference};
+use crate::preferences::{update_vu_dev_shortcut_preference, update_vu_shortcut_preference};
 
 fn set_launcher_install_path() -> io::Result<String> {
     let hklm = RegKey::predef(HKEY_CURRENT_USER);

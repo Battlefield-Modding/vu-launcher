@@ -49,7 +49,7 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      accountIndex: `${preferences.preferred_player_index === 90001 ? 0 : preferences.preferred_player_index}`,
+      accountIndex: `${preferences.preferred_player_index === 9001 ? 0 : preferences.preferred_player_index}`,
       serverIndex: `${preferences.preferred_player_index === 9001 ? 0 : preferences.preferred_player_index}`,
       useDevBranch: preferences.use_dev_branch,
     },
@@ -97,7 +97,7 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
       serverIndex = parseInt(formData.serverIndex)
     }
 
-    const status = await playVU({ accountIndex, serverIndex, useDevBranch })
+    const status = await playVU({ accountIndex, useDevBranch })
 
     if (status) {
       toast(t('home.playVu.form.toast.success'))

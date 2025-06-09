@@ -111,6 +111,8 @@ export function CreateLoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any; m
       admin: { ...defaultStartupArguments.admin, ...values.startup.admin },
       vars: { ...defaultStartupArguments.vars, ...values.startup.vars },
       vu: defaultStartupArguments.vu,
+      RM: defaultStartupArguments.RM,
+      reservedSlots: defaultStartupArguments.reservedSlots,
     }
 
     const loadout: LoadoutJSON = {
