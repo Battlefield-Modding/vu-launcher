@@ -11,6 +11,7 @@ import { Separator } from '@/components/ui/separator'
 import { Sheet, SheetContent } from '@/components/ui/sheet'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { useLocation } from 'react-router'
 
 const SIDEBAR_COOKIE_NAME = 'sidebar:state'
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
@@ -252,6 +253,10 @@ const SidebarTrigger = React.forwardRef<
   React.ComponentProps<typeof Button>
 >(({ className, onClick, ...props }, ref) => {
   const { toggleSidebar, open } = useSidebar()
+  const { pathname } = useLocation()
+  if (pathname.includes('onboarding')) {
+    return <></>
+  }
 
   return (
     <Button
