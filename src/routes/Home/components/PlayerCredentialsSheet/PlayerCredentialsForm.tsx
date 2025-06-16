@@ -14,10 +14,12 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
-import { saveUserCredentials } from '@/api'
+import { finishOnboarding, saveUserCredentials } from '@/api'
 import { useQueryClient } from '@tanstack/react-query'
-import { QueryKey } from '@/config/config'
+import { QueryKey, routes } from '@/config/config'
 import { useTranslation } from 'react-i18next'
+import { useLocation, useNavigate } from 'react-router'
+import { useSidebar } from '@/components/ui/sidebar'
 
 const formSchema = z.object({
   username: z.string().min(2).max(50),
@@ -26,6 +28,9 @@ const formSchema = z.object({
 
 export default function PlayerCredentialsForm({ setSheetOpen }: { setSheetOpen: any }) {
   const queryClient = useQueryClient()
+  const sidebar = useSidebar()
+  const { pathname } = useLocation()
+  const navigate = useNavigate()
   const { t } = useTranslation()
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -44,6 +49,11 @@ export default function PlayerCredentialsForm({ setSheetOpen }: { setSheetOpen: 
       queryClient.invalidateQueries({ queryKey: [QueryKey.UserList], refetchType: 'all' })
       queryClient.invalidateQueries({ queryKey: [QueryKey.PlayVUInformation], refetchType: 'all' })
       setSheetOpen(() => false)
+      if (pathname.includes('onboarding')) {
+        const status = await finishOnboarding()
+        sidebar.toggleSidebar()
+        navigate(routes.HOME)
+      }
     } else {
       toast(t('home.playerCredentials.form.toast.failure'))
     }
