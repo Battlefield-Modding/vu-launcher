@@ -33,9 +33,9 @@ use web::{download_game, get_vu_info, VeniceEndpointData};
 mod mods;
 use mods::{
     get_mod_names_in_cache, get_mod_names_in_loadout, import_mod_folder_to_cache,
-    import_zipped_mod_to_cache, install_mod_to_loadout_from_cache,
-    make_cache_folder_names_same_as_mod_json_names, open_mod_with_vscode, remove_mod_from_cache,
-    remove_mod_from_loadout,
+    import_mod_folder_to_loadout, import_zipped_mod_to_cache, import_zipped_mod_to_loadout,
+    install_mod_to_loadout_from_cache, make_cache_folder_names_same_as_mod_json_names,
+    open_mod_with_vscode, remove_mod_from_cache, remove_mod_from_loadout,
 };
 
 mod speed_calc;
@@ -590,6 +590,8 @@ pub fn run() {
             get_mod_names_in_cache,
             import_zipped_mod_to_cache,
             import_mod_folder_to_cache,
+            import_zipped_mod_to_loadout,
+            import_mod_folder_to_loadout,
             remove_mod_from_cache,
             edit_loadout,
             import_loadout_from_path,

@@ -4,15 +4,17 @@ import { listen, UnlistenFn } from '@tauri-apps/api/event'
 import clsx from 'clsx'
 import { FolderArchive, Search, Upload } from 'lucide-react'
 import { useQueryClient } from '@tanstack/react-query'
-import { QueryKey, DragDropEventTauri } from '@/config/config'
+import { QueryKey, DragDropEventTauri, routes } from '@/config/config'
 import { toast } from 'sonner'
 import { open } from '@tauri-apps/plugin-dialog'
-import { importZippedModToCache } from '@/api'
+import { importZippedModToCache, importZippedModToLoadout } from '@/api'
 import { useTranslation } from 'react-i18next'
+import { useLocation } from 'react-router'
 
-export function ZippedModImport() {
+export function ZippedModImport({ importToLoadout }: { importToLoadout: boolean }) {
   const [isDraggingOver, setIsDraggingOver] = useState(false)
   const { t } = useTranslation()
+  const { pathname } = useLocation()
   let handleDrop: UnlistenFn | undefined
   let handleDragEnter: UnlistenFn | undefined
   let handleDragLeave: UnlistenFn | undefined
@@ -43,7 +45,17 @@ export function ZippedModImport() {
 
         if (payload && payload.paths[0] && payload.paths[0].includes('.zip')) {
           const info = payload.paths[0]
-          const result = await importZippedModToCache(info)
+          let result
+          if (importToLoadout) {
+            const loadoutName = pathname.split(`${routes.SERVERS}/`)[1]
+            result = await importZippedModToLoadout({ modLocation: info, loadoutName })
+            queryClient.invalidateQueries({
+              queryKey: [`${QueryKey.GetAllModNames}-${loadoutName}`],
+              refetchType: 'all',
+            })
+          } else {
+            result = await importZippedModToCache(info)
+          }
           if (result) {
             queryClient.invalidateQueries({
               queryKey: [QueryKey.GetModNamesInCache],
@@ -53,6 +65,7 @@ export function ZippedModImport() {
               queryKey: [QueryKey.GetAllModNames],
               refetchType: 'all',
             })
+
             toast(`${t('mods.import.form.toast.success')}: ${info}`)
           } else {
             toast(t('mods.import.form.toast.failure'))
@@ -85,7 +98,17 @@ export function ZippedModImport() {
         const confirmed = await confirm(`${t('mods.import.form.confirm')}: ${installPath}`)
 
         if (confirmed) {
-          const result = await importZippedModToCache(installPath)
+          let result
+          if (importToLoadout) {
+            const loadoutName = pathname.split(`${routes.SERVERS}/`)[1]
+            result = await importZippedModToLoadout({ modLocation: installPath, loadoutName })
+            queryClient.invalidateQueries({
+              queryKey: [`${QueryKey.GetAllModNames}-${loadoutName}`],
+              refetchType: 'all',
+            })
+          } else {
+            result = await importZippedModToCache(installPath)
+          }
           if (result) {
             queryClient.invalidateQueries({
               queryKey: [QueryKey.GetModNamesInCache],
@@ -95,6 +118,7 @@ export function ZippedModImport() {
               queryKey: [QueryKey.GetAllModNames],
               refetchType: 'all',
             })
+
             toast(`${t('mods.import.form.toast.success')}: ${installPath}`)
           } else {
             toast(t('mods.import.form.toast.failure'))

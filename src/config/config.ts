@@ -38,6 +38,8 @@ export enum rust_fns {
   get_mod_names_in_cache = 'get_mod_names_in_cache',
   import_zipped_mod_to_cache = 'import_zipped_mod_to_cache',
   import_mod_folder_to_cache = 'import_mod_folder_to_cache',
+  import_zipped_mod_to_loadout = 'import_zipped_mod_to_loadout',
+  import_mod_folder_to_loadout = 'import_mod_folder_to_loadout',
   remove_mod_from_cache = 'remove_mod_from_cache',
   edit_loadout = 'edit_loadout',
   import_loadout_from_path = 'import_loadout_from_path',

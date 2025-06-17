@@ -1,6 +1,6 @@
 use std::{
     env,
-    fs::{self},
+    fs::{self, read_to_string},
     io::{self},
     os::windows::process::CommandExt,
     path::{Path, PathBuf},
@@ -818,4 +818,86 @@ pub fn make_cache_folder_names_same_as_mod_json_names() -> bool {
         Err(_) => return false,
     }
     true
+}
+
+#[tauri::command]
+pub fn import_zipped_mod_to_loadout(mod_location: String, loadout_name: String) -> bool {
+    let mut target_path = get_mod_path_for_loadout(&loadout_name);
+    target_path.push("temporary_zip_folder");
+
+    let mod_location_as_path = PathBuf::from(mod_location);
+
+    match extract_zip(&mod_location_as_path, &target_path) {
+        Ok(_) => {
+            make_folder_names_same_as_mod_json_names(&loadout_name);
+            return true;
+        }
+        Err(err) => {
+            println!("{:?}", err);
+            return false;
+        }
+    }
+}
+
+#[tauri::command]
+pub fn import_mod_folder_to_loadout(mod_location: String, loadout_name: String) -> bool {
+    let mut target_path = get_mod_path_for_loadout(&loadout_name);
+
+    let mod_location_as_path = PathBuf::from(mod_location);
+    if mod_location_as_path.is_dir() {
+        let mut mod_json_path = PathBuf::from(&mod_location_as_path);
+        mod_json_path.push("mod.json");
+        if mod_json_path.exists() {
+            let mod_json_info = fs::read_to_string(&mod_json_path).unwrap();
+            let mod_json_result: Result<ModJson, Error> = serde_json::from_str(&mod_json_info);
+            match mod_json_result {
+                Ok(mod_json_struct) => {
+                    target_path.push(&mod_json_struct.Name);
+
+                    if target_path.exists() {
+                        return false;
+                    }
+
+                    match dircpy::copy_dir(&mod_location_as_path, &target_path) {
+                        Ok(_) => match get_loadout_json_as_struct(&loadout_name) {
+                            Ok(mut loadout_json) => {
+                                let new_struct = GameMod {
+                                    enabled: true,
+                                    image: None,
+                                    name: mod_json_struct.Name.clone(),
+                                    src: mod_json_struct.URL.clone(),
+                                    version: mod_json_struct.Version.clone(),
+                                };
+                                loadout_json.modlist.push(new_struct);
+                                match write_loadout_json(&loadout_json) {
+                                    Ok(_) => return true,
+                                    Err(err) => {
+                                        println!("Failed to update loadout.json after importing mod to loadout due to error:\n{:?}", err);
+                                        return false;
+                                    }
+                                }
+                            }
+                            Err(err) => {
+                                println!("Failed to insert newly installed mod into loadoutJSON modlist due to error:\n{:?}", err);
+                                return false;
+                            }
+                        },
+                        Err(err) => {
+                            println!("Failed to import mod into loadout due to error {:?}", err);
+                            return false;
+                        }
+                    }
+                }
+                Err(err) => {
+                    println!(
+                        "Failed to read ModJSON while importing mod into loadout due to error:\n{:?}",
+                        err
+                    );
+                    return false;
+                }
+            }
+        }
+        return false;
+    }
+    return false;
 }

@@ -164,8 +164,36 @@ export async function importZippedModToCache(modLocation: string): Promise<boole
   return status
 }
 
+export async function importZippedModToLoadout({
+  modLocation,
+  loadoutName,
+}: {
+  modLocation: string
+  loadoutName: string
+}): Promise<boolean> {
+  const status = (await invoke(rust_fns.import_zipped_mod_to_loadout, {
+    modLocation,
+    loadoutName,
+  })) as boolean
+  return status
+}
+
 export async function importModFolderToCache(modLocation: string): Promise<boolean> {
   const status = (await invoke(rust_fns.import_mod_folder_to_cache, { modLocation })) as boolean
+  return status
+}
+
+export async function importModFolderToLoadout({
+  modLocation,
+  loadoutName,
+}: {
+  modLocation: string
+  loadoutName: string
+}): Promise<boolean> {
+  const status = (await invoke(rust_fns.import_mod_folder_to_loadout, {
+    modLocation,
+    loadoutName,
+  })) as boolean
   return status
 }
 

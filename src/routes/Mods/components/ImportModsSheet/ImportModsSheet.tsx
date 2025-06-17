@@ -6,7 +6,7 @@ import { ModFolderImport } from './ModFolderImport'
 import { ZippedModImport } from './ZippedModImport'
 import clsx from 'clsx'
 
-export default function ImportModsSheet() {
+export default function ImportModsSheet({ importToLoadout }: { importToLoadout: boolean }) {
   const [sheetOpen, setSheetOpen] = useState(false)
   const [zipActive, setZipActive] = useState(false)
   const { t } = useTranslation()
@@ -26,8 +26,10 @@ export default function ImportModsSheet() {
         <div className="flex justify-center gap-8">
           <div
             className={clsx(
-              'flex min-h-20 min-w-20 flex-col items-center justify-center rounded-md border bg-secondary p-4 transition hover:cursor-pointer hover:bg-secondary/80',
+              'min-h-20 min-w-20 flex-col items-center justify-center rounded-md border bg-secondary p-4 transition hover:cursor-pointer hover:bg-secondary/80',
               zipActive && 'border-cyan-500',
+              importToLoadout && 'hidden',
+              !importToLoadout && 'flex',
             )}
             onClick={() => {
               setZipActive(() => true)
@@ -47,8 +49,8 @@ export default function ImportModsSheet() {
             {t('mods.import.sheet.folder')} <Folder />
           </div>
         </div>
-        {zipActive && <ZippedModImport />}
-        {!zipActive && <ModFolderImport />}
+        {zipActive && !importToLoadout && <ZippedModImport importToLoadout={importToLoadout} />}
+        {!zipActive && <ModFolderImport importToLoadout={importToLoadout} />}
       </SheetContent>
     </Sheet>
   )
