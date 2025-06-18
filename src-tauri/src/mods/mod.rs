@@ -922,7 +922,9 @@ pub fn same_number_of_mods_in_loadout_and_mods_folder(loadout: &LoadoutJson) -> 
         });
 
     if num_mods == loadout.modlist.len() {
+        println!("Modlist and num_mods are identical in: {:?}", &loadout.name);
         return true;
     }
+    println!("Modlist and num_mods are different in: {:?}", &loadout.name);
     return false;
 }
