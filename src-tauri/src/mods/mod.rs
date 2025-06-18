@@ -475,19 +475,28 @@ fn copy_mod_to_loadout_from_cache(mod_info: &GameMod, loadout_name: &String) -> 
     let mut destination = get_mod_path_for_loadout(&loadout_name);
     destination.push(&mod_info.name);
 
+    if destination.exists() {
+        return false;
+    }
+
     match dircpy::copy_dir(path_to_mod, destination) {
         Ok(_) => match get_loadout_json_as_struct(&loadout_name) {
             Ok(mut loadout_json) => {
                 let new_struct = GameMod {
-                    enabled: mod_info.enabled,
+                    enabled: true,
                     image: None,
                     name: mod_info.name.clone(),
                     src: mod_info.src.clone(),
                     version: mod_info.version.clone(),
                 };
                 loadout_json.modlist.push(new_struct);
-                let _ = write_loadout_json(&loadout_json);
-                return true;
+                match write_loadout_json(&loadout_json) {
+                    Ok(_) => return true,
+                    Err(err) => {
+                        println!("Failed to update loadout.json after importing mod to loadout from cache due to error:\n{:?}", err);
+                        return false;
+                    }
+                }
             }
             Err(err) => {
                 println!("Failed to insert newly installed mod into loadoutJSON modlist due to error:\n{:?}", err);
