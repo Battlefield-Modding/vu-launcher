@@ -428,16 +428,7 @@ pub fn get_mod_names_in_loadout(name: String) -> Vec<GameMod> {
 #[tauri::command]
 pub fn install_mod_to_loadout_from_cache(loadout_name: String, game_mod: GameMod) -> bool {
     if copy_mod_to_loadout_from_cache(&game_mod, &loadout_name) {
-        match make_folder_names_same_as_mod_json_names(&loadout_name) {
-            Ok(_) => return true,
-            Err(err) => {
-                println!(
-                    "Failed make_folder_names_same_as_mod_json_names due to reason:\n{:?}",
-                    err
-                );
-                return false;
-            }
-        }
+        return true;
     } else {
         return false;
     }
