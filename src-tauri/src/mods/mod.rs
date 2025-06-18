@@ -399,7 +399,9 @@ pub fn remove_mod_from_cache(mod_name: String) -> bool {
 pub fn get_mod_names_in_loadout(name: String) -> Vec<GameMod> {
     match get_loadout_json_as_struct(&name) {
         Ok(mut loadout) => {
-            if loadout.modlist.len() == 0 {
+            if loadout.modlist.len() == 0
+                || !same_number_of_mods_in_loadout_and_mods_folder(&loadout)
+            {
                 let mods = get_all_mod_json_in_loadout(&name);
                 loadout.modlist = mods;
                 match write_loadout_json(&loadout) {
@@ -898,6 +900,29 @@ pub fn import_mod_folder_to_loadout(mod_location: String, loadout_name: String) 
             }
         }
         return false;
+    }
+    return false;
+}
+
+pub fn same_number_of_mods_in_loadout_and_mods_folder(loadout: &LoadoutJson) -> bool {
+    let mods_path = get_mod_path_for_loadout(&loadout.name);
+    let mut num_mods = 0;
+
+    fs::read_dir(&mods_path)
+        .unwrap()
+        .for_each(|item| match item {
+            Ok(dir_entry) => {
+                if dir_entry.metadata().unwrap().is_dir() {
+                    if dir_entry.file_name() != "FAILED_TO_RENAME" {
+                        num_mods += 1;
+                    }
+                }
+            }
+            Err(_) => {}
+        });
+
+    if num_mods == loadout.modlist.len() {
+        return true;
     }
     return false;
 }
