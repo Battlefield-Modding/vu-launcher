@@ -13,7 +13,7 @@ export function StartupSearch({
   setFilteredArgs: any
 }) {
   const { t } = useTranslation()
-  const [tabFilters, setTabFilters] = useState<Array<string>>([])
+  const [tabFilter, setTabFilter] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
   // @ts-ignore
   const [translations, setTranslations] = useState(
@@ -22,8 +22,8 @@ export function StartupSearch({
 
   useEffect(() => {
     const info = Object.keys(defaultStartupArguments).map((x) => {
-      if (tabFilters.length > 0) {
-        if (tabFilters.includes(x)) {
+      if (tabFilter.length > 0) {
+        if (tabFilter === x) {
           // @ts-ignore
           const filtered_fields = Object.keys(defaultStartupArguments[x])
             .filter((key) => {
@@ -83,7 +83,7 @@ export function StartupSearch({
     })
 
     setFilteredArgs(() => combinedObject)
-  }, [searchQuery, tabFilters])
+  }, [searchQuery, tabFilter])
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setSearchQuery(() => e.target.value)
@@ -103,22 +103,17 @@ export function StartupSearch({
           <Button
             variant={'secondary'}
             key={`StartupArgumentButton-${x}`}
-            className={clsx(
-              'pb-0 pt-0',
-              tabFilters.includes(x) && 'bg-cyan-700 hover:bg-cyan-700/80',
-            )}
+            className={clsx('pb-0 pt-0', tabFilter === x && 'bg-cyan-700 hover:bg-cyan-700/80')}
             onClick={(e) => {
               e.preventDefault()
-              if (tabFilters.includes(x)) {
-                let tabs = [...tabFilters].filter((name) => name != x)
-                setTabFilters(() => tabs)
+              if (tabFilter === x) {
+                setTabFilter(() => '')
                 searchRef.current?.parentNode?.parentNode?.parentNode?.scrollTo({
                   top: 0,
                   behavior: 'smooth',
                 })
               } else {
-                let tabs = [...tabFilters, x]
-                setTabFilters(() => tabs)
+                setTabFilter(() => x)
                 searchRef.current?.parentNode?.parentNode?.parentNode?.scrollTo({
                   top: 0,
                   behavior: 'smooth',
