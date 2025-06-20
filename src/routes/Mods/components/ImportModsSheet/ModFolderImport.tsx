@@ -10,9 +10,11 @@ import { open } from '@tauri-apps/plugin-dialog'
 import { importModFolderToCache, importModFolderToLoadout } from '@/api'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router'
+import { LoaderComponent } from '@/components/LoaderComponent'
 
 export function ModFolderImport({ importToLoadout }: { importToLoadout: boolean }) {
   const [isDraggingOver, setIsDraggingOver] = useState(false)
+  const [submitLoading, setSubmitLoading] = useState(false)
   const { t } = useTranslation()
   const { pathname } = useLocation()
   let handleDrop: UnlistenFn | undefined
@@ -49,13 +51,17 @@ export function ModFolderImport({ importToLoadout }: { importToLoadout: boolean 
           let result
           if (importToLoadout) {
             const loadoutName = pathname.split(`${routes.SERVERS}/`)[1]
+            setSubmitLoading(() => true)
             result = await importModFolderToLoadout({ loadoutName, modLocation: info })
+            setSubmitLoading(() => false)
             queryClient.invalidateQueries({
               queryKey: [`${QueryKey.GetAllModNames}-${loadoutName}`],
               refetchType: 'all',
             })
           } else {
+            setSubmitLoading(() => true)
             result = await importModFolderToCache(info)
+            setSubmitLoading(() => false)
           }
 
           if (result) {
@@ -100,13 +106,17 @@ export function ModFolderImport({ importToLoadout }: { importToLoadout: boolean 
         let result
         if (importToLoadout) {
           const loadoutName = pathname.split(`${routes.SERVERS}/`)[1]
+          setSubmitLoading(() => true)
           result = await importModFolderToLoadout({ loadoutName, modLocation: installPath })
+          setSubmitLoading(() => false)
           queryClient.invalidateQueries({
             queryKey: [`${QueryKey.GetAllModNames}-${loadoutName}`],
             refetchType: 'all',
           })
         } else {
+          setSubmitLoading(() => true)
           result = await importModFolderToCache(installPath)
+          setSubmitLoading(() => false)
         }
 
         if (result) {
@@ -135,6 +145,7 @@ export function ModFolderImport({ importToLoadout }: { importToLoadout: boolean 
       )}
       onClick={handleClick}
     >
+      {submitLoading && <LoaderComponent />}
       {isDraggingOver ? (
         <div className="text-md m-auto flex flex-col gap-8">
           <Upload className="h-32 w-32" />

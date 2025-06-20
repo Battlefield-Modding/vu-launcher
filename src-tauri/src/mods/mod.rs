@@ -310,7 +310,7 @@ pub fn get_mod_names_in_cache() -> Vec<GameMod> {
 }
 
 #[tauri::command]
-pub fn import_zipped_mod_to_cache(mod_location: String) -> bool {
+pub async fn import_zipped_mod_to_cache(mod_location: String) -> bool {
     let mut target_path = get_mod_cache_path();
     target_path.push("temporary_zip_folder");
 
@@ -329,7 +329,7 @@ pub fn import_zipped_mod_to_cache(mod_location: String) -> bool {
 }
 
 #[tauri::command]
-pub fn import_mod_folder_to_cache(mod_location: String) -> bool {
+pub async fn import_mod_folder_to_cache(mod_location: String) -> bool {
     let mut target_path = get_mod_cache_path();
 
     let mod_location_as_path = PathBuf::from(mod_location);
@@ -364,7 +364,7 @@ pub fn import_mod_folder_to_cache(mod_location: String) -> bool {
 }
 
 #[tauri::command]
-pub fn remove_mod_from_cache(mod_name: String) -> bool {
+pub async fn remove_mod_from_cache(mod_name: String) -> bool {
     let mut target_path = get_mod_cache_path();
     target_path.push(mod_name);
 
@@ -428,18 +428,18 @@ pub fn get_mod_names_in_loadout(name: String) -> Vec<GameMod> {
 }
 
 #[tauri::command]
-pub fn install_mod_to_loadout_from_cache(loadout_name: String, game_mod: GameMod) -> bool {
-    if copy_mod_to_loadout_from_cache(&game_mod, &loadout_name) {
+pub async fn install_mod_to_loadout_from_cache(loadout_name: String, game_mod: GameMod) -> bool {
+    if copy_mod_to_loadout_from_cache(&game_mod, &loadout_name).await {
         return true;
     } else {
         return false;
     }
 }
 
-pub fn install_mods_on_loadout_creation(loadout: &LoadoutJson) -> Vec<GameMod> {
+pub async fn install_mods_on_loadout_creation(loadout: &LoadoutJson) -> Vec<GameMod> {
     let mut mod_names: Vec<GameMod> = Vec::new();
     for mod_info in &loadout.modlist {
-        if !copy_mod_to_loadout_from_cache(mod_info, &loadout.name) {
+        if !copy_mod_to_loadout_from_cache(mod_info, &loadout.name).await {
             println!("Failed to install mod:\n${:?}", &mod_info.name);
         }
     }
@@ -456,7 +456,7 @@ pub fn install_mods_on_loadout_creation(loadout: &LoadoutJson) -> Vec<GameMod> {
     mod_names
 }
 
-fn copy_mod_to_loadout_from_cache(mod_info: &GameMod, loadout_name: &String) -> bool {
+async fn copy_mod_to_loadout_from_cache(mod_info: &GameMod, loadout_name: &String) -> bool {
     let mut path_to_mod = get_mod_cache_path();
     let mut string_mod_name = String::from("");
     string_mod_name.push_str(&mod_info.name);
@@ -504,9 +504,10 @@ fn copy_mod_to_loadout_from_cache(mod_info: &GameMod, loadout_name: &String) -> 
 }
 
 #[tauri::command]
-pub fn remove_mod_from_loadout(name: String, modname: String) -> bool {
+pub async fn remove_mod_from_loadout(name: String, modname: String) -> bool {
     if name.contains("mod-cache") {
-        return remove_mod_from_cache(modname);
+        println!("Trying to delete the mod called [{:?}]", &modname);
+        return remove_mod_from_cache(modname).await;
     }
     let mut mod_path = get_mod_path_for_loadout(&name);
     mod_path.push(&modname);
@@ -823,7 +824,7 @@ pub fn make_cache_folder_names_same_as_mod_json_names() -> bool {
 }
 
 #[tauri::command]
-pub fn import_zipped_mod_to_loadout(mod_location: String, loadout_name: String) -> bool {
+pub async fn import_zipped_mod_to_loadout(mod_location: String, loadout_name: String) -> bool {
     let mut target_path = get_mod_path_for_loadout(&loadout_name);
     target_path.push("temporary_zip_folder");
 
@@ -842,7 +843,7 @@ pub fn import_zipped_mod_to_loadout(mod_location: String, loadout_name: String) 
 }
 
 #[tauri::command]
-pub fn import_mod_folder_to_loadout(mod_location: String, loadout_name: String) -> bool {
+pub async fn import_mod_folder_to_loadout(mod_location: String, loadout_name: String) -> bool {
     let mut target_path = get_mod_path_for_loadout(&loadout_name);
 
     let mod_location_as_path = PathBuf::from(mod_location);

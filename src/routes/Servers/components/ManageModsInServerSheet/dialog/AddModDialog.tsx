@@ -1,4 +1,5 @@
 import { installModToLoadoutFromCache } from '@/api'
+import { LoaderComponent } from '@/components/LoaderComponent'
 import {
   Dialog,
   DialogClose,
@@ -11,6 +12,7 @@ import {
 import { GameMod, LoadoutJSON, QueryKey } from '@/config/config'
 import { useQueryClient } from '@tanstack/react-query'
 import { Plus, X } from 'lucide-react'
+import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
@@ -24,10 +26,14 @@ export function AddModDialog({
   queryKey: string
 }) {
   const queryClient = useQueryClient()
+  const [submitLoading, setSubmitLoading] = useState(false)
   const { t } = useTranslation()
+  const dialogCloseRef = useRef(null)
 
   async function handleClick() {
+    setSubmitLoading(() => true)
     const status = await installModToLoadoutFromCache({ loadoutName: loadout.name, gameMod: mod })
+    setSubmitLoading(() => false)
 
     if (status) {
       toast(`${t('servers.loadouts.loadout.mods.addModDialog.toast.success')}: ${mod.name}`)
@@ -42,6 +48,9 @@ export function AddModDialog({
     } else {
       toast(`${t('servers.loadouts.loadout.mods.addModDialog.toast.failure')}: ${mod.name}`)
     }
+
+    // @ts-ignore
+    dialogCloseRef?.current?.click()
   }
 
   return (
@@ -52,6 +61,7 @@ export function AddModDialog({
         </div>
       </DialogTrigger>
       <DialogContent>
+        {submitLoading && <LoaderComponent />}
         <DialogHeader>
           <DialogTitle className="pb-4">
             {t('servers.loadouts.loadout.mods.addModDialog.title')}{' '}
@@ -70,12 +80,13 @@ export function AddModDialog({
               {t('servers.loadouts.loadout.mods.addModDialog.cancel')}
             </p>
           </DialogClose>
-          <DialogClose onClick={handleClick}>
+          <div onClick={handleClick}>
             <p className="flex gap-4 rounded-md bg-green-600 p-2 hover:bg-green-600/80">
               <Plus /> {t('servers.loadouts.loadout.mods.addModDialog.confirm')}:{' '}
               {mod.name.length >= 20 ? `${mod.name.substring(0, 20)}...` : mod.name}
             </p>
-          </DialogClose>
+          </div>
+          <DialogClose ref={dialogCloseRef}></DialogClose>
         </div>
       </DialogContent>
     </Dialog>

@@ -1,4 +1,5 @@
 import { removeModFromLoadout } from '@/api'
+import { LoaderComponent } from '@/components/LoaderComponent'
 import {
   Dialog,
   DialogClose,
@@ -11,6 +12,7 @@ import {
 import { QueryKey } from '@/config/config'
 import { useQueryClient } from '@tanstack/react-query'
 import { Trash, X } from 'lucide-react'
+import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
@@ -23,11 +25,15 @@ export function DeleteModDialog({
   loadoutName: string
   queryKey: string
 }) {
+  const [submitLoading, setSubmitLoading] = useState(false)
   const queryClient = useQueryClient()
   const { t } = useTranslation()
+  const dialogCloseRef = useRef(null)
 
   async function handleDelete() {
+    setSubmitLoading(() => true)
     const status = await removeModFromLoadout(loadoutName, modName)
+    setSubmitLoading(() => false)
     if (status) {
       toast(
         `${t('servers.loadouts.loadout.mods.deleteModDialog.toast.success')}: ${loadoutName}/${modName}`,
@@ -45,6 +51,9 @@ export function DeleteModDialog({
         `${t('servers.loadouts.loadout.mods.deleteModDialog.toast.failure')}: ${loadoutName}/${modName}`,
       )
     }
+
+    // @ts-ignore
+    dialogCloseRef?.current?.click()
   }
 
   return (
@@ -55,6 +64,7 @@ export function DeleteModDialog({
         </div>
       </DialogTrigger>
       <DialogContent>
+        {submitLoading && <LoaderComponent />}
         <DialogHeader>
           <DialogTitle className="pb-4">
             {t('servers.loadouts.loadout.mods.deleteModDialog.title')}:{' '}
@@ -73,12 +83,13 @@ export function DeleteModDialog({
               {t('servers.loadouts.loadout.mods.deleteModDialog.cancel')}
             </p>
           </DialogClose>
-          <DialogClose onClick={handleDelete}>
+          <div onClick={handleDelete}>
             <p className="flex gap-4 rounded-md bg-red-600 p-2 text-white hover:bg-red-600/80">
               <Trash /> {t('servers.loadouts.loadout.mods.deleteModDialog.confirm')}:{' '}
               {modName.length >= 20 ? `${modName.substring(0, 20)}...` : modName}
             </p>
-          </DialogClose>
+          </div>
+          <DialogClose ref={dialogCloseRef}></DialogClose>
         </div>
       </DialogContent>
     </Dialog>
