@@ -109,7 +109,7 @@ export function LaunchArgumentForm({
       <form onSubmit={form.handleSubmit(onSubmit)} className="m-auto max-w-screen-md">
         <LaunchArgumentsSearch searchRef={searchRef} setFilteredArgs={setFilteredArgs} />
 
-        <div className="flex flex-col gap-6 pt-12">
+        <div className="flex flex-col gap-6 pt-16">
           {/* @ts-ignore */}
           <LaunchArgumentFormBuilder
             form={form}

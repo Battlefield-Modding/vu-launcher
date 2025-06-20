@@ -45,7 +45,7 @@ pub async fn create_loadout(mut loadout: LoadoutJson) -> Result<bool, String> {
             return Err(err.to_string());
         }
     };
-    let mod_list = install_mods_on_loadout_creation(&loadout);
+    let mod_list = install_mods_on_loadout_creation(&loadout).await;
 
     loadout.launch.server.serverInstancePath = Some(String::from(server_path.to_str().unwrap()));
 

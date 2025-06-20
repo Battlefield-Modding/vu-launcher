@@ -173,7 +173,7 @@ export function StartupForm({
       <form onSubmit={form.handleSubmit(onSubmit)} className="m-auto max-w-screen-md">
         <StartupSearch setFilteredArgs={setFilteredArgs} searchRef={searchRef} />
 
-        <div className="flex flex-col gap-6 pt-12">
+        <div className="flex flex-col gap-6 pt-16">
           {/* @ts-ignore */}
           <FormBuilder form={form} filteredArguments={filteredArgs} sectionNames={sectionNames} />
         </div>

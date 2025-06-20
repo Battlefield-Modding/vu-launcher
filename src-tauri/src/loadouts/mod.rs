@@ -142,11 +142,19 @@ pub fn get_all_mod_json_in_loadout(loadout_name: &String) -> Vec<GameMod> {
             reader.for_each(|item| {
                 match item {
                     Ok(info) => {
-                        match info.path().is_dir() {
-                            true => {
-                                let mut path_to_mod_json = info.path().clone();
-                                path_to_mod_json.push("mod.json");
+                        if info.path().is_dir() {
+                            let mut path_to_mod_json = info.path().clone();
+                            path_to_mod_json.push("mod.json");
 
+                            if !path_to_mod_json.exists() {
+                                if info.file_name() != "FAILED_TO_RENAME" {
+                                    println!(
+                                        "Found folder that shouldn't be in mod folder: {:?}",
+                                        info.path()
+                                    );
+                                    let _ = fs::remove_dir_all(info.path());
+                                }
+                            } else {
                                 match read_to_string(path_to_mod_json) {
                                     Ok(info) => {
                                         let game_mod: Result<ModJson, Error> =
@@ -170,13 +178,10 @@ pub fn get_all_mod_json_in_loadout(loadout_name: &String) -> Vec<GameMod> {
                                             }
                                         }
                                     }
-                                    Err(_) => {
-                                        println!("No mod.json in this folder. Ignoring.")
-                                    }
+                                    Err(_) => {}
                                 }
                             }
-                            false => {}
-                        };
+                        }
                     }
                     Err(_) => {
                         println!("Error when reading mod names.")
