@@ -22,7 +22,10 @@ export function FormBuilder({
   const { t } = useTranslation()
   return sectionNames.map((sectionName) => {
     if (sectionName === 'reservedSlots') {
-      return <ReservedSlotsComponent key={`${sectionName}-key`} form={form} />
+      // @ts-ignore
+      if (filteredArguments[sectionName]) {
+        return <ReservedSlotsComponent key={`${sectionName}-key`} form={form} />
+      }
     }
 
     // @ts-expect-error
