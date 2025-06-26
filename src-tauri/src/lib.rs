@@ -272,6 +272,13 @@ async fn play_vu_on_local_server(name: String, users: Vec<usize>) -> bool {
         args.push(&preferences.venice_unleashed_shortcut_location)
     }
 
+    let should_spawn_console = &loadout.launch.common.console.unwrap();
+
+    let creation_flag = match should_spawn_console {
+        true => CREATE_NEW_CONSOLE,
+        false => CREATE_NO_WINDOW,
+    };
+
     let mut common = loadout_common_launch_args_to_vec(&loadout.launch.common);
     let mut client = loadout_client_launch_args_to_vec(&loadout.launch.client);
 
@@ -323,7 +330,7 @@ async fn play_vu_on_local_server(name: String, users: Vec<usize>) -> bool {
 
                     Command::new("cmd")
                         .args(args)
-                        .creation_flags(CREATE_NO_WINDOW)
+                        .creation_flags(creation_flag)
                         .spawn()
                         .expect("failed to execute process");
                 }
@@ -352,7 +359,7 @@ async fn play_vu_on_local_server(name: String, users: Vec<usize>) -> bool {
 
                 Command::new("cmd")
                     .args(copied_args)
-                    .creation_flags(CREATE_NO_WINDOW)
+                    .creation_flags(creation_flag)
                     .spawn()
                     .expect("failed to execute process");
             }
