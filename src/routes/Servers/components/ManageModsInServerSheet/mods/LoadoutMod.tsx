@@ -80,7 +80,7 @@ export function LoadoutMod({
       <td className="border border-secondary">{`${mod.name} `}</td>
 
       <td className="border border-secondary">
-        <code className="text-md text-nowrap rounded-md bg-gray-800 p-1 pl-2 pr-2 text-white">
+        <code className="text-md text-nowrap rounded-md bg-gray-800 p-1 pl-2 pr-2 text-primary">
           {mod.version}
         </code>
       </td>

@@ -164,7 +164,7 @@ export function InstallVU() {
           </div>
 
           <div className="flex flex-1 justify-center gap-4 align-middle text-xl leading-9">
-            <h1 className="flex-1 text-white">{t('onboarding.install.prod.download.header')}</h1>
+            <h1 className="flex-1 text-primary">{t('onboarding.install.prod.download.header')}</h1>
             <Button
               variant={'secondary'}
               className=""
@@ -190,11 +190,11 @@ export function InstallVU() {
 
       {gameDownloadUpdateInstalling && (
         <>
-          <div className="flex flex-1 justify-center gap-4 align-middle text-3xl leading-9 text-white">
+          <div className="flex flex-1 justify-center gap-4 align-middle text-3xl leading-9 text-primary">
             <h1>{t('onboarding.install.prod.progress.header')}</h1>
           </div>
 
-          <div className="flex w-full flex-col rounded-md text-white">
+          <div className="flex w-full flex-col rounded-md text-primary">
             {!gameDownloadUpdateExtracting ? (
               <div className="mb-2 flex h-6">
                 <Progress value={gameDownloadUpdateProgress} className="h-full w-full flex-1" />

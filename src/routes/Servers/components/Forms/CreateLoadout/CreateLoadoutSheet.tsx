@@ -28,7 +28,7 @@ export function CreateLoadoutSheet() {
 
   if (isError) {
     return (
-      <div className="rounded-md bg-red-600 pl-2 pr-2 text-xl leading-9 text-white">
+      <div className="rounded-md bg-red-600 pl-2 pr-2 text-xl leading-9 text-primary">
         <h1>{t('servers.loadouts.createLoadout.sheet.error')}</h1>
         <p>{error.message}</p>
       </div>

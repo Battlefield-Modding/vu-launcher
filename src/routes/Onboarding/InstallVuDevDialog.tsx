@@ -46,7 +46,7 @@ export function InstallVuDevDialog({
         <DialogHeader>
           <DialogTitle className="flex flex-col items-center pb-4">
             <p className="mb-4">{t('onboarding.install.dev.dialog.title')}:</p>
-            <code className="text-md text-nowrap rounded-md bg-gray-800 p-1 pl-2 pr-2 text-white">
+            <code className="text-md text-nowrap rounded-md bg-gray-800 p-1 pl-2 pr-2 text-primary">
               {`${vuDevInstallPath}\\VeniceUnleashedDev`}
             </code>
           </DialogTitle>
@@ -63,7 +63,7 @@ export function InstallVuDevDialog({
             </p>
           </DialogClose>
           <p
-            className="flex gap-4 rounded-md bg-green-600 p-2 text-white transition hover:cursor-pointer hover:bg-green-600/80"
+            className="flex gap-4 rounded-md bg-green-600 p-2 text-primary transition hover:cursor-pointer hover:bg-green-600/80"
             onClick={InstallVuDevToPath}
           >
             <Check /> {t('onboarding.install.dev.dialog.button.confirm')}

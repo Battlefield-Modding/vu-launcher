@@ -37,7 +37,7 @@ export function ChooseAccountSheet({ loadoutName }: { loadoutName: string }) {
 
   if (isError) {
     return (
-      <div className="rounded-md bg-red-600 pl-2 pr-2 text-xl leading-9 text-white">
+      <div className="rounded-md bg-red-600 pl-2 pr-2 text-xl leading-9 text-primary">
         <h1>{t('servers.loadouts.loadout.multiAccount.sheet.error')}</h1>
         <p>{error.message}</p>
       </div>
@@ -64,7 +64,7 @@ export function ChooseAccountSheet({ loadoutName }: { loadoutName: string }) {
 
   if (!data || !data[0]) {
     return (
-      <div className="rounded-md bg-red-600 pl-2 pr-2 text-xl leading-9 text-white">
+      <div className="rounded-md bg-red-600 pl-2 pr-2 text-xl leading-9 text-primary">
         <h1>{t('servers.loadouts.loadout.multiAccount.sheet.empty')}</h1>
       </div>
     )

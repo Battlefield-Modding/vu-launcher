@@ -54,7 +54,7 @@ export function InstallVuProdDialog({
         <DialogHeader>
           <DialogTitle className="flex flex-col items-center pb-4">
             <p className="mb-4">{t('onboarding.install.prod.dialog.title')}</p>
-            <code className="text-md text-nowrap rounded-md bg-gray-800 p-1 pl-2 pr-2 text-white">
+            <code className="text-md text-nowrap rounded-md bg-gray-800 p-1 pl-2 pr-2 text-primary">
               {`${vuProdInstallPath}\\VeniceUnleashed`}
             </code>
           </DialogTitle>
@@ -71,7 +71,7 @@ export function InstallVuProdDialog({
           </DialogClose>
           <DialogClose>
             <p
-              className="flex gap-4 rounded-md bg-green-600 p-2 text-white transition hover:cursor-pointer hover:bg-green-600/80"
+              className="flex gap-4 rounded-md bg-green-600 p-2 text-primary transition hover:cursor-pointer hover:bg-green-600/80"
               onClick={InstallVuProdToPath}
             >
               <Check /> {t('onboarding.install.prod.dialog.button.confirmOne')}
@@ -79,7 +79,7 @@ export function InstallVuProdDialog({
           </DialogClose>
           <DialogClose>
             <p
-              className="flex gap-4 rounded-md bg-green-600 p-2 text-white transition hover:cursor-pointer hover:bg-green-600/80"
+              className="flex gap-4 rounded-md bg-green-600 p-2 text-primary transition hover:cursor-pointer hover:bg-green-600/80"
               onClick={InstallVuProdAndDevToPath}
             >
               <Check /> {t('onboarding.install.prod.dialog.button.confirmBoth')}

@@ -100,7 +100,7 @@ export function ServerKeyUpload() {
   return (
     <div
       className={clsx(
-        'flex flex-1 flex-col justify-center border-2 border-dashed border-primary bg-secondary text-white',
+        'flex flex-1 flex-col justify-center border-2 border-dashed border-primary bg-secondary text-primary',
         isDraggingOver && 'bg-[#16a34a]',
       )}
       onClick={handleClick}
@@ -114,7 +114,7 @@ export function ServerKeyUpload() {
           <div className="flex gap-4">
             <p>
               {t('servers.firstTime.guidForm.title')}:{' '}
-              <code className="rounded-md bg-black p-1 text-white">server.key</code>
+              <code className="rounded-md bg-black p-1 text-primary">server.key</code>
             </p>
             <Upload />
           </div>

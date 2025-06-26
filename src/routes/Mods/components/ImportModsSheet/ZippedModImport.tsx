@@ -141,7 +141,7 @@ export function ZippedModImport({ importToLoadout }: { importToLoadout: boolean 
   return (
     <div
       className={clsx(
-        'flex flex-1 flex-col justify-center border-2 border-dashed border-primary bg-secondary text-center text-white',
+        'flex flex-1 flex-col justify-center border-2 border-dashed border-primary bg-secondary text-center text-primary',
         isDraggingOver && 'bg-green-500/80',
       )}
       onClick={handleClick}

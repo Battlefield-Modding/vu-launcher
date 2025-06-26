@@ -71,7 +71,7 @@ export function Updating() {
   if (isUpdating) {
     return (
       <div className="absolute z-10 m-auto flex h-full w-full flex-col justify-between gap-8 rounded-md bg-black p-8">
-        <div className="flex w-full flex-col rounded-md text-white">
+        <div className="flex w-full flex-col rounded-md text-primary">
           <h1 className="text-center text-xl">{t('update.header')}</h1>
           <div className="mb-2 flex h-6">
             <Progress value={downloadProgress} className="h-full w-full flex-1" />

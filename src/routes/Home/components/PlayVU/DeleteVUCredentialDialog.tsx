@@ -43,7 +43,7 @@ function DeleteVUCredentialDialog({ username }: { username: string }) {
         <DialogHeader>
           <DialogTitle className="pb-4">
             {t('home.playVu.form.deleteCredentialDialog.title')}
-            <code className="text-md rounded-md bg-gray-800 p-1 pl-2 pr-2 text-white">
+            <code className="text-md rounded-md bg-gray-800 p-1 pl-2 pr-2 text-primary">
               {username.length >= 20 ? `${username.substring(0, 20)}...` : username}
             </code>
           </DialogTitle>
@@ -59,7 +59,7 @@ function DeleteVUCredentialDialog({ username }: { username: string }) {
             </p>
           </DialogClose>
           <DialogClose onClick={handleDelete}>
-            <p className="flex gap-4 rounded-md bg-red-600 p-2 text-white hover:bg-red-600/80">
+            <p className="flex gap-4 rounded-md bg-red-600 p-2 text-primary hover:bg-red-600/80">
               <Trash /> {t('home.playVu.form.deleteCredentialDialog.confirm')}:{' '}
               {username.length >= 20 ? `${username.substring(0, 20)}...` : username}
             </p>
