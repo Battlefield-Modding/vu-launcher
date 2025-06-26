@@ -124,6 +124,10 @@ export function Loadout() {
                   queryKey: [QueryKey.UserPreferences],
                   refetchType: 'all',
                 })
+                queryClient.invalidateQueries({
+                  queryKey: [QueryKey.GetLoadoutJSON, loadoutName],
+                  refetchType: 'all',
+                })
 
                 toast(t('toggleDevBranch.success'))
               } else {

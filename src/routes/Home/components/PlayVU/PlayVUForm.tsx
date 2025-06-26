@@ -227,6 +227,10 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
                         queryKey: [QueryKey.UserPreferences],
                         refetchType: 'all',
                       })
+                      queryClient.invalidateQueries({
+                        queryKey: [QueryKey.GetLoadoutJSON],
+                        refetchType: 'all',
+                      })
                       toast(t('toggleDevBranch.success'))
                     } else {
                       toast(t('toggleDevBranch.failure'))
