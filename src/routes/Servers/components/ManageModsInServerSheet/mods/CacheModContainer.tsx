@@ -1,4 +1,3 @@
-import { SheetTitle } from '@/components/ui/sheet'
 import { GameMod, LoadoutJSON, QueryKey, routes, STALE } from '@/config/config'
 import { Loader } from 'lucide-react'
 import { getModNamesInCache } from '@/api'

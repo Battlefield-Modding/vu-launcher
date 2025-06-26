@@ -2,7 +2,6 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { LoadoutJSON } from '@/config/config'
 import { Book } from 'lucide-react'
 import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 
 import { CacheModContainer } from './mods/CacheModContainer'
 import { LoadoutModContainer } from './mods/LoadoutModContainer'
@@ -10,7 +9,6 @@ import ImportModsSheet from '@/routes/Mods/components/ImportModsSheet/ImportMods
 
 export function ManageModsInServerSheet({ loadout }: { loadout: LoadoutJSON }) {
   const [sheetOpen, setSheetOpen] = useState(false)
-  const { t } = useTranslation()
 
   return (
     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>

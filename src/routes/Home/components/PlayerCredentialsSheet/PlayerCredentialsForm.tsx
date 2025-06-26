@@ -50,9 +50,13 @@ export default function PlayerCredentialsForm({ setSheetOpen }: { setSheetOpen: 
       queryClient.invalidateQueries({ queryKey: [QueryKey.PlayVUInformation], refetchType: 'all' })
       setSheetOpen(() => false)
       if (pathname.includes('onboarding')) {
-        const status = await finishOnboarding()
-        sidebar.toggleSidebar()
-        navigate(routes.HOME)
+        const onboardingFinished = await finishOnboarding()
+        if (onboardingFinished) {
+          sidebar.toggleSidebar()
+          navigate(routes.HOME)
+        } else {
+          toast(t('onboarding.failure'))
+        }
       }
     } else {
       toast(t('home.playerCredentials.form.toast.failure'))

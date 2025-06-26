@@ -229,6 +229,7 @@
       "continue": "Skip / Continue"
     },
     "error": "Failed to load Onboarding component",
+    "failure": "Failed to complete onboarding",
     "header": "First Time Setup",
     "install": {
       "dev": {

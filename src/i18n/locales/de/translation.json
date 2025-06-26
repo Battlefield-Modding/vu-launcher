@@ -229,6 +229,7 @@
       "continue": "Überspringen / fortfahren"
     },
     "error": "Die Komponente des Bordes nicht laden",
+    "failure": "Versäumte das Bord nicht zu vervollständigen",
     "header": "Erstanpassungs -Setup",
     "install": {
       "dev": {

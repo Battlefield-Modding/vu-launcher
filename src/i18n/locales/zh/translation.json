@@ -229,6 +229,7 @@
       "continue": "跳过 /继续"
     },
     "error": "无法加载入职组件",
+    "failure": "未能完成入职",
     "header": "首次设置",
     "install": {
       "dev": {

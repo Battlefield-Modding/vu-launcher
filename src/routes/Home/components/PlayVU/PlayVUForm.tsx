@@ -82,7 +82,6 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
   async function onSubmit(formData: z.infer<typeof FormSchema>) {
     console.log(formData)
     let accountIndex = 9001
-    let serverIndex = 9001
     let useDevBranch = formData.useDevBranch
 
     if (formData.accountIndex === undefined) {
@@ -91,10 +90,6 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
       }
     } else {
       accountIndex = parseInt(formData.accountIndex)
-    }
-
-    if (formData.serverIndex !== undefined) {
-      serverIndex = parseInt(formData.serverIndex)
     }
 
     const status = await playVU({ accountIndex, useDevBranch })

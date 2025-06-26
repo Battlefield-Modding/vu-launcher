@@ -108,9 +108,13 @@ export function Onboarding() {
               variant={'outline'}
               onClick={async (e) => {
                 e.preventDefault()
-                const status = await finishOnboarding()
-                sidebar.toggleSidebar()
-                navigate(routes.HOME)
+                const onboardingFinished = await finishOnboarding()
+                if (onboardingFinished) {
+                  sidebar.toggleSidebar()
+                  navigate(routes.HOME)
+                } else {
+                  toast(t('onboarding.failure'))
+                }
               }}
             >
               {t('onboarding.button.complete')}
