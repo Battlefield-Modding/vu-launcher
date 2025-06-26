@@ -494,7 +494,12 @@
             "modCache": "mod-cache",
             "noMods": "mod_cache中没有mods",
             "trigger": "mods"
-          }
+          },
+          "tableHeaderFour": "动作",
+          "tableHeaderOne": "iSACTIVE",
+          "tableHeaderOneCacheMod": "地点",
+          "tableHeaderThree": "版本",
+          "tableHeaderTwo": "modName"
         },
         "multiAccount": {
           "form": {

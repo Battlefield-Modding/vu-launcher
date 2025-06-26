@@ -494,7 +494,12 @@
             "modCache": "Mod-Cache",
             "noMods": "Keine Mods in mod_cache",
             "trigger": "Mods"
-          }
+          },
+          "tableHeaderFour": "Aktionen",
+          "tableHeaderOne": "Isaktiv",
+          "tableHeaderOneCacheMod": "Standort",
+          "tableHeaderThree": "Version",
+          "tableHeaderTwo": "Modname"
         },
         "multiAccount": {
           "form": {

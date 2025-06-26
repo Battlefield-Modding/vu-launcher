@@ -21,11 +21,12 @@ export function ManageModsInServerSheet({ loadout }: { loadout: LoadoutJSON }) {
           </div>
         </TooltipWrapper>
       </SheetTrigger>
-      <SheetContent className="overflow-y-scroll">
-        <div className="m-auto flex max-w-screen-lg flex-col gap-8">
+      <SheetContent className="overflow-y-auto">
+        <div className="m-auto flex max-w-screen-lg flex-col gap-2 text-center">
           <div className="m-auto w-fit">
             <ImportModsSheet importToLoadout={true} />
           </div>
+
           <LoadoutModContainer loadout={loadout} />
 
           <CacheModContainer loadout={loadout} />

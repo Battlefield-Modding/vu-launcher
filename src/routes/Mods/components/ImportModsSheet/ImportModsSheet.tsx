@@ -14,7 +14,7 @@ export default function ImportModsSheet({ importToLoadout }: { importToLoadout: 
   return (
     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
       <SheetTrigger>
-        <div className="flex gap-1 rounded-md bg-green-700 p-4 text-white hover:bg-green-700/80">
+        <div className="m-auto flex w-fit justify-center gap-1 rounded-md bg-green-700 p-4 text-primary hover:bg-green-700/80">
           {t('mods.import.sheet.trigger')} <Upload />
         </div>
       </SheetTrigger>

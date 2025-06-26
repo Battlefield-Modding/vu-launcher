@@ -58,10 +58,8 @@ export function DeleteModDialog({
 
   return (
     <Dialog>
-      <DialogTrigger>
-        <div className="rounded-md bg-red-500 p-2.5 text-primary hover:bg-red-500/80">
-          <Trash />
-        </div>
+      <DialogTrigger className="flex bg-red-500 p-1 hover:bg-red-500/80">
+        <Trash className="flex flex-1 text-primary/80" />
       </DialogTrigger>
       <DialogContent>
         {submitLoading && <LoaderComponent />}

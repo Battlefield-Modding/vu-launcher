@@ -1,6 +1,7 @@
 import { DeleteModDialog } from '../dialog/DeleteModDialog'
 import { AddModDialog } from '../dialog/AddModDialog'
 import { GameMod, LoadoutJSON } from '@/config/config'
+import { useTranslation } from 'react-i18next'
 
 export function ModCacheMod({
   mod,
@@ -11,15 +12,30 @@ export function ModCacheMod({
   loadout: LoadoutJSON
   queryKey: string
 }) {
+  const { t } = useTranslation()
+
   return (
-    <div className="flex items-center gap-2">
-      <h1 className="ml-0 mr-auto">{`${mod.name}-${mod.version}`}</h1>
-      <AddModDialog loadout={loadout} mod={mod} queryKey={queryKey} />
-      <DeleteModDialog
-        loadoutName={'mod-cache'}
-        modName={`${mod.name}-${mod.version}`}
-        queryKey={queryKey}
-      />
-    </div>
+    <tr className="border border-secondary">
+      <td className="border border-secondary">
+        {t('servers.loadouts.loadout.mods.sheet.modCache')}
+      </td>
+
+      <td className="border border-secondary">{mod.name}</td>
+
+      <td className="border border-secondary">
+        <code className="text-md text-nowrap rounded-md bg-gray-800 p-1 pl-2 pr-2 text-white">
+          {mod.version}
+        </code>
+      </td>
+
+      <td className="flex justify-center">
+        <AddModDialog loadout={loadout} mod={mod} queryKey={queryKey} />
+        <DeleteModDialog
+          loadoutName={'mod-cache'}
+          modName={`${mod.name}-${mod.version}`}
+          queryKey={queryKey}
+        />
+      </td>
+    </tr>
   )
 }

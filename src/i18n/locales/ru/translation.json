@@ -494,7 +494,12 @@
             "modCache": "мод-кэш",
             "noMods": "Нет модов в mod_cache",
             "trigger": "Моды"
-          }
+          },
+          "tableHeaderFour": "Действия",
+          "tableHeaderOne": "Isactive",
+          "tableHeaderOneCacheMod": "Расположение",
+          "tableHeaderThree": "Версия",
+          "tableHeaderTwo": "Modname"
         },
         "multiAccount": {
           "form": {

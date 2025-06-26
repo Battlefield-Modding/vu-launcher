@@ -48,12 +48,7 @@ export function CacheModContainer({ loadout }: { loadout: LoadoutJSON }) {
   }
 
   return (
-    <div>
-      <SheetTitle>
-        <p>
-          <code className="underline">{t('servers.loadouts.loadout.mods.sheet.modCache')}</code>
-        </p>
-      </SheetTitle>
+    <>
       {data.length == 0 && (
         <div className="flex items-center gap-4">
           <h1>{t('servers.loadouts.loadout.mods.sheet.noMods')}</h1>
@@ -62,7 +57,21 @@ export function CacheModContainer({ loadout }: { loadout: LoadoutJSON }) {
           </Link>
         </div>
       )}
-      <div>
+      <table className="text-center">
+        <tr className="border border-secondary">
+          <th className="h-auto border border-secondary">
+            {t('servers.loadouts.loadout.mods.tableHeaderOneCacheMod')}
+          </th>
+          <th className="h-auto border border-secondary">
+            {t('servers.loadouts.loadout.mods.tableHeaderTwo')}
+          </th>
+          <th className="h-auto border border-secondary">
+            {t('servers.loadouts.loadout.mods.tableHeaderThree')}
+          </th>
+          <th className="h-auto border border-secondary">
+            {t('servers.loadouts.loadout.mods.tableHeaderFour')}
+          </th>
+        </tr>
         {data.map((x, index) => {
           return (
             <ModCacheMod
@@ -73,7 +82,7 @@ export function CacheModContainer({ loadout }: { loadout: LoadoutJSON }) {
             />
           )
         })}
-      </div>
-    </div>
+      </table>
+    </>
   )
 }
