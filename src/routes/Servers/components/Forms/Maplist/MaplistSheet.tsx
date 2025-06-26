@@ -26,7 +26,7 @@ export function MaplistSheet({ loadout }: { loadout: LoadoutJSON }) {
           </div>
         </TooltipWrapper>
       </SheetTrigger>
-      <SheetContent className="overflow-y-scroll">
+      <SheetContent className="overflow-y-auto">
         <SheetHeader>
           <SheetTitle className="m-auto text-xl">
             {t('servers.loadouts.loadout.maplist.sheet.title')}

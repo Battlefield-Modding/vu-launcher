@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { TooltipWrapper } from '@/components/TooltipWrapper'
 import { CacheModContainer } from './mods/CacheModContainer'
 import { LoadoutModContainer } from './mods/LoadoutModContainer'
+import ImportModsSheet from '@/routes/Mods/components/ImportModsSheet/ImportModsSheet'
 
 export function ManageModsInServerSheet({ loadout }: { loadout: LoadoutJSON }) {
   const [sheetOpen, setSheetOpen] = useState(false)
@@ -20,8 +21,12 @@ export function ManageModsInServerSheet({ loadout }: { loadout: LoadoutJSON }) {
           </div>
         </TooltipWrapper>
       </SheetTrigger>
-      <SheetContent className="overflow-y-scroll">
-        <div className="m-auto flex max-w-screen-lg flex-col gap-8">
+      <SheetContent className="overflow-y-auto">
+        <div className="m-auto flex max-w-screen-lg flex-col gap-2 text-center">
+          <div className="m-auto w-fit">
+            <ImportModsSheet importToLoadout={true} />
+          </div>
+
           <LoadoutModContainer loadout={loadout} />
 
           <CacheModContainer loadout={loadout} />

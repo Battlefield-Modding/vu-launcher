@@ -6,7 +6,7 @@ import { ModFolderImport } from './ModFolderImport'
 import { ZippedModImport } from './ZippedModImport'
 import clsx from 'clsx'
 
-export default function ImportModsSheet() {
+export default function ImportModsSheet({ importToLoadout }: { importToLoadout: boolean }) {
   const [sheetOpen, setSheetOpen] = useState(false)
   const [zipActive, setZipActive] = useState(false)
   const { t } = useTranslation()
@@ -14,7 +14,7 @@ export default function ImportModsSheet() {
   return (
     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
       <SheetTrigger>
-        <div className="flex gap-1 rounded-md bg-green-700 p-4 text-white hover:bg-green-700/80">
+        <div className="m-auto flex w-fit justify-center gap-1 rounded-md bg-green-700 p-4 text-primary hover:bg-green-700/80">
           {t('mods.import.sheet.trigger')} <Upload />
         </div>
       </SheetTrigger>
@@ -26,8 +26,10 @@ export default function ImportModsSheet() {
         <div className="flex justify-center gap-8">
           <div
             className={clsx(
-              'flex min-h-20 min-w-20 flex-col items-center justify-center rounded-md border bg-secondary p-4 transition hover:cursor-pointer hover:bg-secondary/80',
+              'min-h-20 min-w-20 flex-col items-center justify-center rounded-md border bg-secondary p-4 transition hover:cursor-pointer hover:bg-secondary/80',
               zipActive && 'border-cyan-500',
+              importToLoadout && 'hidden',
+              !importToLoadout && 'flex',
             )}
             onClick={() => {
               setZipActive(() => true)
@@ -47,8 +49,8 @@ export default function ImportModsSheet() {
             {t('mods.import.sheet.folder')} <Folder />
           </div>
         </div>
-        {zipActive && <ZippedModImport />}
-        {!zipActive && <ModFolderImport />}
+        {zipActive && !importToLoadout && <ZippedModImport importToLoadout={importToLoadout} />}
+        {!zipActive && <ModFolderImport importToLoadout={importToLoadout} />}
       </SheetContent>
     </Sheet>
   )

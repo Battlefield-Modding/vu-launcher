@@ -4,15 +4,19 @@ import { listen, UnlistenFn } from '@tauri-apps/api/event'
 import clsx from 'clsx'
 import { Folder, Search, Upload } from 'lucide-react'
 import { useQueryClient } from '@tanstack/react-query'
-import { QueryKey, DragDropEventTauri } from '@/config/config'
+import { QueryKey, DragDropEventTauri, routes } from '@/config/config'
 import { toast } from 'sonner'
 import { open } from '@tauri-apps/plugin-dialog'
-import { importModFolderToCache } from '@/api'
+import { importModFolderToCache, importModFolderToLoadout } from '@/api'
 import { useTranslation } from 'react-i18next'
+import { useLocation } from 'react-router'
+import { LoaderComponent } from '@/components/LoaderComponent'
 
-export function ModFolderImport() {
+export function ModFolderImport({ importToLoadout }: { importToLoadout: boolean }) {
   const [isDraggingOver, setIsDraggingOver] = useState(false)
+  const [submitLoading, setSubmitLoading] = useState(false)
   const { t } = useTranslation()
+  const { pathname } = useLocation()
   let handleDrop: UnlistenFn | undefined
   let handleDragEnter: UnlistenFn | undefined
   let handleDragLeave: UnlistenFn | undefined
@@ -43,7 +47,27 @@ export function ModFolderImport() {
 
         if (payload && payload.paths[0]) {
           const info = payload.paths[0]
-          const result = await importModFolderToCache(info)
+
+          let result
+          if (importToLoadout) {
+            const loadoutName = pathname.split(`${routes.SERVERS}/`)[1]
+            setSubmitLoading(() => true)
+            result = await importModFolderToLoadout({ loadoutName, modLocation: info })
+            setSubmitLoading(() => false)
+            queryClient.invalidateQueries({
+              queryKey: [`${QueryKey.GetAllModNames}-${loadoutName}`],
+              refetchType: 'all',
+            })
+            queryClient.invalidateQueries({
+              queryKey: [QueryKey.GetLoadoutJSON, loadoutName],
+              refetchType: 'all',
+            })
+          } else {
+            setSubmitLoading(() => true)
+            result = await importModFolderToCache(info)
+            setSubmitLoading(() => false)
+          }
+
           if (result) {
             queryClient.invalidateQueries({
               queryKey: [QueryKey.GetModNamesInCache],
@@ -83,7 +107,26 @@ export function ModFolderImport() {
       const confirmed = await confirm(`${t('mods.import.form.confirm')}: ${installPath}`)
 
       if (confirmed) {
-        const result = await importModFolderToCache(installPath)
+        let result
+        if (importToLoadout) {
+          const loadoutName = pathname.split(`${routes.SERVERS}/`)[1]
+          setSubmitLoading(() => true)
+          result = await importModFolderToLoadout({ loadoutName, modLocation: installPath })
+          setSubmitLoading(() => false)
+          queryClient.invalidateQueries({
+            queryKey: [`${QueryKey.GetAllModNames}-${loadoutName}`],
+            refetchType: 'all',
+          })
+          queryClient.invalidateQueries({
+            queryKey: [QueryKey.GetLoadoutJSON, loadoutName],
+            refetchType: 'all',
+          })
+        } else {
+          setSubmitLoading(() => true)
+          result = await importModFolderToCache(installPath)
+          setSubmitLoading(() => false)
+        }
+
         if (result) {
           queryClient.invalidateQueries({
             queryKey: [QueryKey.GetModNamesInCache],
@@ -93,6 +136,7 @@ export function ModFolderImport() {
             queryKey: [QueryKey.GetAllModNames],
             refetchType: 'all',
           })
+
           toast(`${t('mods.import.form.toast.success')}: ${installPath}`)
         } else {
           toast(t('mods.import.form.toast.failure'))
@@ -109,6 +153,7 @@ export function ModFolderImport() {
       )}
       onClick={handleClick}
     >
+      {submitLoading && <LoaderComponent />}
       {isDraggingOver ? (
         <div className="text-md m-auto flex flex-col gap-8">
           <Upload className="h-32 w-32" />

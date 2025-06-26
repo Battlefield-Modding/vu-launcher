@@ -67,25 +67,33 @@ export function LoadoutMod({
   }
 
   return (
-    <div className="flex items-center gap-2">
-      <Switch
-        defaultChecked={isActive}
-        onCheckedChange={(e) => {
-          handleToggleMod(e)
-        }}
-      />
+    <tr className="border border-secondary">
+      <td>
+        <Switch
+          defaultChecked={isActive}
+          onCheckedChange={(e) => {
+            handleToggleMod(e)
+          }}
+        />
+      </td>
 
-      <h1>{mod.name}</h1>
-      <code className="text-md text-nowrap rounded-md bg-gray-800 p-1 pl-2 pr-2 text-white">
-        {mod.version}
-      </code>
-      <p
-        className="ml-auto mr-0 rounded-md bg-sidebar p-1.5 hover:cursor-pointer hover:bg-sidebar/50"
-        onClick={handleOpenInVSCode}
-      >
-        <img src={VSCodeIcon} className="m-auto"></img>
-      </p>
-      <DeleteModDialog loadoutName={loadout.name} modName={mod.name} queryKey={queryKey} />
-    </div>
+      <td className="border border-secondary">{`${mod.name} `}</td>
+
+      <td className="border border-secondary">
+        <code className="text-md text-nowrap rounded-md bg-gray-800 p-1 pl-2 pr-2 text-white">
+          {mod.version}
+        </code>
+      </td>
+
+      <td className="flex items-center justify-center">
+        <p
+          className="flex-1 bg-sidebar hover:cursor-pointer hover:bg-sidebar/50"
+          onClick={handleOpenInVSCode}
+        >
+          <img src={VSCodeIcon} className="m-auto"></img>
+        </p>
+        <DeleteModDialog loadoutName={loadout.name} modName={mod.name} queryKey={queryKey} />
+      </td>
+    </tr>
   )
 }

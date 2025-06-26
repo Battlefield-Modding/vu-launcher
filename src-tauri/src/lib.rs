@@ -33,9 +33,9 @@ use web::{download_game, get_vu_info, VeniceEndpointData};
 mod mods;
 use mods::{
     get_mod_names_in_cache, get_mod_names_in_loadout, import_mod_folder_to_cache,
-    import_zipped_mod_to_cache, install_mod_to_loadout_from_cache,
-    make_cache_folder_names_same_as_mod_json_names, open_mod_with_vscode, remove_mod_from_cache,
-    remove_mod_from_loadout,
+    import_mod_folder_to_loadout, import_zipped_mod_to_cache, import_zipped_mod_to_loadout,
+    install_mod_to_loadout_from_cache, make_cache_folder_names_same_as_mod_json_names,
+    open_mod_with_vscode, remove_mod_from_cache, remove_mod_from_loadout,
 };
 
 mod speed_calc;
@@ -272,6 +272,13 @@ async fn play_vu_on_local_server(name: String, users: Vec<usize>) -> bool {
         args.push(&preferences.venice_unleashed_shortcut_location)
     }
 
+    let should_spawn_console = &loadout.launch.common.console.unwrap();
+
+    let creation_flag = match should_spawn_console {
+        true => CREATE_NEW_CONSOLE,
+        false => CREATE_NO_WINDOW,
+    };
+
     let mut common = loadout_common_launch_args_to_vec(&loadout.launch.common);
     let mut client = loadout_client_launch_args_to_vec(&loadout.launch.client);
 
@@ -323,7 +330,7 @@ async fn play_vu_on_local_server(name: String, users: Vec<usize>) -> bool {
 
                     Command::new("cmd")
                         .args(args)
-                        .creation_flags(CREATE_NO_WINDOW)
+                        .creation_flags(creation_flag)
                         .spawn()
                         .expect("failed to execute process");
                 }
@@ -352,7 +359,7 @@ async fn play_vu_on_local_server(name: String, users: Vec<usize>) -> bool {
 
                 Command::new("cmd")
                     .args(copied_args)
-                    .creation_flags(CREATE_NO_WINDOW)
+                    .creation_flags(creation_flag)
                     .spawn()
                     .expect("failed to execute process");
             }
@@ -590,6 +597,8 @@ pub fn run() {
             get_mod_names_in_cache,
             import_zipped_mod_to_cache,
             import_mod_folder_to_cache,
+            import_zipped_mod_to_loadout,
+            import_mod_folder_to_loadout,
             remove_mod_from_cache,
             edit_loadout,
             import_loadout_from_path,

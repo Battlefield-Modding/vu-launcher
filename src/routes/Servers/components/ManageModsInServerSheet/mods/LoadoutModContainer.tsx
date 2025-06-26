@@ -46,25 +46,32 @@ export function LoadoutModContainer({ loadout }: { loadout: LoadoutJSON }) {
   }
 
   return (
-    <div>
-      <div>
-        <SheetTitle>
-          <code className="underline">{loadout.name}</code>
-        </SheetTitle>
-        <div>
-          {data.map((x, index) => {
-            return (
-              <LoadoutMod
-                loadout={loadout}
-                mod={x}
-                queryKey={`${QueryKey.GetAllModNames}-${loadout.name}`}
-                isActive={x.enabled}
-                key={`${x}-loadoutMod-${index}`}
-              />
-            )
-          })}
-        </div>
-      </div>
-    </div>
+    <table className="text-center">
+      <tr className="border border-secondary">
+        <th className="h-auto border border-secondary">
+          {t('servers.loadouts.loadout.mods.tableHeaderOne')}
+        </th>
+        <th className="h-auto border border-secondary">
+          {t('servers.loadouts.loadout.mods.tableHeaderTwo')}
+        </th>
+        <th className="h-auto border border-secondary">
+          {t('servers.loadouts.loadout.mods.tableHeaderThree')}
+        </th>
+        <th className="h-auto border border-secondary">
+          {t('servers.loadouts.loadout.mods.tableHeaderFour')}
+        </th>
+      </tr>
+      {data.map((x, index) => {
+        return (
+          <LoadoutMod
+            loadout={loadout}
+            mod={x}
+            queryKey={`${QueryKey.GetAllModNames}-${loadout.name}`}
+            isActive={x.enabled}
+            key={`${x.name}-loadoutMod-${index}`}
+          />
+        )
+      })}
+    </table>
   )
 }
