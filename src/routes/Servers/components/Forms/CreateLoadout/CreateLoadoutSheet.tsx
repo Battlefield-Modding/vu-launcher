@@ -43,7 +43,7 @@ export function CreateLoadoutSheet() {
           <Plus />
         </div>
       </SheetTrigger>
-      <SheetContent className="overflow-y-scroll">
+      <SheetContent className="overflow-y-auto">
         <SheetHeader>
           <SheetTitle className="text-center text-2xl">
             {t('servers.loadouts.createLoadout.sheet.title')}

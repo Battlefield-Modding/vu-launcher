@@ -29,7 +29,7 @@ export function StartupSheet({ existingLoadout }: { existingLoadout: LoadoutJSON
         </TooltipWrapper>
       </SheetTrigger>
       <SheetContent
-        className="overflow-y-scroll"
+        className="overflow-y-auto"
         onKeyDown={(e) => {
           if (prevKeys[prevKeys.length - 1] === 'Control') {
             if (e.key === 'f') {

@@ -26,7 +26,7 @@ export function BanlistSheet({ loadout }: { loadout: LoadoutJSON }) {
           </div>
         </TooltipWrapper>
       </SheetTrigger>
-      <SheetContent className="overflow-y-scroll">
+      <SheetContent className="overflow-y-auto">
         <SheetHeader className="hidden">
           <SheetTitle className="m-auto">
             {t('servers.loadouts.loadout.banlist.sheet.title')}
