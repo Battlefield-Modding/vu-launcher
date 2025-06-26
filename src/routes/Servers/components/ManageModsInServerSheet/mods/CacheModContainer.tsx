@@ -47,8 +47,6 @@ export function CacheModContainer({ loadout }: { loadout: LoadoutJSON }) {
     )
   }
 
-  console.log(data)
-
   return (
     <div>
       <SheetTitle>
@@ -71,7 +69,7 @@ export function CacheModContainer({ loadout }: { loadout: LoadoutJSON }) {
               queryKey={`${QueryKey.GetAllModNames}-${loadout.name}`}
               loadout={loadout}
               mod={x}
-              key={`${x}-cacheMod-${index}`}
+              key={`${x.name}-cacheMod-${index}`}
             />
           )
         })}

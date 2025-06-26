@@ -59,7 +59,7 @@ export function LoadoutModContainer({ loadout }: { loadout: LoadoutJSON }) {
                 mod={x}
                 queryKey={`${QueryKey.GetAllModNames}-${loadout.name}`}
                 isActive={x.enabled}
-                key={`${x}-loadoutMod-${index}`}
+                key={`${x.name}-loadoutMod-${index}`}
               />
             )
           })}
