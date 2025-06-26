@@ -558,6 +558,8 @@
             "trigger": "Startup"
           }
         },
+        "tableHeaderOne": "Configuration",
+        "tableHeaderTwo": "Button",
         "toast": {
           "openExplorer": "Opened explorer for loadout",
           "playFailure": "Failed to start server loadout",

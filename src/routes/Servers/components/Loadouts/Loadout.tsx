@@ -99,7 +99,7 @@ export function Loadout() {
   }
 
   return (
-    <div className="m-auto flex flex-col rounded-md bg-sidebar p-8">
+    <div className="flex w-full flex-col items-center justify-center gap-0">
       <div className="mb-4 ml-auto mr-auto flex max-w-80 items-center gap-2 lg:max-w-lg xl:max-w-screen-md">
         <h1 className="text-primary xl:text-2xl">{loadoutName} </h1>
         <div onClick={handleRefreshLoadout} className="w-fit">
@@ -134,7 +134,7 @@ export function Loadout() {
         </div>
       </div>
 
-      <div className="m-auto flex flex-col gap-8">
+      <div className="flex flex-col gap-8">
         <div className="flex justify-center gap-4">
           <TooltipWrapper text={t('servers.loadouts.loadout.startServer')}>
             <div
@@ -158,16 +158,61 @@ export function Loadout() {
           )}
         </div>
 
-        <div className="flex justify-center gap-4">
-          <MaplistSheet loadout={data.loadout} />
-          <ManageModsInServerSheet loadout={data.loadout} />
-          <BanlistSheet loadout={data.loadout} />
-        </div>
+        <table className="text-center">
+          <tr>
+            <th className="border border-secondary">
+              {t('servers.loadouts.loadout.tableHeaderOne')}
+            </th>
+            <th className="border border-secondary">
+              {t('servers.loadouts.loadout.tableHeaderTwo')}
+            </th>
+          </tr>
 
-        <div className="flex justify-center gap-4">
-          <LaunchArgumentSheet existingLoadout={data.loadout} />
-          <StartupSheet existingLoadout={data.loadout} />
-        </div>
+          <tr className="border border-secondary">
+            <td className="border border-secondary">
+              {t('servers.loadouts.loadout.maplist.sheet.trigger')}
+            </td>
+            <td className="border border-secondary">
+              <MaplistSheet loadout={data.loadout} />
+            </td>
+          </tr>
+
+          <tr className="border border-secondary">
+            <td className="border border-secondary">
+              {t('servers.loadouts.loadout.mods.sheet.trigger')}
+            </td>
+            <td className="border border-secondary">
+              <ManageModsInServerSheet loadout={data.loadout} />
+            </td>
+          </tr>
+
+          <tr className="border border-secondary">
+            <td className="border border-secondary">
+              {t('servers.loadouts.loadout.banlist.sheet.trigger')}
+            </td>
+            <td className="border border-secondary">
+              <BanlistSheet loadout={data.loadout} />
+            </td>
+          </tr>
+
+          <tr className="border border-secondary">
+            <td className="border border-secondary">
+              {t('servers.loadouts.loadout.startup.sheet.trigger')}
+            </td>
+            <td className="border border-secondary">
+              <StartupSheet existingLoadout={data.loadout} />
+            </td>
+          </tr>
+
+          <tr className="border border-secondary">
+            <td className="border border-secondary">
+              {t('servers.loadouts.loadout.launchArgs.sheet.trigger')}
+            </td>
+            <td className="border border-secondary">
+              <LaunchArgumentSheet existingLoadout={data.loadout} />
+            </td>
+          </tr>
+        </table>
 
         <div className="flex justify-center gap-4">
           <TooltipWrapper text={t('servers.loadouts.loadout.openExplorer')}>

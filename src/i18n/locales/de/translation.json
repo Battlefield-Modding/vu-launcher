@@ -558,6 +558,8 @@
             "trigger": "Start-up"
           }
         },
+        "tableHeaderOne": "Konfiguration",
+        "tableHeaderTwo": "Taste",
         "toast": {
           "openExplorer": "Eröffneten Explorer für Loadout",
           "playFailure": "Der Server -Loadout fehlgeschlagen",

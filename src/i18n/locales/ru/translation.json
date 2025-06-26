@@ -558,6 +558,8 @@
             "trigger": "Запускать"
           }
         },
+        "tableHeaderOne": "Конфигурация",
+        "tableHeaderTwo": "Кнопка",
         "toast": {
           "openExplorer": "Открыл Explorer для загрузки",
           "playFailure": "Не удалось запустить загрузку сервера",

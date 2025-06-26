@@ -558,6 +558,8 @@
             "trigger": "启动"
           }
         },
+        "tableHeaderOne": "配置",
+        "tableHeaderTwo": "按钮",
         "toast": {
           "openExplorer": "打开了用于加载的资源管理器",
           "playFailure": "无法启动服务器加载",
