@@ -135,7 +135,7 @@ pub fn make_folder_names_same_as_mod_json_names(loadout_name: &String) -> io::Re
                                                 );
                                                 mod_list.push(GameMod{
                                                     name: mod_json.Name,
-                                                    enabled: false,
+                                                    enabled: true,
                                                     version: mod_json.Version,
                                                     image: None,
                                                     src: mod_json.URL
