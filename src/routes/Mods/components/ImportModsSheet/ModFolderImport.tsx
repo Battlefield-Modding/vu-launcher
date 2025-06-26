@@ -58,6 +58,10 @@ export function ModFolderImport({ importToLoadout }: { importToLoadout: boolean 
               queryKey: [`${QueryKey.GetAllModNames}-${loadoutName}`],
               refetchType: 'all',
             })
+            queryClient.invalidateQueries({
+              queryKey: [QueryKey.GetLoadoutJSON, loadoutName],
+              refetchType: 'all',
+            })
           } else {
             setSubmitLoading(() => true)
             result = await importModFolderToCache(info)
@@ -111,6 +115,10 @@ export function ModFolderImport({ importToLoadout }: { importToLoadout: boolean 
           setSubmitLoading(() => false)
           queryClient.invalidateQueries({
             queryKey: [`${QueryKey.GetAllModNames}-${loadoutName}`],
+            refetchType: 'all',
+          })
+          queryClient.invalidateQueries({
+            queryKey: [QueryKey.GetLoadoutJSON, loadoutName],
             refetchType: 'all',
           })
         } else {

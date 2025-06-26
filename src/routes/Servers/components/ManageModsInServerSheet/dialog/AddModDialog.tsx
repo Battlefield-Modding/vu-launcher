@@ -42,7 +42,7 @@ export function AddModDialog({
         refetchType: 'all',
       })
       queryClient.invalidateQueries({
-        queryKey: [QueryKey.GetLoadoutJSON],
+        queryKey: [QueryKey.GetLoadoutJSON, loadout.name],
         refetchType: 'all',
       })
     } else {

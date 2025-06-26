@@ -53,6 +53,10 @@ export function ZippedModImport({ importToLoadout }: { importToLoadout: boolean 
               queryKey: [`${QueryKey.GetAllModNames}-${loadoutName}`],
               refetchType: 'all',
             })
+            queryClient.invalidateQueries({
+              queryKey: [QueryKey.GetLoadoutJSON, loadoutName],
+              refetchType: 'all',
+            })
           } else {
             result = await importZippedModToCache(info)
           }
@@ -104,6 +108,10 @@ export function ZippedModImport({ importToLoadout }: { importToLoadout: boolean 
             result = await importZippedModToLoadout({ modLocation: installPath, loadoutName })
             queryClient.invalidateQueries({
               queryKey: [`${QueryKey.GetAllModNames}-${loadoutName}`],
+              refetchType: 'all',
+            })
+            queryClient.invalidateQueries({
+              queryKey: [QueryKey.GetLoadoutJSON, loadoutName],
               refetchType: 'all',
             })
           } else {
