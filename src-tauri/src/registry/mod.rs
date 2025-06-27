@@ -8,7 +8,7 @@ use crate::preferences::{update_vu_dev_shortcut_preference, update_vu_shortcut_p
 fn set_launcher_install_path() -> io::Result<String> {
     let hklm = RegKey::predef(HKEY_CURRENT_USER);
     let path;
-    if tauri::is_dev() {
+    if cfg!(debug_assertions) {
         path = r"SOFTWARE\vu-launcher\vu-launcher-dev";
     } else {
         path = r"SOFTWARE\vu-launcher\vu-launcher";
@@ -18,7 +18,7 @@ fn set_launcher_install_path() -> io::Result<String> {
 
     // should always exist
     let mut appdata_path = cache_dir().unwrap();
-    if tauri::is_dev() {
+    if cfg!(debug_assertions) {
         appdata_path.push("vu-launcher-dev");
     } else {
         appdata_path.push("vu-launcher");
@@ -33,7 +33,7 @@ fn set_launcher_install_path() -> io::Result<String> {
 
 pub fn make_default_install_folder() {
     let mut default_install_folder = cache_dir().unwrap();
-    if tauri::is_dev() {
+    if cfg!(debug_assertions) {
         default_install_folder.push("vu-launcher-dev");
     } else {
         default_install_folder.push("vu-launcher");
@@ -89,7 +89,7 @@ pub fn get_install_path_registry() -> io::Result<String> {
 fn get_reg_value(keyname: &str) -> io::Result<String> {
     let hklm = RegKey::predef(HKEY_CURRENT_USER);
     let path;
-    if tauri::is_dev() {
+    if cfg!(debug_assertions) {
         path = r"SOFTWARE\vu-launcher\vu-launcher-dev";
     } else {
         path = r"SOFTWARE\vu-launcher\vu-launcher";
@@ -103,7 +103,7 @@ fn get_reg_value(keyname: &str) -> io::Result<String> {
 fn set_reg_value(keyname: &str, keyvalue: &OsString) -> io::Result<bool> {
     let hklm = RegKey::predef(HKEY_CURRENT_USER);
     let path;
-    if tauri::is_dev() {
+    if cfg!(debug_assertions) {
         path = r"SOFTWARE\vu-launcher\vu-launcher-dev";
     } else {
         path = r"SOFTWARE\vu-launcher\vu-launcher";
@@ -121,7 +121,7 @@ fn set_reg_value(keyname: &str, keyvalue: &OsString) -> io::Result<bool> {
 pub fn get_reg_vu_install_location() -> io::Result<String> {
     let hklm = RegKey::predef(HKEY_CURRENT_USER);
     let path;
-    if tauri::is_dev() {
+    if cfg!(debug_assertions) {
         path = r"SOFTWARE\vu-launcher\vu-launcher-dev"
     } else {
         path = r"SOFTWARE\Venice Unleashed";
@@ -136,7 +136,7 @@ pub fn get_reg_vu_install_location() -> io::Result<String> {
 pub fn get_reg_vu_dev_branch_install_location() -> io::Result<String> {
     let hklm = RegKey::predef(HKEY_CURRENT_USER);
     let path;
-    if tauri::is_dev() {
+    if cfg!(debug_assertions) {
         path = r"SOFTWARE\vu-launcher\vu-launcher-dev"
     } else {
         path = r"SOFTWARE\Venice Unleashed";
@@ -152,7 +152,7 @@ pub fn get_reg_vu_dev_branch_install_location() -> io::Result<String> {
 pub fn set_vu_install_location_registry(installdir: String) -> Result<bool, String> {
     let hklm = RegKey::predef(HKEY_CURRENT_USER);
     let path;
-    if tauri::is_dev() {
+    if cfg!(debug_assertions) {
         path = r"SOFTWARE\vu-launcher\vu-launcher-dev"
     } else {
         path = r"SOFTWARE\Venice Unleashed";
@@ -191,7 +191,7 @@ pub fn set_vu_install_location_registry(installdir: String) -> Result<bool, Stri
 pub fn set_vu_dev_branch_install_location_registry(installdir: String) -> Result<bool, String> {
     let hklm = RegKey::predef(HKEY_CURRENT_USER);
     let path;
-    if tauri::is_dev() {
+    if cfg!(debug_assertions) {
         path = r"SOFTWARE\vu-launcher\vu-launcher-dev"
     } else {
         path = r"SOFTWARE\Venice Unleashed";

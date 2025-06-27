@@ -1,9 +1,9 @@
 import os from 'os'
 import path from 'path'
-import { spawn, spawnSync } from 'child_process'
 import { Builder, Capabilities, WebDriver } from 'selenium-webdriver'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { routes } from '@/config/config'
+import { spawn, spawnSync } from 'child_process'
 
 // create the path to the expected application binary
 const application = path.resolve(
@@ -13,7 +13,7 @@ const application = path.resolve(
   '..',
   'src-tauri',
   'target',
-  'release',
+  'debug',
   'vu-launcher',
 )
 
@@ -25,10 +25,9 @@ let tauriDriver: WebDriver
 
 beforeAll(async function () {
   // unsure how to use the timeout from example
-  // this.timeout(120000)
 
   // ensure the program has been built
-  spawnSync('cargo', ['build', '--release'])
+  spawnSync('cargo', ['build', '--debug'])
 
   // start tauri-driver
   // @ts-expect-error
