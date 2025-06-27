@@ -317,8 +317,7 @@ export async function finishOnboarding(): Promise<boolean> {
   const preferences = await getUserPreferences()
   preferences.is_onboarded = true
   const status = await saveUserPreferences(preferences)
-  // inverting
-  return !status
+  return status
 }
 
 export async function toggleDevBranch(state: boolean): Promise<boolean> {

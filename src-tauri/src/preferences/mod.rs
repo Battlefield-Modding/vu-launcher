@@ -116,13 +116,12 @@ pub fn update_vu_dev_shortcut_preference() -> bool {
     }
 }
 
-pub fn save_user_preferences(preferences: UserPreferences) -> io::Result<()> {
+pub fn save_user_preferences(preferences: UserPreferences) -> io::Result<bool> {
     let str = serde_json::to_string_pretty(&preferences);
     let settings_json_path = get_settings_json_path()?;
 
-    let result = fs::write(settings_json_path, str.unwrap())?;
-
-    Ok(result)
+    fs::write(settings_json_path, str.unwrap())?;
+    Ok(true)
 }
 
 pub fn get_user_preferences_as_struct() -> io::Result<UserPreferences> {
@@ -328,7 +327,11 @@ pub fn settings_json_exists() -> bool {
 pub fn set_user_preferences(new_preferences: UserPreferences) -> bool {
     let status = save_user_preferences(new_preferences);
     match status {
-        Ok(_) => return true,
-        Err(_) => return false,
+        Ok(_) => {
+            return true;
+        }
+        Err(_) => {
+            return false;
+        }
     }
 }
