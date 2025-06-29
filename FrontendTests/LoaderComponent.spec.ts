@@ -1,7 +1,7 @@
 import { expect, describe, it, afterAll, vi, beforeAll } from 'vitest'
 import { clearMocks } from '@tauri-apps/api/mocks'
 import { render, screen } from '@testing-library/react'
-import { LoaderComponent } from './LoaderComponent'
+import { LoaderComponent } from '../src/components/LoaderComponent'
 
 beforeAll(() => {
   vi.mock('react-i18next', () => ({

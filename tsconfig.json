@@ -26,6 +26,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src", "webdriver/selenium/test"],
+  "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
