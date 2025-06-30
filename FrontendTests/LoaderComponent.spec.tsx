@@ -32,7 +32,7 @@ describe('Loader Renders', () => {
     const extraText = '...'
     const expectedString = i18nKey + extraText
     // act
-    render(LoaderComponent())
+    render(<LoaderComponent />)
     // assert
     expect(screen.getByText(expectedString)).toBeDefined()
   })
