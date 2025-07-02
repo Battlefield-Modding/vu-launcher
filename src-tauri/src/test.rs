@@ -4,11 +4,11 @@ use test_env_helpers::*;
 #[before_all]
 #[cfg(test)]
 mod tests {
+    use dirs_next::cache_dir;
+    use serde_json;
     use std::fs;
 
-    use dirs_next::cache_dir;
-
-    use crate::first_time_setup;
+    use crate::{first_time_setup, preferences::preference_structs::UserPreferences};
 
     fn before_all() {
         delete_vu_launcher_dev();
@@ -49,5 +49,23 @@ mod tests {
         first_time_setup();
 
         assert_eq!(settings_json_path.exists(), true);
+    }
+
+    #[test]
+    fn test_2_it_creates_valid_settings_json() {
+        // settings json must be readable by Serde
+
+        let mut settings_json_path = cache_dir().unwrap();
+        settings_json_path.push("vu-launcher-dev");
+        settings_json_path.push("settings.json");
+
+        let string = fs::read_to_string(&settings_json_path).unwrap();
+
+        let json: UserPreferences = serde_json::from_str(&string).unwrap();
+        assert_eq!(json.is_onboarded, false);
+        assert_eq!(json.last_visted_route, "");
+        assert_eq!(json.use_dev_branch, false);
+        assert_eq!(json.automatically_check_for_updates, false);
+        assert_eq!(json.automatically_install_update_if_found, false);
     }
 }
