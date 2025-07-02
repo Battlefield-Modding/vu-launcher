@@ -27,6 +27,8 @@ use registry::{
     set_vu_dev_branch_install_location_registry, set_vu_install_location_registry,
 };
 
+mod test;
+
 mod web;
 use web::{download_game, get_vu_info, VeniceEndpointData};
 

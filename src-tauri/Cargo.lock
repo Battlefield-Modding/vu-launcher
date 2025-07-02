@@ -4640,6 +4640,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "test-env-helpers"
+version = "0.2.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c6ab8f4822c904dadef9dd99f228f58a10d1b2c6ece06b108257e72fea72b1c6"
+dependencies = [
+ "quote",
+ "syn 1.0.109",
+]
+
+[[package]]
 name = "thin-slice"
 version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5118,6 +5128,7 @@ dependencies = [
  "tauri-plugin-shell",
  "tauri-plugin-updater",
  "tauri-plugin-window-state",
+ "test-env-helpers",
  "tokio",
  "walkdir",
  "winreg",
