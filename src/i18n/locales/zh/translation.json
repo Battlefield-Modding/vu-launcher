@@ -229,6 +229,7 @@
       "continue": "跳过 /继续"
     },
     "error": "未能加载引导组件",
+    "failure": "未能完成入职流程",
     "header": "首次设置",
     "install": {
       "dev": {
@@ -494,7 +495,12 @@
             "modCache": "mod-cache",
             "noMods": "mod_cache中没有模组",
             "trigger": "模组"
-          }
+          },
+          "tableHeaderFour": "行动",
+          "tableHeaderOne": "已启用",
+          "tableHeaderOneCacheMod": "位置",
+          "tableHeaderThree": "版本",
+          "tableHeaderTwo": "模组名称"
         },
         "multiAccount": {
           "form": {
@@ -553,6 +559,8 @@
             "trigger": "Startup"
           }
         },
+        "tableHeaderOne": "配置",
+        "tableHeaderTwo": "按钮",
         "toast": {
           "openExplorer": "从资源管理器打开配置文件",
           "playFailure": "无法启动服务器配置文件",
@@ -648,6 +656,7 @@
       "autoPerfMaxPlayers": "设置自动性能优化下的最大玩家数量",
       "battleCryLink": "设置Battlecry JSON端点链接",
       "defaultPreRoundTime": "设置回合开始前的时间",
+      "enableEnemyLocalVoip": "启用跨团队本地VoIP",
       "ingameBanner": "设置指向在游戏中横幅图像的链接",
       "pingLimitEnable": "是否启用ping限制",
       "pingLimitInMs": "设置ping限制（毫秒）",
