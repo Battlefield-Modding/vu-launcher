@@ -8,7 +8,15 @@ mod tests {
     use serde_json;
     use std::fs;
 
-    use crate::{first_time_setup, preferences::preference_structs::UserPreferences};
+    use crate::{
+        first_time_setup,
+        loadouts::{
+            get_loadout_admin_path,
+            loadout_modification::create_loadout,
+            loadout_structs::{LaunchArguments, LoadoutJson, Map, StartupArgs},
+        },
+        preferences::preference_structs::UserPreferences,
+    };
 
     fn before_all() {
         delete_vu_launcher_dev();
@@ -67,5 +75,33 @@ mod tests {
         assert_eq!(json.use_dev_branch, false);
         assert_eq!(json.automatically_check_for_updates, false);
         assert_eq!(json.automatically_install_update_if_found, false);
+    }
+
+    #[tokio::test]
+    async fn test_3_loadout_creation_creates_main_folder() {
+        let mut default_loadout = LoadoutJson::default();
+        default_loadout.name = String::from("TestLoadout");
+
+        let mut loadout_folder_name = cache_dir().unwrap();
+        loadout_folder_name.push("vu-launcher-dev");
+        loadout_folder_name.push("loadouts");
+        loadout_folder_name.push(&default_loadout.name);
+
+        let _ = create_loadout(default_loadout).await;
+
+        assert_eq!(loadout_folder_name.exists(), true);
+    }
+
+    #[tokio::test]
+    async fn test_4_duplicate_loadout_creation_throws_error() {
+        let mut default_loadout = LoadoutJson::default();
+        default_loadout.name = String::from("TestLoadout");
+
+        let mut loadout_folder_name = cache_dir().unwrap();
+        loadout_folder_name.push("vu-launcher-dev");
+        loadout_folder_name.push("loadouts");
+        loadout_folder_name.push(&default_loadout.name);
+
+        assert_eq!(create_loadout(default_loadout).await.is_err(), true)
     }
 }

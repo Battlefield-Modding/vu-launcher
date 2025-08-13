@@ -20,10 +20,13 @@ pub async fn create_loadout(mut loadout: LoadoutJson) -> Result<bool, String> {
                 _ = fs::create_dir_all(&admin_path);
             } else {
                 println!("Couldn't create loadout: {}", &loadout.name);
-                return Ok(false);
+                return Err(String::from("Cannot overwrite an existing loadout."));
             }
         }
-        Err(_) => println!("Couldn't create loadout: {}", &loadout.name),
+        Err(err) => {
+            println!("Couldn't create loadout: {}", &loadout.name);
+            return Err(err.to_string());
+        }
     }
 
     // move the server key over once folders are made
