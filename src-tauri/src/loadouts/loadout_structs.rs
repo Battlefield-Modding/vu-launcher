@@ -10,6 +10,26 @@ pub struct LoadoutJson {
     pub launch: LaunchArguments,
 }
 
+impl LoadoutJson {
+    pub fn default() -> LoadoutJson {
+        let default_map = Map {
+            gameMode: String::from("ConquestLarge0"),
+            mapCode: String::from("MP_Subway"),
+        };
+        let mut map_vec = Vec::new();
+        map_vec.push(default_map);
+
+        LoadoutJson {
+            name: String::from("Default Loadout"),
+            maplist: map_vec,
+            banlist: Vec::new(),
+            modlist: Vec::new(),
+            startup: StartupArgs::default(),
+            launch: LaunchArguments::default(),
+        }
+    }
+}
+
 #[allow(non_snake_case)]
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ModJson {
