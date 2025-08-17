@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
 pub struct LoadoutJson {
     pub name: String,
     pub maplist: Vec<Map>,
@@ -59,7 +59,7 @@ impl ModJson {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
 pub struct GameMod {
     pub name: String,
     pub version: String,
@@ -81,13 +81,13 @@ impl GameMod {
 }
 
 #[allow(non_snake_case)]
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
 pub struct Map {
     pub mapCode: String,
     pub gameMode: String,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
 pub struct Admin {
     pub password: String, // This is RCON password for remote admin.
 }
@@ -101,7 +101,7 @@ impl Admin {
 }
 
 #[allow(non_snake_case)]
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
 pub struct Vars {
     pub ranked: Option<bool>, // Change the server between ranked/unranked mode
     pub serverName: String,   // Set the server name
@@ -185,7 +185,7 @@ impl Vars {
 }
 
 #[allow(non_snake_case)]
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
 pub struct StartupArgs {
     pub admin: Admin,
     pub vars: Vars,
@@ -195,7 +195,7 @@ pub struct StartupArgs {
 }
 
 #[allow(non_snake_case)]
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
 pub struct RM_Commands {
     pub setDevelopers: Vec<String>, // Set list of developers, separated by a space
     pub setAdmins: Vec<String>,     // Set list of admins, separated by a space
@@ -239,7 +239,7 @@ impl RM_Commands {
 }
 
 #[allow(non_snake_case)]
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
 pub struct VU_Commands {
     pub ColorCorrectionEnabled: Option<bool>, // "Enable blue-tint filter",
     pub DesertingAllowed: Option<bool>,       // "Disable Out Of Bounds",
@@ -260,7 +260,7 @@ pub struct VU_Commands {
 }
 
 #[allow(non_snake_case)]
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
 pub struct SetTeamTicketCount {
     pub teamId: String,
     pub ticketCount: u64,
@@ -309,7 +309,7 @@ impl StartupArgs {
 }
 
 #[allow(non_snake_case)]
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
 pub struct LaunchArguments {
     pub common: CommonLaunchArguments,
     pub client: ClientLaunchArguments,
@@ -327,7 +327,7 @@ impl LaunchArguments {
 }
 
 #[allow(non_snake_case)]
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
 pub struct CommonLaunchArguments {
     pub gamepath: Option<String>,
     pub perftrace: Option<bool>,
@@ -397,7 +397,7 @@ impl CommonLaunchArguments {
 // }
 
 #[allow(non_snake_case)]
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
 pub struct ClientLaunchArguments {
     pub dwebui: Option<bool>,
     pub serverJoinString: Option<String>,
@@ -421,7 +421,7 @@ impl ClientLaunchArguments {
 }
 
 #[allow(non_snake_case)]
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
 pub struct ServerLaunchArguments {
     pub high60: Option<bool>,
     pub high120: Option<bool>,

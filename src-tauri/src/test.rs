@@ -11,7 +11,7 @@ mod tests {
     use crate::{
         first_time_setup,
         loadouts::{
-            get_loadout_admin_path,
+            get_loadout_admin_path, get_loadout_json_as_struct,
             loadout_modification::create_loadout,
             loadout_structs::{LaunchArguments, LoadoutJson, Map, StartupArgs},
         },
@@ -103,5 +103,24 @@ mod tests {
         loadout_folder_name.push(&default_loadout.name);
 
         assert_eq!(create_loadout(default_loadout).await.is_err(), true)
+    }
+
+    #[tokio::test]
+    async fn test_5_loadout_json_data_is_correct() {
+        let mut default_loadout = LoadoutJson::default();
+        default_loadout.name = String::from("TestLoadout");
+
+        let written_loadout_json =
+            get_loadout_json_as_struct(&String::from("TestLoadout")).unwrap();
+
+        // The serverInstancePath is assigned to the loadoutJSON on loadout creation.
+        // ServerInstancePath is a critical parameter which decides where VU pulls your config from
+        default_loadout.launch.server.serverInstancePath = written_loadout_json
+            .launch
+            .server
+            .serverInstancePath
+            .clone();
+
+        assert_eq!(default_loadout, written_loadout_json)
     }
 }
