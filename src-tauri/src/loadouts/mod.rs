@@ -140,7 +140,10 @@ pub fn make_loadout_json_from_txt_files(loadout_name: &String) -> io::Result<boo
     Ok(true)
 }
 
-pub fn get_all_mod_json_in_loadout(loadout_name: &String) -> Vec<GameMod> {
+pub fn get_mods_and_overwrite_folder_names_in_loadout(
+    loadout_name: &String,
+    existing_modlist: &Vec<GameMod>,
+) -> Vec<GameMod> {
     let mut loadout_path = get_loadouts_path();
     loadout_path.push(&loadout_name);
     loadout_path.push("Server");
@@ -173,12 +176,20 @@ pub fn get_all_mod_json_in_loadout(loadout_name: &String) -> Vec<GameMod> {
                                             serde_json::from_str(&info);
                                         match game_mod {
                                             Ok(mod_info) => {
+                                                let mut mod_enabled = true;
+                                                for i in existing_modlist {
+                                                    if i.name == mod_info.Name
+                                                        && i.version == mod_info.Version
+                                                    {
+                                                        mod_enabled = i.enabled
+                                                    }
+                                                }
                                                 let mod_info = GameMod {
                                                     name: mod_info.Name,
                                                     version: mod_info.Version,
                                                     image: None,
                                                     src: mod_info.URL,
-                                                    enabled: false,
+                                                    enabled: mod_enabled,
                                                 };
                                                 mod_data.push(mod_info);
                                             }

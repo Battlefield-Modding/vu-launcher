@@ -11,7 +11,8 @@ use serde_json::Error;
 
 use crate::{
     loadouts::{
-        get_all_mod_json_in_loadout, get_loadout_json_as_struct, get_loadouts_path,
+        get_loadout_json_as_struct, get_loadouts_path,
+        get_mods_and_overwrite_folder_names_in_loadout,
         loadout_structs::{GameMod, LoadoutJson, ModJson},
         loadout_txt_handlers::write_to_txt_from_loadout,
         write_loadout_json, write_loadout_json_and_txt_files,
@@ -402,7 +403,7 @@ pub fn get_mod_names_in_loadout(name: String) -> Vec<GameMod> {
             if loadout.modlist.len() == 0
                 || !same_number_of_mods_in_loadout_and_mods_folder(&loadout)
             {
-                let mods = get_all_mod_json_in_loadout(&name);
+                let mods = get_mods_and_overwrite_folder_names_in_loadout(&name, &loadout.modlist);
                 loadout.modlist = mods;
                 match write_loadout_json(&loadout) {
                     Ok(_) => {
@@ -829,12 +830,17 @@ pub async fn import_zipped_mod_to_loadout(mod_location: String, loadout_name: St
     target_path.push("temporary_zip_folder");
 
     let mod_location_as_path = PathBuf::from(mod_location);
-
-    match extract_zip(&mod_location_as_path, &target_path) {
-        Ok(_) => {
-            make_folder_names_same_as_mod_json_names(&loadout_name);
-            return true;
-        }
+    match get_loadout_json_as_struct(&loadout_name) {
+        Ok(loadout) => match extract_zip(&mod_location_as_path, &target_path) {
+            Ok(_) => {
+                get_mods_and_overwrite_folder_names_in_loadout(&loadout_name, &loadout.modlist);
+                return true;
+            }
+            Err(err) => {
+                println!("{:?}", err);
+                return false;
+            }
+        },
         Err(err) => {
             println!("{:?}", err);
             return false;
