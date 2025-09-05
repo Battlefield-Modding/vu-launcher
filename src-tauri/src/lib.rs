@@ -37,7 +37,7 @@ use mods::{
     get_mod_names_in_cache, get_mod_names_in_loadout, import_mod_folder_to_cache,
     import_mod_folder_to_loadout, import_zipped_mod_to_cache, import_zipped_mod_to_loadout,
     install_mod_to_loadout_from_cache, make_cache_folder_names_same_as_mod_json_names,
-    open_mod_with_vscode, remove_mod_from_cache, remove_mod_from_loadout,
+    open_mod_with_vscode, remove_mod_from_cache, remove_mod_from_loadout, toggle_mod,
 };
 
 mod speed_calc;
@@ -621,7 +621,8 @@ pub fn run() {
             install_mod_to_loadout_from_cache,
             get_all_loadout_names,
             get_loadout_json,
-            make_cache_folder_names_same_as_mod_json_names
+            make_cache_folder_names_same_as_mod_json_names,
+            toggle_mod
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

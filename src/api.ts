@@ -380,3 +380,14 @@ export async function refreshModCacheFolderNames() {
   const status = await invoke(rust_fns.make_cache_folder_names_same_as_mod_json_names, {})
   return status
 }
+
+export async function toggleMod({
+  gameMod,
+  loadoutName,
+}: {
+  gameMod: GameMod
+  loadoutName: string
+}) {
+  const status = await invoke(rust_fns.toggle_mod, { gameMod, loadoutName })
+  return status
+}

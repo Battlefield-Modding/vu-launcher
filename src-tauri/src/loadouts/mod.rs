@@ -43,6 +43,18 @@ fn convert_loadout_json_to_string(loadout: &LoadoutJson) -> io::Result<String> {
     Ok(loadout_string)
 }
 
+pub fn write_loadout_json_and_txt_files(loadout: &LoadoutJson) -> io::Result<bool> {
+    let mut path_to_loadout_json = get_loadout_path(&loadout.name);
+    path_to_loadout_json.push("loadout.json");
+
+    let loadout_json_string = convert_loadout_json_to_string(&loadout)?;
+
+    write(&path_to_loadout_json, loadout_json_string)?;
+    write_to_txt_from_loadout(&loadout.name)?;
+
+    Ok(true)
+}
+
 pub fn write_loadout_json(loadout: &LoadoutJson) -> io::Result<bool> {
     let mut path_to_loadout_json = get_loadout_path(&loadout.name);
     path_to_loadout_json.push("loadout.json");

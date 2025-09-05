@@ -14,7 +14,7 @@ use crate::{
         get_all_mod_json_in_loadout, get_loadout_json_as_struct, get_loadouts_path,
         loadout_structs::{GameMod, LoadoutJson, ModJson},
         loadout_txt_handlers::write_to_txt_from_loadout,
-        write_loadout_json,
+        write_loadout_json, write_loadout_json_and_txt_files,
     },
     registry, CREATE_NO_WINDOW,
 };
@@ -928,4 +928,37 @@ pub fn same_number_of_mods_in_loadout_and_mods_folder(loadout: &LoadoutJson) -> 
     }
     println!("Modlist and num_mods are different in: {:?}", &loadout.name);
     return false;
+}
+
+#[tauri::command]
+pub async fn toggle_mod(game_mod: GameMod, loadout_name: String) -> bool {
+    match get_loadout_json_as_struct(&loadout_name) {
+        Ok(mut loadout) => {
+            let mut updated_mod = false;
+            for i in &mut loadout.modlist {
+                if i.name == game_mod.name && i.version == game_mod.version {
+                    i.enabled = !i.enabled;
+                    updated_mod = true;
+                    break;
+                }
+            }
+            if updated_mod == true {
+                match write_loadout_json_and_txt_files(&loadout) {
+                    Ok(_) => return true,
+                    Err(err) => {
+                        println!(
+                            "Failed to write loadoutJSON / txt files after toggling mod due to error: \n{:?}",
+                            err
+                        );
+                        return false;
+                    }
+                }
+            }
+            return false;
+        }
+        Err(err) => {
+            println!("Failed to get ModJSON as struct due to error: \n{:?}", err);
+            return false;
+        }
+    }
 }

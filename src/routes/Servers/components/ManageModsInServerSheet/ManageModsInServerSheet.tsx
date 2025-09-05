@@ -21,7 +21,7 @@ export function ManageModsInServerSheet({ loadout }: { loadout: LoadoutJSON }) {
             <ImportModsSheet importToLoadout={true} />
           </div>
 
-          <LoadoutModContainer loadout={loadout} />
+          <LoadoutModContainer loadoutName={loadout.name} />
 
           <CacheModContainer loadout={loadout} />
         </div>
