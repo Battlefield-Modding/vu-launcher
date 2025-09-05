@@ -4,17 +4,22 @@ import { listen, UnlistenFn } from '@tauri-apps/api/event'
 import clsx from 'clsx'
 import { FolderArchive, Search, Upload } from 'lucide-react'
 import { useQueryClient } from '@tanstack/react-query'
-import { QueryKey, DragDropEventTauri, routes } from '@/config/config'
+import { QueryKey, DragDropEventTauri } from '@/config/config'
 import { toast } from 'sonner'
 import { open } from '@tauri-apps/plugin-dialog'
 import { importZippedModToCache, importZippedModToLoadout } from '@/api'
 import { useTranslation } from 'react-i18next'
-import { useLocation } from 'react-router'
 
-export function ZippedModImport({ importToLoadout }: { importToLoadout: boolean }) {
+export function ZippedModImport({
+  importToLoadout,
+  loadoutName,
+}: {
+  importToLoadout: boolean
+  loadoutName: string | undefined
+}) {
   const [isDraggingOver, setIsDraggingOver] = useState(false)
   const { t } = useTranslation()
-  const { pathname } = useLocation()
+
   let handleDrop: UnlistenFn | undefined
   let handleDragEnter: UnlistenFn | undefined
   let handleDragLeave: UnlistenFn | undefined
@@ -46,8 +51,7 @@ export function ZippedModImport({ importToLoadout }: { importToLoadout: boolean 
         if (payload && payload.paths[0] && payload.paths[0].includes('.zip')) {
           const info = payload.paths[0]
           let result
-          if (importToLoadout) {
-            const loadoutName = pathname.split(`${routes.SERVERS}/`)[1]
+          if (importToLoadout && loadoutName !== undefined) {
             result = await importZippedModToLoadout({ modLocation: info, loadoutName })
             queryClient.invalidateQueries({
               queryKey: [`${QueryKey.GetAllModNames}-${loadoutName}`],
@@ -103,8 +107,7 @@ export function ZippedModImport({ importToLoadout }: { importToLoadout: boolean 
 
         if (confirmed) {
           let result
-          if (importToLoadout) {
-            const loadoutName = pathname.split(`${routes.SERVERS}/`)[1]
+          if (importToLoadout && loadoutName !== undefined) {
             result = await importZippedModToLoadout({ modLocation: installPath, loadoutName })
             queryClient.invalidateQueries({
               queryKey: [`${QueryKey.GetAllModNames}-${loadoutName}`],

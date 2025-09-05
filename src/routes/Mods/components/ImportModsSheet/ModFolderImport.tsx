@@ -12,7 +12,13 @@ import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router'
 import { LoaderComponent } from '@/components/LoaderComponent'
 
-export function ModFolderImport({ importToLoadout }: { importToLoadout: boolean }) {
+export function ModFolderImport({
+  importToLoadout,
+  loadoutName,
+}: {
+  importToLoadout: boolean
+  loadoutName: string | undefined
+}) {
   const [isDraggingOver, setIsDraggingOver] = useState(false)
   const [submitLoading, setSubmitLoading] = useState(false)
   const { t } = useTranslation()
@@ -49,8 +55,7 @@ export function ModFolderImport({ importToLoadout }: { importToLoadout: boolean 
           const info = payload.paths[0]
 
           let result
-          if (importToLoadout) {
-            const loadoutName = pathname.split(`${routes.SERVERS}/`)[1]
+          if (importToLoadout && loadoutName !== undefined) {
             setSubmitLoading(() => true)
             result = await importModFolderToLoadout({ loadoutName, modLocation: info })
             setSubmitLoading(() => false)
@@ -108,8 +113,7 @@ export function ModFolderImport({ importToLoadout }: { importToLoadout: boolean 
 
       if (confirmed) {
         let result
-        if (importToLoadout) {
-          const loadoutName = pathname.split(`${routes.SERVERS}/`)[1]
+        if (importToLoadout && loadoutName !== undefined) {
           setSubmitLoading(() => true)
           result = await importModFolderToLoadout({ loadoutName, modLocation: installPath })
           setSubmitLoading(() => false)
