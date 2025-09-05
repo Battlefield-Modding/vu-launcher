@@ -173,7 +173,7 @@ impl Vars {
             idleBanRounds: Some(false),
             vehicleSpawnAllowed: Some(true),
             vehicleSpawnDelay: Some(1),
-            soldierHealth: Some(1),
+            soldierHealth: Some(100),
             playerRespawnTime: Some(1),
             playerManDownTime: Some(1),
             bulletDamage: Some(1),
