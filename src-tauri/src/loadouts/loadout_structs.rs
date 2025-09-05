@@ -34,12 +34,12 @@ impl LoadoutJson {
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ModJson {
     pub Name: String,
-    pub Authors: Vec<String>,
-    pub Description: String,
+    pub Authors: Option<Vec<String>>,
+    pub Description: Option<String>,
     pub URL: Option<String>,
     pub Version: String,
-    pub HasWebUI: bool,
-    pub HasVeniceEXT: bool,
+    pub HasWebUI: Option<bool>,
+    pub HasVeniceEXT: Option<bool>,
     pub Tags: Option<Vec<String>>,
     // Dependencies // Ignoring dependencies for now...
 }
@@ -48,12 +48,12 @@ impl ModJson {
     pub fn default() -> ModJson {
         ModJson {
             Name: String::from(""),
-            Authors: Vec::new(),
-            Description: String::from(""),
+            Authors: Some(Vec::new()),
+            Description: Some(String::from("")),
             URL: Some(String::from("")),
             Version: String::from(""),
-            HasWebUI: false,
-            HasVeniceEXT: false,
+            HasWebUI: Some(false),
+            HasVeniceEXT: Some(false),
             Tags: Some(Vec::new()),
         }
     }
