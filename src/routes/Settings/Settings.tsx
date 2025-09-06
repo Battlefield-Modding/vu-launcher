@@ -10,7 +10,8 @@ import { MultiAccountToggle } from './components/MultiAccountToggle'
 import { AutomaticallyUpdateToggle } from './components/AutomaticallyUpdateToggle'
 import { CheckForUpdatesToggle } from './components/CheckForUpdatesToggle'
 import { SetVuPathSheet } from './components/SetVuPath/SetVuPathSheet'
-import { InstallVU } from '../Home/components/InstallVU/InstallVU'
+import { CopyProdToDev } from './components/CopyProdToDev'
+import { InstallVUFromSettings } from './components/InstallVuFromSettings'
 
 export default function Settings() {
   const { t } = useTranslation()
@@ -57,8 +58,9 @@ export default function Settings() {
         <CheckForUpdatesToggle data={data} />
         {data.automatically_check_for_updates && <AutomaticallyUpdateToggle data={data} />}
         <SetVuPathSheet preferences={data} />
-        <div className="ml-0 mr-auto">
-          <InstallVU />
+        <div>
+          <InstallVUFromSettings />
+          <CopyProdToDev />
         </div>
       </div>
     </div>

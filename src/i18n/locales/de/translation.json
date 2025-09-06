@@ -613,7 +613,13 @@
         "enable": "Aktivierte Überprüfung nach Updates zum Start des Launchers"
       }
     },
+    "copyProdToDev": {
+      "button": "Wählen Sie den Ordner für VU Dev (Kopien Vu prod)"
+    },
     "error": "Einstellungen nicht laden",
+    "installVu": {
+      "again": "Laden Sie VU erneut herunter"
+    },
     "languageSelector": {
       "title": "Wählen Sie Ihre Sprache",
       "toast": "Sprache geändert in"

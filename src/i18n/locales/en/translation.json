@@ -613,7 +613,13 @@
         "enable": "Enabled checking for updates on Launcher startup"
       }
     },
+    "copyProdToDev": {
+      "button": "Choose Folder for VU Dev (Copies VU Prod)"
+    },
     "error": "Failed to load settings",
+    "installVu": {
+      "again": "Download VU Again"
+    },
     "languageSelector": {
       "title": "Choose your language",
       "toast": "Changed language to"

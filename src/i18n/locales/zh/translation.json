@@ -613,7 +613,13 @@
         "enable": "已在启动器启动时进行更新检查"
       }
     },
+    "copyProdToDev": {
+      "button": "选择Vu Dev的文件夹（副本Vu Prod）"
+    },
     "error": "无法加载设置",
+    "installVu": {
+      "again": "再次下载VU"
+    },
     "languageSelector": {
       "title": "选择您的语言",
       "toast": "将语言更改为"
