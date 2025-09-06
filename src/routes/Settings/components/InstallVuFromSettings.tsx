@@ -78,6 +78,7 @@ export function InstallVUFromSettings() {
       console.log('VU Installation Completed')
       toast(t('onboarding.install.prod.toast.installComplete'))
       queryClient.invalidateQueries({ queryKey: [QueryKey.IsVuInstalled], refetchType: 'all' })
+      queryClient.invalidateQueries({ queryKey: [QueryKey.UserPreferences], refetchType: 'all' })
     })
 
     listen('tauri://update-status', (event: LauncherUpdateStatusEvent) => {
