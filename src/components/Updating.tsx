@@ -17,7 +17,6 @@ import {
 } from '@/components/ui/alert-dialog'
 import { useQuery } from '@tanstack/react-query'
 import { QueryKey, UserPreferences } from '@/config/config'
-import { toast } from 'sonner'
 
 export function Updating() {
   const [isUpdating, setIsUpdating] = useState(false)
@@ -48,7 +47,6 @@ export function Updating() {
   })
 
   if (isPending) {
-    toast(t('update.checking'))
     return <div></div>
   }
 
