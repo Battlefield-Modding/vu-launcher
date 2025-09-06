@@ -1,4 +1,4 @@
-import { getLauncherInstallPath, setVUInstallLocationRegistry } from '@/api'
+import { getLauncherInstallPath } from '@/api'
 import { Button } from '@/components/ui/button'
 import { QueryKey } from '@/config/config'
 import { open } from '@tauri-apps/plugin-dialog'
