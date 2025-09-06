@@ -1,6 +1,6 @@
 [package]
 name = "vu-launcher"
-version = "0.4.7"
+version = "0.4.8"
 description = "Trying to make VU more convenient."
 authors = ["DesertShadow"]
 edition = "2021"
