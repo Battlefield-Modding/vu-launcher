@@ -2,7 +2,13 @@ import { useEffect, useRef, useState } from 'react'
 import { Progress } from '@/components/ui/progress'
 import { Button } from '@/components/ui/button'
 import { Download, Loader } from 'lucide-react'
-import { activateBf3LSX, finishOnboarding, vuDevIsInstalled, vuProdIsInstalled } from '@/api'
+import {
+  activateBf3LSX,
+  finishOnboarding,
+  getLauncherInstallPath,
+  vuDevIsInstalled,
+  vuProdIsInstalled,
+} from '@/api'
 import { useQuery } from '@tanstack/react-query'
 import { QueryKey, routes, STALE } from '@/config/config'
 import { InstallVU } from '@/routes/Home/components/InstallVU/InstallVU'
@@ -56,10 +62,12 @@ export function Onboarding() {
     }
   }
 
-  async function handleDownloadVU() {
+  async function handleCopyVuProdToDev() {
+    const defaultPath = await getLauncherInstallPath()
     const installPath = await open({
       multiple: false,
       directory: true,
+      defaultPath,
     })
     if (installPath) {
       setVuDevInstallPath(() => installPath)
@@ -166,7 +174,7 @@ export function Onboarding() {
               variant={'secondary'}
               onClick={(e) => {
                 e.preventDefault()
-                handleDownloadVU()
+                handleCopyVuProdToDev()
               }}
             >
               <Download size={'10px'} />

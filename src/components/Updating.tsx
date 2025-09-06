@@ -165,7 +165,7 @@ export function Updating() {
               <div className="mb-2 flex h-6">
                 <Progress value={downloadProgress} className="h-full w-full flex-1" />
               </div>
-              <p className="text-right">{downloadProgress}%</p>
+              <p className="text-right">{downloadProgress.toFixed(2)}%</p>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter></AlertDialogFooter>

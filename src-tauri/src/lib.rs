@@ -566,6 +566,14 @@ async fn remove_vu_credentials(username: String) -> bool {
     }
 }
 
+#[tauri::command]
+fn get_launcher_install_path() -> String {
+    match get_install_path_registry() {
+        Ok(path) => return path,
+        Err(err) => return String::from(""),
+    }
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -622,7 +630,8 @@ pub fn run() {
             get_all_loadout_names,
             get_loadout_json,
             make_cache_folder_names_same_as_mod_json_names,
-            toggle_mod
+            toggle_mod,
+            get_launcher_install_path
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -28,15 +28,15 @@ export function InstallVuProdDialog({
 }) {
   const queryClient = useQueryClient()
   const { t } = useTranslation()
-  async function InstallVuProdToPath() {
-    setGameDownloadUpdateInstalling(() => true)
-    await invoke(rust_fns.download_game, { installPath: vuProdInstallPath })
-  }
+
+  // async function InstallVuProdToPath() {
+  //   setGameDownloadUpdateInstalling(() => true)
+  //   await invoke(rust_fns.download_game, { installPath: vuProdInstallPath })
+  // }
 
   async function InstallVuProdAndDevToPath() {
     setGameDownloadUpdateInstalling(() => true)
     await invoke(rust_fns.download_game, { installPath: vuProdInstallPath })
-
     while (gameDownloadUpdateInstalling) {
       // do nothing
     }
@@ -72,17 +72,9 @@ export function InstallVuProdDialog({
           <DialogClose>
             <p
               className="flex gap-4 rounded-md bg-green-600 p-2 text-primary transition hover:cursor-pointer hover:bg-green-600/80"
-              onClick={InstallVuProdToPath}
-            >
-              <Check /> {t('onboarding.install.prod.dialog.button.confirmOne')}
-            </p>
-          </DialogClose>
-          <DialogClose>
-            <p
-              className="flex gap-4 rounded-md bg-green-600 p-2 text-primary transition hover:cursor-pointer hover:bg-green-600/80"
               onClick={InstallVuProdAndDevToPath}
             >
-              <Check /> {t('onboarding.install.prod.dialog.button.confirmBoth')}
+              <Check /> {t('servers.loadouts.loadout.mods.addModDialog.confirm')}
             </p>
           </DialogClose>
         </div>

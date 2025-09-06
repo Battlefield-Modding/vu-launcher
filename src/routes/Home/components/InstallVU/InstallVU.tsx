@@ -1,8 +1,8 @@
-import { setVUInstallLocationRegistry } from '@/api'
+import { getLauncherInstallPath, setVUInstallLocationRegistry } from '@/api'
 import { Button } from '@/components/ui/button'
 import { QueryKey } from '@/config/config'
 import { open } from '@tauri-apps/plugin-dialog'
-import { Download, Search } from 'lucide-react'
+import { Download } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
 
@@ -113,12 +113,15 @@ export function InstallVU() {
   }, [])
 
   async function handleDownloadVU() {
+    const defaultPath = await getLauncherInstallPath()
     const installPath = await open({
       multiple: false,
       directory: true,
+      defaultPath,
     })
     if (installPath) {
       setVuProdInstallPath(() => installPath)
+      console.log(installPath)
       if (dialogRef.current) {
         const element = dialogRef.current as HTMLDialogElement
         element.click()
@@ -126,31 +129,33 @@ export function InstallVU() {
     }
   }
 
-  async function handlesetVUInstallLocationRegistry() {
-    const dir = await open({
-      multiple: false,
-      directory: true,
-    })
-    if (!dir) {
-      return
-    }
-    const status = await setVUInstallLocationRegistry(dir)
-    if (status) {
-      queryClient.invalidateQueries({
-        queryKey: [QueryKey.IsVuInstalled],
-        refetchType: 'all',
-      })
-      toast(`${t('onboarding.install.prod.toast.chooseInstallDir.success')}: ${dir}`)
-    } else {
-      toast(t('onboarding.install.prod.toast.chooseInstallDir.failure'))
-    }
-  }
+  // async function handlesetVUInstallLocationRegistry() {
+  //   const defaultPath = await getLauncherInstallPath()
+  //   const dir = await open({
+  //     multiple: false,
+  //     directory: true,
+  //     defaultPath,
+  //   })
+  //   if (!dir) {
+  //     return
+  //   }
+  //   const status = await setVUInstallLocationRegistry(dir)
+  //   if (status) {
+  //     queryClient.invalidateQueries({
+  //       queryKey: [QueryKey.IsVuInstalled],
+  //       refetchType: 'all',
+  //     })
+  //     toast(`${t('onboarding.install.prod.toast.chooseInstallDir.success')}: ${dir}`)
+  //   } else {
+  //     toast(t('onboarding.install.prod.toast.chooseInstallDir.failure'))
+  //   }
+  // }
 
   return (
     <div className="m-auto flex max-h-[500px] max-w-[500px] flex-col justify-between gap-8 rounded-md bg-black p-8">
       {!gameDownloadUpdateInstalling && (
         <>
-          <div className="flex flex-1 justify-center gap-4 align-middle text-xl leading-9">
+          {/* <div className="flex flex-1 justify-center gap-4 align-middle text-xl leading-9">
             <h1 className="flex-1">{t('onboarding.install.prod.locate.header')}</h1>
             <Button
               variant={'secondary'}
@@ -161,7 +166,7 @@ export function InstallVU() {
             >
               <Search /> {t('onboarding.install.prod.locate.button')}
             </Button>
-          </div>
+          </div> */}
 
           <div className="flex flex-1 justify-center gap-4 align-middle text-xl leading-9">
             <h1 className="flex-1 text-primary">{t('onboarding.install.prod.download.header')}</h1>

@@ -23,21 +23,40 @@ pub fn set_default_preferences() -> bool {
         Ok(info) => String::from(Path::new(&info).join("vu.exe").to_str().unwrap()),
         Err(_) => String::from(""),
     };
+    match get_user_preferences_as_struct() {
+        Ok(mut prefs) => {
+            prefs.venice_unleashed_shortcut_location = path_to_vu_client;
+            prefs.dev_venice_unleashed_shortcut_location = path_to_vu_dev_client;
 
-    let mut sample_preferences = UserPreferences::default();
-    sample_preferences.venice_unleashed_shortcut_location = path_to_vu_client;
-    sample_preferences.dev_venice_unleashed_shortcut_location = path_to_vu_dev_client;
+            match save_user_preferences(prefs) {
+                Ok(_) => {
+                    println!("Successfully saved user preferences!");
+                    return true;
+                }
+                Err(err) => {
+                    println!("Failed to save user preferences due to reason:\n{:?}", err);
+                    return false;
+                }
+            };
+        }
+        Err(_) => {
+            println!("Preferences do not exist, setting defaults");
+            let mut sample_preferences = UserPreferences::default();
+            sample_preferences.venice_unleashed_shortcut_location = path_to_vu_client;
+            sample_preferences.dev_venice_unleashed_shortcut_location = path_to_vu_dev_client;
 
-    match save_user_preferences(sample_preferences) {
-        Ok(_) => {
-            println!("Successfully saved user preferences!");
-            return true;
+            match save_user_preferences(sample_preferences) {
+                Ok(_) => {
+                    println!("Successfully saved user preferences!");
+                    return true;
+                }
+                Err(err) => {
+                    println!("Failed to save user preferences due to reason:\n{:?}", err);
+                    return false;
+                }
+            };
         }
-        Err(err) => {
-            println!("Failed to save user preferences due to reason:\n{:?}", err);
-            return false;
-        }
-    };
+    }
 }
 
 pub fn update_vu_shortcut_preference() -> bool {

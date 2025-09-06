@@ -412,3 +412,8 @@ export async function toggleMod({
   const status = await invoke(rust_fns.toggle_mod, { gameMod, loadoutName })
   return status
 }
+
+export async function getLauncherInstallPath(): Promise<string> {
+  const path = (await invoke(rust_fns.get_launcher_install_path)) as string
+  return path
+}

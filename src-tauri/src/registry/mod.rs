@@ -124,7 +124,7 @@ pub fn get_reg_vu_install_location() -> io::Result<String> {
     if cfg!(debug_assertions) {
         path = r"SOFTWARE\vu-launcher\vu-launcher-dev"
     } else {
-        path = r"SOFTWARE\Venice Unleashed";
+        path = r"SOFTWARE\vu-launcher\vu-launcher";
     }
 
     let key = hklm.open_subkey(path)?;
@@ -139,7 +139,7 @@ pub fn get_reg_vu_dev_branch_install_location() -> io::Result<String> {
     if cfg!(debug_assertions) {
         path = r"SOFTWARE\vu-launcher\vu-launcher-dev"
     } else {
-        path = r"SOFTWARE\Venice Unleashed";
+        path = r"SOFTWARE\vu-launcher\vu-launcher";
     }
 
     let key = hklm.open_subkey(path)?;
@@ -155,7 +155,7 @@ pub fn set_vu_install_location_registry(installdir: String) -> Result<bool, Stri
     if cfg!(debug_assertions) {
         path = r"SOFTWARE\vu-launcher\vu-launcher-dev"
     } else {
-        path = r"SOFTWARE\Venice Unleashed";
+        path = r"SOFTWARE\vu-launcher\vu-launcher";
     }
 
     // incase this path does not exist
@@ -194,7 +194,7 @@ pub fn set_vu_dev_branch_install_location_registry(installdir: String) -> Result
     if cfg!(debug_assertions) {
         path = r"SOFTWARE\vu-launcher\vu-launcher-dev"
     } else {
-        path = r"SOFTWARE\Venice Unleashed";
+        path = r"SOFTWARE\vu-launcher\vu-launcher";
     }
 
     // incase this path does not exist

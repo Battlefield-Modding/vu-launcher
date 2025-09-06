@@ -125,7 +125,12 @@ fn delete_directory_contents(dir: std::fs::ReadDir) {
 #[cfg(target_os = "windows")]
 fn save_installation_path(install_path: &Path) -> io::Result<()> {
     let hklm = RegKey::predef(HKEY_CURRENT_USER);
-    let path = r"SOFTWARE\Venice Unleashed";
+    let path;
+    if cfg!(debug_assertions) {
+        path = r"SOFTWARE\vu-launcher\vu-launcher-dev";
+    } else {
+        path = r"SOFTWARE\vu-launcher\vu-launcher";
+    }
     let (key, _disp) = hklm.create_subkey(&path)?;
 
     key.set_value("InstallPath", &install_path.to_str().unwrap())?;
