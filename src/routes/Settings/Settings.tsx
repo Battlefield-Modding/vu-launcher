@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next'
 import { MultiAccountToggle } from './components/MultiAccountToggle'
 import { AutomaticallyUpdateToggle } from './components/AutomaticallyUpdateToggle'
 import { CheckForUpdatesToggle } from './components/CheckForUpdatesToggle'
+import { SetVuPathSheet } from './components/SetVuPath/SetVuPathSheet'
 
 export default function Settings() {
   const { t } = useTranslation()
@@ -39,7 +40,7 @@ export default function Settings() {
 
   return (
     <div className="flex min-h-[100vh] flex-col">
-      <div className="flex flex-col gap-4 rounded-md p-8 text-primary">
+      <div className="flex max-w-screen-md flex-col gap-4 rounded-md p-8 text-primary">
         <h1 className="text-center text-4xl">{t('settings.title')}</h1>
         <div>
           <ActivateBF3Sheet />
@@ -54,6 +55,7 @@ export default function Settings() {
         <MultiAccountToggle data={data} />
         <CheckForUpdatesToggle data={data} />
         {data.automatically_check_for_updates && <AutomaticallyUpdateToggle data={data} />}
+        <SetVuPathSheet preferences={data} />
       </div>
     </div>
   )

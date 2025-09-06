@@ -636,6 +636,23 @@
         "success": "成功更新了服务器GUID！"
       }
     },
+    "setVuPath": {
+      "alert": {
+        "invalidPath": "路径不包括vu.exe"
+      },
+      "table": {
+        "headerOne": "分支",
+        "headerTwo": "地点",
+        "rowOneLabel": "生产",
+        "rowTwoLabel": "发展"
+      },
+      "title": "更改VU安装路径",
+      "tooltip": {
+        "development": "更新VU开发分支机构安装路径",
+        "production": "更新VU生产分支机构安装路径"
+      },
+      "trigger": "更新VU安装位置"
+    },
     "title": "设置",
     "toast": {
       "failed": "无法更新用户偏好"

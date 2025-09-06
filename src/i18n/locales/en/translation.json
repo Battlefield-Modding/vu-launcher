@@ -636,6 +636,23 @@
         "success": "Updated Server GUID Successfully!"
       }
     },
+    "setVuPath": {
+      "alert": {
+        "invalidPath": "Path does not include vu.exe"
+      },
+      "table": {
+        "headerOne": "Branch",
+        "headerTwo": "Location",
+        "rowOneLabel": "Production",
+        "rowTwoLabel": "Development"
+      },
+      "title": "Change VU Install Path",
+      "tooltip": {
+        "development": "Update VU Development Branch Install Path",
+        "production": "Update VU Production Branch Install Path"
+      },
+      "trigger": "Update VU Install Locations"
+    },
     "title": "Settings",
     "toast": {
       "failed": "Failed to update user preferences"

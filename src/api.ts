@@ -140,14 +140,28 @@ export async function saveServerGUID(guid: string) {
   return status
 }
 
-export async function setVUInstallLocation(installdir: string) {
+export async function setVUInstallLocationRegistry(installdir: string) {
   const info = await invoke(rust_fns.set_vu_install_location_registry, { installdir })
   return info
 }
 
-export async function setVUDevInstallLocation(installdir: string) {
+export async function setVUDevInstallLocationRegistry(installdir: string) {
   const info = await invoke(rust_fns.set_vu_dev_branch_install_location_registry, { installdir })
   return info
+}
+
+export async function setVUInstallLocationPreference(installPath: string) {
+  const preferences = await getUserPreferences()
+  preferences.venice_unleashed_shortcut_location = installPath
+  const status = await saveUserPreferences(preferences)
+  return status
+}
+
+export async function setVUDevInstallLocationPreference(installPath: string) {
+  const preferences = await getUserPreferences()
+  preferences.dev_venice_unleashed_shortcut_location = installPath
+  const status = await saveUserPreferences(preferences)
+  return status
 }
 
 export async function openExplorerAtLoadout(loadoutName: string) {

@@ -1,4 +1,4 @@
-import { setVUInstallLocation } from '@/api'
+import { setVUInstallLocationRegistry } from '@/api'
 import { Button } from '@/components/ui/button'
 import { QueryKey } from '@/config/config'
 import { open } from '@tauri-apps/plugin-dialog'
@@ -126,7 +126,7 @@ export function InstallVU() {
     }
   }
 
-  async function handleSetVUInstallLocation() {
+  async function handlesetVUInstallLocationRegistry() {
     const dir = await open({
       multiple: false,
       directory: true,
@@ -134,7 +134,7 @@ export function InstallVU() {
     if (!dir) {
       return
     }
-    const status = await setVUInstallLocation(dir)
+    const status = await setVUInstallLocationRegistry(dir)
     if (status) {
       queryClient.invalidateQueries({
         queryKey: [QueryKey.IsVuInstalled],
@@ -156,7 +156,7 @@ export function InstallVU() {
               variant={'secondary'}
               onClick={(e) => {
                 e.preventDefault()
-                handleSetVUInstallLocation()
+                handlesetVUInstallLocationRegistry()
               }}
             >
               <Search /> {t('onboarding.install.prod.locate.button')}

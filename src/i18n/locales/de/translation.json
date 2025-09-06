@@ -636,6 +636,23 @@
         "success": "Server GUID erfolgreich aktualisiert!"
       }
     },
+    "setVuPath": {
+      "alert": {
+        "invalidPath": "Pfad enthält nicht vu.exe"
+      },
+      "table": {
+        "headerOne": "Zweig",
+        "headerTwo": "Standort",
+        "rowOneLabel": "Produktion",
+        "rowTwoLabel": "Entwicklung"
+      },
+      "title": "Ändern Sie den Weg des VU -Pfades",
+      "tooltip": {
+        "development": "Aktualisieren Sie VU Development Branch Installationspfad",
+        "production": "Aktualisieren Sie VU Production Branch Installationspfad"
+      },
+      "trigger": "Aktualisieren Sie Vu installieren Sie Standorte"
+    },
     "title": "Einstellungen",
     "toast": {
       "failed": "Die Benutzereinstellungen nicht aktualisieren"
