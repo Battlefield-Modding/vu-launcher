@@ -12,7 +12,7 @@ use serde_json::Error;
 use crate::{
     loadouts::{
         get_loadout_json_as_struct, get_loadouts_path,
-        get_mods_and_overwrite_folder_names_in_loadout,
+        get_mods_and_delete_invalid_folders_in_loadout,
         loadout_structs::{GameMod, LoadoutJson, ModJson},
         write_loadout_json_and_txt_files,
     },
@@ -48,9 +48,15 @@ pub fn get_mod_json_for_mod_in_loadout(
 }
 
 pub fn get_mod_json_for_mod_in_cache(mod_name: &String) -> io::Result<ModJson> {
+    println!("Trying to get mod JSON for the Cache mod: {:?}", &mod_name);
     let mut mod_json_path = get_mod_cache_path();
     mod_json_path.push(mod_name);
     mod_json_path.push("mod.json");
+
+    println!(
+        "The path we are trying to read from is: {:?}",
+        &mod_json_path
+    );
     let text = fs::read_to_string(mod_json_path)?;
     let final_struct = serde_json::from_str(&text)?;
     Ok(final_struct)
@@ -271,29 +277,38 @@ pub fn get_mod_names_in_cache() -> Vec<GameMod> {
             reader.for_each(|item| {
                 match item {
                     Ok(info) => {
-                        match info.path().extension() {
-                            Some(file_type) => match info.path().file_name() {
-                                Some(file_name) => {
-                                    if file_type != "zip" {
-                                        let mod_name = String::from(file_name.to_string_lossy());
-                                        match get_mod_json_for_mod_in_cache(&mod_name) {
-                                            Ok(mod_json) => {
-                                                mod_names.push(GameMod {
-                                                    name: mod_json.Name,
-                                                    version: mod_json.Version,
+                        if info.path().is_dir() {
+                            let mut path_to_mod_json = info.path().clone();
+                            path_to_mod_json.push("mod.json");
+
+                            if path_to_mod_json.exists() {
+                                match read_to_string(path_to_mod_json) {
+                                    Ok(info) => {
+                                        let game_mod: Result<ModJson, Error> =
+                                            serde_json::from_str(&info);
+                                        match game_mod {
+                                            Ok(mod_info) => {
+                                                let mod_info = GameMod {
+                                                    name: mod_info.Name,
+                                                    version: mod_info.Version,
                                                     image: None,
-                                                    src: mod_json.URL,
+                                                    src: mod_info.URL,
                                                     enabled: false,
-                                                });
+                                                };
+                                                mod_names.push(mod_info);
                                             }
-                                            Err(_) => {}
+                                            Err(err) => {
+                                                println!(
+                                                    "Failed to read Game Mod due to error:\n{:?}",
+                                                    err
+                                                );
+                                            }
                                         }
                                     }
+                                    Err(_) => {}
                                 }
-                                None => {}
-                            },
-                            None => {}
-                        };
+                            }
+                        }
                     }
                     Err(_) => {
                         println!("Error when reading mod names.")
@@ -402,7 +417,7 @@ pub fn get_mod_names_in_loadout(name: String) -> Vec<GameMod> {
             if loadout.modlist.len() == 0
                 || !same_number_of_mods_in_loadout_and_mods_folder(&loadout)
             {
-                let mods = get_mods_and_overwrite_folder_names_in_loadout(&name, &loadout.modlist);
+                let mods = get_mods_and_delete_invalid_folders_in_loadout(&name, &loadout.modlist);
                 loadout.modlist = mods;
                 match write_loadout_json_and_txt_files(&loadout) {
                     Ok(_) => {
@@ -469,6 +484,10 @@ async fn copy_mod_to_loadout_from_cache(mod_info: &GameMod, loadout_name: &Strin
     destination.push(&mod_info.name);
 
     if destination.exists() {
+        println!(
+            "The destination {:?} already exists. Not copying from cache to loadout.",
+            &destination
+        );
         return false;
     }
 
@@ -822,7 +841,7 @@ pub async fn import_zipped_mod_to_loadout(mod_location: String, loadout_name: St
     match get_loadout_json_as_struct(&loadout_name) {
         Ok(loadout) => match extract_zip(&mod_location_as_path, &target_path) {
             Ok(_) => {
-                get_mods_and_overwrite_folder_names_in_loadout(&loadout_name, &loadout.modlist);
+                get_mods_and_delete_invalid_folders_in_loadout(&loadout_name, &loadout.modlist);
                 return true;
             }
             Err(err) => {

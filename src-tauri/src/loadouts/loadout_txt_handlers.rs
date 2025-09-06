@@ -5,7 +5,7 @@ use std::{
 
 use crate::loadouts::{
     build_string, get_loadout_admin_path, get_loadout_json_as_struct, get_maplist_as_string_array,
-    get_modlist_as_string_array, get_mods_and_overwrite_folder_names_in_loadout,
+    get_modlist_as_string_array, get_mods_and_delete_invalid_folders_in_loadout,
     get_startup_as_string_array,
     loadout_structs::{
         Admin, GameMod, Map, ParsedStartupTxtLine, RM_Commands, SetTeamTicketCount, StartupArgs,
@@ -561,7 +561,7 @@ pub fn import_modlist_txt_into_loadout(loadout_name: &String) -> io::Result<Vec<
     modlist_txt_path.push("modlist.txt");
 
     let dummy_vec = Vec::new();
-    let mut mods = get_mods_and_overwrite_folder_names_in_loadout(loadout_name, &dummy_vec);
+    let mut mods = get_mods_and_delete_invalid_folders_in_loadout(loadout_name, &dummy_vec);
 
     match read_to_string(modlist_txt_path) {
         Ok(info) => {

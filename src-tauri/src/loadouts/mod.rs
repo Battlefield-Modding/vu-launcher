@@ -128,7 +128,7 @@ pub fn make_loadout_json_from_txt_files(loadout_name: &String) -> io::Result<boo
     Ok(true)
 }
 
-pub fn get_mods_and_overwrite_folder_names_in_loadout(
+pub fn get_mods_and_delete_invalid_folders_in_loadout(
     loadout_name: &String,
     existing_modlist: &Vec<GameMod>,
 ) -> Vec<GameMod> {
