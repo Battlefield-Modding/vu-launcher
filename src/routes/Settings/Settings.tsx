@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { QueryKey, STALE } from '@/config/config'
-import { getUserPreferences } from '@/api'
-import { Loader } from 'lucide-react'
+import { getUserPreferences, openExplorerAtLauncherInstallPath } from '@/api'
+import { Folder, Loader } from 'lucide-react'
 import LocalServerGuidForm from './components/LocalServerGuidForm'
 import { ActivateBF3Sheet } from './components/ActivateBF3/ActivateBF3Sheet'
 import { LanguageSelector } from './components/LanguageSelector'
@@ -12,6 +12,7 @@ import { CheckForUpdatesToggle } from './components/CheckForUpdatesToggle'
 import { SetVuPathSheet } from './components/SetVuPath/SetVuPathSheet'
 import { CopyProdToDev } from './components/CopyProdToDev'
 import { InstallVUFromSettings } from './components/InstallVuFromSettings'
+import { Button } from '@/components/ui/button'
 
 export default function Settings() {
   const { t } = useTranslation()
@@ -44,15 +45,22 @@ export default function Settings() {
     <div className="flex min-h-[100vh] flex-col">
       <div className="flex max-w-screen-md flex-col gap-4 rounded-md p-8 text-primary">
         <h1 className="text-center text-4xl">{t('settings.title')}</h1>
+
         <div>
+          <Button
+            className="p-2 text-lg"
+            variant={'secondary'}
+            onClick={async () => await openExplorerAtLauncherInstallPath()}
+          >
+            <p>{t('settings.fileExplorer')}</p>
+            <Folder />
+          </Button>
           <ActivateBF3Sheet />
         </div>
 
         <div>
           <LanguageSelector />
         </div>
-
-        <LocalServerGuidForm guid={data.server_guid} />
 
         <MultiAccountToggle data={data} />
         <CheckForUpdatesToggle data={data} />
@@ -62,6 +70,7 @@ export default function Settings() {
           <InstallVUFromSettings />
           <CopyProdToDev />
         </div>
+        <LocalServerGuidForm guid={data.server_guid} />
       </div>
     </div>
   )

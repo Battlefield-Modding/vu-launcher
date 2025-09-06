@@ -617,6 +617,7 @@
       "button": "选择Vu Dev的文件夹（副本Vu Prod）"
     },
     "error": "无法加载设置",
+    "fileExplorer": "打开文件资源管理器",
     "installVu": {
       "again": "再次下载VU"
     },

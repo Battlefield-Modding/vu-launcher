@@ -617,6 +617,7 @@
       "button": "Выберите папку для Vu Dev (копии Vu Prod)"
     },
     "error": "Не удалось загрузить настройки",
+    "fileExplorer": "Откройте File Explorer",
     "installVu": {
       "again": "Скачать VU снова"
     },

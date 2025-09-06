@@ -617,6 +617,7 @@
       "button": "Choose Folder for VU Dev (Copies VU Prod)"
     },
     "error": "Failed to load settings",
+    "fileExplorer": "Open File Explorer",
     "installVu": {
       "again": "Download VU Again"
     },

@@ -574,6 +574,24 @@ fn get_launcher_install_path() -> String {
     }
 }
 
+#[tauri::command]
+fn open_explorer_at_launcher_install_path() -> bool {
+    match get_install_path_registry() {
+        Ok(path) => {
+            let mut args = Vec::new();
+            args.push(path);
+            Command::new("explorer")
+                .args(args)
+                .creation_flags(CREATE_NO_WINDOW)
+                .spawn()
+                .expect("failed to execute process");
+
+            return true;
+        }
+        Err(err) => return false,
+    }
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -631,7 +649,8 @@ pub fn run() {
             get_loadout_json,
             make_cache_folder_names_same_as_mod_json_names,
             toggle_mod,
-            get_launcher_install_path
+            get_launcher_install_path,
+            open_explorer_at_launcher_install_path
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

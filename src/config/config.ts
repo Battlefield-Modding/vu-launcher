@@ -60,6 +60,7 @@ export enum rust_fns {
   make_cache_folder_names_same_as_mod_json_names = 'make_cache_folder_names_same_as_mod_json_names',
   toggle_mod = 'toggle_mod',
   get_launcher_install_path = 'get_launcher_install_path',
+  open_explorer_at_launcher_install_path = 'open_explorer_at_launcher_install_path',
 }
 
 export enum QueryKey {

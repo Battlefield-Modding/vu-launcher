@@ -417,3 +417,8 @@ export async function getLauncherInstallPath(): Promise<string> {
   const path = (await invoke(rust_fns.get_launcher_install_path)) as string
   return path
 }
+
+export async function openExplorerAtLauncherInstallPath(): Promise<boolean> {
+  const status = (await invoke(rust_fns.open_explorer_at_launcher_install_path)) as boolean
+  return status
+}

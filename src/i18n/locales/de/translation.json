@@ -617,6 +617,7 @@
       "button": "Wählen Sie den Ordner für VU Dev (Kopien Vu prod)"
     },
     "error": "Einstellungen nicht laden",
+    "fileExplorer": "Öffnen Sie den Datei -Explorer",
     "installVu": {
       "again": "Laden Sie VU erneut herunter"
     },

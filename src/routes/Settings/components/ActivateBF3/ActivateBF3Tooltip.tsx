@@ -8,7 +8,7 @@ export function ActivateBF3Tooltip() {
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <div className="flex items-center justify-between gap-2 rounded-md bg-green-800 p-2 text-lg hover:bg-green-800/80">
+          <div className="flex items-center justify-between gap-2 rounded-md bg-green-800 p-1 text-lg hover:bg-green-800/80">
             {t('settings.activateBF3.tooltip.title')} <Wrench />
           </div>
         </TooltipTrigger>
