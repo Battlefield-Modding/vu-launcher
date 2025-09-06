@@ -57,6 +57,12 @@ export function InstallVuProdDialog({
             <code className="text-md text-nowrap rounded-md bg-gray-800 p-1 pl-2 pr-2 text-primary">
               {`${vuProdInstallPath}\\VeniceUnleashed`}
             </code>
+            <br />
+
+            <p className="mb-4">{t('onboarding.install.dev.dialog.title')}</p>
+            <code className="text-md text-nowrap rounded-md bg-gray-800 p-1 pl-2 pr-2 text-primary">
+              {`${vuProdInstallPath}\\VeniceUnleashedDev`}
+            </code>
           </DialogTitle>
           <DialogDescription className="text-center">
             {t('onboarding.install.prod.dialog.description')}
