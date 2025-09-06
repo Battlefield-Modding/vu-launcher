@@ -3,8 +3,7 @@ use std::fs;
 use crate::{
     loadouts::{
         copy_server_key, get_admin_path, get_loadouts_path, get_server_path,
-        loadout_structs::LoadoutJson, loadout_txt_handlers::write_to_txt_from_loadout,
-        write_loadout_json,
+        loadout_structs::LoadoutJson, write_loadout_json_and_txt_files,
     },
     mods::{install_mods_on_loadout_creation, make_folder_names_same_as_mod_json_names},
 };
@@ -53,26 +52,13 @@ pub async fn create_loadout(mut loadout: LoadoutJson) -> Result<bool, String> {
     loadout.launch.server.serverInstancePath = Some(String::from(server_path.to_str().unwrap()));
 
     loadout.modlist = mod_list;
-    match write_loadout_json(&loadout) {
+    match write_loadout_json_and_txt_files(&loadout) {
         Ok(_) => {}
         Err(err) => {
             println!("Failed to create loadoutJSON due to error:\n{:?}", err);
             return Err(err.to_string());
         }
     }
-
-    match write_to_txt_from_loadout(&loadout.name) {
-        Ok(_) => {
-            println!("Successfully updated Startup / Modlist / Maplist / Banlist");
-        }
-        Err(err) => {
-            println!(
-                "Failed to update Startup / Modlist / Maplist / Banlist due to error:\n{:?}",
-                err
-            );
-            return Err(err.to_string());
-        }
-    };
 
     Ok(true)
 }
@@ -119,26 +105,13 @@ pub async fn import_loadout_from_path(name: String, path: String) -> bool {
 
 #[tauri::command]
 pub async fn edit_loadout(loadout: LoadoutJson) -> Result<bool, String> {
-    match write_loadout_json(&loadout) {
+    match write_loadout_json_and_txt_files(&loadout) {
         Ok(_) => {}
         Err(err) => {
             println!("Failed to update loadoutJSON due to error:\n{:?}", err);
             return Err(err.to_string());
         }
     }
-
-    match write_to_txt_from_loadout(&loadout.name) {
-        Ok(_) => {
-            println!("Successfully updated Startup / Modlist / Maplist / Banlist");
-        }
-        Err(err) => {
-            println!(
-                "Failed to update Startup / Modlist / Maplist / Banlist due to error:\n{:?}",
-                err
-            );
-            return Err(err.to_string());
-        }
-    };
 
     Ok(true)
 }

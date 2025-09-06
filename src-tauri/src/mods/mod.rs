@@ -14,8 +14,7 @@ use crate::{
         get_loadout_json_as_struct, get_loadouts_path,
         get_mods_and_overwrite_folder_names_in_loadout,
         loadout_structs::{GameMod, LoadoutJson, ModJson},
-        loadout_txt_handlers::write_to_txt_from_loadout,
-        write_loadout_json, write_loadout_json_and_txt_files,
+        write_loadout_json_and_txt_files,
     },
     registry, CREATE_NO_WINDOW,
 };
@@ -405,7 +404,7 @@ pub fn get_mod_names_in_loadout(name: String) -> Vec<GameMod> {
             {
                 let mods = get_mods_and_overwrite_folder_names_in_loadout(&name, &loadout.modlist);
                 loadout.modlist = mods;
-                match write_loadout_json(&loadout) {
+                match write_loadout_json_and_txt_files(&loadout) {
                     Ok(_) => {
                         return loadout.modlist;
                     }
@@ -484,7 +483,7 @@ async fn copy_mod_to_loadout_from_cache(mod_info: &GameMod, loadout_name: &Strin
                     version: mod_info.version.clone(),
                 };
                 loadout_json.modlist.push(new_struct);
-                match write_loadout_json(&loadout_json) {
+                match write_loadout_json_and_txt_files(&loadout_json) {
                     Ok(_) => return true,
                     Err(err) => {
                         println!("Failed to update loadout.json after importing mod to loadout from cache due to error:\n{:?}", err);
@@ -618,8 +617,8 @@ fn remove_mod_from_modlist(loadout_name: &String, mod_name: &String) -> bool {
                 .unwrap();
             info.modlist.remove(index);
 
-            match write_loadout_json(&info) {
-                Ok(_) => {}
+            match write_loadout_json_and_txt_files(&info) {
+                Ok(_) => return true,
                 Err(err) => {
                     println!(
                         "Failed to write loadoutJSON after deleting a mod due to error:\n{:?}",
@@ -631,16 +630,6 @@ fn remove_mod_from_modlist(loadout_name: &String, mod_name: &String) -> bool {
         }
         Err(err) => {
             println!("Failed to get loadout due to error: \n{:?}", err);
-            return false;
-        }
-    }
-    match write_to_txt_from_loadout(&loadout_name) {
-        Ok(_) => return true,
-        Err(err) => {
-            println!(
-                "Failed to update txt files after deleting mod due to error:\n{:?}",
-                err
-            );
             return false;
         }
     }
@@ -878,7 +867,7 @@ pub async fn import_mod_folder_to_loadout(mod_location: String, loadout_name: St
                                     version: mod_json_struct.Version.clone(),
                                 };
                                 loadout_json.modlist.push(new_struct);
-                                match write_loadout_json(&loadout_json) {
+                                match write_loadout_json_and_txt_files(&loadout_json) {
                                     Ok(_) => return true,
                                     Err(err) => {
                                         println!("Failed to update loadout.json after importing mod to loadout due to error:\n{:?}", err);

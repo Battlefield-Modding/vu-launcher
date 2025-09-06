@@ -55,17 +55,6 @@ pub fn write_loadout_json_and_txt_files(loadout: &LoadoutJson) -> io::Result<boo
     Ok(true)
 }
 
-pub fn write_loadout_json(loadout: &LoadoutJson) -> io::Result<bool> {
-    let mut path_to_loadout_json = get_loadout_path(&loadout.name);
-    path_to_loadout_json.push("loadout.json");
-
-    let loadout_json_string = convert_loadout_json_to_string(&loadout)?;
-
-    write(&path_to_loadout_json, loadout_json_string)?;
-
-    Ok(true)
-}
-
 #[tauri::command]
 pub fn refresh_loadout(loadout_name: String) -> bool {
     // this function will write loadout json again
@@ -134,8 +123,7 @@ pub fn make_loadout_json_from_txt_files(loadout_name: &String) -> io::Result<boo
         modlist: modlist_args,
     };
 
-    write_loadout_json(&loadout_json)?;
-    write_to_txt_from_loadout(loadout_name)?;
+    write_loadout_json_and_txt_files(&loadout_json)?;
 
     Ok(true)
 }
