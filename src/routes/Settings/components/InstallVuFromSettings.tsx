@@ -129,45 +129,10 @@ export function InstallVUFromSettings() {
     }
   }
 
-  // async function handlesetVUInstallLocationRegistry() {
-  //   const defaultPath = await getLauncherInstallPath()
-  //   const dir = await open({
-  //     multiple: false,
-  //     directory: true,
-  //     defaultPath,
-  //   })
-  //   if (!dir) {
-  //     return
-  //   }
-  //   const status = await setVUInstallLocationRegistry(dir)
-  //   if (status) {
-  //     queryClient.invalidateQueries({
-  //       queryKey: [QueryKey.IsVuInstalled],
-  //       refetchType: 'all',
-  //     })
-  //     toast(`${t('onboarding.install.prod.toast.chooseInstallDir.success')}: ${dir}`)
-  //   } else {
-  //     toast(t('onboarding.install.prod.toast.chooseInstallDir.failure'))
-  //   }
-  // }
-
   return (
     <div>
       {!gameDownloadUpdateInstalling && (
         <>
-          {/* <div className="flex flex-1 justify-center gap-4 align-middle text-xl leading-9">
-            <h1 className="flex-1">{t('onboarding.install.prod.locate.header')}</h1>
-            <Button
-              variant={'secondary'}
-              onClick={(e) => {
-                e.preventDefault()
-                handlesetVUInstallLocationRegistry()
-              }}
-            >
-              <Search /> {t('onboarding.install.prod.locate.button')}
-            </Button>
-          </div> */}
-
           <div>
             <Button
               variant={'secondary'}
