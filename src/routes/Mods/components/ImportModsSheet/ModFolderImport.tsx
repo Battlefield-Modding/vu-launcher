@@ -4,12 +4,11 @@ import { listen, UnlistenFn } from '@tauri-apps/api/event'
 import clsx from 'clsx'
 import { Folder, Search, Upload } from 'lucide-react'
 import { useQueryClient } from '@tanstack/react-query'
-import { QueryKey, DragDropEventTauri, routes } from '@/config/config'
+import { QueryKey, DragDropEventTauri } from '@/config/config'
 import { toast } from 'sonner'
 import { open } from '@tauri-apps/plugin-dialog'
 import { importModFolderToCache, importModFolderToLoadout } from '@/api'
 import { useTranslation } from 'react-i18next'
-import { useLocation } from 'react-router'
 import { LoaderComponent } from '@/components/LoaderComponent'
 
 export function ModFolderImport({
@@ -22,7 +21,6 @@ export function ModFolderImport({
   const [isDraggingOver, setIsDraggingOver] = useState(false)
   const [submitLoading, setSubmitLoading] = useState(false)
   const { t } = useTranslation()
-  const { pathname } = useLocation()
   let handleDrop: UnlistenFn | undefined
   let handleDragEnter: UnlistenFn | undefined
   let handleDragLeave: UnlistenFn | undefined

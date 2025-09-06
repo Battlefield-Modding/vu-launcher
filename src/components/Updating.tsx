@@ -59,7 +59,7 @@ export function Updating() {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{t('update.checkFailed')}</AlertDialogTitle>
-            <AlertDialogDescription></AlertDialogDescription>
+            <AlertDialogDescription>{error.message}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>{t('update.close')}</AlertDialogCancel>
