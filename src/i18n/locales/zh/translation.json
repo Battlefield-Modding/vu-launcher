@@ -229,7 +229,7 @@
       "continue": "跳过 /继续"
     },
     "error": "未能加载引导组件",
-    "failure": "未能完成入职流程",
+    "failure": "未能完成初始设置",
     "header": "首次设置",
     "install": {
       "dev": {
@@ -496,8 +496,8 @@
             "noMods": "mod_cache中没有模组",
             "trigger": "模组"
           },
-          "tableHeaderFour": "行动",
-          "tableHeaderOne": "已启用",
+          "tableHeaderFour": "操作",
+          "tableHeaderOne": "是否激活",
           "tableHeaderOneCacheMod": "位置",
           "tableHeaderThree": "版本",
           "tableHeaderTwo": "模组名称"
