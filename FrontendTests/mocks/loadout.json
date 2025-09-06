@@ -1,0 +1,133 @@
+{
+  "name": "Sample",
+  "maplist": [
+    {
+      "mapCode": "MP_001",
+      "gameMode": "ConquestLarge0"
+    }
+  ],
+  "banlist": [
+    "player0"
+  ],
+  "modlist": [],
+  "startup": {
+    "admin": {
+      "password": ""
+    },
+    "vars": {
+      "ranked": false,
+      "serverName": "",
+      "gamePassword": "",
+      "autoBalance": false,
+      "roundStartPlayerCount": 8,
+      "roundRestartPlayerCount": 0,
+      "roundLockdownCountdown": 10,
+      "serverMessage": "",
+      "friendlyFire": false,
+      "maxPlayers": 64,
+      "serverDescription": "",
+      "killCam": true,
+      "miniMap": true,
+      "hud": true,
+      "crossHair": true,
+      "_3dSpotting": true,
+      "miniMapSpotting": true,
+      "nameTag": true,
+      "_3pCam": true,
+      "regenerateHealth": true,
+      "teamKillCountForKick": 0,
+      "teamKillValueForKick": 2.0,
+      "teamKillValuelncrease": 0.525,
+      "teamKillValueDecreasePerSecond": 0.01,
+      "teamKillKickForBan": 0,
+      "idleTimeout": 9000,
+      "idleBanRounds": false,
+      "vehicleSpawnAllowed": true,
+      "vehicleSpawnDelay": 1,
+      "soldierHealth": 100,
+      "playerRespawnTime": 1,
+      "playerManDownTime": 1,
+      "bulletDamage": 1,
+      "gameModeCounter": 1,
+      "onlySquadLeaderSpawn": false
+    },
+    "RM": {
+      "setDevelopers": [],
+      "setAdmins": [],
+      "setLightAdmins": [],
+      "serverInfo": "",
+      "serverLicenseKey": "",
+      "ingameBanner": "",
+      "pingLimitEnable": true,
+      "pingLimitInMs": 100,
+      "autoPerfEnabled": false,
+      "autoPerfMaxPlayers": 80,
+      "tempReservedSlotsEnabled": true,
+      "tempReservedSlotsRejoinTime": 180,
+      "defaultPreRoundTime": 300,
+      "setAutoBalancer": false,
+      "battleCryLink": "",
+      "enableEnemyLocalVoip": false
+    },
+    "vu": {
+      "ColorCorrectionEnabled": true,
+      "DesertingAllowed": false,
+      "DestructionEnabled": true,
+      "HighPerformanceReplication": false,
+      "ServerBanner": "",
+      "SetTeamTicketCount": [],
+      "SquadSize": 4,
+      "SunFlareEnabled": true,
+      "SuppressionMultiplier": 100,
+      "FriendlyFireSuppression": false,
+      "TimeScale": 1.0,
+      "VehicleDisablingEnabled": true,
+      "HttpAssetUrl": "",
+      "DisablePreRound": false,
+      "TeamActivatedMines": false,
+      "CorpseDamageEnabled": false
+    },
+    "reservedSlots": [
+      ""
+    ]
+  },
+  "launch": {
+    "common": {
+      "gamepath": "",
+      "perftrace": false,
+      "env": "prod",
+      "updateBranch": "prod",
+      "tracedc": false,
+      "cacert": "",
+      "console": false,
+      "debuglog": false,
+      "trace": false,
+      "vextdebug": "",
+      "vexttrace": false
+    },
+    "client": {
+      "dwebui": false,
+      "serverJoinString": "",
+      "serverSpectateString": "",
+      "cefdebug": false,
+      "disableUiHwAcceleration": false
+    },
+    "server": {
+      "high60": false,
+      "high120": false,
+      "headless": true,
+      "serverInstancePath": "",
+      "highResTerrain": false,
+      "disableTerrainInterpolation": false,
+      "skipChecksum": false,
+      "listen": "",
+      "mHarmonyPort": "",
+      "remoteAdminPort": "",
+      "unlisted": false,
+      "joinaddr": "",
+      "joinhost": "",
+      "noUpdate": false,
+      "maxPlayers": 0
+    }
+  }
+}
