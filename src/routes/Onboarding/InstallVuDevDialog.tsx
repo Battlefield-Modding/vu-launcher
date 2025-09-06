@@ -34,6 +34,9 @@ export function InstallVuDevDialog({
     if (status) {
       queryClient.invalidateQueries({ queryKey: [QueryKey.IsVuInstalled], refetchType: 'all' })
       toast(t('onboarding.install.dev.dialog.toast.success'))
+      if (dialogRef.current) {
+        dialogRef.current.click()
+      }
     } else {
       toast(t('onboarding.install.dev.dialog.toast.failure'))
     }
