@@ -1,4 +1,4 @@
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { LoadoutJSON } from '@/config/config'
 import { Book } from 'lucide-react'
 import { useState } from 'react'
@@ -16,6 +16,9 @@ export function ManageModsInServerSheet({ loadout }: { loadout: LoadoutJSON }) {
         <Book className="m-auto" />
       </SheetTrigger>
       <SheetContent className="overflow-y-auto">
+        <SheetHeader className="hidden">
+          <SheetTitle>Manage Mods</SheetTitle>
+        </SheetHeader>
         <div className="m-auto flex max-w-screen-lg flex-col gap-2 text-center">
           <div className="m-auto w-fit">
             <ImportModsSheet importToLoadout={true} loadoutName={loadout.name} />

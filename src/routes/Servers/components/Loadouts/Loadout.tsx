@@ -167,59 +167,61 @@ export function Loadout() {
         </div>
 
         <table className="text-center">
-          <tr>
-            <th className="border border-secondary">
-              {t('servers.loadouts.loadout.tableHeaderOne')}
-            </th>
-            <th className="border border-secondary">
-              {t('servers.loadouts.loadout.tableHeaderTwo')}
-            </th>
-          </tr>
+          <tbody>
+            <tr>
+              <th className="border border-secondary">
+                {t('servers.loadouts.loadout.tableHeaderOne')}
+              </th>
+              <th className="border border-secondary">
+                {t('servers.loadouts.loadout.tableHeaderTwo')}
+              </th>
+            </tr>
 
-          <tr className="border border-secondary">
-            <td className="border border-secondary">
-              {t('servers.loadouts.loadout.maplist.sheet.trigger')}
-            </td>
-            <td className="border border-secondary">
-              <MaplistSheet loadout={data.loadout} />
-            </td>
-          </tr>
+            <tr className="border border-secondary">
+              <td className="border border-secondary">
+                {t('servers.loadouts.loadout.maplist.sheet.trigger')}
+              </td>
+              <td className="border border-secondary">
+                <MaplistSheet loadout={data.loadout} />
+              </td>
+            </tr>
 
-          <tr className="border border-secondary">
-            <td className="border border-secondary">
-              {t('servers.loadouts.loadout.mods.sheet.trigger')}
-            </td>
-            <td className="border border-secondary">
-              <ManageModsInServerSheet loadout={data.loadout} />
-            </td>
-          </tr>
+            <tr className="border border-secondary">
+              <td className="border border-secondary">
+                {t('servers.loadouts.loadout.mods.sheet.trigger')}
+              </td>
+              <td className="border border-secondary">
+                <ManageModsInServerSheet loadout={data.loadout} />
+              </td>
+            </tr>
 
-          <tr className="border border-secondary">
-            <td className="border border-secondary">
-              {t('servers.loadouts.loadout.banlist.sheet.trigger')}
-            </td>
-            <td className="border border-secondary">
-              <BanlistSheet loadout={data.loadout} />
-            </td>
-          </tr>
+            <tr className="border border-secondary">
+              <td className="border border-secondary">
+                {t('servers.loadouts.loadout.banlist.sheet.trigger')}
+              </td>
+              <td className="border border-secondary">
+                <BanlistSheet loadout={data.loadout} />
+              </td>
+            </tr>
 
-          <tr className="border border-secondary">
-            <td className="border border-secondary">
-              {t('servers.loadouts.loadout.startup.sheet.trigger')}
-            </td>
-            <td className="border border-secondary">
-              <StartupSheet existingLoadout={data.loadout} />
-            </td>
-          </tr>
+            <tr className="border border-secondary">
+              <td className="border border-secondary">
+                {t('servers.loadouts.loadout.startup.sheet.trigger')}
+              </td>
+              <td className="border border-secondary">
+                <StartupSheet existingLoadout={data.loadout} />
+              </td>
+            </tr>
 
-          <tr className="border border-secondary">
-            <td className="border border-secondary">
-              {t('servers.loadouts.loadout.launchArgs.sheet.trigger')}
-            </td>
-            <td className="border border-secondary">
-              <LaunchArgumentSheet existingLoadout={data.loadout} />
-            </td>
-          </tr>
+            <tr className="border border-secondary">
+              <td className="border border-secondary">
+                {t('servers.loadouts.loadout.launchArgs.sheet.trigger')}
+              </td>
+              <td className="border border-secondary">
+                <LaunchArgumentSheet existingLoadout={data.loadout} />
+              </td>
+            </tr>
+          </tbody>
         </table>
 
         <div className="flex justify-center gap-4">

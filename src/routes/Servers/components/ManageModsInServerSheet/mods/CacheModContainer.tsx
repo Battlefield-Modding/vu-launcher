@@ -57,30 +57,32 @@ export function CacheModContainer({ loadout }: { loadout: LoadoutJSON }) {
         </div>
       )}
       <table className="text-center">
-        <tr className="border border-secondary">
-          <th className="h-auto border border-secondary">
-            {t('servers.loadouts.loadout.mods.tableHeaderOneCacheMod')}
-          </th>
-          <th className="h-auto border border-secondary">
-            {t('servers.loadouts.loadout.mods.tableHeaderTwo')}
-          </th>
-          <th className="h-auto border border-secondary">
-            {t('servers.loadouts.loadout.mods.tableHeaderThree')}
-          </th>
-          <th className="h-auto border border-secondary">
-            {t('servers.loadouts.loadout.mods.tableHeaderFour')}
-          </th>
-        </tr>
-        {data.map((x, index) => {
-          return (
-            <ModCacheMod
-              queryKey={`${QueryKey.GetAllModNames}-${loadout.name}`}
-              loadout={loadout}
-              mod={x}
-              key={`${x.name}-cacheMod-${index}`}
-            />
-          )
-        })}
+        <tbody>
+          <tr className="border border-secondary">
+            <th className="h-auto border border-secondary">
+              {t('servers.loadouts.loadout.mods.tableHeaderOneCacheMod')}
+            </th>
+            <th className="h-auto border border-secondary">
+              {t('servers.loadouts.loadout.mods.tableHeaderTwo')}
+            </th>
+            <th className="h-auto border border-secondary">
+              {t('servers.loadouts.loadout.mods.tableHeaderThree')}
+            </th>
+            <th className="h-auto border border-secondary">
+              {t('servers.loadouts.loadout.mods.tableHeaderFour')}
+            </th>
+          </tr>
+          {data.map((x, index) => {
+            return (
+              <ModCacheMod
+                queryKey={`${QueryKey.GetAllModNames}-${loadout.name}`}
+                loadout={loadout}
+                mod={x}
+                key={`${x.name}-cacheMod-${index}`}
+              />
+            )
+          })}
+        </tbody>
       </table>
     </>
   )
