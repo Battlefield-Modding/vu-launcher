@@ -18,10 +18,10 @@ export function ManageModsInServerSheet({ loadout }: { loadout: LoadoutJSON }) {
       <SheetContent className="overflow-y-auto">
         <div className="m-auto flex max-w-screen-lg flex-col gap-2 text-center">
           <div className="m-auto w-fit">
-            <ImportModsSheet importToLoadout={true} />
+            <ImportModsSheet importToLoadout={true} loadoutName={loadout.name} />
           </div>
 
-          <LoadoutModContainer loadout={loadout} />
+          <LoadoutModContainer loadoutName={loadout.name} />
 
           <CacheModContainer loadout={loadout} />
         </div>

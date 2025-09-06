@@ -7,13 +7,22 @@ use crate::preferences::{update_vu_dev_shortcut_preference, update_vu_shortcut_p
 
 fn set_launcher_install_path() -> io::Result<String> {
     let hklm = RegKey::predef(HKEY_CURRENT_USER);
-    let path = r"SOFTWARE\vu-launcher\vu-launcher";
+    let path;
+    if cfg!(debug_assertions) {
+        path = r"SOFTWARE\vu-launcher\vu-launcher-dev";
+    } else {
+        path = r"SOFTWARE\vu-launcher\vu-launcher";
+    }
 
     let (key, _disp) = hklm.create_subkey(&path)?;
 
     // should always exist
     let mut appdata_path = cache_dir().unwrap();
-    appdata_path.push("vu-launcher");
+    if cfg!(debug_assertions) {
+        appdata_path.push("vu-launcher-dev");
+    } else {
+        appdata_path.push("vu-launcher");
+    }
 
     let string_form = appdata_path.as_os_str();
     let actual_string = string_form.to_str().unwrap().to_owned();
@@ -24,7 +33,11 @@ fn set_launcher_install_path() -> io::Result<String> {
 
 pub fn make_default_install_folder() {
     let mut default_install_folder = cache_dir().unwrap();
-    default_install_folder.push("vu-launcher");
+    if cfg!(debug_assertions) {
+        default_install_folder.push("vu-launcher-dev");
+    } else {
+        default_install_folder.push("vu-launcher");
+    }
 
     if !default_install_folder.exists() {
         match create_dir_all(default_install_folder) {
@@ -75,7 +88,12 @@ pub fn get_install_path_registry() -> io::Result<String> {
 
 fn get_reg_value(keyname: &str) -> io::Result<String> {
     let hklm = RegKey::predef(HKEY_CURRENT_USER);
-    let path = r"SOFTWARE\vu-launcher\vu-launcher";
+    let path;
+    if cfg!(debug_assertions) {
+        path = r"SOFTWARE\vu-launcher\vu-launcher-dev";
+    } else {
+        path = r"SOFTWARE\vu-launcher\vu-launcher";
+    }
 
     let key = hklm.open_subkey(path)?;
     let reg_value = key.get_value(keyname)?;
@@ -84,7 +102,12 @@ fn get_reg_value(keyname: &str) -> io::Result<String> {
 
 fn set_reg_value(keyname: &str, keyvalue: &OsString) -> io::Result<bool> {
     let hklm = RegKey::predef(HKEY_CURRENT_USER);
-    let path = r"SOFTWARE\vu-launcher\vu-launcher";
+    let path;
+    if cfg!(debug_assertions) {
+        path = r"SOFTWARE\vu-launcher\vu-launcher-dev";
+    } else {
+        path = r"SOFTWARE\vu-launcher\vu-launcher";
+    }
 
     let (key, _disp) = hklm.create_subkey(&path)?;
 
@@ -97,7 +120,12 @@ fn set_reg_value(keyname: &str, keyvalue: &OsString) -> io::Result<bool> {
 
 pub fn get_reg_vu_install_location() -> io::Result<String> {
     let hklm = RegKey::predef(HKEY_CURRENT_USER);
-    let path = r"SOFTWARE\Venice Unleashed";
+    let path;
+    if cfg!(debug_assertions) {
+        path = r"SOFTWARE\vu-launcher\vu-launcher-dev"
+    } else {
+        path = r"SOFTWARE\Venice Unleashed";
+    }
 
     let key = hklm.open_subkey(path)?;
     let reg_value = key.get_value("InstallPath")?;
@@ -107,7 +135,12 @@ pub fn get_reg_vu_install_location() -> io::Result<String> {
 
 pub fn get_reg_vu_dev_branch_install_location() -> io::Result<String> {
     let hklm = RegKey::predef(HKEY_CURRENT_USER);
-    let path = r"SOFTWARE\Venice Unleashed";
+    let path;
+    if cfg!(debug_assertions) {
+        path = r"SOFTWARE\vu-launcher\vu-launcher-dev"
+    } else {
+        path = r"SOFTWARE\Venice Unleashed";
+    }
 
     let key = hklm.open_subkey(path)?;
     let reg_value = key.get_value("InstallPathDev")?;
@@ -118,7 +151,12 @@ pub fn get_reg_vu_dev_branch_install_location() -> io::Result<String> {
 #[tauri::command]
 pub fn set_vu_install_location_registry(installdir: String) -> Result<bool, String> {
     let hklm = RegKey::predef(HKEY_CURRENT_USER);
-    let path = r"SOFTWARE\Venice Unleashed";
+    let path;
+    if cfg!(debug_assertions) {
+        path = r"SOFTWARE\vu-launcher\vu-launcher-dev"
+    } else {
+        path = r"SOFTWARE\Venice Unleashed";
+    }
 
     // incase this path does not exist
     let create_key_result = hklm.create_subkey(path);
@@ -152,7 +190,12 @@ pub fn set_vu_install_location_registry(installdir: String) -> Result<bool, Stri
 #[tauri::command]
 pub fn set_vu_dev_branch_install_location_registry(installdir: String) -> Result<bool, String> {
     let hklm = RegKey::predef(HKEY_CURRENT_USER);
-    let path = r"SOFTWARE\Venice Unleashed";
+    let path;
+    if cfg!(debug_assertions) {
+        path = r"SOFTWARE\vu-launcher\vu-launcher-dev"
+    } else {
+        path = r"SOFTWARE\Venice Unleashed";
+    }
 
     // incase this path does not exist
     let create_key_result = hklm.create_subkey(path);

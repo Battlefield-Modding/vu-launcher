@@ -92,6 +92,10 @@ export function Loadout() {
     const status = await refreshLoadout(loadoutName as string)
     if (status) {
       //servers.loadouts.loadout.toast.serverFailure
+      queryClient.invalidateQueries({
+        queryKey: [QueryKey.GetLoadoutJSON, loadoutName],
+        refetchType: 'all',
+      })
       toast(`${t('servers.loadouts.loadout.toast.refreshSuccess')}: ${loadoutName}`)
     } else {
       toast(`${t('servers.loadouts.loadout.toast.refreshFailure')}: ${loadoutName}`)

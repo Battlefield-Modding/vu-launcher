@@ -6,7 +6,13 @@ import { ModFolderImport } from './ModFolderImport'
 import { ZippedModImport } from './ZippedModImport'
 import clsx from 'clsx'
 
-export default function ImportModsSheet({ importToLoadout }: { importToLoadout: boolean }) {
+export default function ImportModsSheet({
+  importToLoadout,
+  loadoutName,
+}: {
+  importToLoadout: boolean
+  loadoutName: string | undefined
+}) {
   const [sheetOpen, setSheetOpen] = useState(false)
   const [zipActive, setZipActive] = useState(false)
   const { t } = useTranslation()
@@ -49,8 +55,12 @@ export default function ImportModsSheet({ importToLoadout }: { importToLoadout: 
             {t('mods.import.sheet.folder')} <Folder />
           </div>
         </div>
-        {zipActive && !importToLoadout && <ZippedModImport importToLoadout={importToLoadout} />}
-        {!zipActive && <ModFolderImport importToLoadout={importToLoadout} />}
+        {zipActive && !importToLoadout && (
+          <ZippedModImport importToLoadout={importToLoadout} loadoutName={loadoutName} />
+        )}
+        {!zipActive && (
+          <ModFolderImport importToLoadout={importToLoadout} loadoutName={loadoutName} />
+        )}
       </SheetContent>
     </Sheet>
   )

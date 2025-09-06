@@ -1,17 +1,17 @@
-import { GameMod, LoadoutJSON, QueryKey, STALE } from '@/config/config'
+import { GameMod, QueryKey, STALE } from '@/config/config'
 import { Loader } from 'lucide-react'
 import { getModNamesInLoadout } from '@/api'
 import { useQuery } from '@tanstack/react-query'
 import { LoadoutMod } from './LoadoutMod'
 import { useTranslation } from 'react-i18next'
 
-export function LoadoutModContainer({ loadout }: { loadout: LoadoutJSON }) {
+export function LoadoutModContainer({ loadoutName }: { loadoutName: string }) {
   const { t } = useTranslation()
 
   const { isPending, isError, data, error } = useQuery({
-    queryKey: [`${QueryKey.GetAllModNames}-${loadout.name}`],
+    queryKey: [`${QueryKey.GetAllModNames}-${loadoutName}`],
     queryFn: async (): Promise<GameMod[]> => {
-      const modsInLoadout = await getModNamesInLoadout(loadout.name)
+      const modsInLoadout = await getModNamesInLoadout(loadoutName)
 
       return modsInLoadout
     },
@@ -63,9 +63,9 @@ export function LoadoutModContainer({ loadout }: { loadout: LoadoutJSON }) {
       {data.map((x, index) => {
         return (
           <LoadoutMod
-            loadout={loadout}
+            loadoutName={loadoutName}
             mod={x}
-            queryKey={`${QueryKey.GetAllModNames}-${loadout.name}`}
+            queryKey={`${QueryKey.GetAllModNames}-${loadoutName}`}
             isActive={x.enabled}
             key={`${x.name}-loadoutMod-${index}`}
           />

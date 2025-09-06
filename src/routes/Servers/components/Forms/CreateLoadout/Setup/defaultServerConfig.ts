@@ -1,33 +1,35 @@
-import { LoadoutJSON } from "@/config/config"
-import { StartupArgs } from "../../Startup/Setup/StartupTypes"
+import { LoadoutJSON } from '@/config/config'
+import { StartupArgs } from '../../Startup/Setup/StartupTypes'
 
 export type ServerConfig = {
-  name: string,
-  startup: StartupArgs,
+  name: string
+  startup: StartupArgs
   map: {
-    mapCode: string,
+    mapCode: string
     gameMode: string
-  },
+  }
   banlist: string[]
 }
 
 export const defaultServerConfig: LoadoutJSON = {
-  name: "",
+  name: '',
   startup: {
-    admin:{
-      password: ""
+    admin: {
+      password: '',
     },
     vars: {
-      serverName: "",
-      gamePassword: "",
+      serverName: '',
+      gamePassword: '',
       maxPlayers: 64,
     },
   },
-  maplist: [{
-    mapCode: '',
-    gameMode: ''
-  }],
-  banlist: ["player0"],
+  maplist: [
+    {
+      mapCode: 'MP_001',
+      gameMode: 'ConquestLarge0',
+    },
+  ],
+  banlist: ['player0'],
   modlist: [],
-  launch: {}
+  launch: {},
 }

@@ -29,12 +29,13 @@ dirs-next = "2.0.0"
 reqwest = { version = "0.12.9", features = ["blocking"] }
 tauri-plugin-dialog = "2"
 zip = "2.6.1"
-tokio = { version = "1.42.0"}
+tokio = { version = "1.42.0", features = ["macros"] }
 futures-util = "0.3.31"
 tauri-plugin-positioner = "2.2.0"
 dircpy = "0.3.19"
 keyring = { version = "3.6.2", features = ["windows-native"] }
 directories = "6.0.0"
+test-env-helpers = "0.2.2"
 
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
 tauri-plugin-updater = "2"

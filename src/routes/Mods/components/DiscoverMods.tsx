@@ -41,7 +41,7 @@ function DiscoverMods() {
         </a>
       </div>
       <div className="flex justify-center gap-8">
-        <ImportModsSheet importToLoadout={false} />
+        <ImportModsSheet importToLoadout={false} loadoutName="mod-cache" />
       </div>
     </div>
   )

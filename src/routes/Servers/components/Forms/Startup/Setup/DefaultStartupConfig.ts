@@ -111,7 +111,7 @@ export const defaultStartupArguments: StartupArgs = {
     serverDescription: '',
     serverMessage: '',
     serverName: '',
-    soldierHealth: 1,
+    soldierHealth: 100,
     teamKillCountForKick: 0,
     teamKillKickForBan: 0,
     teamKillValueDecreasePerSecond: 0.01,

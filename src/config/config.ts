@@ -58,6 +58,7 @@ export enum rust_fns {
   get_all_loadout_names = 'get_all_loadout_names',
   get_loadout_json = 'get_loadout_json',
   make_cache_folder_names_same_as_mod_json_names = 'make_cache_folder_names_same_as_mod_json_names',
+  toggle_mod = 'toggle_mod',
 }
 
 export enum QueryKey {

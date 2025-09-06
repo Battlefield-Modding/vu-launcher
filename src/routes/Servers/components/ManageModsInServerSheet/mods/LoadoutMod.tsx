@@ -1,19 +1,19 @@
 import VSCodeIcon from '@/assets/VSCodeIcon.svg'
 import { DeleteModDialog } from '../dialog/DeleteModDialog'
 import { toast } from 'sonner'
-import { editServerLoadout, openModWithVsCode } from '@/api'
-import { GameMod, LoadoutJSON, QueryKey } from '@/config/config'
+import { openModWithVsCode, toggleMod } from '@/api'
+import { GameMod, QueryKey } from '@/config/config'
 import { useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { Switch } from '@/components/ui/switch'
 
 export function LoadoutMod({
-  loadout,
+  loadoutName,
   mod,
   isActive,
   queryKey,
 }: {
-  loadout: LoadoutJSON
+  loadoutName: string
   mod: GameMod
   isActive: boolean
   queryKey: string
@@ -22,7 +22,7 @@ export function LoadoutMod({
   const { t } = useTranslation()
 
   async function handleOpenInVSCode() {
-    const status = await openModWithVsCode({ name: loadout.name, modname: mod.name })
+    const status = await openModWithVsCode({ name: loadoutName, modname: mod.name })
     if (status) {
       toast(`${t('servers.loadouts.loadout.mods.loadoutMod.toast.vsCodeSuccess')}: ${mod.name}`)
     } else {
@@ -31,17 +31,7 @@ export function LoadoutMod({
   }
 
   async function handleToggleMod(modStatus: boolean) {
-    if (!loadout.modlist) {
-      return
-    }
-
-    let modList = [...loadout.modlist]
-
-    modList.map((x) => {
-      if (x.name.toLowerCase() == mod.name.toLowerCase()) {
-        x.enabled = modStatus
-      }
-    })
+    const status = await toggleMod({ gameMod: mod, loadoutName })
 
     let message
     if (modStatus) {
@@ -49,10 +39,6 @@ export function LoadoutMod({
     } else {
       message = `${t('servers.loadouts.loadout.mods.loadoutMod.deactivated')} ${mod.name}`
     }
-
-    const finalLoadout = { ...loadout, modlist: modList }
-
-    const status = await editServerLoadout(finalLoadout)
 
     if (status) {
       toast(message)
@@ -92,7 +78,7 @@ export function LoadoutMod({
         >
           <img src={VSCodeIcon} className="m-auto"></img>
         </p>
-        <DeleteModDialog loadoutName={loadout.name} modName={mod.name} queryKey={queryKey} />
+        <DeleteModDialog loadoutName={loadoutName} modName={mod.name} queryKey={queryKey} />
       </td>
     </tr>
   )

@@ -48,7 +48,7 @@ const formSchema = z.object({
     vars: z.object({
       serverName: z.string(),
       gamePassword: z.string(),
-      maxPlayers: z.number(),
+      maxPlayers: z.number({ coerce: true }),
     }),
   }),
   maplist: z.array(
