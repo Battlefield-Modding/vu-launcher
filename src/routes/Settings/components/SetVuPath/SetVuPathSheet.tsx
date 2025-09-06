@@ -2,7 +2,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/co
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
-import { setVUDevInstallLocationPreference, setVUInstallLocationPreference } from '@/api'
+import { setVUDevInstallLocationRegistry, setVUInstallLocationRegistry } from '@/api'
 import { useTranslation } from 'react-i18next'
 import { QueryKey, UserPreferences } from '@/config/config'
 import { open } from '@tauri-apps/plugin-dialog'
@@ -16,9 +16,11 @@ export function SetVuPathSheet({ preferences }: { preferences: UserPreferences }
   const { t } = useTranslation()
 
   async function handlesetVUInstallLocationRegistry() {
+    const defaultPath = preferences.venice_unleashed_shortcut_location
     const dir = await open({
       multiple: false,
       directory: false,
+      defaultPath,
     })
     if (!dir) {
       return
@@ -27,10 +29,15 @@ export function SetVuPathSheet({ preferences }: { preferences: UserPreferences }
       alert(t('settings.setVuPath.alert.invalidPath'))
       return
     }
-    const status = await setVUInstallLocationPreference(dir)
+    const path_without_exe = dir.split('\\vu.exe')[0]
+    const status = await setVUInstallLocationRegistry(path_without_exe)
     if (status) {
       queryClient.invalidateQueries({
         queryKey: [QueryKey.IsVuInstalled],
+        refetchType: 'all',
+      })
+      queryClient.invalidateQueries({
+        queryKey: [QueryKey.UserPreferences],
         refetchType: 'all',
       })
       toast(`${t('onboarding.install.prod.toast.chooseInstallDir.success')}: ${dir}`)
@@ -40,9 +47,11 @@ export function SetVuPathSheet({ preferences }: { preferences: UserPreferences }
   }
 
   async function handleChangeVuDevelopmentLocation() {
+    const defaultPath = preferences.dev_venice_unleashed_shortcut_location
     const dir = await open({
       multiple: false,
       directory: false,
+      defaultPath,
     })
     if (!dir) {
       return
@@ -51,10 +60,15 @@ export function SetVuPathSheet({ preferences }: { preferences: UserPreferences }
       alert(t('settings.setVuPath.alert.invalidPath'))
       return
     }
-    const status = await setVUDevInstallLocationPreference(dir)
+    const path_without_exe = dir.split('\\vu.exe')[0]
+    const status = await setVUDevInstallLocationRegistry(path_without_exe)
     if (status) {
       queryClient.invalidateQueries({
         queryKey: [QueryKey.IsVuInstalled],
+        refetchType: 'all',
+      })
+      queryClient.invalidateQueries({
+        queryKey: [QueryKey.UserPreferences],
         refetchType: 'all',
       })
       toast(`${t('onboarding.install.prod.toast.chooseInstallDir.success')}: ${dir}`)
@@ -104,7 +118,7 @@ export function SetVuPathSheet({ preferences }: { preferences: UserPreferences }
               <td className="h-auto border border-secondary p-4">
                 <TooltipWrapper text={t('settings.setVuPath.tooltip.development')}>
                   <Button variant={'secondary'} onClick={handleChangeVuDevelopmentLocation}>
-                    {preferences.venice_unleashed_shortcut_location}
+                    {preferences.dev_venice_unleashed_shortcut_location}
                   </Button>
                 </TooltipWrapper>
               </td>
