@@ -1,45 +1,89 @@
-import { getUserPreferences } from '@/api'
-import { check } from '@tauri-apps/plugin-updater'
+import { getUserPreferences, setIgnoreUpdateVersion } from '@/api'
+import { check, Update } from '@tauri-apps/plugin-updater'
 import { relaunch } from '@tauri-apps/plugin-process'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Progress } from '@/components/ui/progress'
 import { useTranslation } from 'react-i18next'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
+import { useQuery } from '@tanstack/react-query'
+import { QueryKey, UserPreferences } from '@/config/config'
+import { toast } from 'sonner'
 
 export function Updating() {
   const [isUpdating, setIsUpdating] = useState(false)
   const [downloadProgress, setDownloadProgress] = useState(0)
   const { t } = useTranslation()
 
-  useEffect(() => {
-    async function checkForUpdates() {
+  const { isPending, isError, data, error } = useQuery({
+    queryKey: [QueryKey.CheckForUpdates],
+    queryFn: async (): Promise<{ update: Update | null; preferences: UserPreferences | null }> => {
       const preferences = await getUserPreferences()
-
-      try {
-        if (!preferences.automatically_check_for_updates) {
-          return
-        }
-
-        const update = await check()
-        if (update) {
-          console.log(
-            `found update ${update.version} from ${update.date} with notes ${update.body}`,
-          )
-
-          if (!preferences.automatically_install_update_if_found) {
-            const install = await confirm(
-              `${t('update.install')} [${update.version}]\n\n${update.body}`,
-            )
-            if (!install) {
-              return
+      if (preferences) {
+        if (preferences.automatically_check_for_updates == false) {
+          return { update: null, preferences }
+        } else {
+          const update = await check()
+          if (update) {
+            console.log(update.version, preferences.ignore_update_version)
+            if (update.version == preferences.ignore_update_version) {
+              return { update: null, preferences }
             }
           }
+          return { update, preferences }
+        }
+      } else {
+        return { update: null, preferences: null }
+      }
+    },
+  })
 
+  if (isPending) {
+    toast(t('update.checking'))
+    return <div></div>
+  }
+
+  if (isError) {
+    return (
+      <AlertDialog defaultOpen={true}>
+        <AlertDialogTrigger></AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t('update.checkFailed')}</AlertDialogTitle>
+            <AlertDialogDescription></AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t('update.close')}</AlertDialogCancel>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    )
+  }
+
+  if (data.preferences && data.preferences.automatically_install_update_if_found) {
+    if (data.update && !isUpdating) {
+      startDownload()
+    }
+  }
+
+  async function startDownload() {
+    if (data?.update) {
+      try {
+        if (!isUpdating) {
           setIsUpdating(() => true)
-
           let downloaded = 0
           let contentLength = 0
           // alternatively we could also call update.download() and update.install() separately
-          await update.downloadAndInstall((event) => {
+          await data?.update.downloadAndInstall((event) => {
             switch (event.event) {
               case 'Started':
                 // @ts-ignore
@@ -59,26 +103,76 @@ export function Updating() {
 
           console.log('update installed')
           await relaunch()
+
+          setIsUpdating(() => false)
         }
       } catch (err) {
         console.log(`Failed to check for updates due to error:\n[${err}]`)
       }
     }
+  }
 
-    checkForUpdates()
-  }, [])
+  if (data.update && !isUpdating) {
+    return (
+      <AlertDialog defaultOpen={true}>
+        <AlertDialogTrigger></AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {t('update.install')}
+              <hr></hr>
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              <a
+                href={`https://github.com/Battlefield-Modding/vu-launcher/releases/tag/v${data.update.version}`}
+                target="_blank"
+                className="text-blue-500 underline hover:opacity-80"
+              >
+                {`https://github.com/Battlefield-Modding/vu-launcher/releases/tag/v${data.update.version}`}
+              </a>
+              <br />
+              {data.update.body}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel
+              // @ts-expect-error
+              onClick={async () => await setIgnoreUpdateVersion(data.update.version)}
+            >
+              {t('update.ignore')} {data.update.version}
+            </AlertDialogCancel>
+            <AlertDialogCancel>
+              {t('onboarding.install.dev.dialog.button.cancel')}
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={() => startDownload()}>
+              {t('servers.loadouts.loadout.mods.addModDialog.confirm')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    )
+  }
 
   if (isUpdating) {
     return (
-      <div className="absolute z-10 m-auto flex h-full w-full flex-col justify-between gap-8 rounded-md bg-black p-8">
-        <div className="flex w-full flex-col rounded-md text-primary">
-          <h1 className="text-center text-xl">{t('update.header')}</h1>
-          <div className="mb-2 flex h-6">
-            <Progress value={downloadProgress} className="h-full w-full flex-1" />
-          </div>
-          <h1>{downloadProgress}%</h1>
-        </div>
-      </div>
+      <AlertDialog defaultOpen={true}>
+        <AlertDialogTrigger></AlertDialogTrigger>
+        <AlertDialogContent autoFocus={true} onKeyDown={(e) => e.preventDefault()}>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {t('update.header')}
+              <hr></hr>
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              <div className="mb-2 flex h-6">
+                <Progress value={downloadProgress} className="h-full w-full flex-1" />
+              </div>
+              <p className="text-right">{downloadProgress}%</p>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter></AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     )
   }
 

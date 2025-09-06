@@ -16,6 +16,7 @@ pub struct UserPreferences {
     pub last_visted_route: String,
     pub automatically_check_for_updates: bool,
     pub automatically_install_update_if_found: bool,
+    pub ignore_update_version: String,
 }
 
 impl UserPreferences {
@@ -35,6 +36,7 @@ impl UserPreferences {
             last_visted_route: String::from(""),
             automatically_check_for_updates: false,
             automatically_install_update_if_found: false,
+            ignore_update_version: String::from(""),
         }
     }
 }
@@ -55,6 +57,7 @@ pub struct OptionalUserPreferences {
     pub last_visted_route: Option<String>,
     pub automatically_check_for_updates: Option<bool>,
     pub automatically_install_update_if_found: Option<bool>,
+    pub ignore_update_version: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]

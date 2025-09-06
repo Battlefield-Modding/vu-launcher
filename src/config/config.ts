@@ -76,6 +76,7 @@ export enum QueryKey {
   GetAllModNames = 'GetAllModNames',
   GetAllLoadoutNames = 'GetAllLoadoutNames',
   GetLoadoutJSON = 'GetLoadoutJSON',
+  CheckForUpdates = 'CheckForUpdates',
 }
 
 export enum routes {
@@ -146,6 +147,7 @@ export type UserPreferences = {
   last_visted_route: string
   automatically_check_for_updates: boolean
   automatically_install_update_if_found: boolean
+  ignore_update_version: string
 }
 
 export type SavedServer = {

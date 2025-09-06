@@ -736,7 +736,11 @@
     "success": "保存的偏好"
   },
   "update": {
+    "checkFailed": "无法检查更新",
+    "checking": "检查更新",
+    "close": "关闭",
     "header": "安装更新",
+    "ignore": "忽略更新",
     "install": "找到新的更新！现在安装？"
   }
 }

@@ -243,6 +243,12 @@ pub fn upgrade_preferences_object(old_preferences: OptionalUserPreferences) -> U
         }
         None => {}
     }
+    match old_preferences.ignore_update_version {
+        Some(info) => {
+            new_preferences.ignore_update_version = info;
+        }
+        None => {}
+    }
 
     new_preferences
 }

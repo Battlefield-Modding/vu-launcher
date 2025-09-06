@@ -341,6 +341,13 @@ export async function setPreferredServer(index: number): Promise<boolean> {
   return status
 }
 
+export async function setIgnoreUpdateVersion(version: string): Promise<boolean> {
+  const preferences = await getUserPreferences()
+  preferences.ignore_update_version = version
+  const status = await saveUserPreferences(preferences)
+  return status
+}
+
 export async function installModToLoadoutFromCache({
   loadoutName,
   gameMod,

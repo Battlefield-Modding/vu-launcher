@@ -736,7 +736,11 @@
     "success": "Saved preference"
   },
   "update": {
+    "checkFailed": "Failed to check for updates",
+    "checking": "Checking for updates",
+    "close": "Close",
     "header": "Installing update",
+    "ignore": "Ignore Update",
     "install": "New update found! Install now?"
   }
 }

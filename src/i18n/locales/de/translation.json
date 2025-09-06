@@ -736,7 +736,11 @@
     "success": "Präferenz gespeichert"
   },
   "update": {
+    "checkFailed": "Nach Updates versäumt es, Updates zu überprüfen",
+    "checking": "Überprüfung nach Updates",
+    "close": "Schließen",
     "header": "Update installieren",
+    "ignore": "Update ignorieren",
     "install": "Neues Update gefunden! \nJetzt installieren?"
   }
 }
