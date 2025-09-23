@@ -152,7 +152,7 @@ export function InstallVU() {
   // }
 
   return (
-    <div className="m-auto flex max-h-[500px] max-w-[500px] flex-col justify-between gap-8 rounded-md bg-black p-8">
+    <div className="flex flex-col items-center justify-center w-full max-w-md">
       {!gameDownloadUpdateInstalling && (
         <>
           {/* <div className="flex flex-1 justify-center gap-4 align-middle text-xl leading-9">
@@ -168,18 +168,18 @@ export function InstallVU() {
             </Button>
           </div> */}
 
-          <div className="flex flex-1 justify-center gap-4 align-middle text-xl leading-9">
-            <h1 className="flex-1 text-primary">{t('onboarding.install.prod.download.header')}</h1>
+          <div className="flex flex-col items-center gap-4 w-full text-center">
             <Button
-              variant={'secondary'}
-              className=""
+              variant="secondary"
+              size="lg"
+              className="w-full max-w-sm px-6"
               onClick={(e) => {
                 e.preventDefault()
                 handleDownloadVU()
               }}
             >
-              <Download size={'10px'} />
-              <p>{t('onboarding.install.prod.download.button')}</p>
+              <Download className="h-4 w-4 mr-2" />
+              {t('onboarding.install.prod.download.button')}
             </Button>
           </div>
 
@@ -195,30 +195,22 @@ export function InstallVU() {
 
       {gameDownloadUpdateInstalling && (
         <>
-          <div className="flex flex-1 justify-center gap-4 align-middle text-3xl leading-9 text-primary">
-            <h1>{t('onboarding.install.prod.progress.header')}</h1>
+          <div className="flex flex-col items-center gap-4 w-full text-center">
+            <h1 className="text-2xl font-semibold text-primary leading-tight">
+              {t('onboarding.install.prod.progress.header')}
+            </h1>
           </div>
 
-          <div className="flex w-full flex-col rounded-md text-primary">
+          <div className="w-full flex flex-col gap-2">
+            <div className="h-2">
+              <Progress value={gameDownloadUpdateProgress} className="h-full w-full" />
+            </div>
             {!gameDownloadUpdateExtracting ? (
-              <div className="mb-2 flex h-6">
-                <Progress value={gameDownloadUpdateProgress} className="h-full w-full flex-1" />
-              </div>
+              <p className="text-sm text-muted-foreground text-right">
+                {gameDownloadUpdateProgress.toFixed(2)} %
+              </p>
             ) : (
-              <div className="mb-2 flex h-6">
-                <Progress value={gameDownloadUpdateProgress} className="h-full w-full flex-1" />
-              </div>
-            )}
-            {!gameDownloadUpdateExtracting ? (
-              <div className="flex justify-end">
-                {/* <p className="noselect mr-2 text-right text-sm">{gameDownloadUpdateSpeed} MB/s</p> */}
-
-                <p className="noselect mr-2 text-right text-sm">
-                  {gameDownloadUpdateProgress.toFixed(2)} %
-                </p>
-              </div>
-            ) : (
-              <p className="noselect mr-2 text-right text-sm font-light">
+              <p className="text-sm text-muted-foreground text-center">
                 {t('onboarding.install.prod.progress.extractingPrefix')} (
                 {gameDownloadUpdateExtractingFilesRemaining}{' '}
                 {t('onboarding.install.prod.progress.extractingSuffix')})

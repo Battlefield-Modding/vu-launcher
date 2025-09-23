@@ -56,7 +56,6 @@ export function LanguageSelector() {
           name="language"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t('settings.languageSelector.title')}</FormLabel>
               <Select
                 onValueChange={(e) => {
                   // TODO: make this part of user preferences
