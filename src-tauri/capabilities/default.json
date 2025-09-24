@@ -11,6 +11,8 @@
     "core:window:allow-minimize",
     "core:app:allow-set-app-theme",
     "dialog:default",
-    "window-state:default"
+    "window-state:default",
+    "fs:default",
+    "fs:allow-exists"
   ]
 }
