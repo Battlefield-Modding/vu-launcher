@@ -493,9 +493,6 @@ export function InstallVU() {
         setSpeedHistory([])
         setSpeedStatus(null)
         await emitInstallStatus(true)
-        toast.info(t('onboarding.install.prod.toast.starting', 'Starting download...'), {
-          duration: 2000,
-        })
         await invoke('download_game', { installPath })
         console.log('Download invoke succeeded') // Debug log
       } catch (err: any) {

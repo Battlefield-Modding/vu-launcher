@@ -11,12 +11,11 @@ import {
   ArrowRight,
 } from 'lucide-react'
 import vuIconRed from '@/assets/vu-icon-red.svg' // Animated logo import
-import { activateBf3LSX, finishOnboarding, getLauncherInstallPath } from '@/api'
+import { activateBf3LSX, finishOnboarding } from '@/api'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { QueryKey, routes, STALE } from '@/config/config'
 import { InstallVU } from '@/routes/Home/components/InstallVU/InstallVU'
 import { open } from '@tauri-apps/plugin-dialog'
-import { exists } from '@tauri-apps/plugin-fs' // Tauri FS plugin v2 for existence checks
 import { toast } from 'sonner'
 import PlayerCredentialsSheet from '@/routes/Home/components/PlayerCredentialsSheet/PlayerCredentialsSheet'
 import { useTranslation } from 'react-i18next'
@@ -26,6 +25,7 @@ import { useNavigate } from 'react-router'
 import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import { listen } from '@tauri-apps/api/event'
+import { invoke } from '@tauri-apps/api/core'
 
 interface VuInstallStatusEvent {
   payload: {
@@ -36,7 +36,7 @@ interface VuInstallStatusEvent {
 interface VuInstallCompleteEvent {
   payload: {
     success: boolean // Whether installation completed successfully
-    path?: string // Optional: Installed path (for verification)
+    path?: string // Optional: User-decided base install path (for verification)
   }
 }
 
@@ -47,7 +47,7 @@ export function Onboarding() {
   const [isVerifying, setIsVerifying] = useState(false)
   const [showOnboarding, setShowOnboarding] = useState(false) // Controls reveal of onboarding steps
   const [isInstalling, setIsInstalling] = useState(false) // Tracks installation state from InstallVU events
-  const [selectedInstallPath, setSelectedInstallPath] = useState<string | null>(null) // Tracks user-selected install path
+  const [selectedInstallPath, setSelectedInstallPath] = useState<string | null>(null) // Tracks user-selected base install path
   const navigate = useNavigate()
   const sidebar = useSidebar()
   const queryClient = useQueryClient()
@@ -78,7 +78,7 @@ export function Onboarding() {
     }
   }, [])
 
-  // Listen for VU install complete event to handle advancement and path
+  // Listen for VU install complete event to handle advancement and base path
   useEffect(() => {
     let unlistenComplete: (() => void) | null = null
     const setupCompleteListener = async () => {
@@ -87,7 +87,7 @@ export function Onboarding() {
         async (event) => {
           if (event.payload.success) {
             console.log('VU install completed successfully – advancing to next step')
-            setSelectedInstallPath(event.payload.path || null)
+            setSelectedInstallPath(event.payload.path || null) // Base path from backend
             // Invalidate and refetch immediately to verify custom path
             await queryClient.invalidateQueries({
               queryKey: [QueryKey.IsVuInstalled],
@@ -124,45 +124,21 @@ export function Onboarding() {
     queryKey: [QueryKey.IsVuInstalled],
     queryFn: async (): Promise<{ vuProduction: boolean; vuDevelopment: boolean }> => {
       try {
-        let installPath = await getLauncherInstallPath() // Default path
-        let vuInstalled = false
+        // Use custom base if available (from install event)
+        const customBase = selectedInstallPath || undefined
 
-        // If a custom path was selected during install, check it first
-        if (selectedInstallPath) {
-          console.log(`Checking custom install path: ${selectedInstallPath}`)
-          const folder = `${selectedInstallPath}\\VeniceUnleashed`
-          const folderExists = await exists(folder)
-          if (folderExists) {
-            const vuExe = `${folder}\\vu.exe`
-            vuInstalled = await exists(vuExe)
-            if (vuInstalled) {
-              console.log('VU found at custom path – marking as installed')
-              return { vuProduction: true, vuDevelopment: true } // Success – early return
-            }
-          }
-          // If custom check fails, fallback to default (but log)
-          console.log('Custom path check failed, falling back to default')
-        }
+        // Call new Rust command (handles all path logic and checks internally)
+        const isInstalled = await invoke<boolean, string>('is_vu_installed', { customBase })
 
-        if (!installPath) {
-          return { vuProduction: false, vuDevelopment: false }
-        }
-
-        // Check default path
-        console.log(`Checking default install path: ${installPath}`)
-        const folder = `${installPath}\\VeniceUnleashed`
-        const folderExists = await exists(folder)
-        if (folderExists) {
-          const vuExe = `${folder}\\vu.exe`
-          vuInstalled = await exists(vuExe)
-        }
+        console.log(`VU installed check: ${isInstalled} (custom base: ${customBase || 'default'})`)
 
         return {
-          vuProduction: vuInstalled,
-          vuDevelopment: vuInstalled, // Both installed together
+          vuProduction: isInstalled,
+          vuDevelopment: isInstalled, // Both identical as before
         }
-      } catch (err) {
+      } catch (err: any) {
         console.error('Installation check error:', err)
+        // Return false on error (matching your existing fallback)
         return { vuProduction: false, vuDevelopment: false }
       }
     },

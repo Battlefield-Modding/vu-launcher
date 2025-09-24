@@ -153,23 +153,104 @@ fn delete_directory_contents(dir: std::fs::ReadDir) {
 #[cfg(target_os = "windows")]
 fn save_installation_path(install_path: &Path) -> io::Result<()> {
     let hklm = RegKey::predef(HKEY_CURRENT_USER);
-    let path;
-    if cfg!(debug_assertions) {
-        path = r"SOFTWARE\vu-launcher\vu-launcher-dev";
+    let path = if cfg!(debug_assertions) {
+        r"SOFTWARE\vu-launcher\vu-launcher-dev"
     } else {
-        path = r"SOFTWARE\vu-launcher\vu-launcher";
-    }
+        r"SOFTWARE\vu-launcher\vu-launcher"
+    };
     let (key, _disp) = hklm.create_subkey(&path)?;
 
-    key.set_value("InstallPath", &install_path.to_str().unwrap())?;
+    let install_str = install_path.to_str().unwrap_or("");
+    // Expand %APPDATA% if needed for saving
+    let expanded_path = if install_str.contains('%') {
+        std::env::var("APPDATA")
+            .map(|appdata| install_str.replace("%APPDATA%", &appdata))
+            .unwrap_or(install_str.to_string())
+    } else {
+        install_str.to_string()
+    };
+    key.set_value("InstallPath", &expanded_path)?;
+    println!("Saved base install path to registry: {}", expanded_path);
     Ok(())
+}
+
+#[cfg(target_os = "windows")]
+#[tauri::command]
+pub async fn get_installation_path() -> Result<String, String> {
+    use winreg::enums::*;
+    use winreg::RegKey;
+
+    let hklm = RegKey::predef(HKEY_CURRENT_USER);
+    let path = if cfg!(debug_assertions) {
+        r"SOFTWARE\vu-launcher\vu-launcher-dev"
+    } else {
+        r"SOFTWARE\vu-launcher\vu-launcher"
+    };
+
+    // Try registry first (saved user-decided base path)
+    if let Ok(key) = hklm.open_subkey(&path) {
+        if let Ok(install_str) = key.get_value::<String, &str>("InstallPath") {
+            // Expand %APPDATA% if saved with var
+            let expanded_path = if install_str.contains('%') {
+                std::env::var("APPDATA")
+                    .map(|appdata| {
+                        install_str
+                            .replace("%APPDATA%", &appdata.trim_end_matches('\\'))
+                            .replace("\\\\", "\\")
+                    })
+                    .unwrap_or(install_str)
+            } else {
+                install_str
+            };
+            println!(
+                "Fetched user-decided base path from registry: {}",
+                expanded_path
+            );
+            // Ensure it's a base path (add \Local if needed, but assume saved correctly)
+            let base_path =
+                if expanded_path.ends_with("\\Local") || expanded_path.ends_with("Local") {
+                    expanded_path
+                } else {
+                    format!(r"{}\Local", expanded_path.trim_end_matches('\\'))
+                };
+            return Ok(base_path);
+        }
+    }
+
+    // Fallback: Standard user base path using env vars (no dirs crate needed)
+    let default_base = std::env::var("APPDATA")
+        .map(|appdata| {
+            // %APPDATA% is typically C:\Users\%USERNAME%\AppData\Roaming, but we want Local
+            format!(r"{}\..\Local", appdata.trim_end_matches('\\')).replace("\\\\", "\\")
+            // Clean double slashes
+        })
+        .or_else(|_| {
+            // Fallback: Use %USERPROFILE%\AppData\Local
+            std::env::var("USERPROFILE").map(|userprofile| {
+                format!(r"{}\AppData\Local", userprofile.trim_end_matches('\\'))
+                    .replace("\\\\", "\\")
+            })
+        })
+        .or_else(|_| {
+            // Tertiary: Use %USERNAME% to construct
+            std::env::var("USERNAME").map(|username| {
+                format!(r"C:\Users\{}\AppData\Local", username.replace('\\', "\\\\"))
+            })
+        })
+        .unwrap_or_else(|_| {
+            // Hard fallback: Default Windows path
+            r"C:\Users\Default\AppData\Local".to_string()
+        });
+
+    println!("No registry – using default base path: {}", default_base);
+    Ok(default_base)
 }
 
 #[tauri::command]
 #[cfg(target_os = "windows")]
 pub async fn download_game<R: Runtime>(
     app: AppHandle<R>,
-    install_path: &str,
+    install_path: &str, // User-decided base path (e.g., "C:\\Users\\You\\AppData\\Local")
 ) -> Result<(), String> {
     use std::time::{Duration as StdDuration, Instant};
 
@@ -183,7 +264,7 @@ pub async fn download_game<R: Runtime>(
     let temp_dir = std::env::temp_dir();
     let url = "https://veniceunleashed.net/files/vu.zip".to_string();
     let dl_file_path = temp_dir.join("vu_launcher-windows.zip");
-    let installation_path = Path::new(&install_path).join("VeniceUnleashed");
+    let installation_path = Path::new(&install_path).join("VeniceUnleashed"); // Full game dir for extraction
 
     // Partial/resume support
     let mut downloaded: u64 = 0;
@@ -216,7 +297,6 @@ pub async fn download_game<R: Runtime>(
     // Infinite retry loop (no attempt count – run until done or global timeout)
     let mut local_file: Option<File> = None;
     let retry_delay = StdDuration::from_secs(2);
-    let mut stream_dropped = true; // Track for explicit drop
 
     'download_loop: loop {
         // Check global timeout first
@@ -528,7 +608,6 @@ pub async fn download_game<R: Runtime>(
             f.sync_all().await.ok();
         }
         drop(local_stream); // Ensure drop
-        stream_dropped = true;
 
         if downloaded >= total_size {
             break 'download_loop; // Complete – exit
@@ -544,7 +623,7 @@ pub async fn download_game<R: Runtime>(
         tokio::time::sleep(retry_delay).await;
     }
 
-    // Download complete – FINAL SYNC & VALIDATION (unchanged)
+    // Download complete – FINAL SYNC & VALIDATION
     println!("Download complete – performing final sync and validation");
     if dl_file_path.exists() {
         if let Some(mut existing_file) = local_file.take() {
@@ -649,18 +728,22 @@ pub async fn download_game<R: Runtime>(
     match extract_zip(&dl_file_path, &installation_path, &main_window).await {
         Ok(_) => {
             println!("ZIP extracted successfully!");
-            // FIXED: Emit vu-install-complete with success payload + path (matches frontend listener)
-            let install_path_str = installation_path.to_str().unwrap_or("");
+            // Save user-decided base path to registry
+            if let Err(e) = save_installation_path(Path::new(&installation_path)) {
+                println!("Registry save error (non-fatal): {}", e);
+            }
+            // Emit with success and user-decided base path
+            let install_base_str = install_path.to_string();
             let _ = main_window.emit(
                 "vu-install-complete",
                 json!({
                     "success": true,
-                    "path": install_path_str
+                    "path": install_base_str  // User-decided base path
                 }),
             );
             println!(
-                "Emitting vu-install-complete: success=true, path={}",
-                install_path_str
+                "Emitting vu-install-complete: success=true, base_path={}",
+                install_base_str
             );
         }
         Err(e) => {
@@ -674,7 +757,7 @@ pub async fn download_game<R: Runtime>(
             } else {
                 "extract-fail"
             };
-            // FIXED: Emit failure payload too (for consistency)
+            // Emit failure
             let _ = main_window.emit(
                 "vu-install-complete",
                 json!({
@@ -697,9 +780,6 @@ pub async fn download_game<R: Runtime>(
     let _ = std::fs::remove_file(&dl_file_path);
     println!("Downloaded ZIP deleted successfully");
 
-    if let Err(e) = save_installation_path(&installation_path) {
-        println!("Registry error: {}", e);
-    }
     set_default_preferences();
 
     println!(
