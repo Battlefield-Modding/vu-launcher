@@ -14,7 +14,6 @@ use serde_json::json;
 use std::env;
 use std::io;
 use std::path::Path;
-use std::str::FromStr;
 use tauri::{AppHandle, Manager, Runtime};
 use tokio::fs::{File, OpenOptions};
 use tokio::io::AsyncWriteExt;
@@ -632,7 +631,7 @@ pub async fn download_game<R: Runtime>(
                 println!("Final sync warning: {}", e);
             }
         } else {
-            let mut reopen_file = OpenOptions::new()
+            let reopen_file = OpenOptions::new()
                 .write(true)
                 .open(&dl_file_path)
                 .await
@@ -663,8 +662,7 @@ pub async fn download_game<R: Runtime>(
                 println!("Minor delta ({} bytes) – tolerating as complete", delta);
             } else if file_len > total_size {
                 println!("Overshoot ({file_len} > {total_size}) – retrying truncate");
-                if let Ok(mut truncate_file) = File::options().write(true).open(&dl_file_path).await
-                {
+                if let Ok(truncate_file) = File::options().write(true).open(&dl_file_path).await {
                     if truncate_file.set_len(total_size).await.is_ok() {
                         truncate_file.sync_all().await.ok();
                         tokio::time::sleep(StdDuration::from_millis(100)).await;

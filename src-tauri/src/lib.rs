@@ -1,20 +1,17 @@
 use std::{
     fs,
-    io::{self, Write},
+    io::{self},
     os::windows::process::CommandExt,
-    path::{self, Path, PathBuf},
-    process::{Command, Stdio},
+    path::PathBuf,
+    process::Command,
 };
 
 use tauri_plugin_window_state::StateFlags;
 
-use serde::{Deserialize, Serialize};
 use serde_json;
 
-use tauri::{tray::TrayIconBuilder, Manager, WindowEvent};
-use walkdir::WalkDir;
+use tauri::{tray::TrayIconBuilder, Manager};
 
-use dirs_next;
 use tauri_plugin_positioner::{Position, WindowExt};
 
 pub mod preferences;
@@ -612,7 +609,7 @@ pub fn run() {
                 })
                 .build(app)?;
 
-            let mut win = app.get_webview_window("main").unwrap();
+            let win = app.get_webview_window("main").unwrap();
             let _ = win.move_window(Position::Center);
             Ok(())
         })

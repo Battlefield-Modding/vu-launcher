@@ -11,9 +11,8 @@ mod tests {
     use crate::{
         first_time_setup,
         loadouts::{
-            get_loadout_admin_path, get_loadout_json_as_struct,
-            loadout_modification::create_loadout,
-            loadout_structs::{LaunchArguments, LoadoutJson, Map, StartupArgs},
+            get_loadout_json_as_struct, loadout_modification::create_loadout,
+            loadout_structs::LoadoutJson,
         },
         preferences::preference_structs::UserPreferences,
     };
