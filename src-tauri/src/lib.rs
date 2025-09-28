@@ -11,12 +11,11 @@ use tauri_plugin_window_state::StateFlags;
 use serde::{Deserialize, Serialize};
 use serde_json;
 
-use tauri::{Manager, WindowEvent};
+use tauri::{tray::TrayIconBuilder, Manager, WindowEvent};
 use walkdir::WalkDir;
 
-use tauri_plugin_positioner::{Position, WindowExt};
-
 use dirs_next;
+use tauri_plugin_positioner::{Position, WindowExt};
 
 pub mod preferences;
 use preferences::{get_user_preferences, set_launcher_directory, set_user_preferences};
@@ -595,6 +594,8 @@ fn open_explorer_at_launcher_install_path() -> bool {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_single_instance::init(|app, argv, cwd| {}))
+        .plugin(tauri_plugin_positioner::init())
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(
@@ -604,6 +605,17 @@ pub fn run() {
         )
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_shell::init())
+        .setup(|app| {
+            TrayIconBuilder::new()
+                .on_tray_icon_event(|app, event| {
+                    tauri_plugin_positioner::on_tray_event(app.app_handle(), &event);
+                })
+                .build(app)?;
+
+            let mut win = app.get_webview_window("main").unwrap();
+            let _ = win.move_window(Position::Center);
+            Ok(())
+        })
         .invoke_handler(tauri::generate_handler![
             get_random_number,
             set_launcher_directory,

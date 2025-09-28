@@ -12,6 +12,7 @@
   "app": {
     "windows": [
       {
+        "label": "main",
         "title": "vu-launcher",
         "theme": "Dark",
         "width": 1280,
@@ -29,7 +30,9 @@
     "active": true,
     "createUpdaterArtifacts": true,
     "targets": "nsis",
-    "icon": ["icons/VULauncher.ico"]
+    "icon": [
+      "icons/VULauncher.ico"
+    ]
   },
   "plugins": {
     "updater": {
