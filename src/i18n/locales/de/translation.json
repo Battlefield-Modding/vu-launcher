@@ -94,7 +94,7 @@
       "sheet": {
         "description": "Sie können einem Server nach der Auswahl eines Soldaten beitreten und den Serverbrowser überspringen.",
         "title": "Fügen Sie einen Schnelljoin-Server hinzu",
-        "trigger": "Server hinzufügen"
+        "trigger": "Hinzufügen"
       }
     }
   },

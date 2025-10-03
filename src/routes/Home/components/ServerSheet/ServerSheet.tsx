@@ -18,18 +18,12 @@ export default function ServerSheet() {
 
   return (
     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-      <SheetTrigger>
-        <div
-          className={clsx(
-            'text-md flex items-center justify-center gap-1 rounded-md bg-secondary p-1.5 text-primary hover:bg-secondary/80',
-          )}
-        >
+      <SheetTrigger className="ml-auto">
+        <div className={clsx('flex text-xs text-blue-500 hover:text-blue-400')}>
           {t('home.server.sheet.trigger')}
-
-          <Server />
         </div>
       </SheetTrigger>
-      <SheetContent>
+      <SheetContent className="content-center p-8">
         <SheetHeader>
           <SheetTitle className="text-center">{t('home.server.sheet.title')}</SheetTitle>
           <SheetDescription className="text-center">

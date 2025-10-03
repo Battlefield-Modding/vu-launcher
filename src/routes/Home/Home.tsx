@@ -1,7 +1,5 @@
 import { QueryKey, STALE } from '@/config/config'
 import PlayVUForm from './components/PlayVU/PlayVUForm'
-import PlayerCredentialsSheet from './components/PlayerCredentialsSheet/PlayerCredentialsSheet'
-import ServerSheet from './components/ServerSheet/ServerSheet'
 import { getUserPreferences } from '@/api'
 import { useQuery } from '@tanstack/react-query'
 import { Loader } from 'lucide-react'
@@ -37,11 +35,7 @@ export default function Home() {
 
   return (
     <div className="m-auto flex min-h-[100vh] flex-col justify-center bg-[url(assets/home_background.png)] bg-cover">
-      <div className="m-auto flex max-w-96 flex-col justify-between gap-8 rounded-md bg-black p-8">
-        <div className="flex justify-between gap-8">
-          <PlayerCredentialsSheet />
-          <ServerSheet />
-        </div>
+      <div className="m-auto flex max-w-96 rounded-md bg-black bg-opacity-90 p-8 drop-shadow-lg">
         <PlayVUForm preferences={data} />
       </div>
     </div>

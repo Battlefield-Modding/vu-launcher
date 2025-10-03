@@ -94,7 +94,7 @@
       "sheet": {
         "description": "Lets you join a server after selecting a soldier, skipping the server browser.",
         "title": "Add a quick-join server",
-        "trigger": "Add Server"
+        "trigger": "Add"
       }
     }
   },
