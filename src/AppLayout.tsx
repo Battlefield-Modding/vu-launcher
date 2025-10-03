@@ -1,4 +1,7 @@
 import './App.css'
+
+import useBlockContextMenu from './hooks/block-context-menu'
+
 import { Outlet, useLocation, useNavigate } from 'react-router'
 import { SidebarProvider, SidebarTrigger } from './components/ui/sidebar'
 import { AppSidebar } from './components/AppSidebar'
@@ -12,6 +15,8 @@ import { invoke } from '@tauri-apps/api/core'
 import { Updating } from './components/Updating'
 import { routes } from './config/config'
 export function AppLayout() {
+  useBlockContextMenu()
+
   const { pathname } = useLocation()
   const navigate = useNavigate()
 
