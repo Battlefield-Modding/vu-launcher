@@ -156,7 +156,7 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="w-72 space-y-6">
         <img src={VUIcon} alt="VU Icon" className="m-auto size-32 p-1" />
         {/* Account Select */}
         <FormField
@@ -254,28 +254,28 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
           control={form.control}
           name="useDevBranch"
           render={({ field }) => (
-            <FormItem className="flex flex-row items-center justify-between rounded-lg border bg-card p-4">
-              <div className="flex-1 space-y-1">
+            <FormItem className="flex flex-col rounded-lg border bg-card p-3">
+              <div className="flex w-full items-center">
                 <FormLabel className="text-base font-medium">
                   {t('home.playVu.form.devBranch.title')}
                 </FormLabel>
-                <FormDescription className="text-sm text-muted-foreground">
-                  {t('home.playVu.form.devBranch.description', {
-                    defaultValue: 'Use development branch for updates.',
-                  })}
-                </FormDescription>
+                <FormControl className="ml-auto">
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={handleDevToggle}
+                    className={clsx(
+                      'data-[state=checked]:bg-green-500',
+                      field.value && 'border-green-500',
+                    )}
+                    aria-label={t('home.playVu.form.devBranch.title')}
+                  />
+                </FormControl>
               </div>
-              <FormControl>
-                <Switch
-                  checked={field.value}
-                  onCheckedChange={handleDevToggle}
-                  className={clsx(
-                    'data-[state=checked]:bg-green-500',
-                    field.value && 'border-green-500',
-                  )}
-                  aria-label={t('home.playVu.form.devBranch.title')}
-                />
-              </FormControl>
+              <FormDescription className="text-sm text-muted-foreground">
+                {t('home.playVu.form.devBranch.description', {
+                  defaultValue: 'Use development branch for updates.',
+                })}
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
