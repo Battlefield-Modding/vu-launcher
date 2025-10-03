@@ -10,6 +10,7 @@
     "frontendDist": "../dist"
   },
   "app": {
+    "withGlobalTauri": true,
     "windows": [
       {
         "label": "main",
@@ -19,7 +20,8 @@
         "height": 720,
         "minWidth": 800,
         "minHeight": 600,
-        "visible": false
+        "visible": false,
+        "shadow": false
       }
     ],
     "security": {
