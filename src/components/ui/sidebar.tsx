@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Slot } from '@radix-ui/react-slot'
 import { VariantProps, cva } from 'class-variance-authority'
-import { ArrowLeft, ArrowRight } from 'lucide-react'
+import { GripVertical } from 'lucide-react'
 
 import { useIsMobile } from '@/hooks/use-mobile'
 import { cn } from '@/lib/utils'
@@ -12,6 +12,7 @@ import { Sheet, SheetContent } from '@/components/ui/sheet'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { useLocation } from 'react-router'
+import { useEffect, useState, useRef } from 'react'
 
 const SIDEBAR_COOKIE_NAME = 'sidebar:state'
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
@@ -51,7 +52,7 @@ const SidebarProvider = React.forwardRef<
 >(
   (
     {
-      defaultOpen = true,
+      defaultOpen = false,
       open: openProp,
       onOpenChange: setOpenProp,
       className,
@@ -242,43 +243,109 @@ const Sidebar = React.forwardRef<
             {children}
           </div>
         </div>
+        {/* Render trigger as sibling, outside the sidebar container */}
+        <DraggableSidebarTrigger />
       </div>
     )
   },
 )
 Sidebar.displayName = 'Sidebar'
 
-const SidebarTrigger = React.forwardRef<
-  React.ElementRef<typeof Button>,
-  React.ComponentProps<typeof Button>
->(({ className, onClick, ...props }, ref) => {
-  const { toggleSidebar, open } = useSidebar()
+const DraggableSidebarTrigger = () => {
+  const { open, setOpen, openMobile, setOpenMobile, isMobile, state } = useSidebar()
   const { pathname } = useLocation()
+  const [isDragging, setIsDragging] = useState(false)
+  const [startX, setStartX] = useState(0)
+  const dragThreshold = 50
+
   if (pathname.includes('onboarding')) {
-    return <></>
+    return null
+  }
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault()
+    setIsDragging(true)
+    setStartX(e.clientX)
+  }
+
+  const handleMouseMove = (e: MouseEvent) => {
+    if (!isDragging) return
+
+    const deltaX = e.clientX - startX
+
+    // When closed, drag right to open
+    if (!open && deltaX > dragThreshold) {
+      if (isMobile) {
+        setOpenMobile(true)
+      } else {
+        setOpen(true)
+      }
+      setIsDragging(false)
+    }
+    // When open, drag left to close
+    else if (open && deltaX < -dragThreshold) {
+      if (isMobile) {
+        setOpenMobile(false)
+      } else {
+        setOpen(false)
+      }
+      setIsDragging(false)
+    }
+  }
+
+  const handleMouseUp = () => {
+    setIsDragging(false)
+  }
+
+  useEffect(() => {
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove)
+      document.addEventListener('mouseup', handleMouseUp)
+
+      return () => {
+        document.removeEventListener('mousemove', handleMouseMove)
+        document.removeEventListener('mouseup', handleMouseUp)
+      }
+    }
+  }, [isDragging, startX, open])
+
+  const handleClick = () => {
+    if (isMobile) {
+      setOpenMobile(!openMobile)
+    } else {
+      setOpen(!open)
+    }
+  }
+
+  // Don't render on mobile (Sheet handles its own close button)
+  if (isMobile) {
+    return null
   }
 
   return (
-    <Button
-      ref={ref}
-      data-sidebar="trigger"
-      variant="ghost"
-      size="icon"
+    <button
+      onMouseDown={handleMouseDown}
+      onClick={handleClick}
       className={cn(
-        'h-7 w-7 bg-sidebar text-primary hover:bg-sidebar-foreground hover:text-secondary',
-        className,
+        'fixed top-1/2 z-50 flex -translate-y-1/2 items-center justify-center',
+        'h-48 w-6 rounded-r-lg',
+        'border-b border-r border-t border-transparent',
+        'hover:border-sidebar-border',
+        'bg-black bg-opacity-20',
+        'hover:bg-opacity-100',
+        'cursor-grab transition-all duration-200 ease-linear',
+        'shadow-lg',
+        isDragging && 'cursor-grabbing',
+        // Position based on sidebar state
+        state === 'expanded' ? 'left-[var(--sidebar-width)]' : 'left-0',
       )}
-      onClick={(event) => {
-        onClick?.(event)
-        toggleSidebar()
-      }}
-      {...props}
+      style={{ touchAction: 'none' }}
     >
-      {open ? <ArrowLeft /> : <ArrowRight />}
-    </Button>
+      <GripVertical className="h-5 w-5 text-sidebar-foreground" />
+    </button>
   )
-})
-SidebarTrigger.displayName = 'SidebarTrigger'
+}
+DraggableSidebarTrigger.displayName = 'DraggableSidebarTrigger'
 
 const SidebarRail = React.forwardRef<HTMLButtonElement, React.ComponentProps<'button'>>(
   ({ className, ...props }, ref) => {
@@ -736,6 +803,6 @@ export {
   SidebarProvider,
   SidebarRail,
   SidebarSeparator,
-  SidebarTrigger,
+  DraggableSidebarTrigger,
   useSidebar,
 }

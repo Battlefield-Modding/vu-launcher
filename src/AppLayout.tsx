@@ -3,17 +3,21 @@ import './App.css'
 import useBlockContextMenu from './hooks/block-context-menu'
 
 import { Outlet, useLocation, useNavigate } from 'react-router'
-import { SidebarProvider, SidebarTrigger } from './components/ui/sidebar'
+import { SidebarProvider, DraggableSidebarTrigger } from './components/ui/sidebar'
 import { AppSidebar } from './components/AppSidebar'
 
 import { Toaster } from 'sonner'
-import { useEffect } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { firstTimeSetup, getUserPreferences, saveUserPreferences } from './api'
 
 import { invoke } from '@tauri-apps/api/core'
 
 import { Updating } from './components/Updating'
 import { routes } from './config/config'
+import { cn } from './lib/utils'
+import { useSidebar } from './components/ui/sidebar'
+import { GripVertical } from 'lucide-react'
+
 export function AppLayout() {
   useBlockContextMenu()
 
@@ -51,14 +55,13 @@ export function AppLayout() {
       await saveUserPreferences(preferences)
     }
     storeLatestRoute()
-    // update the latest pathname in preferences
   }, [pathname])
 
   return (
     <>
       <SidebarProvider>
         <AppSidebar />
-        <SidebarTrigger className="fixed bottom-0 left-0 z-10 h-[max(2vw,2rem)] w-[max(2vw,2rem)]" />
+        <DraggableSidebarTrigger />
         <main className="min-h-[100vh] w-full bg-black">
           <Outlet />
         </main>
