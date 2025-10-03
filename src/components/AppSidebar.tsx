@@ -69,13 +69,13 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
-                <SidebarMenuItem key={item.title} className="">
+                <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     isActive={pathname === item.url}
                     asChild
                     className={clsx(
                       'flex h-[max(3vw,3rem)] rounded-none',
-                      pathname === item.url ? 'opacity-70' : 'opacity-100',
+                      pathname === item.url ? 'font-bold' : 'font-normal',
                     )}
                   >
                     <Link
@@ -90,9 +90,7 @@ export function AppSidebar() {
                       <div>
                         <item.icon />
                       </div>
-                      <p className="flex-1 text-[max(1vw,1.25rem)]">
-                        {t(`sidebar.routes.${item.title}`)}
-                      </p>
+                      <p className="flex-1 text-base">{t(`sidebar.routes.${item.title}`)}</p>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
