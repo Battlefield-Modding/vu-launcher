@@ -328,11 +328,10 @@ const DraggableSidebarTrigger = () => {
       onClick={handleClick}
       className={cn(
         'fixed top-1/2 z-50 flex -translate-y-1/2 items-center justify-center',
-        'h-48 w-6 rounded-r-lg',
+        'h-48 w-6 rounded-r-md',
         'border-b border-r border-t border-transparent',
-        'hover:border-sidebar-border',
-        'bg-black bg-opacity-20',
-        'hover:bg-opacity-100',
+        'hover:border-l-0 hover:border-sidebar-border',
+        'bg-sidebar opacity-35 hover:opacity-100',
         'cursor-grab transition-all duration-200 ease-linear',
         'shadow-lg',
         isDragging && 'cursor-grabbing',
@@ -341,7 +340,15 @@ const DraggableSidebarTrigger = () => {
       )}
       style={{ touchAction: 'none' }}
     >
-      <GripVertical className="h-5 w-5 text-sidebar-foreground" />
+      <div
+        className={cn(
+          'transition-transform duration-300', // smooth rotation
+          state === 'expanded' ? 'rotate-180' : 'rotate-0', // rotate if expanded
+          'text-md select-none text-white',
+        )}
+      >
+        {'>'}
+      </div>
     </button>
   )
 }
