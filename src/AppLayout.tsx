@@ -3,20 +3,16 @@ import './App.css'
 import useBlockContextMenu from './hooks/block-context-menu'
 
 import { Outlet, useLocation, useNavigate } from 'react-router'
-import { SidebarProvider, DraggableSidebarTrigger } from './components/ui/sidebar'
-import { AppSidebar } from './components/AppSidebar'
+import { Menu } from './components/Menu'
 
 import { Toaster } from 'sonner'
-import { useEffect, useState, useRef } from 'react'
+import { useEffect } from 'react'
 import { firstTimeSetup, getUserPreferences, saveUserPreferences } from './api'
 
 import { invoke } from '@tauri-apps/api/core'
 
 import { Updating } from './components/Updating'
 import { routes } from './config/config'
-import { cn } from './lib/utils'
-import { useSidebar } from './components/ui/sidebar'
-import { GripVertical } from 'lucide-react'
 
 export function AppLayout() {
   useBlockContextMenu()
@@ -36,7 +32,6 @@ export function AppLayout() {
 
     async function navigateToPreviousRoute() {
       const preferences = await getUserPreferences()
-
       if (preferences.last_visted_route !== '' && preferences.is_onboarded) {
         navigate(preferences.last_visted_route)
       }
@@ -51,23 +46,21 @@ export function AppLayout() {
     async function storeLatestRoute() {
       const preferences = await getUserPreferences()
       preferences.last_visted_route = pathname
-
       await saveUserPreferences(preferences)
     }
     storeLatestRoute()
   }, [pathname])
 
   return (
-    <>
-      <SidebarProvider>
-        <AppSidebar />
-        <DraggableSidebarTrigger />
-        <main className="min-h-[100vh] w-full bg-black">
-          <Outlet />
-        </main>
-        <Toaster />
-        <Updating />
-      </SidebarProvider>
-    </>
+    <div className="flex h-screen bg-black text-white">
+      <Menu />
+
+      <main className="flex-1 overflow-auto">
+        <Outlet />
+      </main>
+
+      <Toaster />
+      <Updating />
+    </div>
   )
 }

@@ -37,7 +37,7 @@
           "none": "None",
           "title": "Quick-Join Server"
         },
-        "submit": "PLAY",
+        "submit": "Play",
         "toast": {
           "failure": "Failed to start VU",
           "success": "Starting VU..."

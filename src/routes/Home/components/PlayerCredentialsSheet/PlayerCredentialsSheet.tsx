@@ -5,7 +5,11 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
+  SheetFooter,
+  SheetClose,
 } from '@/components/ui/sheet'
+import { Button } from '@/components/ui/button'
+
 import { Loader, User } from 'lucide-react'
 import PlayerCredentialsForm from './PlayerCredentialsForm'
 import { useState } from 'react'
@@ -54,7 +58,7 @@ export default function PlayerCredentialsSheet() {
             : t('home.playerCredentials.sheet.login')}
         </div>
       </SheetTrigger>
-      <SheetContent className="content-center p-8">
+      <SheetContent className="content-center bg-black bg-opacity-80 p-8 [&>button:first-of-type]:hidden">
         <SheetHeader>
           <SheetTitle className="text-center">{t('home.playerCredentials.sheet.title')}</SheetTitle>
           <SheetDescription className="text-center">
@@ -68,8 +72,16 @@ export default function PlayerCredentialsSheet() {
             </a>
           </SheetDescription>
         </SheetHeader>
-        <br />
-        <PlayerCredentialsForm setSheetOpen={setSheetOpen} />
+
+        <div className="mt-4">
+          <PlayerCredentialsForm setSheetOpen={setSheetOpen} />
+        </div>
+
+        <SheetFooter className="absolute bottom-4 right-4 m-0 p-0">
+          <SheetClose asChild>
+            <Button variant="outline">Close</Button>
+          </SheetClose>
+        </SheetFooter>
       </SheetContent>
     </Sheet>
   )

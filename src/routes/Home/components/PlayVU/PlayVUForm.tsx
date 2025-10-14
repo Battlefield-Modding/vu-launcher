@@ -285,10 +285,9 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
         <Button
           type="submit"
           variant="constructive"
-          className="w-full rounded-lg p-8 text-2xl shadow-md transition-shadow hover:shadow-lg"
+          className="w-full rounded-lg p-8 text-3xl uppercase tracking-widest shadow-md transition-shadow hover:shadow-lg"
           aria-label={t('home.playVu.form.submit')}
         >
-          <Play className="mr-2 h-6 w-6" />
           {t('home.playVu.form.submit')}
         </Button>
       </form>
