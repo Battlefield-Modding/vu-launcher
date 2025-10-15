@@ -4,13 +4,13 @@ import { getUserPreferences } from '@/api'
 import { useQuery } from '@tanstack/react-query'
 import { Loader } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import clsx from 'clsx'
 
 export default function Home() {
   const { t } = useTranslation()
-  const [bgVisible, setBgVisible] = useState(false)
   const [panelVisible, setPanelVisible] = useState(false)
+  const isFirstRender = useRef(true)
 
   const { isPending, isError, data, error } = useQuery({
     queryKey: [QueryKey.UserPreferences],
@@ -19,13 +19,16 @@ export default function Home() {
   })
 
   useEffect(() => {
-    const bgTimeout = setTimeout(() => setBgVisible(true), 30)
-    const panelTimeout = setTimeout(() => setPanelVisible(true), 300)
-
-    return () => {
-      clearTimeout(bgTimeout)
-      clearTimeout(panelTimeout)
+    if (isFirstRender.current) {
+      // On initial app load, show panel immediately without animation
+      isFirstRender.current = false
+      setPanelVisible(true)
+      return
     }
+
+    // On page transitions, animate panel in
+    const panelTimeout = setTimeout(() => setPanelVisible(true), 50)
+    return () => clearTimeout(panelTimeout)
   }, [])
 
   if (isPending) {
@@ -52,13 +55,13 @@ export default function Home() {
 
   return (
     <>
+      {/* Persistent background, always mounted */}
       <div
-        className={clsx(
-          'duration-[1500ms] fixed inset-0 z-0 origin-center animate-[breathe-zoom_60s_ease-in-out_infinite_forwards] bg-[url(assets/home_background.png)] bg-cover bg-center bg-no-repeat transition-opacity ease-in-out',
-          bgVisible ? 'opacity-100' : 'opacity-0',
-        )}
+        className="fixed inset-0 z-0 origin-center animate-[breathe-zoom_60s_ease-in-out_infinite_forwards] bg-[url(assets/home_background.png)] bg-cover bg-center bg-no-repeat"
+        style={{ willChange: 'transform, opacity' }}
       />
 
+      {/* Panel/content */}
       <div
         data-tauri-drag-region
         className="relative z-10 flex min-h-[100vh] flex-col items-center justify-center"

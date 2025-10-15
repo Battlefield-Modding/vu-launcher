@@ -16,6 +16,8 @@ const topItems = [
 
 const bottomItems = [{ title: 'settings', url: routes.SETTINGS, icon: Settings }]
 
+export const menuOrder = [...topItems, ...bottomItems].map((item) => item.url)
+
 export function Menu() {
   const { pathname } = useLocation()
   const { t } = useTranslation()
@@ -76,8 +78,8 @@ export function Menu() {
     <div className="fixed left-0 top-0 z-50 flex h-screen w-16 flex-col items-center py-4">
       <div
         className={clsx(
-          'absolute left-0 top-0 h-full w-full border-r-[1px] border-r-neutral-950 shadow-inner backdrop-blur-lg backdrop-brightness-[70%] transition-opacity duration-500 ease-in-out',
-          bgVisible ? 'opacity-100' : 'opacity-0',
+          'absolute left-0 top-0 h-full w-full border-r-[1px] border-r-neutral-950 shadow-inner backdrop-blur-lg backdrop-brightness-[70%] transition-opacity transition-transform duration-500 ease-in-out',
+          bgVisible ? 'translate-x-0 opacity-100' : '-translate-x-16 opacity-0',
         )}
       />
 

@@ -47,7 +47,7 @@
     "playerCredentials": {
       "error": "Error loading Player Credentials",
       "form": {
-        "button": "submit",
+        "button": "Submit",
         "password": {
           "description": "Stored using your Operating System's native credential manager.",
           "placeholder": "password",
