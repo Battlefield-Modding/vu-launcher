@@ -1,7 +1,7 @@
 import './App.css'
 
 import useBlockContextMenu from './hooks/block-context-menu'
-import { Outlet, useLocation, useNavigate } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
 import { Menu, menuOrder } from './components/Menu'
 import PageTransition from './components/PageTransition'
 import { Toaster } from 'sonner'
@@ -30,7 +30,7 @@ export function AppLayout() {
       await firstTimeSetup()
       const preferences = await getUserPreferences()
       if (!preferences.is_onboarded) {
-        navigate(routes.ONBOARDING)
+        navigate(routes.ONBOARDING, { state: { skipAnimation: true } })
       }
     }
     handleOnboarding()
@@ -38,7 +38,7 @@ export function AppLayout() {
     async function navigateToPreviousRoute() {
       const preferences = await getUserPreferences()
       if (preferences.last_visted_route !== '' && preferences.is_onboarded) {
-        navigate(preferences.last_visted_route)
+        navigate(preferences.last_visted_route, { state: { skipAnimation: true } })
       }
     }
 
@@ -46,7 +46,6 @@ export function AppLayout() {
     invoke('show_window')
   }, [])
 
-  // Track last route to determine slide direction
   useEffect(() => {
     const prevIndex = menuOrder.indexOf(prevPathRef.current)
     const currIndex = menuOrder.indexOf(location.pathname)
@@ -61,9 +60,15 @@ export function AppLayout() {
     storeLatestRoute()
   }, [location.pathname])
 
-  // Helper to render the route component manually
+  const normalizePath = (path: string) => {
+    const parts = path.split('/')
+    const base = parts[1] || ''
+    return '/' + base || path
+  }
+
   const renderRoute = (pathname: string) => {
-    switch (pathname) {
+    const normalized = normalizePath(pathname)
+    switch (normalized) {
       case routes.HOME:
         return <Home />
       case routes.SERVERS:
@@ -75,6 +80,7 @@ export function AppLayout() {
       case routes.ONBOARDING:
         return <Onboarding />
       default:
+        console.warn('No matching route for normalized path:', normalized)
         return null
     }
   }
@@ -82,11 +88,9 @@ export function AppLayout() {
   return (
     <div className="flex h-screen bg-black text-white">
       <Menu />
-
       <main className="relative flex-1 overflow-hidden">
-        <PageTransition direction={direction}>{renderRoute}</PageTransition>
+        <PageTransition>{renderRoute}</PageTransition>
       </main>
-
       <Toaster />
       <Updating />
     </div>

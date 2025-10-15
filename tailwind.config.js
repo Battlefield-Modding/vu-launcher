@@ -63,37 +63,37 @@ export default {
       },
       keyframes: {
         'slide-up-in': {
-          '0%': { transform: 'translateY(100%)', opacity: '0' },
-          '100%': { transform: 'translateY(0%)', opacity: '1' },
+          from: { transform: 'translateY(100%)', opacity: '0' },
+          to: { transform: 'translateY(0)', opacity: '1' },
         },
         'slide-up-out': {
-          '0%': { transform: 'translateY(0%)', opacity: '1' },
-          '100%': { transform: 'translateY(-100%)', opacity: '0' },
+          from: { transform: 'translateY(0)', opacity: '1' },
+          to: { transform: 'translateY(-100%)', opacity: '0' },
         },
         'slide-down-in': {
-          '0%': { transform: 'translateY(-100%)', opacity: '0' },
-          '100%': { transform: 'translateY(0%)', opacity: '1' },
+          from: { transform: 'translateY(-100%)', opacity: '0' },
+          to: { transform: 'translateY(0)', opacity: '1' },
         },
         'slide-down-out': {
-          '0%': { transform: 'translateY(0%)', opacity: '1' },
-          '100%': { transform: 'translateY(100%)', opacity: '0' },
-        },
-        'breathe-zoom': {
-          '0%, 100%': {
-            transform: 'scale(1)',
-          },
-          '50%': {
-            transform: 'scale(1.05)',
-          },
+          from: { transform: 'translateY(0)', opacity: '1' },
+          to: { transform: 'translateY(100%)', opacity: '0' },
         },
       },
-      animation: {
-        'slide-up-in': 'slide-up-in 0.4s ease-out forwards',
-        'slide-up-out': 'slide-up-out 0.4s ease-in forwards',
-        'slide-down-in': 'slide-down-in 0.4s ease-out forwards',
-        'slide-down-out': 'slide-down-out 0.4s ease-in forwards',
-        'breathe-zoom': 'breathe-zoom 4s ease-in-out infinite forwards',
+      'breathe-zoom': {
+        '0%, 100%': {
+          transform: 'scale(1)',
+        },
+        '50%': {
+          transform: 'scale(1.05)',
+        },
       },
+    },
+    animation: {
+      'slide-up-in': 'slide-up-in 0.7s ease-in-out forwards',
+      'slide-up-out': 'slide-up-out 0.7s ease-in-out forwards',
+      'slide-down-in': 'slide-down-in 0.7s ease-in-out forwards',
+      'slide-down-out': 'slide-down-out 0.7s ease-in-out forwards',
+      'breathe-zoom': 'breathe-zoom 4s ease-in-out infinite forwards',
     },
   },
   plugins: [require('tailwindcss-animate')],

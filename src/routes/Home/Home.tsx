@@ -9,7 +9,7 @@ import clsx from 'clsx'
 
 export default function Home() {
   const { t } = useTranslation()
-  const [panelVisible, setPanelVisible] = useState(false)
+  const [panelVisible, setPanelVisible] = useState(true) // Start visible
   const isFirstRender = useRef(true)
 
   const { isPending, isError, data, error } = useQuery({
@@ -20,13 +20,12 @@ export default function Home() {
 
   useEffect(() => {
     if (isFirstRender.current) {
-      // On initial app load, show panel immediately without animation
       isFirstRender.current = false
-      setPanelVisible(true)
       return
     }
 
-    // On page transitions, animate panel in
+    // For page transitions (remounts), animate in
+    setPanelVisible(false) // Reset to hidden
     const panelTimeout = setTimeout(() => setPanelVisible(true), 50)
     return () => clearTimeout(panelTimeout)
   }, [])

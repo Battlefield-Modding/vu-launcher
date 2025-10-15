@@ -6,7 +6,7 @@ import clsx from 'clsx'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
 import { getAllLoadoutNames } from '@/api'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 
 const topItems = [
   { title: 'home', url: routes.HOME, icon: Home },
@@ -23,6 +23,7 @@ export function Menu() {
   const { t } = useTranslation()
   const [bgVisible, setBgVisible] = useState(false)
   const [iconsVisible, setIconsVisible] = useState(false)
+  const isNavigating = useRef(false)
 
   const { data } = useQuery({
     queryKey: [QueryKey.GetAllLoadoutNames],
@@ -31,19 +32,37 @@ export function Menu() {
   })
 
   useEffect(() => {
-    // Delay slightly so browser paints initial hidden state
     const timeoutBg = setTimeout(() => setBgVisible(true), 50)
-    const timeoutIcons = setTimeout(() => setIconsVisible(true), 350) // after bg
+    const timeoutIcons = setTimeout(() => setIconsVisible(true), 350)
     return () => {
       clearTimeout(timeoutBg)
       clearTimeout(timeoutIcons)
     }
   }, [])
 
+  const normalizePath = (path: string) => {
+    const parts = path.split('/')
+    const base = parts[1] || ''
+    return '/' + base || path
+  }
+
+  const handleNavigation = (url: string) => {
+    const normalizedUrl = normalizePath(url)
+    const normalizedPathname = normalizePath(pathname)
+    if (normalizedUrl === normalizedPathname || isNavigating.current) {
+      console.log('Navigation ignored:', { url, pathname, isNavigating: isNavigating.current })
+      return
+    }
+    isNavigating.current = true
+    setTimeout(() => {
+      isNavigating.current = false
+    }, 700) // Match animation duration
+  }
+
   if (!data) return <Loader />
 
   const renderItem = (item: (typeof topItems)[number], index: number) => {
-    const isActive = pathname === item.url
+    const isActive = normalizePath(pathname) === normalizePath(item.url)
     const url =
       data.length > 0 && item.url === routes.SERVERS ? `${routes.SERVERS}/${data[0]}` : item.url
     const delay = `${index * 100}ms`
@@ -59,6 +78,7 @@ export function Menu() {
       >
         <Link
           to={url}
+          onClick={() => handleNavigation(url)}
           className={clsx(
             'flex h-12 w-12 items-center justify-center rounded-lg transition-colors hover:bg-white hover:bg-opacity-35',
             isActive && 'bg-white bg-opacity-25',
