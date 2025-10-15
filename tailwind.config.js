@@ -78,13 +78,15 @@ export default {
           from: { transform: 'translateY(0)', opacity: '1' },
           to: { transform: 'translateY(100%)', opacity: '0' },
         },
-      },
-      'breathe-zoom': {
-        '0%, 100%': {
-          transform: 'scale(1)',
-        },
-        '50%': {
-          transform: 'scale(1.05)',
+        'breathe-zoom': {
+          '0%, 100%': {
+            transform: 'scale(1)',
+            filter: 'saturate(90%)',
+          },
+          '50%': {
+            transform: 'scale(1.05)',
+            filter: 'saturate(100%)',
+          },
         },
       },
     },

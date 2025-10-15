@@ -56,7 +56,7 @@ export default function Home() {
     <>
       {/* Persistent background, always mounted */}
       <div
-        className="fixed inset-0 z-0 origin-center animate-[breathe-zoom_60s_ease-in-out_infinite_forwards] bg-[url(assets/home_background.png)] bg-cover bg-center bg-no-repeat"
+        className="fixed inset-0 z-0 origin-center animate-[breathe-zoom_120s_ease-in-out_infinite_forwards] bg-[url(assets/home_background.png)] bg-cover bg-center bg-no-repeat"
         style={{ willChange: 'transform, opacity' }}
       />
 
