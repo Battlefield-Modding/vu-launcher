@@ -9,13 +9,13 @@ import { Outlet } from 'react-router'
 
 export function Servers() {
   const { t } = useTranslation()
+
   const { isPending, isError, data, error } = useQuery({
     queryKey: [QueryKey.ServerKeyExists],
     queryFn: async (): Promise<{ serverKeyFileExists: boolean; serverGuidExists: boolean }> => {
       const serverKeyFileExists = await serverKeyExists()
       const preferences = await getUserPreferences()
       const serverGuidExists = preferences.server_guid.length > 0
-
       return { serverKeyFileExists, serverGuidExists }
     },
     staleTime: STALE.never,
@@ -23,31 +23,32 @@ export function Servers() {
 
   if (isPending) {
     return (
-      <div>
-        <h1>{t('servers.firstTime.loading')}</h1>
-        <Loader />
+      <div className="flex h-full min-h-screen flex-col items-center justify-center gap-4">
+        <Loader className="animate-spin h-12 w-12" />
+        <h1 className="text-xl">{t('servers.firstTime.loading')}</h1>
       </div>
     )
   }
 
   if (isError) {
+    const errorMessage = error instanceof Error ? error.message : String(error)
     return (
-      <div className="rounded-md bg-destructive pl-2 pr-2 text-xl leading-9">
+      <div className="flex h-full min-h-screen flex-col items-center justify-center gap-4 rounded-md bg-destructive p-4 text-center text-xl">
         <h1>{t('servers.firstTime.error')}</h1>
-        <p>{error.message}</p>
+        <p>{errorMessage}</p>
       </div>
     )
   }
 
-  if (!data.serverKeyFileExists) {
+  if (!data?.serverKeyFileExists) {
     return <FirstTimeSetup />
   }
 
-  if (!data.serverGuidExists) {
+  if (!data?.serverGuidExists) {
     return (
-      <div className="m-auto flex h-full max-w-screen-md flex-col items-center justify-center gap-8">
+      <div className="flex h-full min-h-screen flex-col items-center justify-center gap-8">
         <h1 className="text-2xl">{t('servers.firstTime.redoGuid')}:</h1>
-        <LocalServerGuidForm guid={''} />
+        <LocalServerGuidForm guid="" />
       </div>
     )
   }

@@ -5,13 +5,13 @@ import { useQuery } from '@tanstack/react-query'
 import { Loader } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useEffect, useState, useRef } from 'react'
-import { getVersion } from '@tauri-apps/api/app'
+
 import clsx from 'clsx'
 
 export default function Home() {
   const { t } = useTranslation()
   const [panelVisible, setPanelVisible] = useState(true) // Start visible
-  const [appVersion, setAppVersion] = useState<string>('')
+
   const isFirstRender = useRef(true)
 
   const { isPending, isError, data, error } = useQuery({
@@ -32,25 +32,12 @@ export default function Home() {
     return () => clearTimeout(panelTimeout)
   }, [])
 
-  useEffect(() => {
-    const fetchVersion = async () => {
-      try {
-        const version = await getVersion()
-        setAppVersion(version)
-      } catch (error) {
-        console.error('Failed to fetch app version:', error)
-      }
-    }
-
-    fetchVersion()
-  }, [])
-
   if (isPending) {
     return (
       <div className="flex min-h-[100vh] items-center justify-center bg-gradient-to-br from-gray-900 to-black">
         <div className="text-center">
           <h1 className="mb-4 text-2xl font-bold text-white">{t('home.loading')}</h1>
-          <Loader className="mx-auto h-8 w-8 animate-spin text-primary" />
+          <Loader className="animate-spin mx-auto h-8 w-8 text-primary" />
         </div>
       </div>
     )
@@ -69,17 +56,6 @@ export default function Home() {
 
   return (
     <>
-      {/* Persistent background, always mounted */}
-      <div
-        className="fixed inset-0 z-0 origin-center animate-[breathe-zoom_120s_ease-in-out_infinite_forwards] bg-[url(assets/home_background.png)] bg-cover bg-center bg-no-repeat"
-        style={{ willChange: 'transform, opacity' }}
-      />
-
-      <div className="fixed bottom-2 right-2 text-sm text-white opacity-70 drop-shadow-md">
-        {appVersion && `v${appVersion}`}
-      </div>
-
-      {/* Panel/content */}
       <div
         data-tauri-drag-region
         className="relative z-10 flex min-h-[100vh] flex-col items-center justify-center"

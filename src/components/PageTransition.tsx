@@ -1,9 +1,8 @@
 import { useEffect, useState, useRef } from 'react'
 import { useLocation } from 'react-router'
 import { menuOrder } from './Menu'
-import { routes } from '@/config/config' // Add import for routes
+import { routes } from '@/config/config'
 
-// Animation keys (Tailwind classes for sliding)
 const slideUpIn = 'animate-slide-up-in'
 const slideUpOut = 'animate-slide-up-out'
 const slideDownIn = 'animate-slide-down-in'
@@ -22,154 +21,79 @@ export default function PageTransition({
   const pendingLocationRef = useRef<null | typeof location>(null)
   const animationTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
-  // Normalize path to handle dynamic URLs (e.g., /mods/subroute -> /mods)
+  // Track if current background should be dark
+  const isDarkRef = useRef(false)
+  const [bgOpacity, setBgOpacity] = useState(0) // 0 = light, 1 = dark
+
   const normalizePath = (path: string) => {
     const parts = path.split('/')
     const base = parts[1] || ''
     return '/' + base || path
   }
 
+  const isDarkRoute = (pathname: string) => normalizePath(pathname) !== routes.HOME
+
+  // Animate background fade when the “dark state” changes
+  useEffect(() => {
+    const newDark = isDarkRoute(currentLocation.pathname)
+    if (newDark !== isDarkRef.current) {
+      // Start smooth fade
+      setBgOpacity(newDark ? 0 : 1) // start from opposite
+      const timeout = setTimeout(() => {
+        setBgOpacity(newDark ? 1 : 0) // fade to target
+        isDarkRef.current = newDark
+      }, 50)
+      return () => clearTimeout(timeout)
+    }
+  }, [currentLocation.pathname])
+
+  // --- Handle page animations ---
   useEffect(() => {
     const normalizedCurrent = normalizePath(currentLocation.pathname)
     const normalizedLocation = normalizePath(location.pathname)
 
     if (normalizedLocation !== normalizedCurrent) {
-      console.log('Navigation detected:', {
-        from: normalizedCurrent,
-        to: normalizedLocation,
-        isAnimating,
-        skip: location.state?.skipAnimation,
-        fromMods: normalizedCurrent === routes.MODS, // Now routes.MODS is defined
-      })
-
-      // Skip animation if flagged or invalid routes
-      if (location.state?.skipAnimation) {
-        console.log('Skipping animation: skipAnimation flag')
-        setCurrentLocation(location)
-        pendingLocationRef.current = null
-        return
-      }
-
-      // Check indices for valid routes
       const prevIndex = menuOrder.indexOf(normalizedCurrent)
       const newIndex = menuOrder.indexOf(normalizedLocation)
 
-      if (prevIndex === -1 || newIndex === -1) {
-        console.log('Skipping animation: invalid route indices', {
-          prevIndex,
-          newIndex,
-          from: normalizedCurrent,
-          to: normalizedLocation,
-        })
+      if (location.state?.skipAnimation || prevIndex === -1 || newIndex === -1) {
         setCurrentLocation(location)
         pendingLocationRef.current = null
         return
       }
 
       if (isAnimating) {
-        // Queue only the latest pending location
         pendingLocationRef.current = location
-        console.log('Queueing navigation:', normalizedLocation)
         return
       }
 
       directionRef.current = newIndex > prevIndex ? 'up' : 'down'
-
-      console.log('Starting animation:', {
-        direction: directionRef.current,
-        prev: normalizedCurrent,
-        next: normalizedLocation,
-        prevIndex,
-        newIndex,
-        fromMods: normalizedCurrent === routes.MODS,
-      })
-
       setPrevLocation(currentLocation)
       setCurrentLocation(location)
       setIsAnimating(true)
 
-      // Fallback timeout to prevent stuck state
-      animationTimeoutRef.current = setTimeout(() => {
-        if (isAnimating) {
-          console.warn('Animation timeout triggered, resetting isAnimating', {
-            current: normalizedCurrent,
-            pending: pendingLocationRef.current?.pathname,
-          })
-          setIsAnimating(false)
-        }
-      }, 800) // Match animation duration (0.7s) + buffer
+      animationTimeoutRef.current = setTimeout(() => setIsAnimating(false), 800)
     }
 
     return () => {
-      if (animationTimeoutRef.current) {
-        clearTimeout(animationTimeoutRef.current)
-      }
+      if (animationTimeoutRef.current) clearTimeout(animationTimeoutRef.current)
     }
-  }, [location, currentLocation.pathname, routes.MODS])
+  }, [location, currentLocation.pathname])
 
   const handleAnimationEnd = () => {
-    console.log('Animation ended:', {
-      current: normalizePath(currentLocation.pathname),
-      pending: pendingLocationRef.current
-        ? normalizePath(pendingLocationRef.current.pathname)
-        : null,
-      fromMods: normalizePath(prevLocation.pathname) === routes.MODS,
-    })
-
     setIsAnimating(false)
-    if (animationTimeoutRef.current) {
-      clearTimeout(animationTimeoutRef.current)
-    }
+    if (animationTimeoutRef.current) clearTimeout(animationTimeoutRef.current)
 
-    // Process pending location if any
     if (
       pendingLocationRef.current &&
       normalizePath(pendingLocationRef.current.pathname) !== normalizePath(currentLocation.pathname)
     ) {
       const pending = pendingLocationRef.current
       pendingLocationRef.current = null
-
-      if (pending.state?.skipAnimation) {
-        console.log('Applying queued skipAnimation navigation:', pending.pathname)
-        setCurrentLocation(pending)
-        return
-      }
-
-      const prevIndex = menuOrder.indexOf(normalizePath(currentLocation.pathname))
-      const newIndex = menuOrder.indexOf(normalizePath(pending.pathname))
-
-      if (prevIndex === -1 || newIndex === -1) {
-        console.log('Skipping queued animation: invalid route indices', {
-          prevIndex,
-          newIndex,
-          from: normalizePath(currentLocation.pathname),
-          to: normalizePath(pending.pathname),
-        })
-        setCurrentLocation(pending)
-        return
-      }
-
-      directionRef.current = newIndex > prevIndex ? 'up' : 'down'
-
-      console.log('Starting queued animation:', {
-        direction: directionRef.current,
-        prev: normalizePath(currentLocation.pathname),
-        next: normalizePath(pending.pathname),
-        prevIndex,
-        newIndex,
-        fromMods: normalizePath(currentLocation.pathname) === routes.MODS,
-      })
-
       setPrevLocation(currentLocation)
       setCurrentLocation(pending)
       setIsAnimating(true)
-
-      animationTimeoutRef.current = setTimeout(() => {
-        if (isAnimating) {
-          console.warn('Queued animation timeout triggered, resetting isAnimating')
-          setIsAnimating(false)
-        }
-      }, 800)
+      animationTimeoutRef.current = setTimeout(() => setIsAnimating(false), 800)
     }
   }
 
@@ -179,11 +103,16 @@ export default function PageTransition({
   }
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden">
+    <div className="hide-scrollbar relative min-h-screen w-full overflow-y-auto">
+      <div
+        className="absolute inset-0 z-0 bg-black bg-opacity-60 transition-opacity duration-700 ease-in-out"
+        style={{ opacity: bgOpacity }}
+      />
+
       {isAnimating && (
         <div
-          key={prevLocation.pathname} // Ensure unique key for outgoing page
-          className={`absolute inset-0 h-full w-full transform ${getAnimationClass('out')}`}
+          key={prevLocation.pathname}
+          className={`absolute inset-0 z-10 min-h-full w-full transform ${getAnimationClass('out')}`}
           style={{ willChange: 'transform, opacity' }}
           onAnimationEnd={handleAnimationEnd}
         >
@@ -192,8 +121,10 @@ export default function PageTransition({
       )}
 
       <div
-        key={currentLocation.pathname} // Ensure unique key for incoming page
-        className={`absolute inset-0 h-full w-full transform ${isAnimating ? getAnimationClass('in') : ''}`}
+        key={currentLocation.pathname}
+        className={`absolute inset-0 z-20 min-h-full w-full transform ${
+          isAnimating ? getAnimationClass('in') : ''
+        }`}
         style={{ willChange: 'transform, opacity' }}
       >
         {children(currentLocation.pathname)}

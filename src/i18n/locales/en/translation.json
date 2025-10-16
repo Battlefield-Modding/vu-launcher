@@ -300,8 +300,8 @@
       },
       "loading": "Checking if Server Key Exists",
       "redoGuid": "Please re-enter your server GUID",
-      "step1": "Download server key from",
-      "step2": "Copy Server GUID from above",
+      "step1": "Download Server Key",
+      "step2": "Copy Server GUID",
       "step3": "Drag and Drop your key into this window"
     },
     "loadouts": {

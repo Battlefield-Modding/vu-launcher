@@ -15,15 +15,32 @@ import { Servers } from './routes/Servers/Servers'
 import Mods from './routes/Mods/Mods'
 import Settings from './routes/Settings/Settings'
 import { Onboarding } from './routes/Onboarding/Onboarding'
+import { getVersion } from '@tauri-apps/api/app'
 
 export function AppLayout() {
   useBlockContextMenu()
+
+  const [appVersion, setAppVersion] = useState<string>('')
+
   const location = useLocation()
   const navigate = useNavigate()
 
   const [prevPath, setPrevPath] = useState(location.pathname)
   const [direction, setDirection] = useState<'up' | 'down'>('up')
   const prevPathRef = useRef(location.pathname)
+
+  useEffect(() => {
+    const fetchVersion = async () => {
+      try {
+        const version = await getVersion()
+        setAppVersion(version)
+      } catch (error) {
+        console.error('Failed to fetch app version:', error)
+      }
+    }
+
+    fetchVersion()
+  }, [])
 
   useEffect(() => {
     async function handleOnboarding() {
@@ -41,7 +58,6 @@ export function AppLayout() {
         navigate(preferences.last_visted_route, { state: { skipAnimation: true } })
       }
     }
-
     navigateToPreviousRoute()
     invoke('show_window')
   }, [])
@@ -86,9 +102,16 @@ export function AppLayout() {
   }
 
   return (
-    <div className="flex h-screen bg-black text-white">
+    <div className="flex min-h-screen bg-black text-white">
       <Menu />
-      <main className="relative flex-1 overflow-hidden">
+      <div
+        className="fixed inset-0 z-0 origin-center animate-[breathe-zoom_120s_ease-in-out_infinite_forwards] bg-[url(assets/home_background.png)] bg-cover bg-center bg-no-repeat"
+        style={{ willChange: 'transform, opacity' }}
+      />
+      <div className="fixed bottom-2 right-2 text-sm text-white opacity-70 drop-shadow-md">
+        {appVersion && `v${appVersion}`}
+      </div>
+      <main className="relative flex-1 overflow-y-auto">
         <PageTransition>{renderRoute}</PageTransition>
       </main>
       <Toaster />
