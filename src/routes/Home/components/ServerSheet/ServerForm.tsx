@@ -86,7 +86,7 @@ export default function ServerForm({ setSheetOpen }: { setSheetOpen: any }) {
               )}
               style={{ transitionDelay: visible ? '150ms' : '0ms' }}
             >
-              <FormLabel>{t('home.server.form.nickname.title')}</FormLabel>
+              <FormLabel>{t('home.server.form.nickname.title')}*</FormLabel>
               <FormControl>
                 <Input
                   type="text"
@@ -111,7 +111,7 @@ export default function ServerForm({ setSheetOpen }: { setSheetOpen: any }) {
               )}
               style={{ transitionDelay: visible ? '300ms' : '0ms' }}
             >
-              <FormLabel>{t('home.server.form.serverGUID.title')}</FormLabel>
+              <FormLabel>{t('home.server.form.serverGUID.title')}*</FormLabel>
               <FormControl>
                 <Input type="text" placeholder="5ccbc53a-6266-4b83-b782-c98cc49da88f" {...field} />
               </FormControl>
@@ -147,6 +147,8 @@ export default function ServerForm({ setSheetOpen }: { setSheetOpen: any }) {
             </FormItem>
           )}
         />
+
+        <p className="text-xs text-gray-400">{t('home.playerCredentials.form.hint')}</p>
 
         <Button
           className={clsx(

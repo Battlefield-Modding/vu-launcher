@@ -89,7 +89,7 @@ export default function PlayerCredentialsForm({ setSheetOpen }: { setSheetOpen: 
               )}
               style={{ transitionDelay: visible ? '150ms' : '0ms' }}
             >
-              <FormLabel>{t('home.playerCredentials.form.username.title')}</FormLabel>
+              <FormLabel>{t('home.playerCredentials.form.username.title')}*</FormLabel>
               <FormControl>
                 <Input
                   type="text"
@@ -124,7 +124,7 @@ export default function PlayerCredentialsForm({ setSheetOpen }: { setSheetOpen: 
               )}
               style={{ transitionDelay: visible ? '300ms' : '0ms' }}
             >
-              <FormLabel>{t('home.playerCredentials.form.password.title')}</FormLabel>
+              <FormLabel>{t('home.playerCredentials.form.password.title')}*</FormLabel>
               <FormControl>
                 <Input
                   type="password"
@@ -146,6 +146,8 @@ export default function PlayerCredentialsForm({ setSheetOpen }: { setSheetOpen: 
             </FormItem>
           )}
         />
+
+        <p className="text-xs text-gray-400">{t('home.playerCredentials.form.hint')}</p>
 
         <Button
           className={clsx(

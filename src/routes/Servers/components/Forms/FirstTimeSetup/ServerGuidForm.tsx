@@ -49,7 +49,7 @@ export function ServerGuidForm({ handleGuid }: { handleGuid: (val: boolean) => v
           control={form.control}
           name="guid"
           render={({ field }) => (
-            <FormItem className={clsx('ml-9 w-1/2', savedGUID && 'hidden')}>
+            <FormItem className={clsx('w-full p-4', savedGUID && 'hidden')}>
               <FormControl>
                 <Input
                   type="text"
@@ -63,12 +63,18 @@ export function ServerGuidForm({ handleGuid }: { handleGuid: (val: boolean) => v
             </FormItem>
           )}
         />
-        <Button type="submit" className={clsx('ml-9', savedGUID && 'hidden')} disabled={savedGUID}>
-          {t('settings.serverGuidForm.submit')}
-        </Button>
-        <h3 className={clsx(savedGUID ? 'visible ml-9 text-primary/70' : 'hidden')}>
-          {t('servers.firstTime.guidForm.done')}
-        </h3>
+        <div className="flex flex-row items-center">
+          <Button
+            type="submit"
+            className={clsx('ml-4', savedGUID && 'hidden')}
+            disabled={savedGUID}
+          >
+            {t('settings.serverGuidForm.submit')}
+          </Button>
+          <h3 className={clsx(savedGUID ? 'visible ml-4 text-green-500' : 'hidden')}>
+            {t('servers.firstTime.guidForm.done')}
+          </h3>
+        </div>
       </form>
     </Form>
   )

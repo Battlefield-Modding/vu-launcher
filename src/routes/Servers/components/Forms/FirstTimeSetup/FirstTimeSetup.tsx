@@ -25,13 +25,15 @@ export function FirstTimeSetup() {
             <div className="flex flex-1 flex-col gap-6 rounded-md bg-black bg-opacity-90 p-8 drop-shadow-2xl transition-all duration-700 ease-in-out">
               <section className="flex flex-col gap-2">
                 <h2 className="text-xl font-medium">1.) {t('servers.firstTime.step1')}</h2>
-                <a
-                  href="https://veniceunleashed.net/keys"
-                  target="_blank"
-                  className="text-cyan-400 underline hover:text-cyan-300"
-                >
-                  {t('servers.firstTime.step1Link')}
-                </a>
+                <p>
+                  <a
+                    href="https://veniceunleashed.net/keys"
+                    target="_blank"
+                    className="text-cyan-400 underline hover:text-cyan-300"
+                  >
+                    https://veniceunleashed.net/keys
+                  </a>
+                </p>
               </section>
 
               <section className="flex flex-col gap-2">
@@ -41,7 +43,7 @@ export function FirstTimeSetup() {
 
               <section className="flex flex-col gap-2">
                 <h2 className="text-xl font-medium">3.) {t('servers.firstTime.step3')}</h2>
-                <p className="text-gray-400">{t('servers.firstTime.step3Description')}</p>
+                <ServerKeyUpload />
               </section>
             </div>
 

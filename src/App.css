@@ -54,6 +54,12 @@
                                   supported by Chrome, Edge, Opera and Firefox */
 }
 
+.noselectimage {
+  -webkit-user-drag: none;
+  user-select: none;
+  pointer-events: none;
+}
+
 @layer base {
   :root {
     --background: 240 10% 3.9%;
@@ -99,6 +105,9 @@
   body {
     @apply bg-background text-foreground;
     @apply noselect;
+  }
+  img {
+    @apply noselectimage;
   }
 }
 

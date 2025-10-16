@@ -100,27 +100,25 @@ export function ServerKeyUpload() {
   return (
     <div
       className={clsx(
-        'flex flex-1 flex-col justify-center border-2 border-dashed border-primary bg-secondary text-primary',
+        'flex flex-1 flex-col justify-center border border-dashed border-primary bg-secondary p-4 text-sm text-primary',
         isDraggingOver && 'bg-[#16a34a]',
       )}
       onClick={handleClick}
     >
       {isDraggingOver ? (
-        <div className="text-md m-auto flex flex-col gap-8">
-          <Upload className="h-32 w-32" />
+        <div className="text-md flex h-16 flex-col items-center">
+          <Upload />
         </div>
       ) : (
-        <div className="text-md m-auto flex flex-col gap-8">
-          <div className="flex gap-4">
+        <div className="text-md flex h-16 flex-col items-center justify-center">
+          <div className="mb-2 flex items-center gap-4">
             <p>
               {t('servers.firstTime.guidForm.title')}:{' '}
               <code className="rounded-md bg-black p-1 text-primary">server.key</code>
             </p>
-            <Upload />
           </div>
-          <div className="flex gap-2">
+          <div className="flex items-center">
             <p>{t('servers.firstTime.guidForm.click')}</p>
-            <Search />
           </div>
         </div>
       )}

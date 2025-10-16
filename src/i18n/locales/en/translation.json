@@ -61,7 +61,8 @@
           "description": "Stored using your Operating System's native credential manager.",
           "placeholder": "username",
           "title": "VU Username"
-        }
+        },
+        "hint": "* Required Field"
       },
       "loading": "Loading Users...",
       "sheet": {
@@ -300,6 +301,8 @@
       },
       "loading": "Checking if Server Key Exists",
       "redoGuid": "Please re-enter your server GUID",
+      "title": "First Time Setup",
+      "subtitle": "Import Server Key & Setup Quick Join Here",
       "step1": "Download Server Key",
       "step2": "Copy Server GUID",
       "step3": "Drag and Drop your key into this window"

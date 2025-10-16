@@ -105,7 +105,7 @@ export default function PageTransition({
   return (
     <div className="hide-scrollbar relative min-h-screen w-full overflow-y-auto">
       <div
-        className="absolute inset-0 z-0 bg-black bg-opacity-60 transition-opacity duration-700 ease-in-out"
+        className="absolute inset-0 z-0 bg-black bg-opacity-60 transition-opacity duration-500 ease-in-out"
         style={{ opacity: bgOpacity }}
       />
 

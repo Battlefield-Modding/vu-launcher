@@ -60,8 +60,9 @@
         "username": {
           "description": "Speichern Sie mit dem nativen Anmeldeinformationsmanager Ihres Betriebssystems.",
           "placeholder": "Benutzername",
-          "title": "Vu Benutzername"
-        }
+          "title": "VU Benutzername"
+        },
+        "hint": "* Pflichtfeld"
       },
       "loading": "Benutzer laden ...",
       "sheet": {
@@ -300,6 +301,8 @@
       },
       "loading": "Überprüfen Sie, ob der Serverschlüssel vorliegt",
       "redoGuid": "Bitte geben Sie Ihre Server-GUID erneut ein",
+      "title": "Ersteinrichtung",
+      "subtitle": "Import des Serverschlüssels und Einrichtung von Quick Join",
       "step1": "Laden Sie den Serverschlüssel von herunter",
       "step2": "Kopieren Sie den Server GUID von oben",
       "step3": "Ziehen Sie und lassen Sie Ihre Taste in dieses Fenster ab"
