@@ -77,9 +77,11 @@ export default function PlayerCredentialsSheet() {
           <PlayerCredentialsForm setSheetOpen={setSheetOpen} />
         </div>
 
-        <SheetFooter className="absolute bottom-4 right-4 m-0 p-0">
+        <SheetFooter className="absolute bottom-4 left-4 m-0 p-0">
           <SheetClose asChild>
-            <Button variant="outline">Close</Button>
+            <Button className="w-24" variant="outline">
+              Back
+            </Button>
           </SheetClose>
         </SheetFooter>
       </SheetContent>
