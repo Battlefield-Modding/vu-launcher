@@ -255,7 +255,7 @@ export function Onboarding() {
   // Shared Error Content (post-reveal)
   const errorContent = (
     <div className="flex h-screen flex-col items-center justify-center gap-4 p-4">
-      <img src={vuIconRed} alt="VU Logo" className="mb-4 h-16 w-16 animate-pulse" />
+      <img src={vuIconRed} alt="VU Logo" className="animate-pulse mb-4 h-16 w-16" />
       <AlertCircle className="h-8 w-8 text-destructive" />
       <div className="text-center">
         <h1 className="text-2xl font-semibold">{t('onboarding.error')}</h1>
@@ -272,9 +272,9 @@ export function Onboarding() {
       <img
         src={vuIconRed}
         alt="VU Logo"
-        className="mb-4 h-16 w-16 animate-ping" // Subtle ping instead of spin for loading
+        className="animate-ping mb-4 h-16 w-16" // Subtle ping instead of spin for loading
       />
-      <Loader className="h-8 w-8 animate-spin text-primary" />
+      <Loader className="animate-spin h-8 w-8 text-primary" />
       <h1 className="text-xl font-semibold">{t('onboarding.loading')}</h1>
     </div>
   )
@@ -379,7 +379,7 @@ export function Onboarding() {
                               disabled={isVerifying}
                             >
                               {isVerifying ? (
-                                <Loader className="mr-1 h-3 w-3 animate-spin" />
+                                <Loader className="animate-spin mr-1 h-3 w-3" />
                               ) : (
                                 <CheckCircle className="mr-1 h-3 w-3" />
                               )}
@@ -412,7 +412,7 @@ export function Onboarding() {
                           disabled={isVerifying}
                         >
                           {isVerifying ? (
-                            <Loader className="mr-1 h-4 w-4 animate-spin" />
+                            <Loader className="animate-spin mr-1 h-4 w-4" />
                           ) : (
                             <CheckCircle className="mr-1 h-4 w-4" />
                           )}
