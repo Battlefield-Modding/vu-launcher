@@ -253,7 +253,7 @@ pub async fn download_game<R: Runtime>(
 ) -> Result<(), String> {
     use std::time::{Duration as StdDuration, Instant};
 
-    use crate::preferences::set_default_preferences;
+    use crate::{copy_vu_prod_to_folder, preferences::set_default_preferences};
 
     let client = Client::builder()
         .timeout(StdDuration::from_secs(30))
@@ -784,5 +784,8 @@ pub async fn download_game<R: Runtime>(
         "Download completed successfully in {:.1}s total",
         download_start.elapsed().as_secs_f64()
     );
+
+    copy_vu_prod_to_folder(String::from(install_path)).await;
+
     Ok(())
 }
