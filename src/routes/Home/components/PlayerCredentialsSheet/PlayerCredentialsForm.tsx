@@ -27,7 +27,7 @@ const formSchema = z.object({
   password: z.string().min(2).max(50),
 })
 
-export default function PlayerCredentialsForm({ setSheetOpen }: { setSheetOpen: any }) {
+export function PlayerCredentialsForm({ setSheetOpen }: { setSheetOpen: any }) {
   const queryClient = useQueryClient()
   const { pathname } = useLocation()
   const navigate = useNavigate()

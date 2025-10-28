@@ -11,7 +11,7 @@ import {
 import { Button } from '@/components/ui/button'
 
 import { Loader } from 'lucide-react'
-import { PlayerCredentialsForm } from './PlayerCredentialsForm'
+import { PlayerCredentialsForm } from '@/routes/Home/components/PlayerCredentialsSheet/PlayerCredentialsForm'
 import { useState } from 'react'
 import { doesCredentialsExist } from '@/api'
 import clsx from 'clsx'
@@ -19,7 +19,7 @@ import { useQuery } from '@tanstack/react-query'
 import { QueryKey, STALE } from '@/config/config'
 import { useTranslation } from 'react-i18next'
 
-export default function PlayerCredentialsSheet() {
+export function OnboardingCredentialsSheet() {
   const [sheetOpen, setSheetOpen] = useState(false)
   const { t } = useTranslation()
 
@@ -51,8 +51,12 @@ export default function PlayerCredentialsSheet() {
 
   return (
     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-      <SheetTrigger className="ml-auto">
-        <div className={clsx('flex text-xs text-blue-500 hover:text-blue-400')}>
+      <SheetTrigger className="flex w-full">
+        <div
+          className={clsx(
+            'inline-flex h-9 w-full items-center justify-center gap-2 whitespace-nowrap rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
+          )}
+        >
           {credsExist
             ? t('home.playerCredentials.sheet.addUser')
             : t('home.playerCredentials.sheet.login')}

@@ -16,7 +16,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { QueryKey, routes, STALE } from '@/config/config'
 import { open } from '@tauri-apps/plugin-dialog'
 import { toast } from 'sonner'
-import PlayerCredentialsSheet from '@/routes/Home/components/PlayerCredentialsSheet/PlayerCredentialsSheet'
+import { OnboardingCredentialsSheet } from './components/OnboardingCredentialsSheet'
 import { useTranslation } from 'react-i18next'
 import { LanguageSelector } from '@/routes/Settings/components/LanguageSelector'
 import { useNavigate } from 'react-router'
@@ -95,7 +95,7 @@ export function Onboarding() {
       case 0:
         return data?.vuProduction && data?.vuDevelopment
       case 1:
-        return isActivated
+        return true
       case 2:
         return true
       default:
@@ -103,7 +103,7 @@ export function Onboarding() {
     }
   }
 
-  const nextStep = () => {
+  const nextStep = async () => {
     if (isStepCompleted()) {
       if (currentStep < 2) {
         setCurrentStep((prev) => prev + 1)
@@ -121,6 +121,15 @@ export function Onboarding() {
     toast(t('onboarding.toast.activateBF3'))
     activateBf3LSX()
     setIsActivated(true)
+  }
+
+  async function completeOnboarding() {
+    const onboardingFinished = await finishOnboarding()
+    if (onboardingFinished) {
+      navigate(routes.HOME)
+    } else {
+      toast(t('onboarding.failure', 'Onboarding could not be completed'))
+    }
   }
 
   const { vuProduction, vuDevelopment } = data || { vuProduction: false, vuDevelopment: false }
@@ -291,24 +300,7 @@ export function Onboarding() {
                     </div>
                   </div>
                   <CardContent className="max-h-[300px] space-y-4 overflow-y-auto p-0">
-                    <PlayerCredentialsSheet />
-                    <Button
-                      variant="default"
-                      size="lg"
-                      className="w-full"
-                      onClick={async (e) => {
-                        e.preventDefault()
-                        const onboardingFinished = await finishOnboarding()
-                        if (onboardingFinished) {
-                          navigate(routes.HOME)
-                        } else {
-                          toast(t('onboarding.failure', 'Onboarding could not be completed'))
-                        }
-                      }}
-                    >
-                      <CheckCircle className="mr-2 h-4 w-4" />
-                      {t('onboarding.button.complete', 'Complete Onboarding')}
-                    </Button>
+                    <OnboardingCredentialsSheet />
                   </CardContent>
                 </Card>
               </div>
@@ -335,7 +327,7 @@ export function Onboarding() {
             <button
               key={index}
               type="button"
-              onClick={() => {
+              onClick={async () => {
                 if (index <= currentStep || index === 0) {
                   setCurrentStep(index)
                 }
@@ -355,12 +347,14 @@ export function Onboarding() {
         </div>
 
         <Button
-          variant={currentStep === 2 ? 'default' : 'outline'}
+          variant={currentStep > 1 ? 'default' : 'outline'}
           size="sm"
-          onClick={currentStep === 2 ? undefined : nextStep}
-          disabled={currentStep !== 2 && !isStepCompleted()}
-          className={cn('w-auto transition-colors', currentStep < 2 ? 'h-10 w-10 p-0' : 'px-4')}
+          onClick={currentStep === 2 ? completeOnboarding : nextStep}
+          disabled={currentStep > 1 && !isStepCompleted()}
+          className={cn('w-auto transition-colors', currentStep < 1 ? 'h-10 w-10 p-0' : 'px-4')}
         >
+          {currentStep === 1 && <>{t('onboarding.button.skip')}</>}
+
           {currentStep === 2 ? (
             <>
               <CheckCircle className="mr-2 h-4 w-4" />

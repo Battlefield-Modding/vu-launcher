@@ -1,4 +1,7 @@
 {
+  "button": {
+    "back": "Back"
+  },
   "home": {
     "error": "Error loading home route",
     "loading": "Loading home route",
@@ -229,6 +232,7 @@
       "complete": "Skip / Complete Onboarding",
       "continue": "Skip / Continue",
       "refresh": "Refresh Check",
+      "skip": "Skip",
       "verify": "Verify"
     },
     "error": "Failed to load Onboarding component",
