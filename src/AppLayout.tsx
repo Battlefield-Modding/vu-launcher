@@ -25,7 +25,6 @@ export function AppLayout() {
   const location = useLocation()
   const navigate = useNavigate()
 
-  const [prevPath, setPrevPath] = useState(location.pathname)
   const [direction, setDirection] = useState<'up' | 'down'>('up')
   const prevPathRef = useRef(location.pathname)
 

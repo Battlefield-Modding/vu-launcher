@@ -46,7 +46,7 @@ export function Servers() {
 
   if (!data?.serverGuidExists) {
     return (
-      <div className="flex h-full min-h-screen flex-col items-center justify-center gap-8">
+      <div className="ml-[56px] flex h-full min-h-screen flex-col items-center justify-center gap-8">
         <h1 className="text-2xl">{t('servers.firstTime.redoGuid')}:</h1>
         <LocalServerGuidForm guid="" />
       </div>

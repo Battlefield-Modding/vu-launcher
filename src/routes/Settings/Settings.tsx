@@ -42,7 +42,7 @@ export default function Settings() {
   }
 
   return (
-    <div className="flex min-h-[100vh] flex-col">
+    <div className="ml-[56px] flex min-h-[100vh] flex-col items-center">
       <div className="flex max-w-screen-md flex-col gap-4 rounded-md p-8 text-primary">
         <h1 className="text-center text-4xl">{t('settings.title')}</h1>
 

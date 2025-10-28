@@ -58,7 +58,7 @@ export default function Home() {
     <>
       <div
         data-tauri-drag-region
-        className="relative z-10 flex min-h-[100vh] flex-col items-center justify-center"
+        className="relative z-10 ml-[56px] flex min-h-[100vh] flex-col items-center justify-center"
       >
         <div
           className={clsx(
