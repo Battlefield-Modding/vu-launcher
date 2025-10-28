@@ -14,7 +14,6 @@ import vuIconRed from '@/assets/vu-icon-red.svg' // Animated logo import
 import { activateBf3LSX, finishOnboarding } from '@/api'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { QueryKey, routes, STALE } from '@/config/config'
-import { InstallVU } from '@/routes/Home/components/InstallVU/InstallVU'
 import { open } from '@tauri-apps/plugin-dialog'
 import { toast } from 'sonner'
 import PlayerCredentialsSheet from '@/routes/Home/components/PlayerCredentialsSheet/PlayerCredentialsSheet'
@@ -23,87 +22,19 @@ import { LanguageSelector } from '@/routes/Settings/components/LanguageSelector'
 import { useNavigate } from 'react-router'
 import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
-import { listen } from '@tauri-apps/api/event'
 import { invoke } from '@tauri-apps/api/core'
-
-interface VuInstallStatusEvent {
-  payload: {
-    installing: boolean // Whether VU installation is active
-  }
-}
-
-interface VuInstallCompleteEvent {
-  payload: {
-    success: boolean // Whether installation completed successfully
-    path?: string // Optional: User-decided base install path (for verification)
-  }
-}
+import { InstallStep } from './components/InstallStep'
 
 export function Onboarding() {
   const { t } = useTranslation()
   const [currentStep, setCurrentStep] = useState(0)
   const [isActivated, setIsActivated] = useState(false)
-  const [isVerifying, setIsVerifying] = useState(false)
+
   const [showOnboarding, setShowOnboarding] = useState(false) // Controls reveal of onboarding steps
-  const [isInstalling, setIsInstalling] = useState(false) // Tracks installation state from InstallVU events
+
   const [selectedInstallPath, setSelectedInstallPath] = useState<string | null>(null) // Tracks user-selected base install path
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-
-  // Listen for VU install status events to hide/show header when installing
-  useEffect(() => {
-    let unlistenStatus: (() => void) | null = null
-    const setupStatusListener = async () => {
-      unlistenStatus = await listen<VuInstallStatusEvent>('vu-install-status', (event) => {
-        setIsInstalling(event.payload.installing)
-        if (event.payload.installing) {
-          console.log('VU install started – hiding download header')
-        } else {
-          console.log('VU install ended – showing download header')
-        }
-      })
-    }
-    setupStatusListener().catch(console.error)
-
-    return () => {
-      if (unlistenStatus) {
-        unlistenStatus()
-      }
-    }
-  }, [])
-
-  // Listen for VU install complete event to handle advancement and base path
-  useEffect(() => {
-    let unlistenComplete: (() => void) | null = null
-    const setupCompleteListener = async () => {
-      unlistenComplete = await listen<VuInstallCompleteEvent>(
-        'vu-install-complete',
-        async (event) => {
-          if (event.payload.success) {
-            console.log('VU install completed successfully – advancing to next step')
-            setSelectedInstallPath(event.payload.path || null) // Base path from backend
-            // Invalidate and refetch immediately to verify custom path
-            await queryClient.invalidateQueries({
-              queryKey: [QueryKey.IsVuInstalled],
-              refetchType: 'all',
-            })
-            // Manual refetch to ensure update
-            queryClient.refetchQueries({ queryKey: [QueryKey.IsVuInstalled] })
-          } else {
-            console.log('VU install failed – no advancement')
-            setSelectedInstallPath(null)
-          }
-        },
-      )
-    }
-    setupCompleteListener().catch(console.error)
-
-    return () => {
-      if (unlistenComplete) {
-        unlistenComplete()
-      }
-    }
-  }, [queryClient])
 
   // Intro Animation: Show logo for 3 seconds, then reveal onboarding
   useEffect(() => {
@@ -122,7 +53,7 @@ export function Onboarding() {
         const customBase = selectedInstallPath || undefined
 
         // Call new Rust command (handles all path logic and checks internally)
-        const isInstalled = await invoke<boolean, string>('is_vu_installed', { customBase })
+        const isInstalled = await invoke<boolean>('is_vu_installed', { customBase })
 
         console.log(`VU installed check: ${isInstalled} (custom base: ${customBase || 'default'})`)
 
@@ -158,37 +89,6 @@ export function Onboarding() {
       }
     }
   }, [data, currentStep, showOnboarding])
-
-  // Helper function to show verify feedback based on status
-  const showVerifyFeedback = (vuInstalled: boolean) => {
-    if (vuInstalled) {
-      toast.success(t('onboarding.verify.installed', 'Venice Unleashed is installed correctly!'))
-    } else {
-      toast.warning(
-        t(
-          'onboarding.verify.notInstalled',
-          'Venice Unleashed not found. Please install it to proceed.',
-        ),
-      )
-    }
-  }
-
-  const handleVerifyInstall = async () => {
-    setIsVerifying(true)
-    try {
-      await refetch() // Use refetch for immediate update
-      if (data) {
-        showVerifyFeedback(data.vuProduction)
-      } else {
-        toast.error(t('onboarding.verify.error', 'Failed to verify installation status'))
-      }
-    } catch (err) {
-      console.error('Verify error:', err)
-      toast.error(t('onboarding.verify.error', 'Failed to verify installation status'))
-    } finally {
-      setIsVerifying(false)
-    }
-  }
 
   const isStepCompleted = () => {
     switch (currentStep) {
@@ -321,103 +221,13 @@ export function Onboarding() {
             style={{ transform: `translateX(-${currentStep * 100}%)` }}
           >
             {/* Step 0: Install Panel - Single Card for Download Venice Unleashed */}
-            <section className="flex w-full flex-shrink-0 flex-col items-center justify-center p-4">
-              <div className="flex w-full max-w-sm flex-1 flex-col items-center justify-center">
-                {!vuProduction || !vuDevelopment ? (
-                  <Card className="w-full max-w-md rounded-md border-border/50 p-4 shadow-md">
-                    {!isInstalling && (
-                      <div className="flex flex-col items-center space-x-3 text-center">
-                        <Download className="m-4 h-12 w-12 flex-shrink-0 text-primary" />
-                        <div>
-                          <h3 className="text-lg font-semibold">
-                            {t('onboarding.install.title', 'Download Venice Unleashed')}
-                          </h3>
-                          <p className="text-sm text-muted-foreground">
-                            {t(
-                              'onboarding.install.description',
-                              'Download the latest version of Venice Unleashed',
-                            )}
-                          </p>
-                        </div>
-                      </div>
-                    )}
-                    <CardContent className="relative p-0">
-                      <div className="space-y-4 p-4">
-                        <InstallVU />
-                      </div>
-                      {!isInstalling && (
-                        <div>
-                          <div className="absolute bottom-4 right-4">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-8 w-8 p-0"
-                              onClick={() =>
-                                toast(
-                                  t(
-                                    'onboarding.toast.learnMore',
-                                    'Learn more about Venice Unleashed',
-                                  ),
-                                )
-                              }
-                            >
-                              ?
-                            </Button>
-                          </div>
-                          <div className="flex justify-center p-4 pt-0">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="min-w-[100px]"
-                              onClick={handleVerifyInstall}
-                              disabled={isVerifying}
-                            >
-                              {isVerifying ? (
-                                <Loader className="animate-spin mr-1 h-3 w-3" />
-                              ) : (
-                                <CheckCircle className="mr-1 h-3 w-3" />
-                              )}
-                              {t('onboarding.button.verify', 'Verify')}
-                            </Button>
-                          </div>
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
-                ) : (
-                  <Card className="w-full max-w-md rounded-md border-border/50 p-4 shadow-md">
-                    <div className="mb-4 flex items-center space-x-3">
-                      <CheckCircle className="h-12 w-12 flex-shrink-0 text-green-500" />
-                      <div>
-                        <h3 className="text-lg font-semibold text-green-600">
-                          {t('onboarding.install.complete', 'Installation Complete!')}
-                        </h3>
-                        <p className="text-sm text-muted-foreground">
-                          Venice Unleashed is ready. VU is set up successfully.
-                        </p>
-                      </div>
-                    </div>
-                    <CardContent className="p-0">
-                      <div className="flex justify-center p-4 pt-0">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={handleVerifyInstall}
-                          disabled={isVerifying}
-                        >
-                          {isVerifying ? (
-                            <Loader className="animate-spin mr-1 h-4 w-4" />
-                          ) : (
-                            <CheckCircle className="mr-1 h-4 w-4" />
-                          )}
-                          {t('onboarding.button.refresh', 'Refresh Check')}
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                )}
-              </div>
-            </section>
+            <InstallStep
+              vuProduction={vuProduction}
+              vuDevelopment={vuDevelopment}
+              setSelectedInstallPath={setSelectedInstallPath}
+              refetch={refetch}
+              data={data}
+            />
 
             {/* Step 1: Activate Panel - Single Card for List + Button */}
             <section className="flex w-full flex-shrink-0 flex-col items-center justify-center p-4">
