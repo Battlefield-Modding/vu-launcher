@@ -20,7 +20,6 @@ import { toast } from 'sonner'
 import PlayerCredentialsSheet from '@/routes/Home/components/PlayerCredentialsSheet/PlayerCredentialsSheet'
 import { useTranslation } from 'react-i18next'
 import { LanguageSelector } from '@/routes/Settings/components/LanguageSelector'
-import { useSidebar } from '../../components/ui/sidebar'
 import { useNavigate } from 'react-router'
 import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
@@ -49,12 +48,7 @@ export function Onboarding() {
   const [isInstalling, setIsInstalling] = useState(false) // Tracks installation state from InstallVU events
   const [selectedInstallPath, setSelectedInstallPath] = useState<string | null>(null) // Tracks user-selected base install path
   const navigate = useNavigate()
-  const sidebar = useSidebar()
   const queryClient = useQueryClient()
-
-  useEffect(() => {
-    sidebar.toggleSidebar()
-  }, [])
 
   // Listen for VU install status events to hide/show header when installing
   useEffect(() => {
@@ -496,7 +490,6 @@ export function Onboarding() {
                         e.preventDefault()
                         const onboardingFinished = await finishOnboarding()
                         if (onboardingFinished) {
-                          sidebar.toggleSidebar()
                           navigate(routes.HOME)
                         } else {
                           toast(t('onboarding.failure', 'Onboarding could not be completed'))

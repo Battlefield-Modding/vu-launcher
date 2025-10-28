@@ -40,6 +40,11 @@ export function Menu() {
     }
   }, [])
 
+  // Hide sidebar if in onboarding route
+  if (pathname && pathname.includes(routes.ONBOARDING)) {
+    return <></>
+  }
+
   const normalizePath = (path: string) => {
     const parts = path.split('/')
     const base = parts[1] || ''
