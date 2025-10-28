@@ -782,6 +782,9 @@
     "checkFailed": "Failed to check for updates",
     "checking": "Checking for updates",
     "close": "Close",
+    "download": "Download",
+    "downloadComplete": "Download complete. Installing automatically in ",
+    "downloading": "Downloading Update",
     "header": "Installing update",
     "ignore": "Ignore Update",
     "install": "New update found! Install now?"
