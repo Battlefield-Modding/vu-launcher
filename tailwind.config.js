@@ -89,13 +89,13 @@ export default {
           },
         },
       },
-    },
-    animation: {
+      animation: {
       'slide-up-in': 'slide-up-in 0.5s ease-in-out forwards',
       'slide-up-out': 'slide-up-out 0.5s ease-in-out forwards',
       'slide-down-in': 'slide-down-in 0.5s ease-in-out forwards',
       'slide-down-out': 'slide-down-out 0.5s ease-in-out forwards',
       'breathe-zoom': 'breathe-zoom 4s ease-in-out infinite forwards',
+      },
     },
   },
   plugins: [require('tailwindcss-animate')],
