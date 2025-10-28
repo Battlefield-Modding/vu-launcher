@@ -53,9 +53,5 @@ export function Servers() {
     )
   }
 
-  return (
-    <div className="m-auto flex min-h-[100vh] flex-col justify-center">
-      <Outlet />
-    </div>
-  )
+  return <Outlet />
 }

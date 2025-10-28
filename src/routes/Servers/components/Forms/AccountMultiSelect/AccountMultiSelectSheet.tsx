@@ -73,7 +73,7 @@ export function ChooseAccountSheet({ loadoutName }: { loadoutName: string }) {
       <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
         <SheetTrigger>
           <TooltipWrapper text={t('servers.loadouts.loadout.multiAccount.sheet.trigger')}>
-            <div className="flex items-center justify-between gap-2 rounded-md bg-green-800 p-4 text-xl text-primary hover:cursor-pointer hover:bg-green-800/80">
+            <div className="flex items-center justify-between gap-2 rounded-md bg-green-700 p-4 text-xl text-primary hover:cursor-pointer hover:bg-green-700/80">
               <Server />
               <UserCheck />
             </div>

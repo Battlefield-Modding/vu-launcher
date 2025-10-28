@@ -23,6 +23,7 @@ import clsx from 'clsx'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
 import { TooltipWrapper } from '@/components/TooltipWrapper'
+import { DeleteLoadoutDialog } from './DeleteLoadoutDialog'
 
 export function Loadout() {
   let { loadoutName } = useParams()
@@ -109,6 +110,7 @@ export function Loadout() {
         <div onClick={handleRefreshLoadout} className="w-fit">
           <RefreshLoadoutTooltip />
         </div>
+        <DeleteLoadoutDialog name={loadoutName} />
       </div>
 
       <div className="m-auto mb-8 mt-8">
@@ -147,7 +149,7 @@ export function Loadout() {
           <TooltipWrapper text={t('servers.loadouts.loadout.startServer')}>
             <div
               onClick={handleServer}
-              className="rounded-md bg-green-800 p-4 text-xl text-primary hover:cursor-pointer hover:bg-green-800/80"
+              className="rounded-md bg-green-700 p-4 text-xl text-primary hover:cursor-pointer hover:bg-green-700/80"
             >
               <Server />
             </div>
@@ -155,7 +157,7 @@ export function Loadout() {
           <TooltipWrapper text={t('servers.loadouts.loadout.startServerAndClient')}>
             <div
               onClick={handlePlay}
-              className="flex items-center justify-center gap-2 rounded-md bg-green-800 p-4 text-xl text-primary hover:cursor-pointer hover:bg-green-800/80"
+              className="flex items-center justify-center gap-2 rounded-md bg-green-700 p-4 text-xl text-primary hover:cursor-pointer hover:bg-green-700/80"
             >
               <Server />
               <User />
