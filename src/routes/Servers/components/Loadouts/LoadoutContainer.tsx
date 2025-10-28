@@ -89,7 +89,7 @@ export function LoadoutContainer() {
         <Outlet />
       </div>
 
-      <div className="mb-0">
+      <div className="mb-16">
         <CreateLoadoutSheet />
         <UploadLoadoutSheet />
       </div>
