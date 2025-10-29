@@ -197,9 +197,7 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
                   )}
                 </SelectContent>
               </Select>
-              <FormDescription className="mt-1 text-sm text-muted-foreground">
-                {t('home.playVu.form.account.description', { defaultValue: '' })}
-              </FormDescription>
+              <FormDescription className="mt-1 text-sm text-muted-foreground"></FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -241,9 +239,7 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
                   </div>
                 </SelectContent>
               </Select>
-              <FormDescription className="mt-1 text-sm text-muted-foreground">
-                {t('home.playVu.form.server.description', { defaultValue: '' })}
-              </FormDescription>
+              <FormDescription className="mt-1 text-sm text-muted-foreground"></FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -272,9 +268,7 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
                 </FormControl>
               </div>
               <FormDescription className="text-sm text-muted-foreground">
-                {t('home.playVu.form.devBranch.description', {
-                  defaultValue: 'Use development branch for updates.',
-                })}
+                {t('home.playVu.form.devBranch.description')}
               </FormDescription>
               <FormMessage />
             </FormItem>

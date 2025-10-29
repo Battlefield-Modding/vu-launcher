@@ -32,6 +32,7 @@
           }
         },
         "devBranch": {
+          "description": "For mods using legacy UI with CEF",
           "title": "Use Dev Branch"
         },
         "error": "Error loading Play VU Form",
