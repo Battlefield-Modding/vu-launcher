@@ -6,6 +6,7 @@ import { FirstTimeSetup } from './components/Forms/FirstTimeSetup/FirstTimeSetup
 import LocalServerGuidForm from '../Settings/components/LocalServerGuidForm'
 import { useTranslation } from 'react-i18next'
 import { Outlet } from 'react-router'
+import { AnimatedLayout } from '@/components/AnimatedLayout'
 
 export function Servers() {
   const { t } = useTranslation()
@@ -24,7 +25,7 @@ export function Servers() {
   if (isPending) {
     return (
       <div className="flex h-full min-h-screen flex-col items-center justify-center gap-4">
-        <Loader className="animate-spin h-12 w-12" />
+        <Loader className="h-12 w-12 animate-spin" />
         <h1 className="text-xl">{t('servers.firstTime.loading')}</h1>
       </div>
     )
@@ -53,5 +54,9 @@ export function Servers() {
     )
   }
 
-  return <Outlet />
+  return (
+    <AnimatedLayout>
+      <Outlet />
+    </AnimatedLayout>
+  )
 }
