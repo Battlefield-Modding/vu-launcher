@@ -1,5 +1,5 @@
 import { getAllLoadoutNames } from '@/api'
-import { QueryKey, STALE } from '@/config/config'
+import { QueryKey, routes, STALE } from '@/config/config'
 import { useQuery } from '@tanstack/react-query'
 import { Loader } from 'lucide-react'
 import { CreateLoadoutSheet } from '../Forms/CreateLoadout/CreateLoadoutSheet'
@@ -60,7 +60,7 @@ export function LoadoutContainer() {
       <div className="mt-16">
         <Select
           onValueChange={(e) => {
-            navigate(`./${e}`)
+            navigate(`${routes.SERVERS}/${e}`)
           }}
         >
           <SelectTrigger className="w-fit">
