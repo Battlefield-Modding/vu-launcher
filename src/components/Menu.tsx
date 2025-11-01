@@ -1,6 +1,6 @@
 import { Book, Home, Loader, Server, Settings } from 'lucide-react'
 import vuIconRed from '@/assets/vu-icon-red.svg'
-import { Link, useLocation, useNavigate } from 'react-router'
+import { Link, useLocation } from 'react-router'
 import { QueryKey, routes, STALE } from '@/config/config'
 import clsx from 'clsx'
 import { useTranslation } from 'react-i18next'
@@ -14,25 +14,16 @@ const topItems = [
   { title: 'mods', url: routes.MODS, icon: Book },
 ]
 
-const routeOrder = {
-  [routes.HOME]: 0,
-  [routes.SERVERS]: 1,
-  [routes.MODS]: 2,
-  [routes.SETTINGS]: 3,
-}
-
 const bottomItems = [{ title: 'settings', url: routes.SETTINGS, icon: Settings }]
 
 export const menuOrder = [...topItems, ...bottomItems].map((item) => item.url)
 
 export function Menu() {
-  const location = useLocation()
-  const pathname = location.pathname
+  const { pathname } = useLocation()
   const { t } = useTranslation()
   const [bgVisible, setBgVisible] = useState(false)
   const [iconsVisible, setIconsVisible] = useState(false)
   const isNavigating = useRef(false)
-  const navigate = useNavigate()
 
   const { data } = useQuery({
     queryKey: [QueryKey.GetAllLoadoutNames],
@@ -60,27 +51,17 @@ export function Menu() {
     return '/' + base || path
   }
 
-  async function handleNavigation(url: string) {
-    const targetPath = normalizePath(url)
-    const currentPath = normalizePath(pathname)
-    if (targetPath === currentPath || isNavigating.current) {
+  const handleNavigation = (url: string) => {
+    const normalizedUrl = normalizePath(url)
+    const normalizedPathname = normalizePath(pathname)
+    if (normalizedUrl === normalizedPathname || isNavigating.current) {
       console.log('Navigation ignored:', { url, pathname, isNavigating: isNavigating.current })
       return
     }
     isNavigating.current = true
-    await navigate(url, {
-      viewTransition: true,
-      state: {
-        direction: getDirection(currentPath, targetPath),
-      },
-    })
     setTimeout(() => {
       isNavigating.current = false
-    }, 200) // Match animation duration
-  }
-
-  function getDirection(urlOne, urlTwo) {
-    return routeOrder[urlOne] < routeOrder[urlTwo] ? 1 : -1
+    }, 700) // Match animation duration
   }
 
   if (!data) return <Loader />
@@ -95,20 +76,21 @@ export function Menu() {
       <div
         key={item.title}
         className={clsx(
-          'group relative flex w-full justify-center transition-transform duration-500 ease-out',
+          'group relative flex w-full justify-center transition-opacity transition-transform duration-500 ease-out',
           iconsVisible ? 'translate-x-0 opacity-100' : '-translate-x-16 opacity-0',
         )}
         style={{ transitionDelay: delay }}
       >
-        <div
+        <Link
+          to={url}
           onClick={() => handleNavigation(url)}
           className={clsx(
-            'flex h-12 w-12 cursor-pointer items-center justify-center rounded-lg transition-colors hover:bg-white hover:bg-opacity-35',
+            'flex h-12 w-12 items-center justify-center rounded-lg transition-colors hover:bg-white hover:bg-opacity-35',
             isActive && 'bg-white bg-opacity-25',
           )}
         >
           <item.icon className="h-6 w-6 text-white" />
-        </div>
+        </Link>
 
         <span className="pointer-events-none absolute left-full top-1/2 ml-2 -translate-y-1/2 whitespace-nowrap rounded bg-black px-2 py-1 text-sm text-white opacity-0 transition-opacity group-hover:opacity-100">
           {t(`sidebar.routes.${item.title}`)}

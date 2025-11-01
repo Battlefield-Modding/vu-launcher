@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next'
 import { useEffect, useState, useRef } from 'react'
 
 import clsx from 'clsx'
-import { AnimatedLayout } from '@/components/AnimatedLayout'
 
 export default function Home() {
   const { t } = useTranslation()
@@ -38,7 +37,7 @@ export default function Home() {
       <div className="flex min-h-[100vh] items-center justify-center bg-gradient-to-br from-gray-900 to-black">
         <div className="text-center">
           <h1 className="mb-4 text-2xl font-bold text-white">{t('home.loading')}</h1>
-          <Loader className="mx-auto h-8 w-8 animate-spin text-primary" />
+          <Loader className="animate-spin mx-auto h-8 w-8 text-primary" />
         </div>
       </div>
     )
@@ -56,7 +55,7 @@ export default function Home() {
   }
 
   return (
-    <AnimatedLayout>
+    <>
       <div
         data-tauri-drag-region
         className="relative z-10 ml-[56px] flex min-h-[100vh] flex-col items-center justify-center"
@@ -73,6 +72,6 @@ export default function Home() {
           <PlayVUForm preferences={data} />
         </div>
       </div>
-    </AnimatedLayout>
+    </>
   )
 }

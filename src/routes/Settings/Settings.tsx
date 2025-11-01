@@ -13,7 +13,6 @@ import { SetVuPathSheet } from './components/SetVuPath/SetVuPathSheet'
 import { CopyProdToDev } from './components/CopyProdToDev'
 import { InstallVUFromSettings } from './components/InstallVuFromSettings'
 import { Button } from '@/components/ui/button'
-import { AnimatedLayout } from '@/components/AnimatedLayout'
 
 export default function Settings() {
   const { t } = useTranslation()
@@ -43,38 +42,36 @@ export default function Settings() {
   }
 
   return (
-    <AnimatedLayout>
-      <div className="ml-[56px] flex min-h-[100vh] flex-col items-center">
-        <div className="flex max-w-screen-md flex-col gap-4 rounded-md p-8 text-primary">
-          <h1 className="text-center text-4xl">{t('settings.title')}</h1>
+    <div className="ml-[56px] flex min-h-[100vh] flex-col items-center">
+      <div className="flex max-w-screen-md flex-col gap-4 rounded-md p-8 text-primary">
+        <h1 className="text-center text-4xl">{t('settings.title')}</h1>
 
-          <div>
-            <Button
-              className="p-2 text-lg"
-              variant={'secondary'}
-              onClick={async () => await openExplorerAtLauncherInstallPath()}
-            >
-              <p>{t('settings.fileExplorer')}</p>
-              <Folder />
-            </Button>
-            <ActivateBF3Sheet />
-          </div>
-
-          <div>
-            <LanguageSelector />
-          </div>
-
-          <MultiAccountToggle data={data} />
-          <CheckForUpdatesToggle data={data} />
-          {data.automatically_check_for_updates && <AutomaticallyUpdateToggle data={data} />}
-          <SetVuPathSheet preferences={data} />
-          <div>
-            <InstallVUFromSettings />
-            <CopyProdToDev />
-          </div>
-          <LocalServerGuidForm guid={data.server_guid} />
+        <div>
+          <Button
+            className="p-2 text-lg"
+            variant={'secondary'}
+            onClick={async () => await openExplorerAtLauncherInstallPath()}
+          >
+            <p>{t('settings.fileExplorer')}</p>
+            <Folder />
+          </Button>
+          <ActivateBF3Sheet />
         </div>
+
+        <div>
+          <LanguageSelector />
+        </div>
+
+        <MultiAccountToggle data={data} />
+        <CheckForUpdatesToggle data={data} />
+        {data.automatically_check_for_updates && <AutomaticallyUpdateToggle data={data} />}
+        <SetVuPathSheet preferences={data} />
+        <div>
+          <InstallVUFromSettings />
+          <CopyProdToDev />
+        </div>
+        <LocalServerGuidForm guid={data.server_guid} />
       </div>
-    </AnimatedLayout>
+    </div>
   )
 }
