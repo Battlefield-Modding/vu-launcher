@@ -1,7 +1,9 @@
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetDescription,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -11,6 +13,7 @@ import { useRef, useState } from 'react'
 import { LaunchArgumentForm } from './LaunchArgumentsForm'
 import { LoadoutJSON } from '@/config/config'
 import { useTranslation } from 'react-i18next'
+import { Button } from '@/components/ui/button'
 
 export function LaunchArgumentSheet({ existingLoadout }: { existingLoadout: LoadoutJSON }) {
   const [sheetOpen, setSheetOpen] = useState(false)
@@ -56,6 +59,13 @@ export function LaunchArgumentSheet({ existingLoadout }: { existingLoadout: Load
           existingLoadout={existingLoadout}
           searchRef={searchRef}
         />
+        <SheetFooter className="fixed bottom-4 left-4 m-0 p-0">
+          <SheetClose asChild>
+            <Button className="w-24" variant="outline">
+              {t('button.back')}
+            </Button>
+          </SheetClose>
+        </SheetFooter>
       </SheetContent>
     </Sheet>
   )

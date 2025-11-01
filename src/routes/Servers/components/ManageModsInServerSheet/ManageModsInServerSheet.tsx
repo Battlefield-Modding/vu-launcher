@@ -1,4 +1,12 @@
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet'
 import { LoadoutJSON } from '@/config/config'
 import { Book } from 'lucide-react'
 import { useState } from 'react'
@@ -6,9 +14,12 @@ import { useState } from 'react'
 import { CacheModContainer } from './mods/CacheModContainer'
 import { LoadoutModContainer } from './mods/LoadoutModContainer'
 import ImportModsSheet from '@/routes/Mods/components/ImportModsSheet/ImportModsSheet'
+import { Button } from '@/components/ui/button'
+import { useTranslation } from 'react-i18next'
 
 export function ManageModsInServerSheet({ loadout }: { loadout: LoadoutJSON }) {
   const [sheetOpen, setSheetOpen] = useState(false)
+  const { t } = useTranslation()
 
   return (
     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
@@ -28,6 +39,13 @@ export function ManageModsInServerSheet({ loadout }: { loadout: LoadoutJSON }) {
 
           <CacheModContainer loadout={loadout} />
         </div>
+        <SheetFooter className="fixed bottom-4 left-4 m-0 p-0">
+          <SheetClose asChild>
+            <Button className="w-24" variant="outline">
+              {t('button.back')}
+            </Button>
+          </SheetClose>
+        </SheetFooter>
       </SheetContent>
     </Sheet>
   )

@@ -27,7 +27,7 @@ export default function ServerSheet() {
           {t('home.server.sheet.trigger')}
         </div>
       </SheetTrigger>
-      <SheetContent className="content-center bg-black bg-opacity-80 p-8 [&>button:first-of-type]:hidden">
+      <SheetContent className="content-center bg-black bg-opacity-80 p-8">
         <SheetHeader>
           <SheetTitle className="text-center">{t('home.server.sheet.title')}</SheetTitle>
           <SheetDescription className="text-center">
@@ -36,10 +36,10 @@ export default function ServerSheet() {
         </SheetHeader>
         <br />
         <ServerForm setSheetOpen={setSheetOpen} />
-        <SheetFooter className="absolute bottom-4 left-4 m-0 p-0">
+        <SheetFooter className="fixed bottom-4 left-4 m-0 p-0">
           <SheetClose asChild>
             <Button className="w-24" variant="outline">
-              Back
+              {t('button.back')}
             </Button>
           </SheetClose>
         </SheetFooter>

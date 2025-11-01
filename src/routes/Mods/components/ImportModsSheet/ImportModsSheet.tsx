@@ -1,10 +1,19 @@
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet'
 import { Folder, FolderArchive, Upload } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ModFolderImport } from './ModFolderImport'
 import { ZippedModImport } from './ZippedModImport'
 import clsx from 'clsx'
+import { Button } from '@/components/ui/button'
 
 export default function ImportModsSheet({
   importToLoadout,
@@ -61,6 +70,13 @@ export default function ImportModsSheet({
         {!zipActive && (
           <ModFolderImport importToLoadout={importToLoadout} loadoutName={loadoutName} />
         )}
+        <SheetFooter className="fixed bottom-4 left-4 m-0 p-0">
+          <SheetClose asChild>
+            <Button className="w-24" variant="outline">
+              {t('button.back')}
+            </Button>
+          </SheetClose>
+        </SheetFooter>
       </SheetContent>
     </Sheet>
   )

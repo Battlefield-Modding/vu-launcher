@@ -1,4 +1,12 @@
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
@@ -73,6 +81,13 @@ export function ActivateBF3Sheet() {
             </Button>
           </div>
         </div>
+        <SheetFooter className="fixed bottom-4 left-4 m-0 p-0">
+          <SheetClose asChild>
+            <Button className="w-24" variant="outline">
+              {t('button.back')}
+            </Button>
+          </SheetClose>
+        </SheetFooter>
       </SheetContent>
     </Sheet>
   )

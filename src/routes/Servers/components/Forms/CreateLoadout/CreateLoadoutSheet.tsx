@@ -1,4 +1,12 @@
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet'
 import { Loader, Plus } from 'lucide-react'
 import { useState } from 'react'
 import { CreateLoadoutForm } from './CreateLoadoutForm'
@@ -6,6 +14,7 @@ import { QueryKey, STALE } from '@/config/config'
 import { useQuery } from '@tanstack/react-query'
 import { getModNamesInCache } from '@/api'
 import { useTranslation } from 'react-i18next'
+import { Button } from '@/components/ui/button'
 
 export function CreateLoadoutSheet() {
   const [sheetOpen, setSheetOpen] = useState(false)
@@ -51,6 +60,13 @@ export function CreateLoadoutSheet() {
         </SheetHeader>
         <br />
         <CreateLoadoutForm setSheetOpen={setSheetOpen} mods={data} />
+        <SheetFooter className="fixed bottom-4 left-4 m-0 p-0">
+          <SheetClose asChild>
+            <Button className="w-24" variant="outline">
+              {t('button.back')}
+            </Button>
+          </SheetClose>
+        </SheetFooter>
       </SheetContent>
     </Sheet>
   )
