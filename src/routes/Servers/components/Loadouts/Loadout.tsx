@@ -24,19 +24,24 @@ import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
 import { TooltipWrapper } from '@/components/TooltipWrapper'
 import { DeleteLoadoutDialog } from './DeleteLoadoutDialog'
+import { LoadoutSkeleton } from './LoadoutSkeleton'
 
 export function Loadout() {
   let { loadoutName } = useParams()
-  if (!loadoutName) {
-    return <div>No loadoutName specified...</div>
-  }
+  const { t } = useTranslation()
 
   const queryClient = useQueryClient()
-  const { t } = useTranslation()
 
   const { isPending, isError, data, error } = useQuery({
     queryKey: [QueryKey.GetLoadoutJSON, loadoutName],
-    queryFn: async (): Promise<{ preferences: UserPreferences; loadout: LoadoutJSON }> => {
+    queryFn: async (): Promise<{
+      preferences: UserPreferences | undefined
+      loadout: LoadoutJSON | undefined
+    }> => {
+      if (!loadoutName) {
+        return { preferences: undefined, loadout: undefined }
+      }
+
       const loadout = (await getLoadoutJson(loadoutName as string))[0]
       const preferences = await getUserPreferences()
 
@@ -101,6 +106,10 @@ export function Loadout() {
     } else {
       toast(`${t('servers.loadouts.loadout.toast.refreshFailure')}: ${loadoutName}`)
     }
+  }
+
+  if (loadoutName == undefined || data.preferences == undefined || data.loadout == undefined) {
+    return <LoadoutSkeleton />
   }
 
   return (

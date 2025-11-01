@@ -6,7 +6,7 @@ import { CreateLoadoutSheet } from '../Forms/CreateLoadout/CreateLoadoutSheet'
 import { UploadLoadoutSheet } from '../Forms/UploadLoadout/UploadLoadoutSheet'
 import clsx from 'clsx'
 import { useTranslation } from 'react-i18next'
-import { Outlet, useNavigate, useParams } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
 import {
   Select,
   SelectContent,
@@ -16,6 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { Loadout } from './Loadout'
 
 export function LoadoutContainer() {
   const { t } = useTranslation()
@@ -86,7 +87,7 @@ export function LoadoutContainer() {
       </div>
 
       <div className="m-auto flex w-full">
-        <Outlet />
+        <Loadout />
       </div>
 
       <div className="mb-16">
