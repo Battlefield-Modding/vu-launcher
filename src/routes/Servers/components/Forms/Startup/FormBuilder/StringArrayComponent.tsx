@@ -20,11 +20,13 @@ export function StringArrayComponent({
   keyName,
   label,
   sectionName,
+  delayIndex,
 }: {
   form: any
   keyName: any
   label: string
   sectionName: keyof StartupArgs
+  delayIndex: number
 }) {
   const fieldArray = useFieldArray({ name: `${sectionName}.${keyName}`, control: form.control })
   const [autoFocusIndex, setAutoFocusIndex] = useState(-1)
@@ -32,7 +34,7 @@ export function StringArrayComponent({
 
   const [visible, setVisible] = useState(false)
   useEffect(() => {
-    setVisible(true)
+    setTimeout(() => setVisible(true), 50)
   }, [])
 
   return (
@@ -41,7 +43,7 @@ export function StringArrayComponent({
         'flex pb-10 pt-10 transition-all duration-700 ease-out',
         visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0',
       )}
-      style={{ transitionDelay: visible ? '150ms' : '0ms' }}
+      style={{ transitionDelay: visible ? `${delayIndex * 50}ms` : '0ms' }}
     >
       <div className="flex-1">
         <FormLabel className="text-lg">{label}</FormLabel>

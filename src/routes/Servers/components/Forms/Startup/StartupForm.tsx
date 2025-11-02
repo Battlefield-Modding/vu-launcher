@@ -196,7 +196,14 @@ export function StartupForm({
         </div>
 
         {submitLoading && <LoaderComponent />}
-        <Button type="submit" className="ml-auto mr-auto mt-8 flex">
+        <Button
+          type="submit"
+          className={clsx(
+            'ml-auto mr-auto mt-8 flex transition-all duration-700 ease-out',
+            visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0',
+          )}
+          style={{ transitionDelay: visible ? `${300}ms` : '0ms' }}
+        >
           {t('servers.loadouts.loadout.startup.form.submit')}
         </Button>
       </form>

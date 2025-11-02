@@ -23,11 +23,13 @@ export function SelectComponent({
   keyName,
   label,
   sectionName,
+  index,
 }: {
   form: any
   keyName: any
   label: string
   sectionName: keyof LaunchArguments
+  index: number
 }) {
   const { t } = useTranslation()
   const [visible, setVisible] = useState(false)
@@ -46,7 +48,7 @@ export function SelectComponent({
             'flex transition-all duration-700 ease-out',
             visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0',
           )}
-          style={{ transitionDelay: visible ? '150ms' : '0ms' }}
+          style={{ transitionDelay: visible ? `${index * 50}ms` : '0ms' }}
         >
           <div className="flex-1">
             <FormLabel className="text-lg">{label}</FormLabel>

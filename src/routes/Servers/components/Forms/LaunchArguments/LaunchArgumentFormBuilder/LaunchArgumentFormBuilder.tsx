@@ -19,7 +19,7 @@ export function LaunchArgumentFormBuilder({
   const { t } = useTranslation()
   return sectionNames.map((sectionName) => {
     // @ts-expect-error
-    return Object.entries(filteredArguments[sectionName] ?? {}).map(([key, value]) => {
+    return Object.entries(filteredArguments[sectionName] ?? {}).map(([key, value], index) => {
       // @ts-expect-error
       const fieldType = defaultLaunchArgumentInputTypes[sectionName][key]
 
@@ -32,6 +32,7 @@ export function LaunchArgumentFormBuilder({
             sectionName={sectionName}
             form={form}
             keyName={key}
+            index={index}
           />
         )
       }
@@ -44,6 +45,7 @@ export function LaunchArgumentFormBuilder({
             label={label}
             form={form}
             keyName={key}
+            index={index}
           />
         )
       }
@@ -55,6 +57,7 @@ export function LaunchArgumentFormBuilder({
             label={label}
             form={form}
             keyName={key}
+            index={index}
           />
         )
       }
@@ -66,6 +69,7 @@ export function LaunchArgumentFormBuilder({
             label={label}
             form={form}
             keyName={key}
+            index={index}
           />
         )
       }
@@ -77,6 +81,7 @@ export function LaunchArgumentFormBuilder({
             label={label}
             form={form}
             keyName={key}
+            index={index}
           />
         )
       }

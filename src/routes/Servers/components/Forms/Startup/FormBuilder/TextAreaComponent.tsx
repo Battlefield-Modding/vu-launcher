@@ -17,15 +17,17 @@ export function TextAreaComponent({
   keyName,
   label,
   sectionName,
+  index,
 }: {
   form: any
   keyName: any
   label: string
   sectionName: keyof StartupArgs | keyof LaunchArguments
+  index: number
 }) {
   const [visible, setVisible] = useState(false)
   useEffect(() => {
-    setVisible(true)
+    setTimeout(() => setVisible(true), 50)
   }, [])
 
   return (
@@ -39,7 +41,7 @@ export function TextAreaComponent({
             'transition-all duration-700 ease-out',
             visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0',
           )}
-          style={{ transitionDelay: visible ? '150ms' : '0ms' }}
+          style={{ transitionDelay: visible ? `${index * 50}ms` : '0ms' }}
         >
           <FormLabel className="text-lg">{label}</FormLabel>
 

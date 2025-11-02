@@ -21,7 +21,7 @@ export function ReservedSlotsComponent({ form }: { form: any }) {
 
   const [visible, setVisible] = useState(false)
   useEffect(() => {
-    setVisible(true)
+    setTimeout(() => setVisible(true), 50)
   }, [])
 
   return (
@@ -30,7 +30,7 @@ export function ReservedSlotsComponent({ form }: { form: any }) {
         'flex transition-all duration-700 ease-out',
         visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0',
       )}
-      style={{ transitionDelay: visible ? '150ms' : '0ms' }}
+      style={{ transitionDelay: visible ? '50ms' : '0ms' }}
     >
       <div className="flex-1">
         <FormLabel className="text-lg">{t('startupDescriptions.reservedSlots.add')}</FormLabel>

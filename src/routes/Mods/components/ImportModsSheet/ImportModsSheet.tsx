@@ -38,7 +38,7 @@ export default function ImportModsSheet({
         <br />
 
         <ImportModsForm importToLoadout={importToLoadout} loadoutName={loadoutName} />
-        <SheetFooter className="absolute bottom-4 left-4 m-0 p-0">
+        <SheetFooter className="fixed bottom-4 left-4 m-0 p-0">
           <SheetClose asChild>
             <Button className="w-24" variant="outline">
               {t('button.back')}

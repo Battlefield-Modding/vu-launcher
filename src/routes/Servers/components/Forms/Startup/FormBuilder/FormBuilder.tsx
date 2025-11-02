@@ -20,6 +20,7 @@ export function FormBuilder({
   filteredArguments: Partial<LoadoutJSON>
 }) {
   const { t } = useTranslation()
+  let delayIndex = 0
   return sectionNames.map((sectionName) => {
     if (sectionName === 'reservedSlots') {
       // @ts-ignore
@@ -29,7 +30,8 @@ export function FormBuilder({
     }
 
     // @ts-expect-error
-    return Object.entries(filteredArguments[sectionName] ?? {}).map(([key, value]) => {
+    return Object.entries(filteredArguments[sectionName] ?? {}).map(([key, value], index) => {
+      delayIndex += 1
       // @ts-expect-error
       const fieldType = formBuilderInputTypes[sectionName][key]
 
@@ -42,6 +44,7 @@ export function FormBuilder({
             sectionName={sectionName}
             form={form}
             keyName={key}
+            index={delayIndex}
           />
         )
       }
@@ -54,6 +57,7 @@ export function FormBuilder({
             label={label}
             form={form}
             keyName={key}
+            index={delayIndex}
           />
         )
       }
@@ -65,6 +69,7 @@ export function FormBuilder({
             label={label}
             form={form}
             keyName={key}
+            index={delayIndex}
           />
         )
       }
@@ -76,6 +81,7 @@ export function FormBuilder({
             label={label}
             form={form}
             keyName={key}
+            index={delayIndex}
           />
         )
       }
@@ -87,11 +93,12 @@ export function FormBuilder({
             label={label}
             form={form}
             keyName={key}
+            delayIndex={delayIndex}
           />
         )
       }
       if (fieldType === 'setTeamTicketCount') {
-        return <SetTeamTicketCountComponent key={key} form={form} />
+        return <SetTeamTicketCountComponent key={key} form={form} delayIndex={delayIndex} />
       }
       if (fieldType === 'none') {
         return <div key={key}></div>
