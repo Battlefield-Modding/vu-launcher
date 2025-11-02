@@ -88,7 +88,9 @@ export function SetVuPathSheet({ preferences }: { preferences: UserPreferences }
   return (
     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
       <SheetTrigger className="w-fit">
-        <Button variant={'secondary'}>{t('settings.setVuPath.trigger')}</Button>
+        <div className="inline-flex h-9 items-center justify-center gap-2 whitespace-nowrap rounded-md bg-secondary px-4 py-2 text-sm font-medium text-secondary-foreground shadow-sm transition-colors hover:bg-secondary/80 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0">
+          {t('settings.setVuPath.trigger')}
+        </div>
       </SheetTrigger>
       <SheetContent className="overflow-y-none">
         <SheetHeader>
@@ -133,7 +135,7 @@ export function SetVuPathSheet({ preferences }: { preferences: UserPreferences }
             </tr>
           </tbody>
         </table>
-        <SheetFooter className="fixed bottom-4 left-4 m-0 p-0">
+        <SheetFooter className="absolute bottom-4 left-4 m-0 p-0">
           <SheetClose asChild>
             <Button className="w-24" variant="outline">
               {t('button.back')}
