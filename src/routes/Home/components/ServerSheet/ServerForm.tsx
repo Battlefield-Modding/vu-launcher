@@ -84,7 +84,7 @@ export default function ServerForm({ setSheetOpen }: { setSheetOpen: any }) {
                 'transition-all duration-700 ease-out',
                 visible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0',
               )}
-              style={{ transitionDelay: visible ? '150ms' : '0ms' }}
+              style={{ transitionDelay: visible ? '100ms' : '0ms' }}
             >
               <FormLabel>{t('home.server.form.nickname.title')}*</FormLabel>
               <FormControl>
@@ -109,7 +109,7 @@ export default function ServerForm({ setSheetOpen }: { setSheetOpen: any }) {
                 'transition-all duration-700 ease-out',
                 visible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0',
               )}
-              style={{ transitionDelay: visible ? '300ms' : '0ms' }}
+              style={{ transitionDelay: visible ? '200ms' : '0ms' }}
             >
               <FormLabel>{t('home.server.form.serverGUID.title')}*</FormLabel>
               <FormControl>
@@ -133,7 +133,7 @@ export default function ServerForm({ setSheetOpen }: { setSheetOpen: any }) {
                 'transition-all duration-700 ease-out',
                 visible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0',
               )}
-              style={{ transitionDelay: visible ? '450ms' : '0ms' }}
+              style={{ transitionDelay: visible ? '300ms' : '0ms' }}
             >
               <FormLabel>{t('home.server.form.serverPassword.title')}</FormLabel>
               <FormControl>
@@ -148,14 +148,22 @@ export default function ServerForm({ setSheetOpen }: { setSheetOpen: any }) {
           )}
         />
 
-        <p className="text-xs text-gray-400">{t('home.playerCredentials.form.hint')}</p>
+        <p
+          className={clsx(
+            'text-xs text-gray-400 transition-all duration-700 ease-out',
+            visible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0',
+          )}
+          style={{ transitionDelay: visible ? '400ms' : '0ms' }}
+        >
+          {t('home.playerCredentials.form.hint')}
+        </p>
 
         <Button
           className={clsx(
             'm-auto w-fit transition-all duration-700 ease-out',
             visible ? 'translate-y-0 scale-100 opacity-100' : 'translate-y-4 scale-95 opacity-0',
           )}
-          style={{ transitionDelay: visible ? '600ms' : '0ms' }}
+          style={{ transitionDelay: visible ? '500ms' : '0ms' }}
           type="submit"
         >
           {t('home.server.form.submit')}

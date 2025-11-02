@@ -145,7 +145,15 @@ export function PlayerCredentialsForm({ setSheetOpen }: { setSheetOpen: any }) {
           )}
         />
 
-        <p className="text-xs text-gray-400">{t('home.playerCredentials.form.hint')}</p>
+        <p
+          className={clsx(
+            'text-xs text-gray-400 transition-all duration-700 ease-out',
+            visible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0',
+          )}
+          style={{ transitionDelay: visible ? '400ms' : '0ms' }}
+        >
+          {t('home.playerCredentials.form.hint')}
+        </p>
 
         <Button
           className={clsx(
