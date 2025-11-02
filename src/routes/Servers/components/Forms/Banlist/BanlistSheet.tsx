@@ -32,7 +32,7 @@ export function BanlistSheet({ loadout }: { loadout: LoadoutJSON }) {
           <SheetDescription></SheetDescription>
         </SheetHeader>
         <BanlistForm setSheetOpen={setSheetOpen} loadout={loadout} />
-        <SheetFooter className="fixed bottom-4 left-4 m-0 p-0">
+        <SheetFooter className="absolute bottom-4 left-4 m-0 p-0">
           <SheetClose asChild>
             <Button className="w-24" variant="outline">
               {t('button.back')}

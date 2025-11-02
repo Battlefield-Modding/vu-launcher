@@ -20,6 +20,11 @@ export function StartupSearch({
     t('startupDescriptions', { returnObjects: true }),
   )
 
+  const [visible, setVisible] = useState(false)
+  useEffect(() => {
+    setVisible(true)
+  }, [])
+
   useEffect(() => {
     const info = Object.keys(defaultStartupArguments).map((x) => {
       if (tabFilter.length > 0) {
@@ -90,7 +95,12 @@ export function StartupSearch({
   }
 
   return (
-    <div className="fixed top-0">
+    <div
+      className={clsx(
+        "ease-out' transition-all duration-700",
+        visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0',
+      )}
+    >
       <input
         type="text"
         placeholder={`${t('servers.loadouts.loadout.startup.form.searchPlaceholder')}     [CTRL + F]`}

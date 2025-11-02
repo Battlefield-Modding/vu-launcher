@@ -19,17 +19,29 @@ import { allMaps } from '../../../Maplist/Setup/allMaps'
 import { Trash } from 'lucide-react'
 import { CreateLoadoutFormType } from '../../CreateLoadoutForm'
 import { useTranslation } from 'react-i18next'
+import { useEffect, useState } from 'react'
+import clsx from 'clsx'
 
-export function Maplist({ form }: { form: CreateLoadoutFormType }) {
+export function Maplist({ form, delay }: { form: CreateLoadoutFormType; delay: number }) {
   const fieldArray = useFieldArray({ name: 'maplist', control: form.control })
   const { t } = useTranslation()
+  const [visible, setVisible] = useState(false)
+  useEffect(() => {
+    setVisible(true)
+  }, [])
 
   function clearGamemode(index: number) {
     form.resetField(`maplist.${index}.gameMode`)
   }
 
   return (
-    <div>
+    <div
+      className={clsx(
+        'transition-all duration-700 ease-out',
+        visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0',
+      )}
+      style={{ transitionDelay: visible ? `${delay}ms` : '0ms' }}
+    >
       <FormLabel className="text-xl">
         {t('servers.loadouts.createLoadout.form.maplist.title')}
       </FormLabel>

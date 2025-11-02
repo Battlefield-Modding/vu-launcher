@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 import { Form } from '@/components/ui/form'
 import { useQueryClient } from '@tanstack/react-query'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { LoaderComponent } from '@/components/LoaderComponent'
 import { LoadoutJSON, QueryKey } from '@/config/config'
 import { editServerLoadout } from '@/api'
@@ -13,6 +13,7 @@ import { toast } from 'sonner'
 import { LaunchArgumentFormBuilder } from './LaunchArgumentFormBuilder/LaunchArgumentFormBuilder'
 import { LaunchArgumentsSearch } from './LaunchArgumentsSearch'
 import { useTranslation } from 'react-i18next'
+import clsx from 'clsx'
 
 const formSchema = z.object({
   common: z
@@ -76,6 +77,11 @@ export function LaunchArgumentForm({
   const [filteredArgs, setFilteredArgs] = useState<{}>({ ...existingLoadout.launch })
   const { t } = useTranslation()
 
+  const [visible, setVisible] = useState(false)
+  useEffect(() => {
+    setVisible(true)
+  }, [])
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: existingLoadout.launch,
@@ -106,10 +112,16 @@ export function LaunchArgumentForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="m-auto max-w-screen-md">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className={clsx(
+          'm-auto max-w-screen-md transition-all duration-700 ease-out',
+          visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0',
+        )}
+      >
         <LaunchArgumentsSearch searchRef={searchRef} setFilteredArgs={setFilteredArgs} />
 
-        <div className="flex flex-col gap-6 pt-16">
+        <div className="flex flex-col gap-6 pt-32">
           {/* @ts-ignore */}
           <LaunchArgumentFormBuilder
             form={form}
@@ -119,7 +131,13 @@ export function LaunchArgumentForm({
         </div>
 
         {submitLoading && <LoaderComponent />}
-        <Button type="submit" className="mt-8">
+        <Button
+          type="submit"
+          className={clsx(
+            'ml-auto mr-auto mt-8 flex transition-all duration-700 ease-out',
+            visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0',
+          )}
+        >
           {t('servers.loadouts.loadout.launchArgs.form.submit')}
         </Button>
       </form>

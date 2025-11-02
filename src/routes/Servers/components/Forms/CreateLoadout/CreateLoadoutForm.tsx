@@ -18,7 +18,7 @@ import { createServerLoadout } from '@/api'
 import { useQueryClient } from '@tanstack/react-query'
 import { defaultServerConfig } from './Setup/defaultServerConfig'
 import { GameMod, LoadoutJSON, QueryKey, routes } from '@/config/config'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { LoaderComponent } from '@/components/LoaderComponent'
 import { Banlist } from './components/Forms/Banlist'
 import { Maplist } from './components/Forms/Maplist'
@@ -28,6 +28,7 @@ import { defaultStartupArguments } from '../Startup/Setup/DefaultStartupConfig'
 import { defaultLaunchArguments } from '../LaunchArguments/setup/LaunchArguments'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
+import clsx from 'clsx'
 
 const formSchema = z.object({
   name: z
@@ -92,6 +93,11 @@ export function CreateLoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any; m
   const navigate = useNavigate()
   const { t } = useTranslation()
 
+  const [visible, setVisible] = useState(false)
+  useEffect(() => {
+    setVisible(true)
+  }, [])
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: { ...defaultServerConfig },
@@ -144,13 +150,22 @@ export function CreateLoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any; m
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="m-auto flex max-w-screen-md flex-col gap-6"
+        className={clsx(
+          'm-auto flex max-w-screen-md flex-col gap-6 transition-all duration-700 ease-out',
+          visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0',
+        )}
       >
         <FormField
           control={form.control}
           name="name"
           render={({ field }) => (
-            <FormItem className="flex">
+            <FormItem
+              className={clsx(
+                'flex transition-all duration-700 ease-out',
+                visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0',
+              )}
+              style={{ transitionDelay: visible ? '150ms' : '0ms' }}
+            >
               <div className="flex-1">
                 <FormLabel className="text-xl">
                   {t('servers.loadouts.createLoadout.form.nickname.title')}
@@ -178,12 +193,19 @@ export function CreateLoadoutForm({ setSheetOpen, mods }: { setSheetOpen: any; m
           )}
         />
 
-        <Startup form={form} />
-        <ModList form={form} mods={mods} />
-        <Maplist form={form} />
-        <Banlist form={form} alwaysAutoFocus={false} />
+        <Startup form={form} delay={150} />
+        <ModList form={form} mods={mods} delay={300} />
+        <Maplist form={form} delay={450} />
+        <Banlist form={form} alwaysAutoFocus={false} delay={600} />
         {submitLoading && <LoaderComponent />}
-        <Button type="submit" className="m-auto mt-6 w-fit">
+        <Button
+          type="submit"
+          className={clsx(
+            'ml-auto mr-auto mt-6 transition-all duration-700 ease-out',
+            visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0',
+          )}
+          style={{ transitionDelay: visible ? '750ms' : '0ms' }}
+        >
           {t('servers.loadouts.createLoadout.form.submit')}
         </Button>
       </form>

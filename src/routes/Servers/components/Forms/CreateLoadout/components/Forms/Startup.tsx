@@ -9,11 +9,23 @@ import {
 import { Input } from '@/components/ui/input'
 import { CreateLoadoutFormType } from '../../CreateLoadoutForm'
 import { useTranslation } from 'react-i18next'
+import { useEffect, useState } from 'react'
+import clsx from 'clsx'
 
-export function Startup({ form }: { form: CreateLoadoutFormType }) {
+export function Startup({ form, delay }: { form: CreateLoadoutFormType; delay: number }) {
   const { t } = useTranslation()
+  const [visible, setVisible] = useState(false)
+  useEffect(() => {
+    setVisible(true)
+  }, [])
   return (
-    <>
+    <div
+      className={clsx(
+        'transition-all duration-700 ease-out',
+        visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0',
+      )}
+      style={{ transitionDelay: visible ? `${delay}ms` : '0ms' }}
+    >
       <FormField
         control={form.control}
         name="startup.vars.serverName"
@@ -131,6 +143,6 @@ export function Startup({ form }: { form: CreateLoadoutFormType }) {
           </FormItem>
         )}
       />
-    </>
+    </div>
   )
 }

@@ -14,6 +14,7 @@ import { toast } from 'sonner'
 import { StartupSearch } from './StartupSearch'
 import { useTranslation } from 'react-i18next'
 import { StartupArgs } from './Setup/StartupTypes'
+import clsx from 'clsx'
 
 const formSchema = z.object({
   admin: z.object({
@@ -115,6 +116,11 @@ export function StartupForm({
   const [realityModActive, SetRealityModActive] = useState(false)
   const { t } = useTranslation()
 
+  const [visible, setVisible] = useState(false)
+  useEffect(() => {
+    setVisible(true)
+  }, [])
+
   const rm = existingLoadout.startup.RM
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -170,16 +176,27 @@ export function StartupForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="m-auto max-w-screen-md">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className={clsx(
+          'm-auto max-w-screen-md transition-all duration-700 ease-out',
+          visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0',
+        )}
+      >
         <StartupSearch setFilteredArgs={setFilteredArgs} searchRef={searchRef} />
 
-        <div className="flex flex-col gap-6 pt-16">
+        <div
+          className={clsx(
+            'flex flex-col gap-6 pt-16 transition-all duration-700 ease-out',
+            visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0',
+          )}
+        >
           {/* @ts-ignore */}
           <FormBuilder form={form} filteredArguments={filteredArgs} sectionNames={sectionNames} />
         </div>
 
         {submitLoading && <LoaderComponent />}
-        <Button type="submit" className="mt-8">
+        <Button type="submit" className="ml-auto mr-auto mt-8 flex">
           {t('servers.loadouts.loadout.startup.form.submit')}
         </Button>
       </form>

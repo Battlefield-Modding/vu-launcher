@@ -43,9 +43,7 @@ export function PlayerCredentialsForm({ setSheetOpen }: { setSheetOpen: any }) {
   })
 
   useEffect(() => {
-    // Small delay ensures DOM paints hidden state before we toggle visibility
-    const timeout = setTimeout(() => setVisible(true), 50)
-    return () => clearTimeout(timeout)
+    setVisible(true)
   }, [])
 
   async function onSubmit(values: z.infer<typeof formSchema>) {

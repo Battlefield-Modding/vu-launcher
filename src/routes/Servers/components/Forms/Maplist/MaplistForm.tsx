@@ -26,6 +26,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import { LoaderComponent } from '@/components/LoaderComponent'
 import { useTranslation } from 'react-i18next'
+import clsx from 'clsx'
 
 const formSchema = z.object({
   maplist: z.array(
@@ -97,11 +98,22 @@ export function MaplistForm({
     }
   }
 
+  const [visible, setVisible] = useState(false)
+  useEffect(() => {
+    setVisible(true)
+  }, [])
+
   const fieldArray = useFieldArray({ name: 'maplist', control: form.control })
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="m-auto flex max-w-screen-md flex-col">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className={clsx(
+          'm-auto flex max-w-screen-md flex-col transition-all duration-700 ease-out',
+          visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0',
+        )}
+      >
         {fieldArray.fields.length === 0 && (
           <Button
             variant={'constructive'}
@@ -117,7 +129,14 @@ export function MaplistForm({
         <div className="flex w-fit flex-col items-end gap-4">
           {fieldArray.fields.map((x, index) => {
             return (
-              <div className="flex flex-col gap-4" key={`maplist-${index}`}>
+              <div
+                className={clsx(
+                  'flex flex-col gap-4 transition-all duration-700 ease-out',
+                  visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0',
+                )}
+                style={{ transitionDelay: visible ? `${100 * index}ms` : '0ms' }}
+                key={`maplist-${index}`}
+              >
                 <div className="flex gap-4">
                   <FormLabel className="mb-auto mt-auto text-xl">{index + 1}.&#41;</FormLabel>
 
@@ -231,7 +250,13 @@ export function MaplistForm({
           })}
         </div>
         {submitLoading && <LoaderComponent />}
-        <div className="mt-8 flex justify-center">
+        <div
+          className={clsx(
+            'mt-8 flex justify-center transition-all duration-700 ease-out',
+            visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0',
+          )}
+          style={{ transitionDelay: visible ? `${100 * fieldArray.fields.length}ms` : '0ms' }}
+        >
           <Button type="submit">{t('servers.loadouts.loadout.maplist.form.submit')}</Button>
         </div>
       </form>

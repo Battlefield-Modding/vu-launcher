@@ -15,7 +15,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
 import { importLoadoutFromPath } from '@/api'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { LoadoutDragDrop } from './LoadoutDragDrop'
 import { useQueryClient } from '@tanstack/react-query'
 import { QueryKey, routes } from '@/config/config'
@@ -50,6 +50,12 @@ export function UploadLoadoutForm({
   const [path, setPath] = useState('')
   const navigate = useNavigate()
   const [submitLoading, setSubmitLoading] = useState(false)
+
+  const [visible, setVisible] = useState(false)
+  useEffect(() => {
+    setVisible(true)
+  }, [])
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -83,13 +89,22 @@ export function UploadLoadoutForm({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="m-auto flex max-w-screen-md flex-col gap-8"
+        className={clsx(
+          'm-auto flex max-w-screen-md flex-col gap-8 transition-all duration-700 ease-out',
+          visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0',
+        )}
       >
         <FormField
           control={form.control}
           name="name"
           render={({ field }) => (
-            <FormItem className="flex">
+            <FormItem
+              className={clsx(
+                'flex transition-all duration-700 ease-out',
+                visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0',
+              )}
+              style={{ transitionDelay: visible ? '150ms' : '0ms' }}
+            >
               <div className="flex-1">
                 <FormLabel className="text-xl">
                   {t('servers.loadouts.importLoadout.form.nickname.title')}
@@ -111,7 +126,13 @@ export function UploadLoadoutForm({
             </FormItem>
           )}
         />
-        <div>
+        <div
+          className={clsx(
+            'transition-all duration-700 ease-out',
+            visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0',
+          )}
+          style={{ transitionDelay: visible ? '300ms' : '0ms' }}
+        >
           <h2 className="mb-4 text-xl">
             {t('servers.loadouts.importLoadout.form.importPath.title')}
           </h2>
@@ -127,12 +148,20 @@ export function UploadLoadoutForm({
 
         <Button
           type="submit"
-          disabled={!path}
           variant={'secondary'}
+          onClick={(e) => {
+            if (!path) {
+              e.preventDefault()
+            }
+          }}
           className={clsx(
-            'm-auto w-fit',
-            path && 'bg-green-500 text-primary hover:bg-green-500/80',
+            'm-auto w-fit transition-all duration-700 ease-out',
+            path
+              ? 'bg-green-500 text-primary hover:bg-green-500/80'
+              : 'cursor-not-allowed opacity-50',
+            visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0',
           )}
+          style={{ transitionDelay: visible ? '450ms' : '0ms' }}
         >
           {t('servers.loadouts.importLoadout.form.submit')}
         </Button>

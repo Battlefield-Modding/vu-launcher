@@ -18,13 +18,26 @@ import { useFieldArray } from 'react-hook-form'
 import { Plus, Trash } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { useTranslation } from 'react-i18next'
+import { useEffect, useState } from 'react'
+import clsx from 'clsx'
 
 export function SetTeamTicketCountComponent({ form }: { form: any }) {
   const fieldArray = useFieldArray({ name: 'vu.SetTeamTicketCount', control: form.control })
   const { t } = useTranslation()
 
+  const [visible, setVisible] = useState(false)
+  useEffect(() => {
+    setVisible(true)
+  }, [])
+
   return (
-    <div className="flex">
+    <div
+      className={clsx(
+        'flex transition-all duration-700 ease-out',
+        visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0',
+      )}
+      style={{ transitionDelay: visible ? '150ms' : '0ms' }}
+    >
       <div className="flex-1">
         <FormLabel className="text-lg">
           {t('servers.loadouts.loadout.startup.form.setTeamTickets.title')}

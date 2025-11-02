@@ -6,8 +6,10 @@ import { toast } from 'sonner'
 import { useState } from 'react'
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetDescription,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -15,6 +17,7 @@ import {
 import { AccountMultiSelectForm } from './AccountMultiSelectForm'
 import { useTranslation } from 'react-i18next'
 import { TooltipWrapper } from '@/components/TooltipWrapper'
+import { Button } from '@/components/ui/button'
 
 export function ChooseAccountSheet({ loadoutName }: { loadoutName: string }) {
   const [sheetOpen, setSheetOpen] = useState(false)
@@ -96,6 +99,13 @@ export function ChooseAccountSheet({ loadoutName }: { loadoutName: string }) {
             usernames={data}
             updateUsers={updateUsers}
           />
+          <SheetFooter className="fixed bottom-4 left-4 m-0 p-0">
+            <SheetClose asChild>
+              <Button className="w-24" variant="outline">
+                {t('button.back')}
+              </Button>
+            </SheetClose>
+          </SheetFooter>
         </SheetContent>
       </Sheet>
     )

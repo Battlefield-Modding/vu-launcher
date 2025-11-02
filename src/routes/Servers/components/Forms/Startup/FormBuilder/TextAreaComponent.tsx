@@ -9,6 +9,8 @@ import {
 import { StartupArgs } from '../Setup/StartupTypes'
 import { Textarea } from '@/components/ui/textarea'
 import { LaunchArguments } from '../../LaunchArguments/setup/LaunchArguments'
+import { useEffect, useState } from 'react'
+import clsx from 'clsx'
 
 export function TextAreaComponent({
   form,
@@ -21,13 +23,24 @@ export function TextAreaComponent({
   label: string
   sectionName: keyof StartupArgs | keyof LaunchArguments
 }) {
+  const [visible, setVisible] = useState(false)
+  useEffect(() => {
+    setVisible(true)
+  }, [])
+
   return (
     <FormField
       key={keyName}
       control={form.control}
       name={`${sectionName}.${keyName}`}
       render={({ field }) => (
-        <FormItem>
+        <FormItem
+          className={clsx(
+            'transition-all duration-700 ease-out',
+            visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0',
+          )}
+          style={{ transitionDelay: visible ? '150ms' : '0ms' }}
+        >
           <FormLabel className="text-lg">{label}</FormLabel>
 
           <FormDescription>

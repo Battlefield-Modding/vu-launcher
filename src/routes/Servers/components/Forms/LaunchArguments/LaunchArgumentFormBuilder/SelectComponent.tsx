@@ -15,6 +15,8 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useTranslation } from 'react-i18next'
+import { useEffect, useState } from 'react'
+import clsx from 'clsx'
 
 export function SelectComponent({
   form,
@@ -28,6 +30,10 @@ export function SelectComponent({
   sectionName: keyof LaunchArguments
 }) {
   const { t } = useTranslation()
+  const [visible, setVisible] = useState(false)
+  useEffect(() => {
+    setVisible(true)
+  }, [])
 
   return (
     <FormField
@@ -35,7 +41,13 @@ export function SelectComponent({
       control={form.control}
       name={`${sectionName}.${keyName}`}
       render={({ field }) => (
-        <FormItem className="flex">
+        <FormItem
+          className={clsx(
+            'flex transition-all duration-700 ease-out',
+            visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0',
+          )}
+          style={{ transitionDelay: visible ? '150ms' : '0ms' }}
+        >
           <div className="flex-1">
             <FormLabel className="text-lg">{label}</FormLabel>
             <FormDescription>

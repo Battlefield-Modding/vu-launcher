@@ -8,16 +8,36 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import clsx from 'clsx'
 import { Trash } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { useFieldArray } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-export function Banlist({ form, alwaysAutoFocus }: { form: any; alwaysAutoFocus: boolean }) {
+export function Banlist({
+  form,
+  alwaysAutoFocus,
+  delay,
+}: {
+  form: any
+  alwaysAutoFocus: boolean
+  delay: number
+}) {
   const fieldArray = useFieldArray({ name: 'banlist', control: form.control })
   const { t } = useTranslation()
+  const [visible, setVisible] = useState(false)
+  useEffect(() => {
+    setVisible(true)
+  }, [])
 
   return (
-    <div>
+    <div
+      className={clsx(
+        'transition-all duration-700 ease-out',
+        visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0',
+      )}
+      style={{ transitionDelay: visible ? `${delay}ms` : '0ms' }}
+    >
       <FormLabel className="text-xl">
         {t('servers.loadouts.createLoadout.form.banlist.title')}
       </FormLabel>

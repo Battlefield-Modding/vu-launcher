@@ -11,11 +11,9 @@ import { LoadoutJSON } from '@/config/config'
 import { Book } from 'lucide-react'
 import { useState } from 'react'
 
-import { CacheModContainer } from './mods/CacheModContainer'
-import { LoadoutModContainer } from './mods/LoadoutModContainer'
-import ImportModsSheet from '@/routes/Mods/components/ImportModsSheet/ImportModsSheet'
 import { Button } from '@/components/ui/button'
 import { useTranslation } from 'react-i18next'
+import ManageModsInServerForm from './ManageModsInServerForm'
 
 export function ManageModsInServerSheet({ loadout }: { loadout: LoadoutJSON }) {
   const [sheetOpen, setSheetOpen] = useState(false)
@@ -30,16 +28,8 @@ export function ManageModsInServerSheet({ loadout }: { loadout: LoadoutJSON }) {
         <SheetHeader className="hidden">
           <SheetTitle>Manage Mods</SheetTitle>
         </SheetHeader>
-        <div className="m-auto flex max-w-screen-lg flex-col gap-2 text-center">
-          <div className="m-auto w-fit">
-            <ImportModsSheet importToLoadout={true} loadoutName={loadout.name} />
-          </div>
-
-          <LoadoutModContainer loadoutName={loadout.name} />
-
-          <CacheModContainer loadout={loadout} />
-        </div>
-        <SheetFooter className="fixed bottom-4 left-4 m-0 p-0">
+        <ManageModsInServerForm loadout={loadout} />
+        <SheetFooter className="absolute bottom-4 left-4 m-0 p-0">
           <SheetClose asChild>
             <Button className="w-24" variant="outline">
               {t('button.back')}
