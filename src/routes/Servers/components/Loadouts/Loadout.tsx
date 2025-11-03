@@ -1,4 +1,4 @@
-import { Folder, Loader, Server, User } from 'lucide-react'
+import { Folder, Server, User } from 'lucide-react'
 import {
   getLoadoutJson,
   getUserPreferences,
@@ -51,12 +51,8 @@ export function Loadout() {
   })
 
   if (isPending) {
-    return (
-      <div>
-        <h1>{t('servers.loadouts.loadout.loading')}</h1>
-        <Loader />
-      </div>
-    )
+    console.log(t('servers.loadouts.loadout.loading'))
+    return <LoadoutSkeleton />
   }
 
   if (isError) {
