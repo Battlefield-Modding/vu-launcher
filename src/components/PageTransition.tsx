@@ -8,6 +8,11 @@ const slideUpOut = 'animate-slide-up-out'
 const slideDownIn = 'animate-slide-down-in'
 const slideDownOut = 'animate-slide-down-out'
 
+enum Mode {
+  LightMode = 0,
+  DarkMode = 1,
+}
+
 export default function PageTransition({
   children,
 }: {
@@ -21,9 +26,8 @@ export default function PageTransition({
   const pendingLocationRef = useRef<null | typeof location>(null)
   const animationTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
-  // Track if current background should be dark
   const isDarkRef = useRef(false)
-  const [bgOpacity, setBgOpacity] = useState(0) // 0 = light, 1 = dark
+  const [bgOpacity, setBgOpacity] = useState(Mode.LightMode)
 
   const normalizePath = (path: string) => {
     const parts = path.split('/')
@@ -31,29 +35,22 @@ export default function PageTransition({
     return '/' + base || path
   }
 
-  const isDarkRoute = (pathname: string) => normalizePath(pathname) !== routes.HOME
-
-  // Animate background fade when the “dark state” changes
-  useEffect(() => {
-    const newDark = isDarkRoute(currentLocation.pathname)
-    if (newDark !== isDarkRef.current) {
-      // Start smooth fade
-      setBgOpacity(newDark ? 0 : 1) // start from opposite
-      const timeout = setTimeout(() => {
-        setBgOpacity(newDark ? 1 : 0) // fade to target
-        isDarkRef.current = newDark
-      }, 50)
-      return () => clearTimeout(timeout)
-    }
-  }, [currentLocation.pathname])
+  function handleDarkMode() {
+    const isDarkMode = currentLocation.pathname !== routes.HOME
+    setBgOpacity(isDarkMode ? Mode.DarkMode : Mode.LightMode)
+    isDarkRef.current = isDarkMode
+  }
 
   // --- Handle page animations ---
   useEffect(() => {
+    handleDarkMode()
     const normalizedCurrent = normalizePath(currentLocation.pathname)
     const normalizedLocation = normalizePath(location.pathname)
 
     if (normalizedLocation !== normalizedCurrent) {
+      // @ts-ignore
       const prevIndex = menuOrder.indexOf(normalizedCurrent)
+      // @ts-ignore
       const newIndex = menuOrder.indexOf(normalizedLocation)
 
       if (location.state?.skipAnimation || prevIndex === -1 || newIndex === -1) {
@@ -80,7 +77,7 @@ export default function PageTransition({
     }
   }, [location, currentLocation.pathname])
 
-  const handleAnimationEnd = () => {
+  function handleAnimationEnd() {
     setIsAnimating(false)
     if (animationTimeoutRef.current) clearTimeout(animationTimeoutRef.current)
 
@@ -97,7 +94,7 @@ export default function PageTransition({
     }
   }
 
-  const getAnimationClass = (type: 'in' | 'out') => {
+  function getAnimationClass(type: 'in' | 'out') {
     if (type === 'in') return directionRef.current === 'up' ? slideUpIn : slideDownIn
     return directionRef.current === 'up' ? slideUpOut : slideDownOut
   }
