@@ -1,21 +1,7 @@
 import { Button } from '@/components/ui/button'
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  Form,
-} from '@/components/ui/form'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+import { FormLabel, Form } from '@/components/ui/form'
+
 import { useFieldArray, useForm } from 'react-hook-form'
-import { allMaps, RealityModGameModes } from './Setup/allMaps'
 import { Trash } from 'lucide-react'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -27,6 +13,8 @@ import { useEffect, useState } from 'react'
 import { LoaderComponent } from '@/components/LoaderComponent'
 import { useTranslation } from 'react-i18next'
 import clsx from 'clsx'
+import { MapSelector } from './MapSelector'
+import { GameModeSelector } from './GameModeSelector'
 
 const formSchema = z.object({
   maplist: z.array(
@@ -127,7 +115,7 @@ export function MaplistForm({
           </Button>
         )}
         <div className="flex w-fit flex-col items-end gap-4">
-          {fieldArray.fields.map((x, index) => {
+          {fieldArray.fields.map((map, index) => {
             return (
               <div
                 className={clsx(
@@ -140,87 +128,18 @@ export function MaplistForm({
                 <div className="flex gap-4">
                   <FormLabel className="mb-auto mt-auto text-xl">{index + 1}.&#41;</FormLabel>
 
-                  <FormField
-                    control={form.control}
-                    name={`maplist.${index}.mapCode`}
-                    key={`${x.id}-mapCode`}
-                    render={({ field }) => (
-                      <FormItem className="w-64">
-                        <Select
-                          onValueChange={(e) => {
-                            clearGamemode(index)
-                            console.log('Chosen Map Changed!')
-                            field.onChange(e)
-                          }}
-                          defaultValue={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue
-                                placeholder={t(
-                                  'servers.loadouts.loadout.maplist.form.mapPlaceholder',
-                                )}
-                              />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {allMaps.map((x, index) => {
-                              return (
-                                <SelectItem value={x.mapCode} key={`chosen-map-${index}`}>
-                                  [{x.mapCode}]: {x.displayName}
-                                </SelectItem>
-                              )
-                            })}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
+                  <MapSelector
+                    form={form}
+                    index={index}
+                    clearGamemode={clearGamemode}
+                    key={`${map.id}-mapCode`}
                   />
-                  <FormField
-                    control={form.control}
-                    name={`maplist.${index}.gameMode`}
-                    key={`${x.id}-gameMode`}
-                    render={({ field }) => (
-                      <FormItem className="w-64">
-                        <Select onValueChange={field.onChange} value={field.value}>
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue
-                                placeholder={t(
-                                  'servers.loadouts.loadout.maplist.form.gamemodePlaceholder',
-                                )}
-                              />
-                            </SelectTrigger>
-                          </FormControl>
 
-                          <SelectContent>
-                            {realityModActive &&
-                              RealityModGameModes.map((x, index) => {
-                                return (
-                                  <SelectItem key={`chosen-gamemode-${index}`} value={x}>
-                                    {x}
-                                  </SelectItem>
-                                )
-                              })}
-
-                            {!realityModActive &&
-                              allMaps
-                                .filter(
-                                  (x) => x.mapCode === form.getValues(`maplist.${index}.mapCode`),
-                                )[0]
-                                ?.gameModes.map((x, index) => {
-                                  return (
-                                    <SelectItem key={`chosen-gamemode-${index}`} value={x}>
-                                      {x}
-                                    </SelectItem>
-                                  )
-                                })}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
+                  <GameModeSelector
+                    form={form}
+                    index={index}
+                    realityModActive={realityModActive}
+                    key={`${map.id}-gameMode`}
                   />
 
                   <div
