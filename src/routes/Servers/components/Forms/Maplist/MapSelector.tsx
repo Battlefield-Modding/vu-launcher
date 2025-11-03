@@ -6,8 +6,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { allMaps } from './Setup/allMaps'
+import { allMaps, mapCodeToName } from './Setup/allMaps'
 import { useTranslation } from 'react-i18next'
+import { useState } from 'react'
 
 export function MapSelector({
   form,
@@ -18,7 +19,9 @@ export function MapSelector({
   index: number
   clearGamemode: (num: number) => void
 }) {
+  const [isActive, setIsActive] = useState(false)
   const { t } = useTranslation()
+
   return (
     <FormField
       control={form.control}
@@ -33,21 +36,33 @@ export function MapSelector({
             }}
             defaultValue={field.value}
           >
-            <FormControl>
+            <FormControl
+              onMouseEnter={() => {
+                setIsActive(true)
+              }}
+            >
               <SelectTrigger>
                 <SelectValue
-                  placeholder={t('servers.loadouts.loadout.maplist.form.mapPlaceholder')}
+                  placeholder={
+                    field.value ?? t('servers.loadouts.loadout.maplist.form.mapPlaceholder')
+                  }
                 />
               </SelectTrigger>
             </FormControl>
             <SelectContent>
-              {allMaps.map((x, index) => {
-                return (
-                  <SelectItem value={x.mapCode} key={`chosen-map-${index}`}>
-                    [{x.mapCode}]: {x.displayName}
-                  </SelectItem>
-                )
-              })}
+              {isActive &&
+                allMaps.map((x, index) => {
+                  return (
+                    <SelectItem value={x.mapCode} key={`chosen-map-${index}`}>
+                      [{x.mapCode}]: {x.displayName}
+                    </SelectItem>
+                  )
+                })}
+              {!isActive && (
+                <SelectItem value={field.value} key={`chosen-map-${index}`}>
+                  [{field.value}]: {mapCodeToName[field.value as keyof typeof mapCodeToName]}
+                </SelectItem>
+              )}
             </SelectContent>
           </Select>
           <FormMessage />
