@@ -552,8 +552,8 @@ pub async fn download_game<R: Runtime>(
                         Err(decode_error) => {
                             consecutive_timeouts += 1;
                             println!(
-                                "Decode error (consecutive: {}) after {:.1}s",
-                                consecutive_timeouts, chunk_elapsed
+                                "Decode error {:?} (consecutive: {}) after {:.1}s",
+                                decode_error, consecutive_timeouts, chunk_elapsed
                             );
                             if consecutive_timeouts >= max_consecutive_timeouts {
                                 println!("Max consecutive decode errors – retrying stream");

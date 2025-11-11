@@ -567,7 +567,10 @@ async fn remove_vu_credentials(username: String) -> bool {
 fn get_launcher_install_path() -> String {
     match get_install_path_registry() {
         Ok(path) => return path,
-        Err(err) => return String::from(""),
+        Err(err) => {
+            println!("{:?}", err);
+            return String::from("");
+        }
     }
 }
 
@@ -585,14 +588,17 @@ fn open_explorer_at_launcher_install_path() -> bool {
 
             return true;
         }
-        Err(err) => return false,
+        Err(err) => {
+            println!("{:?}", err);
+            return false;
+        }
     }
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
-        .plugin(tauri_plugin_single_instance::init(|app, argv, cwd| {}))
+        .plugin(tauri_plugin_single_instance::init(|_app, _argv, _cwd| {}))
         .plugin(tauri_plugin_decorum::init())
         .plugin(tauri_plugin_positioner::init())
         .plugin(tauri_plugin_fs::init())

@@ -30,7 +30,16 @@ pub fn get_mod_cache_path() -> PathBuf {
     mod_cache_path.push("mod-cache");
 
     if !&mod_cache_path.exists() {
-        fs::create_dir(&mod_cache_path);
+        match fs::create_dir(&mod_cache_path) {
+            Ok(_) => {}
+            Err(err) => {
+                println!(
+                    "Failed to create mod cache path at {:?} due to error {:?}",
+                    &mod_cache_path, err
+                );
+                panic!("Failed to create mod cache path, aborting");
+            }
+        }
     }
     return mod_cache_path;
 }
@@ -62,7 +71,7 @@ pub fn get_mod_json_for_mod_in_cache(mod_name: &String) -> io::Result<ModJson> {
     Ok(final_struct)
 }
 
-pub fn get_mod_json_path(loadout_name: &String, dir_entry: &fs::DirEntry) -> io::Result<PathBuf> {
+pub fn get_mod_json_path(dir_entry: &fs::DirEntry) -> io::Result<PathBuf> {
     let meta_data = dir_entry.metadata()?;
     if meta_data.is_dir() {
         let mut default_mod_json_path = dir_entry.path();
@@ -106,7 +115,7 @@ pub fn make_folder_names_same_as_mod_json_names(loadout_name: &String) -> io::Re
         match item {
             Ok(info) => {
                 let original_mod_path = info.path().clone();
-                match get_mod_json_path(loadout_name, &info){
+                match get_mod_json_path( &info){
                     Ok(mod_json_path) => {
                         if mod_json_path != empty_path_buf {
                             let mod_folder_name: String = match info.path().file_name().unwrap().to_str() {
@@ -231,7 +240,7 @@ pub fn make_folder_names_same_as_mod_json_names(loadout_name: &String) -> io::Re
                                             let _ = fs::remove_dir_all(info.path());
                                         },
                                         Err(err) => {
-
+                                            println!("{:?}", err)
                                         }
                                     }
                                 } else {
@@ -242,6 +251,7 @@ pub fn make_folder_names_same_as_mod_json_names(loadout_name: &String) -> io::Re
                         }
                     },
                     Err(err) => {
+                        println!("{:?}", err)
                     }
                 }
             }

@@ -638,10 +638,18 @@ pub fn get_loadouts_path() -> PathBuf {
     loadouts_path.push("loadouts");
 
     if !loadouts_path.exists() {
-        fs::create_dir(&loadouts_path);
+        match fs::create_dir(&loadouts_path) {
+            Ok(_) => {
+                return loadouts_path;
+            }
+            Err(err) => {
+                println!("Failed to create Loadouts Path due to error: {:?}", err);
+                panic!("Failed to create Loadouts Path");
+            }
+        }
+    } else {
+        return loadouts_path;
     }
-
-    return loadouts_path;
 }
 
 pub fn get_loadout_admin_path(name: &String) -> PathBuf {
