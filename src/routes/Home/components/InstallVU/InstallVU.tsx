@@ -15,57 +15,29 @@ import { QueryKey } from '@/config/config'
 import { open } from '@tauri-apps/plugin-dialog'
 import { Progress } from '@/components/ui/progress'
 import { useQueryClient } from '@tanstack/react-query'
-import { InstallVuProdDialog } from './InstallVuProdDialog'
 import { useRef, useState, useEffect, useCallback } from 'react'
 import { toast } from 'sonner'
 import { invoke } from '@tauri-apps/api/core'
 import { listen, emit, type UnlistenFn } from '@tauri-apps/api/event'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
+import { InstallVuProdDialog } from './InstallVuProdDialog'
 
-interface TauriEmitEvent {
+type NumericPayload = {
   payload: number
 }
 
-// Custom event interfaces (applied to subscribed events for TS safety; flat number payloads)
-interface CustomProgressEvent {
-  payload: number // Download progress as percentage (0-100)
-}
-
-interface CustomSpeedEvent {
-  payload: number // Average download speed in KB/s
-}
-
-interface CustomTotalSizeEvent {
-  payload: number // Total download size in bytes
-}
-
-// Interface for VU install status event emitted by this component
-interface VuInstallStatusEvent {
+type DownloadCorruptEvent = {
   payload: {
-    installing: boolean // Whether VU installation is active
+    reason: string
+    progress: number
+    action: string
+    error?: string
   }
 }
 
-// Stalled event interface (empty payload from Rust)
-interface DownloadStalledEvent {
-  payload: never // Or {} if you extend Rust to include { progress: number, remaining: number }
-}
-
-// Corrupt event interface (from Rust on corrupt ZIP/partial)
-interface DownloadCorruptEvent {
-  payload: {
-    reason: string // e.g., "zip-invalid"
-    progress: number // e.g., 100.0
-    action: string // e.g., "deleted"
-    error?: string // Optional full error
-  }
-}
-
-// Speed stability status type
 type SpeedStatus = 'stable' | 'unstable' | 'no-progress' | null
 
-// Error type for categorization (from Rust Err strings or corrupt event)
 type RustErrorType = 'network' | 'server' | 'corrupt' | 'disk' | 'generic' | 'stalled' | null
 
 export function InstallVU() {
@@ -86,26 +58,20 @@ export function InstallVU() {
   const [corruptError, setCorruptError] = useState<string | null>(null) // Specific for corrupt ZIP
   const [lastInstallPath, setLastInstallPath] = useState<string>('') // Cached last path for resume
   const [lastProgressAtError, setLastProgressAtError] = useState(0) // Track % at stall for button text
-  const [speedHistory, setSpeedHistory] = useState<number[]>([]) // Track last 5 speeds for stability calc
+  const [_speedHistory, setSpeedHistory] = useState<number[]>([]) // Track last 5 speeds for stability calc
   const [speedStatus, setSpeedStatus] = useState<SpeedStatus>(null) // Stable/Unstable/No progress indicator
   const [isStalled, setIsStalled] = useState(false) // Track stalled state for UX (retrying or prompt)
 
-  const [vuProdInstallPath, setVuProdInstallPath] = useState('')
-
   // Refs for unlistens to handle async setup
+  const dialogRef = useRef<any>(null)
   const unlistensRef = useRef<UnlistenFn[]>([])
-
-  const dialogRef = useRef<any>(null) // Kept for compatibility; can be used if dialog needs ref
   const { t } = useTranslation()
 
-  // Refs for critical states read in event handlers to avoid stale closures
   const errorRef = useRef(error)
   const isStalledRef = useRef(isStalled)
   const corruptErrorRef = useRef(corruptError)
   const speedStatusRef = useRef(speedStatus)
   const gameDownloadUpdateProgressRef = useRef(gameDownloadUpdateProgress)
-  const gameDownloadUpdateInstallingRef = useRef(gameDownloadUpdateInstalling)
-  const gameDownloadUpdateExtractingRef = useRef(gameDownloadUpdateExtracting)
 
   useEffect(() => {
     errorRef.current = error
@@ -126,14 +92,6 @@ export function InstallVU() {
   useEffect(() => {
     gameDownloadUpdateProgressRef.current = gameDownloadUpdateProgress
   }, [gameDownloadUpdateProgress])
-
-  useEffect(() => {
-    gameDownloadUpdateInstallingRef.current = gameDownloadUpdateInstalling
-  }, [gameDownloadUpdateInstalling])
-
-  useEffect(() => {
-    gameDownloadUpdateExtractingRef.current = gameDownloadUpdateExtracting
-  }, [gameDownloadUpdateExtracting])
 
   // Emit VU install status to parent/other listeners
   const emitInstallStatus = useCallback(async (installing: boolean) => {
@@ -287,7 +245,8 @@ export function InstallVU() {
       try {
         unlistensRef.current = await Promise.all([
           // Download progress: Flat number payload (percentage)
-          listen<CustomProgressEvent>('download-progress', (event) => {
+          listen('download-progress', (event: NumericPayload) => {
+            // @ts-ignore
             const progress = Math.min(100, event.payload) // Clamp to 100%
             setGameDownloadUpdateProgress(progress)
             console.log(`Download progress event received: ${progress}%`)
@@ -305,7 +264,7 @@ export function InstallVU() {
           }),
 
           // Download speed: Flat number payload (KB/s)
-          listen<CustomSpeedEvent>('download-speed', (event) => {
+          listen('download-speed', (event: NumericPayload) => {
             const speedKbps = event.payload // KB/s from Rust (average)
             const speedMbpsRaw = speedKbps / 1024 // Raw MB/s
             // Use standard rounding to 2 decimals for better fluctuation visibility
@@ -341,7 +300,7 @@ export function InstallVU() {
           }),
 
           // Listener for total size: Flat number payload (bytes)
-          listen<CustomTotalSizeEvent>('download-total-size', (event) => {
+          listen('download-total-size', (event: NumericPayload) => {
             const total = Math.floor(event.payload) // Ensure integer bytes
             console.log(
               `Download total size event received: ${total} bytes (${formatBytes(total)} )`,
@@ -350,28 +309,22 @@ export function InstallVU() {
           }),
 
           // Stalled listener (from Rust on disconnect/stall) - No setError here; handled in catch
-          listen<DownloadStalledEvent>('download-stalled', () => {
+          listen('download-stalled', () => {
             console.log('Download stalled event received: Connection interrupted')
             setIsStalled(true)
             setSpeedStatus('no-progress') // Trigger red dot
             setEta('Stalled – Retrying...')
 
             // Toast for user awareness (no auto-retry, prompt to resume)
-            toast.warning(
-              t(
-                'onboarding.install.prod.stalled',
-                'Connection interrupted. Check your network and resume download.',
-              ),
-              {
-                duration: 5000,
-              },
-            )
+            toast.warning(t('onboarding.install.prod.stalled'), {
+              duration: 5000,
+            })
           }),
 
           // Corrupt listener (from Rust on corrupt ZIP/partial)
-          listen<DownloadCorruptEvent>('download-corrupt', (event) => {
+          listen('download-corrupt', (event: DownloadCorruptEvent) => {
             console.log('Download corrupt event received:', event.payload)
-            const { reason, progress, action, error: err } = event.payload
+            const { reason, action, error: err } = event.payload
             let corruptMsg = `Corrupt download detected (${reason}). File ${action === 'deleted' ? 'deleted' : 'fixed'} for fresh start.`
             if (err) {
               corruptMsg += ` Error: ${err}`
@@ -416,7 +369,7 @@ export function InstallVU() {
           }),
 
           // Extracting files remaining: Flat number payload
-          listen<TauriEmitEvent>('extracting-files', (event) => {
+          listen('extracting-files', (event: NumericPayload) => {
             setGameDownloadUpdateExtractingFilesRemaining(event.payload)
             console.log('Files remaining:', event.payload)
           }),
@@ -518,7 +471,6 @@ export function InstallVU() {
             { duration: 5000 },
           )
         } else {
-          // Other errors: show error box
           setIsStalled(false)
           setError(errorMsg)
           // Specific toasts
@@ -590,22 +542,11 @@ export function InstallVU() {
       defaultPath,
     })
     if (installPath) {
-      console.log('Folder selected:', installPath) // Debug log
-      setLastInstallPath(installPath) // Cache for future resumes
-      setVuProdInstallPath(installPath)
-      toast.info(
-        t(
-          'onboarding.install.prod.toast.selectingPath',
-          'Installation path selected. Starting download...',
-        ),
-        {
-          duration: 2000,
-        },
-      )
-      // Directly start download after selection (bypasses dialog auto-trigger for reliability)
-      await startDownload(installPath)
-      // Note: If you need the InstallVuProdDialog for confirmation/editing, add logic here to open it
-      // e.g., if (dialogRef.current) { dialogRef.current.showModal(); } but comment out startDownload and rely on onPathConfirm
+      console.log('Folder selected:', installPath)
+      setLastInstallPath(installPath)
+      if (dialogRef.current) {
+        dialogRef.current.click()
+      }
     } else {
       console.log('No folder selected') // Debug log
     }
@@ -779,16 +720,10 @@ export function InstallVU() {
             <Download className="mr-2 h-4 w-4" />
             {t('onboarding.install.prod.download.button', 'Select Directory & Download')}
           </Button>
-          {/* Dialog for optional path confirmation/editing – not auto-triggered */}
           <InstallVuProdDialog
-            vuProdInstallPath={vuProdInstallPath}
-            setGameDownloadUpdateInstalling={setGameDownloadUpdateInstalling}
-            gameDownloadUpdateInstalling={gameDownloadUpdateInstalling}
-            gameDownloadUpdateExtracting={gameDownloadUpdateExtracting}
+            vuProdInstallPath={lastInstallPath}
             dialogRef={dialogRef}
             onPathConfirm={async (path) => {
-              console.log('Dialog confirmed path:', path) // Debug log
-              setLastInstallPath(path)
               await startDownload(path)
             }}
           />

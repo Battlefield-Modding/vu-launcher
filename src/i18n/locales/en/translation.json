@@ -281,6 +281,7 @@
           "extractingSuffix": "remaining",
           "header": "Downloading VU"
         },
+        "stalled": "Connection interrupted. Check your connection and click resume.",
         "toast": {
           "chooseInstallDir": {
             "failure": "Failed to set VU install path",
