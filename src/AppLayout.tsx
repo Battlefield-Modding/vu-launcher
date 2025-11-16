@@ -2,10 +2,10 @@ import './App.css'
 
 import useBlockContextMenu from './hooks/block-context-menu'
 import { useLocation, useNavigate } from 'react-router'
-import { Menu, menuOrder } from './components/Menu'
+import { Menu } from './components/Menu'
 import PageTransition from './components/PageTransition'
 import { Toaster } from 'sonner'
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState } from 'react'
 import { firstTimeSetup, getUserPreferences, saveUserPreferences } from './api'
 import { invoke } from '@tauri-apps/api/core'
 import { Updating } from './components/Updating'
@@ -24,9 +24,6 @@ export function AppLayout() {
 
   const location = useLocation()
   const navigate = useNavigate()
-
-  const [direction, setDirection] = useState<'up' | 'down'>('up')
-  const prevPathRef = useRef(location.pathname)
 
   useEffect(() => {
     const fetchVersion = async () => {
@@ -62,11 +59,6 @@ export function AppLayout() {
   }, [])
 
   useEffect(() => {
-    const prevIndex = menuOrder.indexOf(prevPathRef.current)
-    const currIndex = menuOrder.indexOf(location.pathname)
-    setDirection(currIndex > prevIndex ? 'up' : 'down')
-    prevPathRef.current = location.pathname
-
     async function storeLatestRoute() {
       const preferences = await getUserPreferences()
       preferences.last_visted_route = location.pathname
