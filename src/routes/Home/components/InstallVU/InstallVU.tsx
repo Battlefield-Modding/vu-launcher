@@ -50,19 +50,18 @@ export function InstallVU() {
     gameDownloadUpdateExtractingFilesRemaining,
     setGameDownloadUpdateExtractingFilesRemaining,
   ] = useState(0)
-  const [totalDownloadSize, setTotalDownloadSize] = useState(0) // Total bytes (set dynamically from Rust event only)
-  const [downloadedBytes, setDownloadedBytes] = useState(0) // Downloaded bytes (derived from progress)
+  const [totalDownloadSize, setTotalDownloadSize] = useState(0)
+  const [downloadedBytes, setDownloadedBytes] = useState(0)
   const [eta, setEta] = useState('Calculating...') // Estimated time remaining (mm:ss)
-  const [error, setError] = useState<string | null>(null) // Generic error message
-  const [errorType, setErrorType] = useState<RustErrorType>(null) // Categorize for icons/toasts (network, server, etc.)
-  const [corruptError, setCorruptError] = useState<string | null>(null) // Specific for corrupt ZIP
-  const [lastInstallPath, setLastInstallPath] = useState<string>('') // Cached last path for resume
-  const [lastProgressAtError, setLastProgressAtError] = useState(0) // Track % at stall for button text
+  const [error, setError] = useState<string | null>(null)
+  const [errorType, setErrorType] = useState<RustErrorType>(null)
+  const [corruptError, setCorruptError] = useState<string | null>(null)
+  const [lastInstallPath, setLastInstallPath] = useState<string>('')
+  const [lastProgressAtError, setLastProgressAtError] = useState(0)
   const [_speedHistory, setSpeedHistory] = useState<number[]>([]) // Track last 5 speeds for stability calc
-  const [speedStatus, setSpeedStatus] = useState<SpeedStatus>(null) // Stable/Unstable/No progress indicator
-  const [isStalled, setIsStalled] = useState(false) // Track stalled state for UX (retrying or prompt)
+  const [speedStatus, setSpeedStatus] = useState<SpeedStatus>(null)
+  const [isStalled, setIsStalled] = useState(false)
 
-  // Refs for unlistens to handle async setup
   const dialogRef = useRef<any>(null)
   const unlistensRef = useRef<UnlistenFn[]>([])
   const { t } = useTranslation()
@@ -93,7 +92,6 @@ export function InstallVU() {
     gameDownloadUpdateProgressRef.current = gameDownloadUpdateProgress
   }, [gameDownloadUpdateProgress])
 
-  // Emit VU install status to parent/other listeners
   const emitInstallStatus = useCallback(async (installing: boolean) => {
     try {
       await emit('vu-install-status', { installing })
@@ -103,7 +101,6 @@ export function InstallVU() {
     }
   }, [])
 
-  // Categorize Rust error for better UX (icons, toasts) - Added 'stalled'
   const categorizeRustError = useCallback((errorMsg: string): RustErrorType => {
     const lower = errorMsg.toLowerCase()
     if (
@@ -140,7 +137,6 @@ export function InstallVU() {
     return 'generic'
   }, [])
 
-  // Format bytes to GB/MB for display
   const formatBytes = useCallback((bytes: number) => {
     if (bytes >= 1024 * 1024 * 1024) {
       return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} GB`
@@ -148,16 +144,14 @@ export function InstallVU() {
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
   }, [])
 
-  // Calculate and format ETA (using direct speed in MB/s)
   const calculateEta = useCallback((remainingBytes: number, speedMbps: number) => {
     if (speedMbps <= 0 || remainingBytes <= 0) {
       return 'Calculating...'
     }
     const speedBytesPerSec = speedMbps * 1024 * 1024 // Convert MB/s to bytes/s
     let secondsRemaining = Math.ceil(remainingBytes / speedBytesPerSec)
-    secondsRemaining = Math.max(0, secondsRemaining) // Clamp to prevent negative
+    secondsRemaining = Math.max(0, secondsRemaining)
     if (secondsRemaining < 5) {
-      // Slightly higher threshold to avoid jitter at end
       return 'Finishing...'
     }
     const minutes = Math.floor(secondsRemaining / 60)
@@ -165,44 +159,39 @@ export function InstallVU() {
     return `${minutes}m ${seconds.toString().padStart(2, '0')}s`
   }, [])
 
-  // Calculate speed stability (simple variance: low change over last 3+ speeds = stable)
   const calculateSpeedStability = useCallback((currentSpeed: number, history: number[]) => {
-    if (history.length < 3) return null // Need min history for assessment
-    const recentSpeeds = [currentSpeed, ...history.slice(-2)] // Last 3 speeds (current + last 2)
+    if (history.length < 3) return null
+    const recentSpeeds = [currentSpeed, ...history.slice(-2)]
     const avg = recentSpeeds.reduce((a, b) => a + b, 0) / recentSpeeds.length
     const variance =
       recentSpeeds.reduce((sum, speed) => sum + Math.pow(speed - avg, 2), 0) / recentSpeeds.length
     const stdDev = Math.sqrt(variance)
-    // Threshold: <0.03 MB/s std dev = stable (e.g., 0.87 ±0.01); >0.03 = unstable
     return stdDev < 0.03 ? 'stable' : 'unstable'
   }, [])
 
-  // Separate effect to reset derived states when install starts (avoids loop in listener effect)
   useEffect(() => {
     if (gameDownloadUpdateInstalling) {
       setTotalDownloadSize(0)
       setDownloadedBytes(0)
       setEta('Calculating...')
-      setSpeedHistory([]) // Reset history on new install
+      setSpeedHistory([])
       setSpeedStatus(null)
       setIsStalled(false)
-      setCorruptError(null) // Clear corrupt on new start
-      setError(null) // Clear errors on start
+      setCorruptError(null)
+      setError(null)
       setErrorType(null)
-      setGameDownloadUpdateExtracting(false) // Ensure not stuck on extract
+      setGameDownloadUpdateExtracting(false)
     }
   }, [gameDownloadUpdateInstalling])
 
-  // Effect to derive downloadedBytes, ETA, and no-progress status
   useEffect(() => {
     if (!gameDownloadUpdateInstalling || totalDownloadSize <= 0) {
-      return // Guard: Only during install, after total available
+      return
     }
 
     const downloaded = (gameDownloadUpdateProgress / 100) * totalDownloadSize
     setDownloadedBytes(downloaded)
 
-    // ETA only if speed available and not stalled/corrupt/error
     if (gameDownloadUpdateSpeed > 0 && !isStalled && !corruptError && !error) {
       const remainingBytes = Math.max(0, totalDownloadSize - downloaded)
       const etaTime = calculateEta(remainingBytes, gameDownloadUpdateSpeed)
@@ -215,9 +204,8 @@ export function InstallVU() {
       !corruptError &&
       !error
     ) {
-      // No progress: Speed=0 after meaningful progress (e.g., total set, progress started, but no speed events)
       setSpeedStatus('no-progress')
-      setEta('Stalled') // Or keep 'Calculating...' if preferred
+      setEta('Stalled')
       console.log('Speed status: No progress (speed=0 despite progress>10%)')
     }
 
@@ -231,27 +219,24 @@ export function InstallVU() {
     gameDownloadUpdateInstalling,
     calculateEta,
     formatBytes,
-    speedStatus, // Dep for no-progress check
-    isStalled, // New: Avoid no-progress during stalled retry
-    corruptError, // Guard for corrupt
-    error, // Guard for error
+    speedStatus,
+    isStalled,
+    corruptError,
+    error,
   ])
 
-  // Main listener setup: Async setup with Promise.all to handle Tauri v2's async listen
   useEffect(() => {
     unlistensRef.current = []
 
     const setupListeners = async () => {
       try {
         unlistensRef.current = await Promise.all([
-          // Download progress: Flat number payload (percentage)
           listen('download-progress', (event: NumericPayload) => {
             // @ts-ignore
-            const progress = Math.min(100, event.payload) // Clamp to 100%
+            const progress = Math.min(100, event.payload)
             setGameDownloadUpdateProgress(progress)
             console.log(`Download progress event received: ${progress}%`)
 
-            // On progress update during error/stalled: Clear if resuming (e.g., manual retry)
             if (
               (errorRef.current || isStalledRef.current || corruptErrorRef.current) &&
               progress > lastProgressAtError
@@ -263,29 +248,26 @@ export function InstallVU() {
             }
           }),
 
-          // Download speed: Flat number payload (KB/s)
           listen('download-speed', (event: NumericPayload) => {
-            const speedKbps = event.payload // KB/s from Rust (average)
-            const speedMbpsRaw = speedKbps / 1024 // Raw MB/s
-            // Use standard rounding to 2 decimals for better fluctuation visibility
+            const speedKbps = event.payload
+            const speedMbpsRaw = speedKbps / 1024
+
             const speedMbps = Math.round(speedMbpsRaw * 100) / 100 // E.g., 0.874 → 0.87
             console.log(
               `Download speed event received: ${speedKbps.toFixed(2)} KB/s → ${speedMbps.toFixed(2)} MB/s (raw: ${speedMbpsRaw.toFixed(3)})`,
             )
             setGameDownloadUpdateSpeed(speedMbps)
 
-            // Reset no-progress and stalled on speed event (progress resuming)
             if (speedStatusRef.current === 'no-progress' || isStalledRef.current) {
               setSpeedStatus(null)
               setIsStalled(false)
-              setError(null) // Clear stalled error if resuming
+              setError(null)
             }
-            // Clear corrupt if speed >0 (new fresh download in progress)
+
             if (speedMbps > 0) {
               setCorruptError(null)
             }
 
-            // Update speed history and stability
             setSpeedHistory((prev) => {
               const newHistory = [...prev, speedMbps].slice(-5) // Keep last 5 speeds
               const stability = calculateSpeedStability(speedMbps, newHistory)
@@ -299,7 +281,6 @@ export function InstallVU() {
             })
           }),
 
-          // Listener for total size: Flat number payload (bytes)
           listen('download-total-size', (event: NumericPayload) => {
             const total = Math.floor(event.payload) // Ensure integer bytes
             console.log(
@@ -308,20 +289,17 @@ export function InstallVU() {
             setTotalDownloadSize(total)
           }),
 
-          // Stalled listener (from Rust on disconnect/stall) - No setError here; handled in catch
           listen('download-stalled', () => {
             console.log('Download stalled event received: Connection interrupted')
             setIsStalled(true)
-            setSpeedStatus('no-progress') // Trigger red dot
+            setSpeedStatus('no-progress')
             setEta('Stalled – Retrying...')
 
-            // Toast for user awareness (no auto-retry, prompt to resume)
             toast.warning(t('onboarding.install.prod.stalled'), {
               duration: 5000,
             })
           }),
 
-          // Corrupt listener (from Rust on corrupt ZIP/partial)
           listen('download-corrupt', (event: DownloadCorruptEvent) => {
             console.log('Download corrupt event received:', event.payload)
             const { reason, action, error: err } = event.payload
@@ -330,17 +308,17 @@ export function InstallVU() {
               corruptMsg += ` Error: ${err}`
             }
             setCorruptError(corruptMsg)
-            setErrorType('corrupt') // Categorize as corrupt
+            setErrorType('corrupt')
             setIsStalled(true)
-            setSpeedStatus('no-progress') // Red dot
+            setSpeedStatus('no-progress')
             setEta('Restarting Fresh...')
-            // Snap to 0% visual if partial deleted (action=deleted)
+
             if (action === 'deleted') {
               setGameDownloadUpdateProgress(0)
               setDownloadedBytes(0)
               setTotalDownloadSize(0)
             }
-            // Toast specific to reason
+
             const toastMsg =
               reason === 'zip-invalid'
                 ? 'Downloaded ZIP is invalid/corrupt. Deleted and restarting fresh...'
@@ -358,23 +336,20 @@ export function InstallVU() {
             })
           }),
 
-          // Extracting: No payload
           listen('download-extracting', () => {
             setGameDownloadUpdateExtracting(true)
-            setIsStalled(false) // Clear stalled during extract
-            setCorruptError(null) // Clear corrupt during extract
+            setIsStalled(false)
+            setCorruptError(null)
             setError(null)
-            setErrorType(null) // Clear errors during extract
+            setErrorType(null)
             console.log('Files Extracting.')
           }),
 
-          // Extracting files remaining: Flat number payload
           listen('extracting-files', (event: NumericPayload) => {
             setGameDownloadUpdateExtractingFilesRemaining(event.payload)
             console.log('Files remaining:', event.payload)
           }),
 
-          // Install complete: No payload
           listen('install-complete', async () => {
             setGameDownloadUpdateInstalling(false)
             setGameDownloadUpdateExtracting(false)
@@ -386,7 +361,7 @@ export function InstallVU() {
             setErrorType(null)
             setCorruptError(null)
             setIsStalled(false)
-            setSpeedHistory([]) // Reset on complete
+            setSpeedHistory([])
             setSpeedStatus(null)
             toast.success(
               t(
@@ -399,7 +374,7 @@ export function InstallVU() {
               refetchType: 'all',
             })
             console.log('Install completed')
-            await emitInstallStatus(false) // Emit end to parent
+            await emitInstallStatus(false)
           }),
         ])
       } catch (err) {
@@ -409,7 +384,6 @@ export function InstallVU() {
 
     setupListeners()
 
-    // Cleanup: Call each unlisten function if it's a function
     return () => {
       unlistensRef.current.forEach((unlisten) => {
         if (typeof unlisten === 'function') {
@@ -426,28 +400,27 @@ export function InstallVU() {
     calculateSpeedStability,
     categorizeRustError,
     lastProgressAtError,
-  ]) // Stable deps only: No changing states
+  ])
 
-  // Helper to start download with error handling
   const startDownload = useCallback(
     async (installPath: string) => {
-      console.log('Starting download for path:', installPath) // Debug log
+      console.log('Starting download for path:', installPath)
       try {
-        setLastProgressAtError(gameDownloadUpdateProgressRef.current) // Capture current before start
+        setLastProgressAtError(gameDownloadUpdateProgressRef.current)
         setGameDownloadUpdateInstalling(true)
         setError(null)
         setErrorType(null)
         setCorruptError(null)
         setIsStalled(false)
         setGameDownloadUpdateSpeed(0)
-        setGameDownloadUpdateProgress(gameDownloadUpdateProgressRef.current) // Preserve progress for resume
+        setGameDownloadUpdateProgress(gameDownloadUpdateProgressRef.current)
         setDownloadedBytes((gameDownloadUpdateProgressRef.current / 100) * totalDownloadSize)
         setEta('Calculating...')
         setSpeedHistory([])
         setSpeedStatus(null)
         await emitInstallStatus(true)
         await invoke('download_game', { installPath })
-        console.log('Download invoke succeeded') // Debug log
+        console.log('Download invoke succeeded')
       } catch (err: any) {
         console.error('Download invoke failed:', err)
         setGameDownloadUpdateInstalling(false)
@@ -459,10 +432,9 @@ export function InstallVU() {
         setErrorType(errType)
         setLastProgressAtError(gameDownloadUpdateProgressRef.current)
 
-        // Special handling for stalled (show stalled mode, not error box)
         if (errType === 'stalled') {
           setIsStalled(true)
-          setError(null) // Don't show generic error for stalled
+          setError(null)
           toast.warning(
             t(
               'onboarding.install.prod.error.stalled',
@@ -473,7 +445,7 @@ export function InstallVU() {
         } else {
           setIsStalled(false)
           setError(errorMsg)
-          // Specific toasts
+
           if (errType === 'network') {
             toast.warning(errorMsg, { duration: 4000, icon: <WifiOff className="h-4 w-4" /> })
           } else if (errType === 'server') {
@@ -483,7 +455,7 @@ export function InstallVU() {
           } else {
             toast.error(errorMsg, { duration: 5000 })
           }
-          // Hint for resume if partial progress
+
           if (gameDownloadUpdateProgressRef.current > 5 && errType !== 'corrupt') {
             toast.info(
               t(
@@ -496,21 +468,20 @@ export function InstallVU() {
         }
         setGameDownloadUpdateSpeed(0)
         setEta('Error')
-        setSpeedHistory([]) // Reset on error
-        setSpeedStatus('no-progress') // Red dot on error
-        setGameDownloadUpdateExtracting(false) // Cancel extracting if stuck
+        setSpeedHistory([])
+        setSpeedStatus('no-progress')
+        setGameDownloadUpdateExtracting(false)
       }
     },
     [t, emitInstallStatus, categorizeRustError, gameDownloadUpdateProgressRef, totalDownloadSize],
   )
 
-  // New: handleResume – Uses cached path, no dialog if possible
   const handleResume = useCallback(async () => {
     if (!lastInstallPath) {
       toast.warning(t('onboarding.install.prod.noPath', 'No previous path. Select a new one.'), {
         duration: 3000,
       })
-      return handleDownloadVU() // Fallback to full
+      return handleDownloadVU()
     }
 
     toast.info(
@@ -522,18 +493,18 @@ export function InstallVU() {
   }, [lastInstallPath, lastProgressAtError, t, startDownload, handleDownloadVU])
 
   async function handleDownloadVU() {
-    console.log('handleDownloadVU called - opening folder dialog') // Debug log
-    setError(null) // Clear previous errors
+    console.log('handleDownloadVU called - opening folder dialog')
+    setError(null)
     setErrorType(null)
-    setCorruptError(null) // Clear corrupt
+    setCorruptError(null)
     setGameDownloadUpdateSpeed(0)
-    setGameDownloadUpdateProgress(0) // Force 0% for fresh visual (backend will set initial if resume, but new path = fresh)
+    setGameDownloadUpdateProgress(0)
     setDownloadedBytes(0)
     setTotalDownloadSize(0)
     setEta('Calculating...')
-    setSpeedHistory([]) // Reset on new download
+    setSpeedHistory([])
     setSpeedStatus(null)
-    setIsStalled(false) // Clear stalled on manual start
+    setIsStalled(false)
     setLastProgressAtError(0)
     const defaultPath = await getLauncherInstallPath()
     const installPath = await open({
@@ -548,31 +519,28 @@ export function InstallVU() {
         dialogRef.current.click()
       }
     } else {
-      console.log('No folder selected') // Debug log
+      console.log('No folder selected')
     }
   }
 
-  // Handle manual cancel/retry (emit end if was installing) – Clears for fresh/restart
   const handleCancelOrRetry = async () => {
     const wasInstalling = gameDownloadUpdateInstalling
     setError(null)
     setErrorType(null)
-    setCorruptError(null) // Clear corrupt on retry action
+    setCorruptError(null)
     setGameDownloadUpdateInstalling(false)
     setGameDownloadUpdateSpeed(0)
-    setGameDownloadUpdateProgress(0) // Reset to 0 for fresh/restart visual
+    setGameDownloadUpdateProgress(0)
     setDownloadedBytes(0)
     setTotalDownloadSize(0)
     setEta('Calculating...')
-    setSpeedHistory([]) // Reset on retry
+    setSpeedHistory([])
     setSpeedStatus(null)
     setIsStalled(false)
     setLastProgressAtError(0)
     if (wasInstalling) {
       await emitInstallStatus(false)
     }
-    // On retry, if corrupt, Rust has deleted partial → Fresh download
-    // If stalled, partial remains → Resume on next startDownload
   }
 
   const formatSpeed = (speed: number) => {
@@ -580,10 +548,9 @@ export function InstallVU() {
       const kbps = speed * 1024
       return `${kbps.toFixed(1)} KB/s`
     }
-    return `${speed.toFixed(2)} MB/s` // 2 decimals for subtlety (was 1; shows 0.87 → 0.90 changes)
+    return `${speed.toFixed(2)} MB/s`
   }
 
-  // Icon based on error type
   const getErrorIcon = (type: RustErrorType) => {
     switch (type) {
       case 'network':
@@ -600,7 +567,6 @@ export function InstallVU() {
     }
   }
 
-  // Dot indicator based on speed status (enhanced for stalled/corrupt – force red)
   const getSpeedDot = () => {
     if (
       (speedStatus === null || speedStatus === 'no-progress') &&
@@ -608,8 +574,8 @@ export function InstallVU() {
       !corruptError &&
       !error
     )
-      return null // No dot until assessable or stalled/corrupt
-    let dotClass = 'bg-red-500' // Default to red for stalled/no-progress/corrupt
+      return null
+    let dotClass = 'bg-red-500'
     let pulse = true
     if (speedStatus === 'stable') {
       dotClass = 'bg-green-500'
@@ -618,7 +584,6 @@ export function InstallVU() {
       dotClass = 'bg-orange-500'
       pulse = false
     } else {
-      // no-progress or stalled or corrupt
       pulse = true
     }
     return (
@@ -626,17 +591,15 @@ export function InstallVU() {
         className={cn(
           'ml-1 inline-block h-2 w-2 rounded-full',
           dotClass,
-          pulse ? 'animate-pulse' : '', // Always pulse on stalled/no-progress/corrupt
+          pulse ? 'animate-pulse' : '',
         )}
         title={`Speed: ${speedStatus === 'stable' ? 'Stable' : speedStatus === 'unstable' ? 'Unstable' : isStalled ? 'Stalled (retrying)' : corruptError ? 'Corrupt (restarting)' : 'No progress'}`}
       />
     )
   }
 
-  // Determine UI mode: Normal, Stalled, Corrupt, or Error
   const uiMode = isStalled ? 'stalled' : corruptError ? 'corrupt' : error ? 'error' : 'normal'
 
-  // Dynamic action buttons based on mode/type
   const getActionButton = () => {
     if (corruptError) {
       return (
@@ -650,7 +613,7 @@ export function InstallVU() {
               setError(null)
               setErrorType(null)
               setGameDownloadUpdateInstalling(false)
-              setLastInstallPath('') // Clear cache for fresh
+              setLastInstallPath('')
               handleCancelOrRetry()
             }}
           >
@@ -689,7 +652,6 @@ export function InstallVU() {
       )
     }
 
-    // For stalled (manual resume)
     if (isStalled && !error && !corruptError && !gameDownloadUpdateExtracting) {
       return (
         <Button variant="outline" className="w-full" onClick={handleResume}>
@@ -812,7 +774,7 @@ export function InstallVU() {
                       <span className="ml-auto">Downloaded: {formatBytes(downloadedBytes)}</span>
                     </div>
                   )}
-                  {/* Legend: Subtle footer under info grid – Hide if stalled/corrupt for simplicity */}
+
                   {uiMode === 'normal' && (
                     <div className="mt-2 flex items-center justify-center gap-3 text-[10px] opacity-60">
                       <span className="flex items-center gap-1">
@@ -859,7 +821,7 @@ export function InstallVU() {
               )}
             </>
           )}
-          {/* Action buttons for stalled/errors (only if not extracting) */}
+
           {(error || corruptError || (isStalled && !error && !corruptError)) &&
             !gameDownloadUpdateExtracting &&
             getActionButton()}
