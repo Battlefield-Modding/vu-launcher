@@ -265,6 +265,8 @@
         },
         "header": "Found VU Prod. Install VU Dev also?"
       },
+      "extractDescription": "Files remaining",
+      "extractTitle": "Extracting files",
       "prod": {
         "dialog": {
           "button": {
