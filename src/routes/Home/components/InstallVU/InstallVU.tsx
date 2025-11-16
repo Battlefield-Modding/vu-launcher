@@ -1,7 +1,6 @@
 import { getLauncherInstallPath } from '@/api'
 import { Button } from '@/components/ui/button'
 import {
-  Download,
   Zap,
   Clock,
   FileText,
@@ -21,7 +20,7 @@ import { invoke } from '@tauri-apps/api/core'
 import { listen, emit, type UnlistenFn } from '@tauri-apps/api/event'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
-import { InstallVuProdDialog } from './InstallVuProdDialog'
+import { DownloadVUButton } from './DownloadVUButton'
 
 type NumericPayload = {
   payload: number
@@ -669,27 +668,12 @@ export function InstallVU() {
   return (
     <div className="flex w-full flex-col items-center justify-center space-y-4">
       {!gameDownloadUpdateInstalling && (
-        <>
-          <Button
-            variant="default"
-            size="lg"
-            className="w-full max-w-sm px-6"
-            onClick={(e) => {
-              e.preventDefault()
-              handleDownloadVU()
-            }}
-          >
-            <Download className="mr-2 h-4 w-4" />
-            {t('onboarding.install.prod.download.button', 'Select Directory & Download')}
-          </Button>
-          <InstallVuProdDialog
-            vuProdInstallPath={lastInstallPath}
-            dialogRef={dialogRef}
-            onPathConfirm={async (path) => {
-              await startDownload(path)
-            }}
-          />
-        </>
+        <DownloadVUButton
+          handleDownloadVU={handleDownloadVU}
+          dialogRef={dialogRef}
+          lastInstallPath={lastInstallPath}
+          startDownload={startDownload}
+        />
       )}
 
       {gameDownloadUpdateInstalling && (
