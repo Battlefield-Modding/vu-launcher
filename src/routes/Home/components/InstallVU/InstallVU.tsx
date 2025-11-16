@@ -21,7 +21,9 @@ import { listen, emit, type UnlistenFn } from '@tauri-apps/api/event'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { DownloadVUButton } from './DownloadVUButton'
-
+import { ResumeStalledDownloadButton } from './ResumeStalledDownloadButton'
+import { DownloadErrorComponent } from './DownloadErrorComponent'
+import { CorruptedDownloadComponent } from './CorruptedDownloadComponent'
 type NumericPayload = {
   payload: number
 }
@@ -70,6 +72,15 @@ export function InstallVU() {
   const corruptErrorRef = useRef(corruptError)
   const speedStatusRef = useRef(speedStatus)
   const gameDownloadUpdateProgressRef = useRef(gameDownloadUpdateProgress)
+
+  function restartCorruptedDownload() {
+    setCorruptError(null)
+    setError(null)
+    setErrorType(null)
+    setGameDownloadUpdateInstalling(false)
+    setLastInstallPath('')
+    handleCancelOrRetry()
+  }
 
   useEffect(() => {
     errorRef.current = error
@@ -602,63 +613,31 @@ export function InstallVU() {
   const getActionButton = () => {
     if (corruptError) {
       return (
-        <div className="flex w-full gap-2">
-          <Button
-            variant="destructive"
-            size="sm"
-            className="flex-1"
-            onClick={() => {
-              setCorruptError(null)
-              setError(null)
-              setErrorType(null)
-              setGameDownloadUpdateInstalling(false)
-              setLastInstallPath('')
-              handleCancelOrRetry()
-            }}
-          >
-            <RefreshCw className="mr-1 h-3 w-3" />
-            Restart Fresh
-          </Button>
-          <Button variant="outline" size="sm" className="flex-1" onClick={handleResume}>
-            Resume if Partial
-          </Button>
-        </div>
+        <CorruptedDownloadComponent
+          handleResume={handleResume}
+          restartCorruptedDownload={restartCorruptedDownload}
+        />
       )
     }
 
     if (error && !corruptError) {
-      const isResume = errorType === 'network'
-      const buttonText = isResume
-        ? `Resume from ${lastProgressAtError > 0 ? lastProgressAtError.toFixed(1) + '%' : ''}`
-        : t('onboarding.install.prod.retry', 'Retry')
-      const onClick = isResume ? handleResume : handleDownloadVU
       return (
-        <div className="flex w-full gap-2">
-          <Button variant="outline" size="sm" className="flex-1" onClick={onClick}>
-            {buttonText}
-          </Button>
-          {errorType === 'disk' && (
-            <Button variant="ghost" size="sm" className="flex-1" onClick={handleCancelOrRetry}>
-              {t('onboarding.install.prod.diskCancel', 'Cancel (Check Disk Space)')}
-            </Button>
-          )}
-          {errorType !== 'disk' && (
-            <Button variant="ghost" size="sm" className="flex-1" onClick={handleCancelOrRetry}>
-              Cancel
-            </Button>
-          )}
-        </div>
+        <DownloadErrorComponent
+          errorType={errorType}
+          handleCancelOrRetry={handleCancelOrRetry}
+          handleDownloadVU={handleDownloadVU}
+          handleResume={handleResume}
+          lastProgressAtError={lastProgressAtError}
+        />
       )
     }
 
     if (isStalled && !error && !corruptError && !gameDownloadUpdateExtracting) {
       return (
-        <Button variant="outline" className="w-full" onClick={handleResume}>
-          <RefreshCw className="mr-2 h-4 w-4" />
-          {lastProgressAtError > 0
-            ? `Resume from ${lastProgressAtError.toFixed(1)}%`
-            : t('onboarding.install.prod.resume', 'Resume Download')}
-        </Button>
+        <ResumeStalledDownloadButton
+          handleResume={handleResume}
+          lastProgressAtError={lastProgressAtError}
+        />
       )
     }
 

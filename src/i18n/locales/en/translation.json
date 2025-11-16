@@ -240,6 +240,13 @@
     "failure": "Failed to complete onboarding",
     "header": "First Time Setup",
     "install": {
+      "button": {
+        "cancel": "Cancel",
+        "cancelDiskSpace": "Cancel (No Disk Space Remaining)",
+        "resume": "Resume Download",
+        "resumeFrom": "Resume from",
+        "retry": "Retry"
+      },
       "complete": "Installation Complete!",
       "description": "Download the latest version of Venice Unleashed",
       "dev": {

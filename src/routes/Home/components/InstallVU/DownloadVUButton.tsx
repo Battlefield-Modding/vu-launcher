@@ -29,7 +29,7 @@ export function DownloadVUButton({
         }}
       >
         <Download className="mr-2 h-4 w-4" />
-        {t('onboarding.install.prod.download.button', 'Select Directory & Download')}
+        {t('onboarding.install.prod.download.button')}
       </Button>
       <InstallVuProdDialog
         vuProdInstallPath={lastInstallPath}
