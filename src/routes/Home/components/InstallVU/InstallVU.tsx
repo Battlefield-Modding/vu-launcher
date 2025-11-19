@@ -543,14 +543,6 @@ export function InstallVU() {
     }
   }
 
-  const formatSpeed = (speed: number) => {
-    if (speed < 1) {
-      const kbps = speed * 1024
-      return `${kbps.toFixed(1)} KB/s`
-    }
-    return `${speed.toFixed(2)} MB/s`
-  }
-
   const getErrorIcon = (type: RustErrorType) => {
     switch (type) {
       case 'network':

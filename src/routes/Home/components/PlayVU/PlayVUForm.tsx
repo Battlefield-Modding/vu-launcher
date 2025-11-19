@@ -29,7 +29,7 @@ import {
   setPreferredServer,
   toggleDevBranch,
 } from '@/api'
-import { Loader, Play, User, Globe } from 'lucide-react'
+import { Loader, User, Globe } from 'lucide-react'
 import DeleteVUCredentialDialog from './DeleteVUCredentialDialog'
 import DeleteVUServerDialog from './DeleteVUServerDialog'
 import { getCurrentWindow } from '@tauri-apps/api/window'

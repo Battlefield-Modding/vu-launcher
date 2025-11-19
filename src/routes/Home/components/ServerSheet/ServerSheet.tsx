@@ -10,7 +10,6 @@ import {
 } from '@/components/ui/sheet'
 import { Button } from '@/components/ui/button'
 
-import { Server } from 'lucide-react'
 import { useState } from 'react'
 import clsx from 'clsx'
 import ServerForm from './ServerForm'

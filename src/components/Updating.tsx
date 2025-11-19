@@ -2,7 +2,6 @@ import { getUserPreferences, setIgnoreUpdateVersion } from '@/api'
 import { check, Update } from '@tauri-apps/plugin-updater'
 import { relaunch } from '@tauri-apps/plugin-process'
 import { useEffect, useRef, useState } from 'react'
-import { Progress } from '@/components/ui/progress'
 import { useTranslation } from 'react-i18next'
 import {
   AlertDialog,
@@ -17,12 +16,11 @@ import {
 import { useQuery } from '@tanstack/react-query'
 import { QueryKey, UserPreferences } from '@/config/config'
 import { Button } from './ui/button'
-import { Loader, Loader2, Loader2Icon } from 'lucide-react'
-import { LoaderComponent } from './LoaderComponent'
+import { Loader2 } from 'lucide-react'
 
 export function Updating() {
   const [isUpdating, setIsUpdating] = useState(false)
-  const [downloadProgress, setDownloadProgress] = useState(0)
+  // const [downloadProgress, setDownloadProgress] = useState(0)
   const autoInstallRef = useRef(undefined)
   const [isReadyForInstall, setIsReadyForInstall] = useState(false)
   const [autoInstallTimer, setAutoInstallTimer] = useState(5)
@@ -98,8 +96,8 @@ export function Updating() {
         if (!isUpdating) {
           // console.log('SET IS UPDATING TRUE')
           setIsUpdating(() => true)
-          let downloaded = 0
-          let contentLength = 0
+          // let downloaded = 0
+          // let contentLength = 0
           // alternatively we could also call update.download() and update.install() separately
           console.log('GOING INTO DOWNLOAD FUNCTION')
 
@@ -110,6 +108,7 @@ export function Updating() {
           setIsUpdating(() => false)
 
           setIsReadyForInstall(() => true)
+          // @ts-expect-error
           autoInstallRef.current = setInterval(async () => {
             setAutoInstallTimer((prev) => prev - 1)
           }, 1000)
@@ -227,7 +226,7 @@ export function Updating() {
               <hr></hr>
             </AlertDialogTitle>
             <div className="mb-2 flex h-8">
-              <Loader2 className="animate-spin m-auto h-16 w-16" />
+              <Loader2 className="m-auto h-16 w-16 animate-spin" />
               {/* <Progress value={downloadProgress} className="h-full w-full flex-1" /> */}
             </div>
             {/* <div className="text-right">{downloadProgress.toFixed(2)}%</div> */}
