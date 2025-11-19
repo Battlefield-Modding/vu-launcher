@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { useTranslation } from 'react-i18next'
 
-export function DownloadErrorComponent({
+export function ErrorDownloadButton({
   errorType,
   lastProgressAtError,
   handleResume,

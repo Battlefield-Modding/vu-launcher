@@ -12,8 +12,8 @@ import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { DownloadVUButton } from './DownloadVUButton'
 import { ResumeStalledDownloadButton } from './ResumeStalledDownloadButton'
-import { DownloadErrorComponent } from './DownloadErrorComponent'
-import { CorruptedDownloadComponent } from './CorruptedDownloadComponent'
+import { ErrorDownloadButton } from './ErrorDownloadButton'
+import { CorruptedDownloadButton } from './CorruptedDownloadButton'
 import { DownloadMetricsComponent } from './DownloadMetricsComponent'
 import { ExtractionMetricsComponent } from './ExtractionMetricsComponent'
 
@@ -603,7 +603,7 @@ export function InstallVU() {
   const getActionButton = () => {
     if (corruptError) {
       return (
-        <CorruptedDownloadComponent
+        <CorruptedDownloadButton
           handleResume={handleResume}
           restartCorruptedDownload={restartCorruptedDownload}
         />
@@ -612,7 +612,7 @@ export function InstallVU() {
 
     if (error && !corruptError) {
       return (
-        <DownloadErrorComponent
+        <ErrorDownloadButton
           errorType={errorType}
           handleCancelOrRetry={handleCancelOrRetry}
           handleDownloadVU={handleDownloadVU}

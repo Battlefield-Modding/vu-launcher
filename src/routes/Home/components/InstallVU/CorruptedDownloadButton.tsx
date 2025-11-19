@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button'
 import { RefreshCw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-export function CorruptedDownloadComponent({
+export function CorruptedDownloadButton({
   restartCorruptedDownload,
   handleResume,
 }: {
