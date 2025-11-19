@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import {
   Download,
@@ -10,11 +10,10 @@ import {
   ArrowLeft,
   ArrowRight,
 } from 'lucide-react'
-import vuIconRed from '@/assets/vu-icon-red.svg' // Animated logo import
+import vuIconRed from '@/assets/vu-icon-red.svg'
 import { activateBf3LSX, finishOnboarding } from '@/api'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { QueryKey, routes, STALE } from '@/config/config'
-import { open } from '@tauri-apps/plugin-dialog'
 import { toast } from 'sonner'
 import { OnboardingCredentialsSheet } from './components/OnboardingCredentialsSheet'
 import { useTranslation } from 'react-i18next'
@@ -28,19 +27,15 @@ import { InstallStep } from './components/InstallStep'
 export function Onboarding() {
   const { t } = useTranslation()
   const [currentStep, setCurrentStep] = useState(0)
-  const [isActivated, setIsActivated] = useState(false)
+  const [showOnboarding, setShowOnboarding] = useState(false)
 
-  const [showOnboarding, setShowOnboarding] = useState(false) // Controls reveal of onboarding steps
-
-  const [selectedInstallPath, setSelectedInstallPath] = useState<string | null>(null) // Tracks user-selected base install path
+  const [selectedInstallPath, setSelectedInstallPath] = useState<string | null>(null)
   const navigate = useNavigate()
-  const queryClient = useQueryClient()
 
-  // Intro Animation: Show logo for 3 seconds, then reveal onboarding
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowOnboarding(true)
-    }, 3000) // 3s animation delay; adjust as needed (e.g., tie to animation end if using listener)
+    }, 3000)
 
     return () => clearTimeout(timer)
   }, [])
@@ -49,30 +44,26 @@ export function Onboarding() {
     queryKey: [QueryKey.IsVuInstalled],
     queryFn: async (): Promise<{ vuProduction: boolean; vuDevelopment: boolean }> => {
       try {
-        // Use custom base if available (from install event)
         const customBase = selectedInstallPath || undefined
 
-        // Call new Rust command (handles all path logic and checks internally)
         const isInstalled = await invoke<boolean>('is_vu_installed', { customBase })
 
         console.log(`VU installed check: ${isInstalled} (custom base: ${customBase || 'default'})`)
 
         return {
           vuProduction: isInstalled,
-          vuDevelopment: isInstalled, // Both identical as before
+          vuDevelopment: isInstalled,
         }
       } catch (err: any) {
         console.error('Installation check error:', err)
-        // Return false on error (matching your existing fallback)
         return { vuProduction: false, vuDevelopment: false }
       }
     },
     staleTime: STALE.never,
-    refetchOnMount: false, // Disable auto-refetch on mount to avoid during intro; manual trigger below
-    enabled: showOnboarding, // Only run query after reveal
+    refetchOnMount: false,
+    enabled: showOnboarding,
   })
 
-  // Initial refetch after intro (to avoid overlapping with logo animation)
   useEffect(() => {
     if (showOnboarding) {
       refetch()
@@ -84,7 +75,6 @@ export function Onboarding() {
       if (data.vuProduction && data.vuDevelopment) {
         setCurrentStep(1)
       } else {
-        // Explicitly stay or reset to step 0 if not fully installed (prevents false skips)
         setCurrentStep(0)
       }
     }
@@ -114,13 +104,12 @@ export function Onboarding() {
   }
 
   const prevStep = () => {
-    setCurrentStep((prev) => Math.max(0, prev - 1)) // Ensure can't go below 0, but always allow back
+    setCurrentStep((prev) => Math.max(0, prev - 1))
   }
 
   function handleActivateLSX() {
     toast(t('onboarding.toast.activateBF3'))
     activateBf3LSX()
-    setIsActivated(true)
   }
 
   async function completeOnboarding() {
@@ -155,10 +144,9 @@ export function Onboarding() {
     },
   ]
 
-  // Shared Error Content (post-reveal)
   const errorContent = (
     <div className="flex h-screen flex-col items-center justify-center gap-4 p-4">
-      <img src={vuIconRed} alt="VU Logo" className="animate-pulse mb-4 h-16 w-16" />
+      <img src={vuIconRed} alt="VU Logo" className="mb-4 h-16 w-16 animate-pulse" />
       <AlertCircle className="h-8 w-8 text-destructive" />
       <div className="text-center">
         <h1 className="text-2xl font-semibold">{t('onboarding.error')}</h1>
@@ -169,20 +157,14 @@ export function Onboarding() {
     </div>
   )
 
-  // Shared Pending Content (post-reveal)
   const pendingContent = (
     <div className="flex flex-1 flex-col items-center justify-center gap-4 p-4">
-      <img
-        src={vuIconRed}
-        alt="VU Logo"
-        className="animate-ping mb-4 h-16 w-16" // Subtle ping instead of spin for loading
-      />
-      <Loader className="animate-spin h-8 w-8 text-primary" />
+      <img src={vuIconRed} alt="VU Logo" className="mb-4 h-16 w-16 animate-ping" />
+      <Loader className="h-8 w-8 animate-spin text-primary" />
       <h1 className="text-xl font-semibold">{t('onboarding.loading')}</h1>
     </div>
   )
 
-  // Intro Logo Screen Overlay
   const introScreen = (
     <div
       className={cn(
@@ -190,15 +172,10 @@ export function Onboarding() {
         !showOnboarding ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0',
       )}
     >
-      <img
-        src={vuIconRed}
-        alt="VU Logo"
-        className="animate-logo-intro h-32 w-32" // New grow/fade animation
-      />
+      <img src={vuIconRed} alt="VU Logo" className="animate-logo-intro h-32 w-32" />
     </div>
   )
 
-  // Main Onboarding Structure (under overlay)
   const onboardingStructure = (
     <div
       className={cn(
@@ -206,19 +183,16 @@ export function Onboarding() {
         showOnboarding ? 'opacity-100' : 'opacity-0',
       )}
     >
-      {/* Fixed Header (appears on reveal) */}
       <header className="flex shrink-0 items-center justify-center border-b px-4 py-4">
         <h1 className="text-center text-xl font-bold text-foreground sm:text-2xl">
           {t('onboarding.header')}
         </h1>
       </header>
 
-      {/* Language Selector (appears on reveal) */}
-      <div className="absolute right-4 top-4 z-40">
+      <div className="absolute bottom-4 left-4 z-40">
         <LanguageSelector />
       </div>
 
-      {/* Content Body: Error / Pending / Main Steps */}
       <div className="relative flex-1 overflow-hidden">
         {isError ? (
           <div className="flex h-full items-center justify-center">{errorContent}</div>
@@ -229,7 +203,6 @@ export function Onboarding() {
             className="flex h-full transition-transform duration-500 ease-in-out"
             style={{ transform: `translateX(-${currentStep * 100}%)` }}
           >
-            {/* Step 0: Install Panel - Single Card for Download Venice Unleashed */}
             <InstallStep
               vuProduction={vuProduction}
               vuDevelopment={vuDevelopment}
@@ -238,7 +211,6 @@ export function Onboarding() {
               data={data}
             />
 
-            {/* Step 1: Activate Panel - Single Card for List + Button */}
             <section className="flex w-full flex-shrink-0 flex-col items-center justify-center p-4">
               <div className="flex w-full max-w-sm flex-1 flex-col items-center justify-center">
                 <Card className="w-full max-w-md rounded-md border-border/50 p-4 shadow-md">
@@ -281,7 +253,6 @@ export function Onboarding() {
               </div>
             </section>
 
-            {/* Step 2: Account Panel - Single Card for Form + Button */}
             <section className="flex w-full flex-shrink-0 flex-col items-center justify-center p-4">
               <div className="flex w-full max-w-sm flex-1 flex-col items-center justify-center">
                 <Card className="w-full max-w-md rounded-md border-border/50 p-4 shadow-md">
@@ -309,7 +280,6 @@ export function Onboarding() {
         )}
       </div>
 
-      {/* Footer (appears on reveal) */}
       <footer className="flex shrink-0 items-center justify-between border-t bg-background p-4">
         <Button
           variant="outline"
@@ -372,26 +342,6 @@ export function Onboarding() {
     <div className="relative flex h-screen flex-col overflow-hidden bg-background">
       {introScreen}
       {onboardingStructure}
-      {/* Global Styles for Animations */}
-      <style jsx>{`
-        @keyframes logo-intro {
-          0% {
-            opacity: 0;
-            transform: scale(0.5);
-          }
-          50% {
-            opacity: 1;
-            transform: scale(1.1);
-          }
-          100% {
-            opacity: 0;
-            transform: scale(0.8);
-          }
-        }
-        .animate-logo-intro {
-          animation: logo-intro 3s ease-in-out infinite;
-        }
-      `}</style>
     </div>
   )
 }
