@@ -11,7 +11,6 @@ import { AutomaticallyUpdateToggle } from './components/AutomaticallyUpdateToggl
 import { CheckForUpdatesToggle } from './components/CheckForUpdatesToggle'
 import { SetVuPathSheet } from './components/SetVuPath/SetVuPathSheet'
 import { CopyProdToDev } from './components/CopyProdToDev'
-import { InstallVUFromSettings } from './components/InstallVuFromSettings'
 import { Button } from '@/components/ui/button'
 
 export default function Settings() {
@@ -67,7 +66,6 @@ export default function Settings() {
         {data.automatically_check_for_updates && <AutomaticallyUpdateToggle data={data} />}
         <SetVuPathSheet preferences={data} />
         <div>
-          <InstallVUFromSettings />
           <CopyProdToDev />
         </div>
         <LocalServerGuidForm guid={data.server_guid} />
