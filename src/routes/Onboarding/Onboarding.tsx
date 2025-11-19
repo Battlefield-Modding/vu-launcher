@@ -92,7 +92,7 @@ export function Onboarding() {
         setCurrentStep((prev) => prev + 1)
       }
     } else {
-      toast(t('onboarding.toast.completeStep', 'Please complete this step before proceeding'))
+      toast(t('onboarding.toast.completeStep'))
     }
   }
 
@@ -105,7 +105,7 @@ export function Onboarding() {
     if (onboardingFinished) {
       navigate(routes.HOME)
     } else {
-      toast(t('onboarding.failure', 'Onboarding could not be completed'))
+      toast(t('onboarding.failure'))
     }
   }
 
@@ -114,21 +114,21 @@ export function Onboarding() {
   const steps = [
     {
       id: 1,
-      title: t('onboarding.steps.install', 'Install VU'),
+      title: t('onboarding.steps.install.title'),
       icon: Download,
-      subtitle: t('onboarding.subtitle', 'Download Venice Unleashed'),
+      subtitle: t('onboarding.steps.install.description'),
     },
     {
       id: 2,
-      title: t('onboarding.steps.activate', 'Activate LSX'),
+      title: t('onboarding.steps.activate.title'),
       icon: Zap,
-      subtitle: t('onboarding.activate.description', 'Follow these steps to enable the mod'),
+      subtitle: t('onboarding.steps.activate.description'),
     },
     {
       id: 3,
-      title: t('onboarding.steps.account', 'Add Account'),
+      title: t('onboarding.steps.account.title'),
       icon: User,
-      subtitle: t('onboarding.account.description', 'Link your player credentials'),
+      subtitle: t('onboarding.account.description'),
     },
   ]
 
@@ -138,9 +138,7 @@ export function Onboarding() {
       <AlertCircle className="h-8 w-8 text-destructive" />
       <div className="text-center">
         <h1 className="text-2xl font-semibold">{t('onboarding.error')}</h1>
-        <p className="text-muted-foreground">
-          {error?.message || t('onboarding.unknownError', 'An unknown error occurred')}
-        </p>
+        <p className="text-muted-foreground">{error?.message || t('onboarding.unknownError')}</p>
       </div>
     </div>
   )

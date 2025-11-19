@@ -51,7 +51,7 @@ export function FirstTimeSetup() {
               <div className="flex flex-1 justify-center overflow-hidden rounded-md md:justify-end">
                 <img
                   src={serverKeyImage}
-                  alt={t('servers.firstTime.step1ImageAlt')}
+                  alt={t('servers.firstTime.serverKeyImageAlt')}
                   className="h-full w-full scale-[1.0] rounded-md object-cover object-left-bottom"
                 />
               </div>

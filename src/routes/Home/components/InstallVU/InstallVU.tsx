@@ -425,9 +425,7 @@ export function InstallVU() {
         console.error('Download invoke failed:', err)
         setGameDownloadUpdateInstalling(false)
         await emitInstallStatus(false)
-        const errorMsg =
-          err.message ||
-          t('onboarding.install.prod.error.generic', 'Installation failed. Please try again.')
+        const errorMsg = err.message || t('onboarding.install.prod.error.generic')
         const errType = categorizeRustError(errorMsg)
         setErrorType(errType)
         setLastProgressAtError(gameDownloadUpdateProgressRef.current)
@@ -435,13 +433,7 @@ export function InstallVU() {
         if (errType === 'stalled') {
           setIsStalled(true)
           setError(null)
-          toast.warning(
-            t(
-              'onboarding.install.prod.error.stalled',
-              'Download stalled (network issue). Check your connection and resume from partial progress.',
-            ),
-            { duration: 5000 },
-          )
+          toast.warning(t('onboarding.install.prod.error.stalled'), { duration: 5000 })
         } else {
           setIsStalled(false)
           setError(errorMsg)
@@ -458,10 +450,7 @@ export function InstallVU() {
 
           if (gameDownloadUpdateProgressRef.current > 5 && errType !== 'corrupt') {
             toast.info(
-              t(
-                'onboarding.install.prod.resumeHint',
-                `Partial download at ${gameDownloadUpdateProgressRef.current.toFixed(1)}%. Resume will continue.`,
-              ),
+              `${t('onboarding.install.prod.resumeHint')} ${gameDownloadUpdateProgressRef.current.toFixed(1)}%`,
               { duration: 3000 },
             )
           }
@@ -478,16 +467,15 @@ export function InstallVU() {
 
   const handleResume = useCallback(async () => {
     if (!lastInstallPath) {
-      toast.warning(t('onboarding.install.prod.noPath', 'No previous path. Select a new one.'), {
+      toast.warning(t('onboarding.install.prod.noPath'), {
         duration: 3000,
       })
       return handleDownloadVU()
     }
 
-    toast.info(
-      t('onboarding.install.prod.resuming', `Resuming from ${lastProgressAtError.toFixed(1)}%...`),
-      { duration: 2000 },
-    )
+    toast.info(`${t('onboarding.install.prod.resuming')} ${lastProgressAtError.toFixed(1)}%...`, {
+      duration: 2000,
+    })
 
     await startDownload(lastInstallPath)
   }, [lastInstallPath, lastProgressAtError, t, startDownload, handleDownloadVU])
@@ -667,26 +655,20 @@ export function InstallVU() {
                   />
                   <h3 className="text-lg font-semibold">
                     {uiMode === 'stalled'
-                      ? t('onboarding.install.prod.stalledHeader', 'Connection Stalled')
+                      ? t('onboarding.install.prod.stalledHeader')
                       : t('onboarding.install.prod.progress.header', 'Installing Venice Unleashed')}
                   </h3>
                 </div>
                 <p className="text-sm text-muted-foreground">
                   {uiMode === 'stalled'
-                    ? t(
-                        'onboarding.install.prod.stalledDescription',
-                        'Connection issue detected. Check your internet and click Resume to continue from partial download.',
-                      )
-                    : t(
-                        'onboarding.install.prod.progress.description',
-                        'Your download is in progress. This may take several minutes depending on your connection.',
-                      )}
+                    ? t('onboarding.install.prod.stalledDescription')
+                    : t('onboarding.install.prod.progress.description')}
                 </p>
               </div>
 
               <div className="space-y-2">
                 <div className="flex justify-between text-xs text-muted-foreground">
-                  <span>{t('onboarding.install.prod.progress.progress', 'Progress')}</span>
+                  <span>{t('onboarding.install.prod.progress.label')}</span>
                   <span>{gameDownloadUpdateProgress.toFixed(1)}%</span>
                 </div>
                 <Progress
@@ -711,10 +693,7 @@ export function InstallVU() {
               )}
               {uiMode === 'stalled' && (
                 <div className="text-center text-sm text-destructive">
-                  {t(
-                    'onboarding.install.prod.stalledMessage',
-                    'Click Resume to continue after checking your connection.',
-                  )}
+                  {t('onboarding.install.prod.stalledMessage')}
                 </div>
               )}
             </>

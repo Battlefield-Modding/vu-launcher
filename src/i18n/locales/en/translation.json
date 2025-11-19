@@ -283,16 +283,28 @@
           "button": "Choose Install Location",
           "header": "Download VU"
         },
+        "error": {
+          "generic": "Installation failed, please try again.",
+          "stalled": "Download stalled (network issue). Check connection and resume when ready."
+        },
         "locate": {
           "button": "Find VU",
           "header": "VU already installed?"
         },
+        "noPath": "Cannot resume because no install path found. Select new install path.",
         "progress": {
+          "description": "Download is in progress. This may take a few minutes depending on your connection.",
           "extractingPrefix": "Extracting Files",
           "extractingSuffix": "remaining",
-          "header": "Downloading VU"
+          "header": "Downloading VU",
+          "label": "Progress"
         },
+        "resumeHint": "Click resume to continue partial download at",
+        "resuming": "Resuming from",
         "stalled": "Connection interrupted. Check your connection and click resume.",
+        "stalledDescription": "Connection issue detected. Check internet and click Resume to continue.",
+        "stalledHeader": "Connection Stalled",
+        "stalledMessage": "Check connection and click resume to continue.",
         "toast": {
           "chooseInstallDir": {
             "failure": "Failed to set VU install path",
@@ -305,10 +317,25 @@
       "title": "Download Venice Unleashed"
     },
     "loading": "Loading Onboarding component",
+    "steps": {
+      "account": {
+        "title": "Add Account"
+      },
+      "activate": {
+        "description": "VU requires a first time bf3 activation step. If you have already activated BF3 you can skip this step.",
+        "title": "Activate BF3"
+      },
+      "install": {
+        "description": "Download Venice Unleashed",
+        "title": "Install VU"
+      }
+    },
     "toast": {
       "activateBF3": "Activating BF3",
+      "completeStep": "Please complete this step before proceeding",
       "learnMore": "Learn more about Venice Unleashed"
     },
+    "unknownError": "An unknown error has occured",
     "verify": {
       "error": "Failed to verify installation status",
       "installed": "Venice Unleashed is installed correctly!",
@@ -330,6 +357,7 @@
       },
       "loading": "Checking if Server Key Exists",
       "redoGuid": "Please re-enter your server GUID",
+      "serverKeyImageAlt": "Image showing how to get server key info",
       "step1": "Download Server Key",
       "step2": "Copy Server GUID",
       "step3": "Drag and Drop your key into this window",
