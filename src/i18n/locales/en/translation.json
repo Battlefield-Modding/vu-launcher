@@ -220,10 +220,12 @@
   },
   "onboarding": {
     "account": {
-      "add": "Add a VU account"
+      "add": "Add a VU account",
+      "description": "Enter your VU credentials for automatic login"
     },
     "activate": {
       "button": "Activate BF3",
+      "description": "Follow steps below to activate BF3",
       "header": "Activate BF3 with EA App / Origin",
       "step1": "Please launch your EA App / Origin and sign in.",
       "step2": "Once signed-in click on the Activate BF3 button:",
