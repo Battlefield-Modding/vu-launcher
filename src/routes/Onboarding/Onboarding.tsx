@@ -161,7 +161,7 @@ export function Onboarding() {
           </h1>
         </header>
 
-        <div className="absolute bottom-4 left-4 z-40">
+        <div className="absolute left-4 top-4 z-40">
           <LanguageSelector />
         </div>
 
