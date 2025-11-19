@@ -10,14 +10,7 @@ import {
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 
 import { CIcon } from '@coreui/icons-react'
 import * as icon from '@coreui/icons'
@@ -28,7 +21,7 @@ const formSchema = z.object({
 })
 
 const languageCodesToFlags = {
-  [i18nLanguageCodes.English]: icon.flagSet.cifGb,
+  [i18nLanguageCodes.English]: icon.flagSet.cifUs,
   [i18nLanguageCodes.German]: icon.flagSet.cifDe,
   [i18nLanguageCodes.Chinese]: icon.flagSet.cifCn,
   [i18nLanguageCodes.Russian]: icon.flagSet.cifRu,
