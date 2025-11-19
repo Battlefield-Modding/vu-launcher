@@ -1,6 +1,6 @@
 import { Zap, Clock, FileText } from 'lucide-react'
 
-export default function DownloadMetricsComponent({
+export function DownloadMetricsComponent({
   formatSpeed,
   gameDownloadUpdateSpeed,
   getSpeedDot,

@@ -14,8 +14,9 @@ import { DownloadVUButton } from './DownloadVUButton'
 import { ResumeStalledDownloadButton } from './ResumeStalledDownloadButton'
 import { DownloadErrorComponent } from './DownloadErrorComponent'
 import { CorruptedDownloadComponent } from './CorruptedDownloadComponent'
-import DownloadMetricsComponent from './DownloadMetricsComponent'
+import { DownloadMetricsComponent } from './DownloadMetricsComponent'
 import { ExtractionMetricsComponent } from './ExtractionMetricsComponent'
+
 type NumericPayload = {
   payload: number
 }
