@@ -56,7 +56,7 @@ export function LoadoutContainer() {
   }
 
   return (
-    <div className="flex h-full flex-col items-center">
+    <div className="flex h-full flex-col items-center justify-center gap-16">
       <div className="mt-16">
         <Select
           onValueChange={(e) => {
@@ -86,9 +86,7 @@ export function LoadoutContainer() {
         </Select>
       </div>
 
-      <div className="m-auto flex w-full">
-        <Loadout />
-      </div>
+      <Loadout />
 
       <div className="mb-16">
         <CreateLoadoutSheet />
