@@ -1,4 +1,7 @@
 {
+  "button": {
+    "back": "Zurück"
+  },
   "home": {
     "error": "Fehler laden Home Route",
     "loading": "Home Route laden",
@@ -29,6 +32,7 @@
           }
         },
         "devBranch": {
+          "description": "Experimentelle Updates",
           "title": "Verwenden Sie Dev Branch"
         },
         "error": "Fehlerladen spielen Vu -Formular",
@@ -37,7 +41,7 @@
           "none": "Keiner",
           "title": "Quick-Join-Server"
         },
-        "submit": "SPIELEN",
+        "submit": "Spielen",
         "toast": {
           "failure": "Versäumte es, VU zu starten",
           "success": "Starten vu ..."
@@ -48,6 +52,7 @@
       "error": "Fehler laden Player -Anmeldeinformationen",
       "form": {
         "button": "einreichen",
+        "hint": "* Pflichtfeld",
         "password": {
           "description": "Speichern Sie mit dem nativen Anmeldeinformationsmanager Ihres Betriebssystems.",
           "placeholder": "Passwort",
@@ -60,7 +65,7 @@
         "username": {
           "description": "Speichern Sie mit dem nativen Anmeldeinformationsmanager Ihres Betriebssystems.",
           "placeholder": "Benutzername",
-          "title": "Vu Benutzername"
+          "title": "VU Benutzername"
         }
       },
       "loading": "Benutzer laden ...",
@@ -94,7 +99,7 @@
       "sheet": {
         "description": "Sie können einem Server nach der Auswahl eines Soldaten beitreten und den Serverbrowser überspringen.",
         "title": "Fügen Sie einen Schnelljoin-Server hinzu",
-        "trigger": "Server hinzufügen"
+        "trigger": "Hinzufügen"
       }
     }
   },
@@ -215,10 +220,12 @@
   },
   "onboarding": {
     "account": {
-      "add": "Fügen Sie ein VU -Konto hinzu"
+      "add": "Fügen Sie ein VU -Konto hinzu",
+      "description": "Geben Sie Ihre VU-Zugangsdaten für die automatische Anmeldung ein"
     },
     "activate": {
       "button": "BF3 aktivieren",
+      "description": "Befolgen Sie die nachstehenden Schritte, um BF3 zu aktivieren",
       "header": "Aktivieren Sie BF3 mit EA App / Origin",
       "step1": "Bitte starten Sie Ihre EA -App / Herkunft und melden Sie sich an.",
       "step2": "Sobald Sie angemeldet sind, klicken Sie auf die Schaltfläche BF3 aktivieren:",
@@ -226,12 +233,24 @@
     },
     "button": {
       "complete": "Überspringen / komplett in Boarding",
-      "continue": "Überspringen / fortfahren"
+      "continue": "Überspringen / fortfahren",
+      "refresh": "Aktualisierungsprüfung",
+      "skip": "Überspringen",
+      "verify": "Verifizieren"
     },
     "error": "Die Komponente des Bordes nicht laden",
     "failure": "Versäumte das Bord nicht zu vervollständigen",
     "header": "Erstanpassungs -Setup",
     "install": {
+      "button": {
+        "cancel": "Stornieren",
+        "cancelDiskSpace": "Abbrechen (kein Speicherplatz mehr verfügbar)",
+        "resume": "Download fortsetzen",
+        "resumeFrom": "Lebenslauf von",
+        "retry": "Wiederholen"
+      },
+      "complete": "Installation abgeschlossen!",
+      "description": "Laden Sie die neueste Version von Venice Unleashed herunter",
       "dev": {
         "button": "Wählen Sie den Standort installieren",
         "dialog": {
@@ -248,6 +267,8 @@
         },
         "header": "VU prod gefunden. \nVU Dev auch installieren?"
       },
+      "extractDescription": "Verbleibende Dateien",
+      "extractTitle": "Dateien extrahieren",
       "prod": {
         "dialog": {
           "button": {
@@ -262,15 +283,28 @@
           "button": "Wählen Sie den Standort installieren",
           "header": "Laden Sie Vu herunter"
         },
+        "error": {
+          "generic": "Die Installation ist fehlgeschlagen. Bitte versuchen Sie es erneut.",
+          "stalled": "Der Download ist blockiert (Netzwerkproblem). \nÜberprüfen Sie die Verbindung und fahren Sie fort, wenn Sie bereit sind."
+        },
         "locate": {
           "button": "Finde vu",
           "header": "VU bereits installiert?"
         },
+        "noPath": "Kann nicht fortgesetzt werden, da kein Installationspfad gefunden wurde. \nWählen Sie einen neuen Installationspfad.",
         "progress": {
+          "description": "Der Download läuft. \nDies kann je nach Verbindung einige Minuten dauern.",
           "extractingPrefix": "Dateien extrahieren",
           "extractingSuffix": "übrig",
-          "header": "VU herunterladen"
+          "header": "VU herunterladen",
+          "label": "Fortschritt"
         },
+        "resumeHint": "Klicken Sie auf „Fortsetzen“, um mit dem teilweisen Download fortzufahren",
+        "resuming": "Fortsetzung von",
+        "stalled": "Verbindung unterbrochen. \nÜberprüfen Sie Ihre Verbindung und klicken Sie auf „Fortsetzen“.",
+        "stalledDescription": "Verbindungsproblem erkannt. \nÜberprüfen Sie die Internetverbindung und klicken Sie auf „Fortsetzen“, um fortzufahren.",
+        "stalledHeader": "Verbindung ist ins Stocken geraten",
+        "stalledMessage": "Überprüfen Sie die Verbindung und klicken Sie auf „Fortsetzen“, um fortzufahren.",
         "toast": {
           "chooseInstallDir": {
             "failure": "Ich habe den Vu -Installationsweg nicht festgelegt",
@@ -278,11 +312,34 @@
           },
           "installComplete": "VU -Installation abgeschlossen"
         }
-      }
+      },
+      "success": "VU ist einsatzbereit.",
+      "title": "Laden Sie „Venice Unleashed“ herunter"
     },
     "loading": "Laden von Bordkomponenten",
+    "steps": {
+      "account": {
+        "title": "Konto hinzufügen"
+      },
+      "activate": {
+        "description": "VU erfordert einen ersten bf3-Aktivierungsschritt. \nWenn Sie BF3 bereits aktiviert haben, können Sie diesen Schritt überspringen.",
+        "title": "Aktiviere BF3"
+      },
+      "install": {
+        "description": "Laden Sie „Venice Unleashed“ herunter",
+        "title": "VU installieren"
+      }
+    },
     "toast": {
-      "activateBF3": "BF3 aktivieren"
+      "activateBF3": "BF3 aktivieren",
+      "completeStep": "Bitte schließen Sie diesen Schritt ab, bevor Sie fortfahren",
+      "learnMore": "Erfahren Sie mehr über Venice Unleashed"
+    },
+    "unknownError": "Es ist ein unbekannter Fehler aufgetreten",
+    "verify": {
+      "error": "Der Installationsstatus konnte nicht überprüft werden",
+      "installed": "Venice Unleashed ist korrekt installiert!",
+      "notInstalled": "Venice Unleashed nicht gefunden. \nBitte installieren Sie es, um fortzufahren."
     }
   },
   "servers": {
@@ -300,9 +357,12 @@
       },
       "loading": "Überprüfen Sie, ob der Serverschlüssel vorliegt",
       "redoGuid": "Bitte geben Sie Ihre Server-GUID erneut ein",
+      "serverKeyImageAlt": "Bild, das zeigt, wie man Serverschlüsselinformationen erhält",
       "step1": "Laden Sie den Serverschlüssel von herunter",
       "step2": "Kopieren Sie den Server GUID von oben",
-      "step3": "Ziehen Sie und lassen Sie Ihre Taste in dieses Fenster ab"
+      "step3": "Ziehen Sie und lassen Sie Ihre Taste in dieses Fenster ab",
+      "subtitle": "Import des Serverschlüssels und Einrichtung von Quick Join",
+      "title": "Ersteinrichtung"
     },
     "loadouts": {
       "createLoadout": {
@@ -570,7 +630,8 @@
           "serverFailure": "Der Server -Loadout fehlgeschlagen",
           "serverSuccess": "VU Server gestartet ..."
         }
-      }
+      },
+      "selectLabel": "Aktives Loadout"
     }
   },
   "settings": {
@@ -763,6 +824,9 @@
     "checkFailed": "Nach Updates versäumt es, Updates zu überprüfen",
     "checking": "Überprüfung nach Updates",
     "close": "Schließen",
+    "download": "Herunterladen",
+    "downloadComplete": "Download abgeschlossen. \nAutomatische Installation in",
+    "downloading": "Update wird heruntergeladen",
     "header": "Update installieren",
     "ignore": "Update ignorieren",
     "install": "Neues Update gefunden! \nJetzt installieren?"

@@ -1,6 +1,8 @@
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
+import { useEffect, useState } from 'react'
+import clsx from 'clsx'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -19,19 +21,18 @@ import { useQueryClient } from '@tanstack/react-query'
 import { QueryKey, routes } from '@/config/config'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router'
-import { useSidebar } from '@/components/ui/sidebar'
 
 const formSchema = z.object({
   username: z.string().min(2).max(50),
   password: z.string().min(2).max(50),
 })
 
-export default function PlayerCredentialsForm({ setSheetOpen }: { setSheetOpen: any }) {
+export function PlayerCredentialsForm({ setSheetOpen }: { setSheetOpen: any }) {
   const queryClient = useQueryClient()
-  const sidebar = useSidebar()
   const { pathname } = useLocation()
   const navigate = useNavigate()
   const { t } = useTranslation()
+  const [visible, setVisible] = useState(false)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -40,6 +41,10 @@ export default function PlayerCredentialsForm({ setSheetOpen }: { setSheetOpen: 
       password: '',
     },
   })
+
+  useEffect(() => {
+    setVisible(true)
+  }, [])
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const status = await saveUserCredentials(values)
@@ -52,7 +57,6 @@ export default function PlayerCredentialsForm({ setSheetOpen }: { setSheetOpen: 
       if (pathname.includes('onboarding')) {
         const onboardingFinished = await finishOnboarding()
         if (onboardingFinished) {
-          sidebar.toggleSidebar()
           navigate(routes.HOME)
         } else {
           toast(t('onboarding.failure'))
@@ -67,14 +71,23 @@ export default function PlayerCredentialsForm({ setSheetOpen }: { setSheetOpen: 
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="m-auto flex max-w-screen-md flex-col gap-8"
+        className={clsx(
+          'm-auto flex max-w-screen-md flex-col gap-8 transition-all duration-700 ease-out',
+          visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0',
+        )}
       >
         <FormField
           control={form.control}
           name="username"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>{t('home.playerCredentials.form.username.title')}</FormLabel>
+            <FormItem
+              className={clsx(
+                'transition-all duration-700 ease-out',
+                visible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0',
+              )}
+              style={{ transitionDelay: visible ? '150ms' : '0ms' }}
+            >
+              <FormLabel>{t('home.playerCredentials.form.username.title')}*</FormLabel>
               <FormControl>
                 <Input
                   type="text"
@@ -97,12 +110,19 @@ export default function PlayerCredentialsForm({ setSheetOpen }: { setSheetOpen: 
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name="password"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>{t('home.playerCredentials.form.password.title')}</FormLabel>
+            <FormItem
+              className={clsx(
+                'transition-all duration-700 ease-out',
+                visible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0',
+              )}
+              style={{ transitionDelay: visible ? '300ms' : '0ms' }}
+            >
+              <FormLabel>{t('home.playerCredentials.form.password.title')}*</FormLabel>
               <FormControl>
                 <Input
                   type="password"
@@ -124,7 +144,25 @@ export default function PlayerCredentialsForm({ setSheetOpen }: { setSheetOpen: 
             </FormItem>
           )}
         />
-        <Button className="m-auto w-fit" type="submit">
+
+        <p
+          className={clsx(
+            'text-xs text-gray-400 transition-all duration-700 ease-out',
+            visible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0',
+          )}
+          style={{ transitionDelay: visible ? '400ms' : '0ms' }}
+        >
+          {t('home.playerCredentials.form.hint')}
+        </p>
+
+        <Button
+          className={clsx(
+            'm-auto w-fit transition-all duration-700 ease-out',
+            visible ? 'translate-y-0 scale-100 opacity-100' : 'translate-y-4 scale-95 opacity-0',
+          )}
+          style={{ transitionDelay: visible ? '500ms' : '0ms' }}
+          type="submit"
+        >
           {t('home.playerCredentials.form.button')}
         </Button>
       </form>

@@ -6,8 +6,10 @@ import { toast } from 'sonner'
 import { useState } from 'react'
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetDescription,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -15,6 +17,7 @@ import {
 import { AccountMultiSelectForm } from './AccountMultiSelectForm'
 import { useTranslation } from 'react-i18next'
 import { TooltipWrapper } from '@/components/TooltipWrapper'
+import { Button } from '@/components/ui/button'
 
 export function ChooseAccountSheet({ loadoutName }: { loadoutName: string }) {
   const [sheetOpen, setSheetOpen] = useState(false)
@@ -73,7 +76,7 @@ export function ChooseAccountSheet({ loadoutName }: { loadoutName: string }) {
       <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
         <SheetTrigger>
           <TooltipWrapper text={t('servers.loadouts.loadout.multiAccount.sheet.trigger')}>
-            <div className="flex items-center justify-between gap-2 rounded-md bg-green-800 p-4 text-xl text-primary hover:cursor-pointer hover:bg-green-800/80">
+            <div className="flex items-center justify-between gap-2 rounded-md bg-green-700 p-4 text-xl text-primary hover:cursor-pointer hover:bg-green-700/80">
               <Server />
               <UserCheck />
             </div>
@@ -96,6 +99,13 @@ export function ChooseAccountSheet({ loadoutName }: { loadoutName: string }) {
             usernames={data}
             updateUsers={updateUsers}
           />
+          <SheetFooter className="fixed bottom-4 left-4 m-0 p-0">
+            <SheetClose asChild>
+              <Button className="w-24" variant="outline">
+                {t('button.back')}
+              </Button>
+            </SheetClose>
+          </SheetFooter>
         </SheetContent>
       </Sheet>
     )

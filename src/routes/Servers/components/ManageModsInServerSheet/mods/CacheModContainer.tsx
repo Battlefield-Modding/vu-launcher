@@ -6,9 +6,16 @@ import { ModCacheMod } from './ModCacheMod'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { Button } from '@/components/ui/button'
+import { useEffect, useState } from 'react'
+import clsx from 'clsx'
 
 export function CacheModContainer({ loadout }: { loadout: LoadoutJSON }) {
   const { t } = useTranslation()
+
+  const [visible, setVisible] = useState(false)
+  useEffect(() => {
+    setVisible(true)
+  }, [])
 
   const { isPending, isError, data, error } = useQuery({
     queryKey: [QueryKey.GetModNamesInCache],
@@ -49,14 +56,25 @@ export function CacheModContainer({ loadout }: { loadout: LoadoutJSON }) {
   return (
     <>
       {data.length == 0 && (
-        <div className="flex items-center gap-4">
+        <div
+          className={clsx(
+            'flex items-center gap-4 transition-all duration-700 ease-out',
+            visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0',
+          )}
+        >
           <h1>{t('servers.loadouts.loadout.mods.sheet.noMods')}</h1>
           <Link to={routes.MODS}>
             <Button variant={'outline'}>{t('sidebar.routes.mods')}</Button>
           </Link>
         </div>
       )}
-      <table className="text-center">
+      <table
+        className={clsx(
+          'text-center transition-all duration-700 ease-out',
+          visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0',
+        )}
+        style={{ transitionDelay: visible ? '150ms' : '0ms' }}
+      >
         <tbody>
           <tr className="border border-secondary">
             <th className="h-auto border border-secondary">

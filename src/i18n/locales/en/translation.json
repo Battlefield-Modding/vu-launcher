@@ -1,4 +1,7 @@
 {
+  "button": {
+    "back": "Back"
+  },
   "home": {
     "error": "Error loading home route",
     "loading": "Loading home route",
@@ -29,6 +32,7 @@
           }
         },
         "devBranch": {
+          "description": "Experimental updates",
           "title": "Use Dev Branch"
         },
         "error": "Error loading Play VU Form",
@@ -37,7 +41,7 @@
           "none": "None",
           "title": "Quick-Join Server"
         },
-        "submit": "PLAY",
+        "submit": "Play",
         "toast": {
           "failure": "Failed to start VU",
           "success": "Starting VU..."
@@ -47,7 +51,8 @@
     "playerCredentials": {
       "error": "Error loading Player Credentials",
       "form": {
-        "button": "submit",
+        "button": "Submit",
+        "hint": "* Required Field",
         "password": {
           "description": "Stored using your Operating System's native credential manager.",
           "placeholder": "password",
@@ -94,7 +99,7 @@
       "sheet": {
         "description": "Lets you join a server after selecting a soldier, skipping the server browser.",
         "title": "Add a quick-join server",
-        "trigger": "Add Server"
+        "trigger": "Add"
       }
     }
   },
@@ -215,10 +220,12 @@
   },
   "onboarding": {
     "account": {
-      "add": "Add a VU account"
+      "add": "Add a VU account",
+      "description": "Enter your VU credentials for automatic login"
     },
     "activate": {
       "button": "Activate BF3",
+      "description": "Follow steps below to activate BF3",
       "header": "Activate BF3 with EA App / Origin",
       "step1": "Please launch your EA App / Origin and sign in.",
       "step2": "Once signed-in click on the Activate BF3 button:",
@@ -226,12 +233,24 @@
     },
     "button": {
       "complete": "Skip / Complete Onboarding",
-      "continue": "Skip / Continue"
+      "continue": "Skip / Continue",
+      "refresh": "Refresh Check",
+      "skip": "Skip",
+      "verify": "Verify"
     },
     "error": "Failed to load Onboarding component",
     "failure": "Failed to complete onboarding",
     "header": "First Time Setup",
     "install": {
+      "button": {
+        "cancel": "Cancel",
+        "cancelDiskSpace": "Cancel (No Disk Space Remaining)",
+        "resume": "Resume Download",
+        "resumeFrom": "Resume from",
+        "retry": "Retry"
+      },
+      "complete": "Installation Complete!",
+      "description": "Download the latest version of Venice Unleashed",
       "dev": {
         "button": "Choose Install Location",
         "dialog": {
@@ -248,6 +267,8 @@
         },
         "header": "Found VU Prod. Install VU Dev also?"
       },
+      "extractDescription": "Files remaining",
+      "extractTitle": "Extracting files",
       "prod": {
         "dialog": {
           "button": {
@@ -262,15 +283,28 @@
           "button": "Choose Install Location",
           "header": "Download VU"
         },
+        "error": {
+          "generic": "Installation failed, please try again.",
+          "stalled": "Download stalled (network issue). Check connection and resume when ready."
+        },
         "locate": {
           "button": "Find VU",
           "header": "VU already installed?"
         },
+        "noPath": "Cannot resume because no install path found. Select new install path.",
         "progress": {
+          "description": "Download is in progress. This may take a few minutes depending on your connection.",
           "extractingPrefix": "Extracting Files",
           "extractingSuffix": "remaining",
-          "header": "Downloading VU"
+          "header": "Downloading VU",
+          "label": "Progress"
         },
+        "resumeHint": "Click resume to continue partial download at",
+        "resuming": "Resuming from",
+        "stalled": "Connection interrupted. Check your connection and click resume.",
+        "stalledDescription": "Connection issue detected. Check internet and click Resume to continue.",
+        "stalledHeader": "Connection Stalled",
+        "stalledMessage": "Check connection and click resume to continue.",
         "toast": {
           "chooseInstallDir": {
             "failure": "Failed to set VU install path",
@@ -278,11 +312,34 @@
           },
           "installComplete": "VU Installation Completed"
         }
-      }
+      },
+      "success": "VU is ready to use.",
+      "title": "Download Venice Unleashed"
     },
     "loading": "Loading Onboarding component",
+    "steps": {
+      "account": {
+        "title": "Add Account"
+      },
+      "activate": {
+        "description": "VU requires a first time bf3 activation step. If you have already activated BF3 you can skip this step.",
+        "title": "Activate BF3"
+      },
+      "install": {
+        "description": "Download Venice Unleashed",
+        "title": "Install VU"
+      }
+    },
     "toast": {
-      "activateBF3": "Activating BF3"
+      "activateBF3": "Activating BF3",
+      "completeStep": "Please complete this step before proceeding",
+      "learnMore": "Learn more about Venice Unleashed"
+    },
+    "unknownError": "An unknown error has occured",
+    "verify": {
+      "error": "Failed to verify installation status",
+      "installed": "Venice Unleashed is installed correctly!",
+      "notInstalled": "Venice Unleashed not found. Please install it to proceed."
     }
   },
   "servers": {
@@ -300,9 +357,12 @@
       },
       "loading": "Checking if Server Key Exists",
       "redoGuid": "Please re-enter your server GUID",
-      "step1": "Download server key from",
-      "step2": "Copy Server GUID from above",
-      "step3": "Drag and Drop your key into this window"
+      "serverKeyImageAlt": "Image showing how to get server key info",
+      "step1": "Download Server Key",
+      "step2": "Copy Server GUID",
+      "step3": "Drag and Drop your key into this window",
+      "subtitle": "Import Server Key & Setup Quick Join Here",
+      "title": "First Time Setup"
     },
     "loadouts": {
       "createLoadout": {
@@ -570,7 +630,8 @@
           "serverFailure": "Failed to start server loadout",
           "serverSuccess": "Started VU Server..."
         }
-      }
+      },
+      "selectLabel": "Active Loadout"
     }
   },
   "settings": {
@@ -763,6 +824,9 @@
     "checkFailed": "Failed to check for updates",
     "checking": "Checking for updates",
     "close": "Close",
+    "download": "Download",
+    "downloadComplete": "Download complete. Installing automatically in ",
+    "downloading": "Downloading Update",
     "header": "Installing update",
     "ignore": "Ignore Update",
     "install": "New update found! Install now?"

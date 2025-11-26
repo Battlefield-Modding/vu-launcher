@@ -1,118 +1,499 @@
 import { getLauncherInstallPath } from '@/api'
-import { Button } from '@/components/ui/button'
+import { Zap, AlertCircle, WifiOff, Server, AlertTriangle } from 'lucide-react'
 import { QueryKey } from '@/config/config'
 import { open } from '@tauri-apps/plugin-dialog'
-import { Download } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
-import { toast } from 'sonner'
-
-import { listen } from '@tauri-apps/api/event'
 import { Progress } from '@/components/ui/progress'
 import { useQueryClient } from '@tanstack/react-query'
-import { InstallVuProdDialog } from './InstallVuProdDialog'
+import { useRef, useState, useEffect, useCallback } from 'react'
+import { toast } from 'sonner'
+import { invoke } from '@tauri-apps/api/core'
+import { listen, emit, type UnlistenFn } from '@tauri-apps/api/event'
 import { useTranslation } from 'react-i18next'
+import { cn } from '@/lib/utils'
+import { DownloadVUButton } from './DownloadVUButton'
+import { ResumeStalledDownloadButton } from './ResumeStalledDownloadButton'
+import { ErrorDownloadButton } from './ErrorDownloadButton'
+import { CorruptedDownloadButton } from './CorruptedDownloadButton'
+import { DownloadMetricsComponent } from './DownloadMetricsComponent'
+import { ExtractionMetricsComponent } from './ExtractionMetricsComponent'
 
-interface TauriEmitEvent {
+type NumericPayload = {
   payload: number
 }
 
-interface LauncherUpdateStatusEvent {
-  payload: LauncherUpdateStatusEventPayload
+type DownloadCorruptEvent = {
+  payload: {
+    reason: string
+    progress: number
+    action: string
+    error?: string
+  }
 }
 
-interface LauncherUpdateProgressEvent {
-  payload: LauncherUpdateProgressEventPayload
-}
+type SpeedStatus = 'stable' | 'unstable' | 'no-progress' | null
 
-interface LauncherUpdateProgressEventPayload {
-  chunkLength: number
-  contentLength: number
-}
-
-interface LauncherUpdateStatusEventPayload {
-  status: string
-  error: string
-}
+type RustErrorType = 'network' | 'server' | 'corrupt' | 'disk' | 'generic' | 'stalled' | null
 
 export function InstallVU() {
   const queryClient = useQueryClient()
   const [gameDownloadUpdateInstalling, setGameDownloadUpdateInstalling] = useState(false)
   const [gameDownloadUpdateProgress, setGameDownloadUpdateProgress] = useState(0)
-  const [gameDownloadUpdateSpeed, setGameDownloadUpdateSpeed] = useState(0)
+  const [gameDownloadUpdateSpeed, setGameDownloadUpdateSpeed] = useState(0) // MB/s
   const [gameDownloadUpdateExtracting, setGameDownloadUpdateExtracting] = useState(false)
-  const [
-    gameDownloadUpdateExtractingFilesRemaining,
-    setGameDownloadUpdateExtractingFilesRemaining,
-  ] = useState(0)
+  const [extractionFilesLeft, setextractionFilesLeft] = useState(0)
+  const [totalDownloadSize, setTotalDownloadSize] = useState(0)
+  const [downloadedBytes, setDownloadedBytes] = useState(0)
+  const [eta, setEta] = useState('Calculating...') // Estimated time remaining (mm:ss)
+  const [error, setError] = useState<string | null>(null)
+  const [errorType, setErrorType] = useState<RustErrorType>(null)
+  const [corruptError, setCorruptError] = useState<string | null>(null)
+  const [lastInstallPath, setLastInstallPath] = useState<string>('')
+  const [lastProgressAtError, setLastProgressAtError] = useState(0)
+  const [_speedHistory, setSpeedHistory] = useState<number[]>([]) // Track last 5 speeds for stability calc
+  const [speedStatus, setSpeedStatus] = useState<SpeedStatus>(null)
+  const [isStalled, setIsStalled] = useState(false)
 
-  const [vuProdInstallPath, setVuProdInstallPath] = useState('')
-  const dialogRef = useRef(null)
+  const dialogRef = useRef<any>(null)
+  const unlistensRef = useRef<UnlistenFn[]>([])
   const { t } = useTranslation()
 
+  const errorRef = useRef(error)
+  const isStalledRef = useRef(isStalled)
+  const corruptErrorRef = useRef(corruptError)
+  const speedStatusRef = useRef(speedStatus)
+  const gameDownloadUpdateProgressRef = useRef(gameDownloadUpdateProgress)
+
+  function restartCorruptedDownload() {
+    setCorruptError(null)
+    setError(null)
+    setErrorType(null)
+    setGameDownloadUpdateInstalling(false)
+    setLastInstallPath('')
+    handleCancelOrRetry()
+  }
+
   useEffect(() => {
-    listen('download-progress', (event: TauriEmitEvent) => {
-      setGameDownloadUpdateProgress(event.payload)
-      console.log('Download progress: ' + event.payload)
-    })
+    errorRef.current = error
+  }, [error])
 
-    listen('download-speed', (event: TauriEmitEvent) => {
-      // set var and update it to MB/s and floor to 2 digits
-      let value = Math.floor((event.payload / 1024) * 10) / 10
-      setGameDownloadUpdateSpeed(value)
-      console.log('Download speed: ' + value)
-    })
+  useEffect(() => {
+    isStalledRef.current = isStalled
+  }, [isStalled])
 
-    listen('download-extracting', () => {
-      setGameDownloadUpdateExtracting(true)
-      console.log('Files Extracting.')
-    })
+  useEffect(() => {
+    corruptErrorRef.current = corruptError
+  }, [corruptError])
 
-    listen('extracting-files', (event: TauriEmitEvent) => {
-      setGameDownloadUpdateExtractingFilesRemaining(event.payload)
-      console.log('Files remaining:', event.payload)
-    })
+  useEffect(() => {
+    speedStatusRef.current = speedStatus
+  }, [speedStatus])
 
-    listen('install-complete', () => {
-      setGameDownloadUpdateInstalling(false)
-      setGameDownloadUpdateExtracting(false)
-      console.log('VU Installation Completed')
-      toast(t('onboarding.install.prod.toast.installComplete'))
-      queryClient.invalidateQueries({ queryKey: [QueryKey.IsVuInstalled], refetchType: 'all' })
-    })
+  useEffect(() => {
+    gameDownloadUpdateProgressRef.current = gameDownloadUpdateProgress
+  }, [gameDownloadUpdateProgress])
 
-    listen('tauri://update-status', (event: LauncherUpdateStatusEvent) => {
-      console.log('New status: ', event)
-      if (event.payload.status == 'PENDING') {
-        setGameDownloadUpdateInstalling(true)
-      }
-    })
-
-    let downloadedChunkLength = 0
-    let lastTime = Date.now()
-    let lastDownloaded = 0
-
-    listen('tauri://update-download-progress', (event: LauncherUpdateProgressEvent) => {
-      downloadedChunkLength += event.payload.chunkLength
-      let progress = (downloadedChunkLength / event.payload.contentLength) * 100
-
-      let currentTime = Date.now()
-      let elapsedTime = (currentTime - lastTime) / 1000
-
-      if (elapsedTime >= 1) {
-        let recentDownloaded = downloadedChunkLength - lastDownloaded
-        let downloadSpeed = recentDownloaded / 1024 / 1024 / elapsedTime
-
-        setGameDownloadUpdateProgress(progress)
-        setGameDownloadUpdateSpeed(parseFloat(downloadSpeed.toFixed(2)))
-        console.log(gameDownloadUpdateSpeed)
-
-        lastTime = currentTime
-        lastDownloaded = downloadedChunkLength
-      }
-    })
+  const emitInstallStatus = useCallback(async (installing: boolean) => {
+    try {
+      await emit('vu-install-status', { installing })
+      console.log(`VU install status emitted: ${installing ? 'started' : 'ended'}`)
+    } catch (err) {
+      console.error('Failed to emit VU install status:', err)
+    }
   }, [])
 
+  const categorizeRustError = useCallback((errorMsg: string): RustErrorType => {
+    const lower = errorMsg.toLowerCase()
+    if (
+      lower.includes('stalled') ||
+      lower.includes('timeout') ||
+      lower.includes('disconnected') ||
+      lower.includes('decoding')
+    ) {
+      return 'stalled'
+    } else if (lower.includes('http') || lower.includes('request')) {
+      return 'network'
+    } else if (
+      lower.includes('server') ||
+      lower.includes('status') ||
+      lower.includes('total size') ||
+      lower.includes('probe')
+    ) {
+      return 'server'
+    } else if (
+      lower.includes('corrupt') ||
+      lower.includes('mismatch') ||
+      lower.includes('extraction') ||
+      lower.includes('zip')
+    ) {
+      return 'corrupt'
+    } else if (
+      lower.includes('disk') ||
+      lower.includes('file') ||
+      lower.includes('metadata') ||
+      lower.includes('write')
+    ) {
+      return 'disk'
+    }
+    return 'generic'
+  }, [])
+
+  const formatBytes = useCallback((bytes: number) => {
+    if (bytes >= 1024 * 1024 * 1024) {
+      return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} GB`
+    }
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+  }, [])
+
+  const calculateEta = useCallback((remainingBytes: number, speedMbps: number) => {
+    if (speedMbps <= 0 || remainingBytes <= 0) {
+      return 'Calculating...'
+    }
+    const speedBytesPerSec = speedMbps * 1024 * 1024 // Convert MB/s to bytes/s
+    let secondsRemaining = Math.ceil(remainingBytes / speedBytesPerSec)
+    secondsRemaining = Math.max(0, secondsRemaining)
+    if (secondsRemaining < 5) {
+      return 'Finishing...'
+    }
+    const minutes = Math.floor(secondsRemaining / 60)
+    const seconds = secondsRemaining % 60
+    return `${minutes}m ${seconds.toString().padStart(2, '0')}s`
+  }, [])
+
+  const calculateSpeedStability = useCallback((currentSpeed: number, history: number[]) => {
+    if (history.length < 3) return null
+    const recentSpeeds = [currentSpeed, ...history.slice(-2)]
+    const avg = recentSpeeds.reduce((a, b) => a + b, 0) / recentSpeeds.length
+    const variance =
+      recentSpeeds.reduce((sum, speed) => sum + Math.pow(speed - avg, 2), 0) / recentSpeeds.length
+    const stdDev = Math.sqrt(variance)
+    return stdDev < 0.03 ? 'stable' : 'unstable'
+  }, [])
+
+  useEffect(() => {
+    if (gameDownloadUpdateInstalling) {
+      setTotalDownloadSize(0)
+      setDownloadedBytes(0)
+      setEta('Calculating...')
+      setSpeedHistory([])
+      setSpeedStatus(null)
+      setIsStalled(false)
+      setCorruptError(null)
+      setError(null)
+      setErrorType(null)
+      setGameDownloadUpdateExtracting(false)
+    }
+  }, [gameDownloadUpdateInstalling])
+
+  useEffect(() => {
+    if (!gameDownloadUpdateInstalling || totalDownloadSize <= 0) {
+      return
+    }
+
+    const downloaded = (gameDownloadUpdateProgress / 100) * totalDownloadSize
+    setDownloadedBytes(downloaded)
+
+    if (gameDownloadUpdateSpeed > 0 && !isStalled && !corruptError && !error) {
+      const remainingBytes = Math.max(0, totalDownloadSize - downloaded)
+      const etaTime = calculateEta(remainingBytes, gameDownloadUpdateSpeed)
+      setEta(etaTime)
+    } else if (
+      gameDownloadUpdateProgress > 10 &&
+      speedStatus !== 'stable' &&
+      speedStatus !== 'unstable' &&
+      !isStalled &&
+      !corruptError &&
+      !error
+    ) {
+      setSpeedStatus('no-progress')
+      setEta('Stalled')
+      console.log('Speed status: No progress (speed=0 despite progress>10%)')
+    }
+
+    console.log(
+      `Derived: Progress ${gameDownloadUpdateProgress}% of ${formatBytes(totalDownloadSize)} → Downloaded ${formatBytes(downloaded)} | Remaining ${formatBytes(totalDownloadSize - downloaded)} | Speed ${gameDownloadUpdateSpeed.toFixed(2)} MB/s | ETA ${eta}`,
+    )
+  }, [
+    gameDownloadUpdateProgress,
+    totalDownloadSize,
+    gameDownloadUpdateSpeed,
+    gameDownloadUpdateInstalling,
+    calculateEta,
+    formatBytes,
+    speedStatus,
+    isStalled,
+    corruptError,
+    error,
+  ])
+
+  useEffect(() => {
+    unlistensRef.current = []
+
+    const setupListeners = async () => {
+      try {
+        unlistensRef.current = await Promise.all([
+          listen('download-progress', (event: NumericPayload) => {
+            // @ts-ignore
+            const progress = Math.min(100, event.payload)
+            setGameDownloadUpdateProgress(progress)
+            console.log(`Download progress event received: ${progress}%`)
+
+            if (
+              (errorRef.current || isStalledRef.current || corruptErrorRef.current) &&
+              progress > lastProgressAtError
+            ) {
+              setError(null)
+              setErrorType(null)
+              setIsStalled(false)
+              setCorruptError(null)
+            }
+          }),
+
+          listen('download-speed', (event: NumericPayload) => {
+            const speedKbps = event.payload
+            const speedMbpsRaw = speedKbps / 1024
+
+            const speedMbps = Math.round(speedMbpsRaw * 100) / 100 // E.g., 0.874 → 0.87
+            console.log(
+              `Download speed event received: ${speedKbps.toFixed(2)} KB/s → ${speedMbps.toFixed(2)} MB/s (raw: ${speedMbpsRaw.toFixed(3)})`,
+            )
+            setGameDownloadUpdateSpeed(speedMbps)
+
+            if (speedStatusRef.current === 'no-progress' || isStalledRef.current) {
+              setSpeedStatus(null)
+              setIsStalled(false)
+              setError(null)
+            }
+
+            if (speedMbps > 0) {
+              setCorruptError(null)
+            }
+
+            setSpeedHistory((prev) => {
+              const newHistory = [...prev, speedMbps].slice(-5) // Keep last 5 speeds
+              const stability = calculateSpeedStability(speedMbps, newHistory)
+              if (stability) {
+                setSpeedStatus(stability)
+                console.log(
+                  `Speed history: [${newHistory.map((h) => h.toFixed(2)).join(', ')}] | Status: ${stability}`,
+                )
+              }
+              return newHistory
+            })
+          }),
+
+          listen('download-total-size', (event: NumericPayload) => {
+            const total = Math.floor(event.payload) // Ensure integer bytes
+            console.log(
+              `Download total size event received: ${total} bytes (${formatBytes(total)} )`,
+            )
+            setTotalDownloadSize(total)
+          }),
+
+          listen('download-stalled', () => {
+            console.log('Download stalled event received: Connection interrupted')
+            setIsStalled(true)
+            setSpeedStatus('no-progress')
+            setEta('Stalled – Retrying...')
+
+            toast.warning(t('onboarding.install.prod.stalled'), {
+              duration: 5000,
+            })
+          }),
+
+          listen('download-corrupt', (event: DownloadCorruptEvent) => {
+            console.log('Download corrupt event received:', event.payload)
+            const { reason, action, error: err } = event.payload
+            let corruptMsg = `Corrupt download detected (${reason}). File ${action === 'deleted' ? 'deleted' : 'fixed'} for fresh start.`
+            if (err) {
+              corruptMsg += ` Error: ${err}`
+            }
+            setCorruptError(corruptMsg)
+            setErrorType('corrupt')
+            setIsStalled(true)
+            setSpeedStatus('no-progress')
+            setEta('Restarting Fresh...')
+
+            if (action === 'deleted') {
+              setGameDownloadUpdateProgress(0)
+              setDownloadedBytes(0)
+              setTotalDownloadSize(0)
+            }
+
+            const toastMsg =
+              reason === 'zip-invalid'
+                ? 'Downloaded ZIP is invalid/corrupt. Deleted and restarting fresh...'
+                : reason === 'partial-oversize'
+                  ? 'Partial file oversized/corrupt. Deleted and starting fresh...'
+                  : reason === 'size-mismatch'
+                    ? 'Downloaded size incorrect. Deleted corrupt file and restarting...'
+                    : reason === 'no-metadata'
+                      ? 'Could not read file. Deleted and restarting fresh...'
+                      : reason === 'overshoot-truncated'
+                        ? 'Download overshot – truncated for integrity. Continuing...'
+                        : `Corrupt download (${reason}). Restarting fresh...`
+            toast.error(toastMsg, {
+              duration: 4000,
+            })
+          }),
+
+          listen('download-extracting', () => {
+            setGameDownloadUpdateExtracting(true)
+            setIsStalled(false)
+            setCorruptError(null)
+            setError(null)
+            setErrorType(null)
+            console.log('Files Extracting.')
+          }),
+
+          listen('extracting-files', (event: NumericPayload) => {
+            setextractionFilesLeft(event.payload)
+            console.log('Files remaining:', event.payload)
+          }),
+
+          listen('install-complete', async () => {
+            setGameDownloadUpdateInstalling(false)
+            setGameDownloadUpdateExtracting(false)
+            setDownloadedBytes(0)
+            setTotalDownloadSize(0)
+            setGameDownloadUpdateSpeed(0)
+            setEta('Complete')
+            setError(null)
+            setErrorType(null)
+            setCorruptError(null)
+            setIsStalled(false)
+            setSpeedHistory([])
+            setSpeedStatus(null)
+            toast.success(
+              t(
+                'onboarding.install.prod.toast.installComplete',
+                'VU Production installation completed successfully!',
+              ),
+            )
+            queryClient.invalidateQueries({
+              queryKey: [QueryKey.IsVuInstalled],
+              refetchType: 'all',
+            })
+            console.log('Install completed')
+            await emitInstallStatus(false)
+          }),
+        ])
+      } catch (err) {
+        console.error('Failed to set up event listeners:', err)
+      }
+    }
+
+    setupListeners()
+
+    return () => {
+      unlistensRef.current.forEach((unlisten) => {
+        if (typeof unlisten === 'function') {
+          unlisten()
+        }
+      })
+      unlistensRef.current = []
+    }
+  }, [
+    queryClient,
+    t,
+    emitInstallStatus,
+    formatBytes,
+    calculateSpeedStability,
+    categorizeRustError,
+    lastProgressAtError,
+  ])
+
+  const startDownload = useCallback(
+    async (installPath: string) => {
+      console.log('Starting download for path:', installPath)
+      try {
+        setLastProgressAtError(gameDownloadUpdateProgressRef.current)
+        setGameDownloadUpdateInstalling(true)
+        setError(null)
+        setErrorType(null)
+        setCorruptError(null)
+        setIsStalled(false)
+        setGameDownloadUpdateSpeed(0)
+        setGameDownloadUpdateProgress(gameDownloadUpdateProgressRef.current)
+        setDownloadedBytes((gameDownloadUpdateProgressRef.current / 100) * totalDownloadSize)
+        setEta('Calculating...')
+        setSpeedHistory([])
+        setSpeedStatus(null)
+        await emitInstallStatus(true)
+        await invoke('download_game', { installPath })
+        console.log('Download invoke succeeded')
+      } catch (err: any) {
+        console.error('Download invoke failed:', err)
+        setGameDownloadUpdateInstalling(false)
+        await emitInstallStatus(false)
+        const errorMsg = err.message || t('onboarding.install.prod.error.generic')
+        const errType = categorizeRustError(errorMsg)
+        setErrorType(errType)
+        setLastProgressAtError(gameDownloadUpdateProgressRef.current)
+
+        if (errType === 'stalled') {
+          setIsStalled(true)
+          setError(null)
+          toast.warning(t('onboarding.install.prod.error.stalled'), { duration: 5000 })
+        } else {
+          setIsStalled(false)
+          setError(errorMsg)
+
+          if (errType === 'network') {
+            toast.warning(errorMsg, { duration: 4000, icon: <WifiOff className="h-4 w-4" /> })
+          } else if (errType === 'server') {
+            toast.warning(errorMsg, { duration: 4000, icon: <Server className="h-4 w-4" /> })
+          } else if (errType === 'disk') {
+            toast.error(errorMsg, { duration: 5000, icon: <AlertTriangle className="h-4 w-4" /> })
+          } else {
+            toast.error(errorMsg, { duration: 5000 })
+          }
+
+          if (gameDownloadUpdateProgressRef.current > 5 && errType !== 'corrupt') {
+            toast.info(
+              `${t('onboarding.install.prod.resumeHint')} ${gameDownloadUpdateProgressRef.current.toFixed(1)}%`,
+              { duration: 3000 },
+            )
+          }
+        }
+        setGameDownloadUpdateSpeed(0)
+        setEta('Error')
+        setSpeedHistory([])
+        setSpeedStatus('no-progress')
+        setGameDownloadUpdateExtracting(false)
+      }
+    },
+    [t, emitInstallStatus, categorizeRustError, gameDownloadUpdateProgressRef, totalDownloadSize],
+  )
+
+  const handleResume = useCallback(async () => {
+    if (!lastInstallPath) {
+      toast.warning(t('onboarding.install.prod.noPath'), {
+        duration: 3000,
+      })
+      return handleDownloadVU()
+    }
+
+    toast.info(`${t('onboarding.install.prod.resuming')} ${lastProgressAtError.toFixed(1)}%...`, {
+      duration: 2000,
+    })
+
+    await startDownload(lastInstallPath)
+  }, [lastInstallPath, lastProgressAtError, t, startDownload, handleDownloadVU])
+
   async function handleDownloadVU() {
+    console.log('handleDownloadVU called - opening folder dialog')
+    setError(null)
+    setErrorType(null)
+    setCorruptError(null)
+    setGameDownloadUpdateSpeed(0)
+    setGameDownloadUpdateProgress(0)
+    setDownloadedBytes(0)
+    setTotalDownloadSize(0)
+    setEta('Calculating...')
+    setSpeedHistory([])
+    setSpeedStatus(null)
+    setIsStalled(false)
+    setLastProgressAtError(0)
     const defaultPath = await getLauncherInstallPath()
     const installPath = await open({
       multiple: false,
@@ -120,112 +501,208 @@ export function InstallVU() {
       defaultPath,
     })
     if (installPath) {
-      setVuProdInstallPath(() => installPath)
-      console.log(installPath)
+      console.log('Folder selected:', installPath)
+      setLastInstallPath(installPath)
       if (dialogRef.current) {
-        const element = dialogRef.current as HTMLDialogElement
-        element.click()
+        dialogRef.current.click()
       }
+    } else {
+      console.log('No folder selected')
     }
   }
 
-  // async function handlesetVUInstallLocationRegistry() {
-  //   const defaultPath = await getLauncherInstallPath()
-  //   const dir = await open({
-  //     multiple: false,
-  //     directory: true,
-  //     defaultPath,
-  //   })
-  //   if (!dir) {
-  //     return
-  //   }
-  //   const status = await setVUInstallLocationRegistry(dir)
-  //   if (status) {
-  //     queryClient.invalidateQueries({
-  //       queryKey: [QueryKey.IsVuInstalled],
-  //       refetchType: 'all',
-  //     })
-  //     toast(`${t('onboarding.install.prod.toast.chooseInstallDir.success')}: ${dir}`)
-  //   } else {
-  //     toast(t('onboarding.install.prod.toast.chooseInstallDir.failure'))
-  //   }
-  // }
+  const handleCancelOrRetry = async () => {
+    const wasInstalling = gameDownloadUpdateInstalling
+    setError(null)
+    setErrorType(null)
+    setCorruptError(null)
+    setGameDownloadUpdateInstalling(false)
+    setGameDownloadUpdateSpeed(0)
+    setGameDownloadUpdateProgress(0)
+    setDownloadedBytes(0)
+    setTotalDownloadSize(0)
+    setEta('Calculating...')
+    setSpeedHistory([])
+    setSpeedStatus(null)
+    setIsStalled(false)
+    setLastProgressAtError(0)
+    if (wasInstalling) {
+      await emitInstallStatus(false)
+    }
+  }
+
+  const getErrorIcon = (type: RustErrorType) => {
+    switch (type) {
+      case 'network':
+      case 'stalled':
+        return <WifiOff className="h-4 w-4" />
+      case 'server':
+        return <Server className="h-4 w-4" />
+      case 'disk':
+        return <AlertTriangle className="h-4 w-4" />
+      case 'corrupt':
+        return <AlertCircle className="h-4 w-4" />
+      default:
+        return <AlertCircle className="h-4 w-4" />
+    }
+  }
+
+  const getSpeedDot = () => {
+    if (
+      (speedStatus === null || speedStatus === 'no-progress') &&
+      !isStalled &&
+      !corruptError &&
+      !error
+    )
+      return null
+    let dotClass = 'bg-red-500'
+    let pulse = true
+    if (speedStatus === 'stable') {
+      dotClass = 'bg-green-500'
+      pulse = false
+    } else if (speedStatus === 'unstable') {
+      dotClass = 'bg-orange-500'
+      pulse = false
+    } else {
+      pulse = true
+    }
+    return (
+      <div
+        className={cn(
+          'ml-1 inline-block h-2 w-2 rounded-full',
+          dotClass,
+          pulse ? 'animate-pulse' : '',
+        )}
+        title={`Speed: ${speedStatus === 'stable' ? 'Stable' : speedStatus === 'unstable' ? 'Unstable' : isStalled ? 'Stalled (retrying)' : corruptError ? 'Corrupt (restarting)' : 'No progress'}`}
+      />
+    )
+  }
+
+  const uiMode = isStalled ? 'stalled' : corruptError ? 'corrupt' : error ? 'error' : 'normal'
+
+  const getActionButton = () => {
+    if (corruptError) {
+      return (
+        <CorruptedDownloadButton
+          handleResume={handleResume}
+          restartCorruptedDownload={restartCorruptedDownload}
+        />
+      )
+    }
+
+    if (error && !corruptError) {
+      return (
+        <ErrorDownloadButton
+          errorType={errorType}
+          handleCancelOrRetry={handleCancelOrRetry}
+          handleDownloadVU={handleDownloadVU}
+          handleResume={handleResume}
+          lastProgressAtError={lastProgressAtError}
+        />
+      )
+    }
+
+    if (isStalled && !error && !corruptError && !gameDownloadUpdateExtracting) {
+      return (
+        <ResumeStalledDownloadButton
+          handleResume={handleResume}
+          lastProgressAtError={lastProgressAtError}
+        />
+      )
+    }
+
+    return null
+  }
 
   return (
-    <div className="m-auto flex max-h-[500px] max-w-[500px] flex-col justify-between gap-8 rounded-md bg-black p-8">
+    <div className="flex w-full flex-col items-center justify-center space-y-4">
       {!gameDownloadUpdateInstalling && (
-        <>
-          {/* <div className="flex flex-1 justify-center gap-4 align-middle text-xl leading-9">
-            <h1 className="flex-1">{t('onboarding.install.prod.locate.header')}</h1>
-            <Button
-              variant={'secondary'}
-              onClick={(e) => {
-                e.preventDefault()
-                handlesetVUInstallLocationRegistry()
-              }}
-            >
-              <Search /> {t('onboarding.install.prod.locate.button')}
-            </Button>
-          </div> */}
-
-          <div className="flex flex-1 justify-center gap-4 align-middle text-xl leading-9">
-            <h1 className="flex-1 text-primary">{t('onboarding.install.prod.download.header')}</h1>
-            <Button
-              variant={'secondary'}
-              className=""
-              onClick={(e) => {
-                e.preventDefault()
-                handleDownloadVU()
-              }}
-            >
-              <Download size={'10px'} />
-              <p>{t('onboarding.install.prod.download.button')}</p>
-            </Button>
-          </div>
-
-          <InstallVuProdDialog
-            vuProdInstallPath={vuProdInstallPath}
-            setGameDownloadUpdateInstalling={setGameDownloadUpdateInstalling}
-            gameDownloadUpdateInstalling={gameDownloadUpdateInstalling}
-            gameDownloadUpdateExtracting={gameDownloadUpdateExtracting}
-            dialogRef={dialogRef}
-          />
-        </>
+        <DownloadVUButton
+          handleDownloadVU={handleDownloadVU}
+          dialogRef={dialogRef}
+          lastInstallPath={lastInstallPath}
+          startDownload={startDownload}
+        />
       )}
 
       {gameDownloadUpdateInstalling && (
-        <>
-          <div className="flex flex-1 justify-center gap-4 align-middle text-3xl leading-9 text-primary">
-            <h1>{t('onboarding.install.prod.progress.header')}</h1>
-          </div>
-
-          <div className="flex w-full flex-col rounded-md text-primary">
-            {!gameDownloadUpdateExtracting ? (
-              <div className="mb-2 flex h-6">
-                <Progress value={gameDownloadUpdateProgress} className="h-full w-full flex-1" />
-              </div>
-            ) : (
-              <div className="mb-2 flex h-6">
-                <Progress value={gameDownloadUpdateProgress} className="h-full w-full flex-1" />
-              </div>
-            )}
-            {!gameDownloadUpdateExtracting ? (
-              <div className="flex justify-end">
-                {/* <p className="noselect mr-2 text-right text-sm">{gameDownloadUpdateSpeed} MB/s</p> */}
-
-                <p className="noselect mr-2 text-right text-sm">
-                  {gameDownloadUpdateProgress.toFixed(2)} %
+        <div className="w-full space-y-4">
+          {error && !corruptError && (
+            <div className="flex flex-col items-center gap-2 rounded-md border bg-destructive/5 p-3 text-sm text-destructive">
+              {getErrorIcon(errorType)}
+              <span className="text-center">{error}</span>
+              {getActionButton()}
+            </div>
+          )}
+          {corruptError && (
+            <div className="flex flex-col items-center gap-2 rounded-md border bg-destructive/10 p-4 text-sm text-destructive">
+              <AlertCircle className="h-4 w-4" />
+              <span className="text-center">{corruptError}</span>
+              {getActionButton()}
+            </div>
+          )}
+          {!error && !corruptError && (
+            <>
+              <div className="space-y-1 text-center">
+                <div className="flex items-center justify-center gap-2">
+                  <Zap
+                    className={cn(
+                      'h-5 w-5',
+                      uiMode !== 'normal'
+                        ? 'animate-pulse text-destructive'
+                        : 'animate-pulse text-primary',
+                    )}
+                  />
+                  <h3 className="text-lg font-semibold">
+                    {uiMode === 'stalled'
+                      ? t('onboarding.install.prod.stalledHeader')
+                      : t('onboarding.install.prod.progress.header', 'Installing Venice Unleashed')}
+                  </h3>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  {uiMode === 'stalled'
+                    ? t('onboarding.install.prod.stalledDescription')
+                    : t('onboarding.install.prod.progress.description')}
                 </p>
               </div>
-            ) : (
-              <p className="noselect mr-2 text-right text-sm font-light">
-                {t('onboarding.install.prod.progress.extractingPrefix')} (
-                {gameDownloadUpdateExtractingFilesRemaining}{' '}
-                {t('onboarding.install.prod.progress.extractingSuffix')})
-              </p>
-            )}
-          </div>
-        </>
+
+              <div className="space-y-2">
+                <div className="flex justify-between text-xs text-muted-foreground">
+                  <span>{t('onboarding.install.prod.progress.label')}</span>
+                  <span>{gameDownloadUpdateProgress.toFixed(1)}%</span>
+                </div>
+                <Progress
+                  value={gameDownloadUpdateProgress}
+                  className={cn('h-2', uiMode !== 'normal' ? 'animate-pulse' : '')}
+                />
+              </div>
+
+              {!gameDownloadUpdateExtracting ? (
+                <DownloadMetricsComponent
+                  downloadedBytes={downloadedBytes}
+                  eta={eta}
+                  formatBytes={formatBytes}
+                  formatSpeed={formatBytes}
+                  gameDownloadUpdateSpeed={gameDownloadUpdateSpeed}
+                  getSpeedDot={getSpeedDot}
+                  totalDownloadSize={totalDownloadSize}
+                  uiMode={uiMode}
+                />
+              ) : (
+                <ExtractionMetricsComponent extractionFilesLeft={extractionFilesLeft} />
+              )}
+              {uiMode === 'stalled' && (
+                <div className="text-center text-sm text-destructive">
+                  {t('onboarding.install.prod.stalledMessage')}
+                </div>
+              )}
+            </>
+          )}
+
+          {(error || corruptError || (isStalled && !error && !corruptError)) &&
+            !gameDownloadUpdateExtracting &&
+            getActionButton()}
+        </div>
       )}
     </div>
   )

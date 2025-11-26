@@ -8,8 +8,9 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import clsx from 'clsx'
 import { Trash } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useFieldArray } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
@@ -18,8 +19,19 @@ export function ReservedSlotsComponent({ form }: { form: any }) {
   const [autoFocusIndex, setAutoFocusIndex] = useState(-1)
   const { t } = useTranslation()
 
+  const [visible, setVisible] = useState(false)
+  useEffect(() => {
+    setTimeout(() => setVisible(true), 50)
+  }, [])
+
   return (
-    <div className="flex">
+    <div
+      className={clsx(
+        'flex transition-all duration-700 ease-out',
+        visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0',
+      )}
+      style={{ transitionDelay: visible ? '50ms' : '0ms' }}
+    >
       <div className="flex-1">
         <FormLabel className="text-lg">{t('startupDescriptions.reservedSlots.add')}</FormLabel>
         <FormDescription>reservedSlots.add</FormDescription>

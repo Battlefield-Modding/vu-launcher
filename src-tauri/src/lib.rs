@@ -1,22 +1,19 @@
 use std::{
     fs,
-    io::{self, Write},
+    io::{self},
     os::windows::process::CommandExt,
-    path::{self, Path, PathBuf},
-    process::{Command, Stdio},
+    path::PathBuf,
+    process::Command,
 };
 
+use tauri_plugin_decorum::WebviewWindowExt;
 use tauri_plugin_window_state::StateFlags;
 
-use serde::{Deserialize, Serialize};
 use serde_json;
 
-use tauri::{Manager, WindowEvent};
-use walkdir::WalkDir;
+use tauri::{tray::TrayIconBuilder, Manager};
 
 use tauri_plugin_positioner::{Position, WindowExt};
-
-use dirs_next;
 
 pub mod preferences;
 use preferences::{get_user_preferences, set_launcher_directory, set_user_preferences};
@@ -570,7 +567,10 @@ async fn remove_vu_credentials(username: String) -> bool {
 fn get_launcher_install_path() -> String {
     match get_install_path_registry() {
         Ok(path) => return path,
-        Err(err) => return String::from(""),
+        Err(err) => {
+            println!("{:?}", err);
+            return String::from("");
+        }
     }
 }
 
@@ -588,13 +588,20 @@ fn open_explorer_at_launcher_install_path() -> bool {
 
             return true;
         }
-        Err(err) => return false,
+        Err(err) => {
+            println!("{:?}", err);
+            return false;
+        }
     }
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_single_instance::init(|_app, _argv, _cwd| {}))
+        .plugin(tauri_plugin_decorum::init())
+        .plugin(tauri_plugin_positioner::init())
+        .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(
             tauri_plugin_window_state::Builder::default()
@@ -603,6 +610,34 @@ pub fn run() {
         )
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_shell::init())
+        .setup(|app| {
+            TrayIconBuilder::new()
+                .on_tray_icon_event(|app, event| {
+                    tauri_plugin_positioner::on_tray_event(app.app_handle(), &event);
+                })
+                .build(app)?;
+
+            let main_window = app.get_webview_window("main").unwrap();
+
+            let _ = main_window.move_window(Position::Center);
+
+            main_window.create_overlay_titlebar().unwrap();
+
+            // Some macOS-specific helpers
+            #[cfg(target_os = "macos")]
+            {
+                // Set a custom inset to the traffic lights
+                main_window.set_traffic_lights_inset(12.0, 16.0).unwrap();
+
+                // Make window transparent without privateApi
+                main_window.make_transparent().unwrap();
+
+                // Set window level
+                // NSWindowLevel: https://developer.apple.com/documentation/appkit/nswindowlevel
+                main_window.set_window_level(25).unwrap();
+            }
+            Ok(())
+        })
         .invoke_handler(tauri::generate_handler![
             get_random_number,
             set_launcher_directory,

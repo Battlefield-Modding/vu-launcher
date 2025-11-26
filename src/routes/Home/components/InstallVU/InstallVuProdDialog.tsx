@@ -7,81 +7,59 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { QueryKey, rust_fns } from '@/config/config'
-import { useQueryClient } from '@tanstack/react-query'
-import { invoke } from '@tauri-apps/api/core'
+import { Button } from '@/components/ui/button'
 import { Check, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 export function InstallVuProdDialog({
   vuProdInstallPath,
-  setGameDownloadUpdateInstalling,
   dialogRef,
-  gameDownloadUpdateInstalling,
-  gameDownloadUpdateExtracting,
+  onPathConfirm,
 }: {
   vuProdInstallPath: string
-  setGameDownloadUpdateInstalling: (t: () => boolean) => void
   dialogRef: any
-  gameDownloadUpdateInstalling: boolean
-  gameDownloadUpdateExtracting: boolean
+  onPathConfirm: (path: string) => void
 }) {
-  const queryClient = useQueryClient()
   const { t } = useTranslation()
-
-  // async function InstallVuProdToPath() {
-  //   setGameDownloadUpdateInstalling(() => true)
-  //   await invoke(rust_fns.download_game, { installPath: vuProdInstallPath })
-  // }
-
-  async function InstallVuProdAndDevToPath() {
-    setGameDownloadUpdateInstalling(() => true)
-    await invoke(rust_fns.download_game, { installPath: vuProdInstallPath })
-    while (gameDownloadUpdateInstalling) {
-      // do nothing
-    }
-    while (gameDownloadUpdateExtracting) {
-      // do nothing
-    }
-    await invoke(rust_fns.copy_vu_prod_to_folder, { path: vuProdInstallPath })
-    queryClient.invalidateQueries({ queryKey: [QueryKey.IsVuInstalled], refetchType: 'all' })
-  }
 
   return (
     <Dialog>
       <DialogTrigger ref={dialogRef}></DialogTrigger>
-      <DialogContent className="w-auto max-w-screen-xl">
-        <DialogHeader>
-          <DialogTitle className="flex flex-col items-center pb-4">
-            <p className="mb-4">{t('onboarding.install.prod.dialog.title')}</p>
-            <code className="text-md text-nowrap rounded-md bg-gray-800 p-1 pl-2 pr-2 text-primary">
-              {`${vuProdInstallPath}\\VeniceUnleashed`}
-            </code>
-            <br />
-
-            <p className="mb-4">{t('onboarding.install.dev.dialog.title')}</p>
-            <code className="text-md text-nowrap rounded-md bg-gray-800 p-1 pl-2 pr-2 text-primary">
-              {`${vuProdInstallPath}\\VeniceUnleashedDev`}
-            </code>
+      <DialogContent className="max-w-md rounded-md border-border/50 shadow-md">
+        <DialogHeader className="space-y-4 text-center">
+          <DialogTitle className="text-lg font-semibold">
+            {t('onboarding.install.prod.dialog.title')}
           </DialogTitle>
-          <DialogDescription className="text-center">
+          <code className="inline-block rounded-md bg-muted px-2 py-1 text-sm text-foreground">
+            {`${vuProdInstallPath}\\VeniceUnleashed`}
+          </code>
+          <p className="text-sm text-muted-foreground">
+            {t('onboarding.install.dev.dialog.title')}
+          </p>
+          <code className="inline-block rounded-md bg-muted px-2 py-1 text-sm text-foreground">
+            {`${vuProdInstallPath}\\VeniceUnleashedDev`}
+          </code>
+          <DialogDescription className="text-sm">
             {t('onboarding.install.prod.dialog.description')}
           </DialogDescription>
         </DialogHeader>
-        <div className="flex justify-center gap-8">
-          <DialogClose>
-            <p className="flex gap-2 rounded-md bg-secondary p-2 transition hover:bg-secondary/80">
-              <X />
+        <div className="flex justify-center gap-3">
+          <DialogClose asChild>
+            <Button variant="outline" size="sm" className="min-w-[80px] gap-2">
+              <X className="h-4 w-4" />
               {t('onboarding.install.prod.dialog.button.cancel')}
-            </p>
+            </Button>
           </DialogClose>
-          <DialogClose>
-            <p
-              className="flex gap-4 rounded-md bg-green-600 p-2 text-primary transition hover:cursor-pointer hover:bg-green-600/80"
-              onClick={InstallVuProdAndDevToPath}
+          <DialogClose asChild>
+            <Button
+              variant="default"
+              size="sm"
+              className="min-w-[100px] gap-2"
+              onClick={() => onPathConfirm(vuProdInstallPath)}
             >
-              <Check /> {t('servers.loadouts.loadout.mods.addModDialog.confirm')}
-            </p>
+              <Check className="h-4 w-4" />
+              {t('servers.loadouts.loadout.mods.addModDialog.confirm')}
+            </Button>
           </DialogClose>
         </div>
       </DialogContent>

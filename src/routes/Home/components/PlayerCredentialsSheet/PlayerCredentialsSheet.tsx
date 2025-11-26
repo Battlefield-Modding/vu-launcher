@@ -5,9 +5,13 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
+  SheetFooter,
+  SheetClose,
 } from '@/components/ui/sheet'
-import { Loader, User } from 'lucide-react'
-import PlayerCredentialsForm from './PlayerCredentialsForm'
+import { Button } from '@/components/ui/button'
+
+import { Loader } from 'lucide-react'
+import { PlayerCredentialsForm } from './PlayerCredentialsForm'
 import { useState } from 'react'
 import { doesCredentialsExist } from '@/api'
 import clsx from 'clsx'
@@ -47,19 +51,14 @@ export default function PlayerCredentialsSheet() {
 
   return (
     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-      <SheetTrigger>
-        <div
-          className={clsx(
-            'text-md flex items-center justify-center rounded-md bg-secondary p-1.5 text-primary hover:bg-secondary/80',
-          )}
-        >
+      <SheetTrigger className="ml-auto">
+        <div className={clsx('flex text-xs text-blue-500 hover:text-blue-400')}>
           {credsExist
             ? t('home.playerCredentials.sheet.addUser')
             : t('home.playerCredentials.sheet.login')}
-          <User />
         </div>
       </SheetTrigger>
-      <SheetContent>
+      <SheetContent className="content-center bg-black bg-opacity-80 p-8">
         <SheetHeader>
           <SheetTitle className="text-center">{t('home.playerCredentials.sheet.title')}</SheetTitle>
           <SheetDescription className="text-center">
@@ -73,8 +72,18 @@ export default function PlayerCredentialsSheet() {
             </a>
           </SheetDescription>
         </SheetHeader>
-        <br />
-        <PlayerCredentialsForm setSheetOpen={setSheetOpen} />
+
+        <div className="mt-4">
+          <PlayerCredentialsForm setSheetOpen={setSheetOpen} />
+        </div>
+
+        <SheetFooter className="fixed bottom-4 left-4 m-0 p-0">
+          <SheetClose asChild>
+            <Button className="w-24" variant="outline">
+              {t('button.back')}
+            </Button>
+          </SheetClose>
+        </SheetFooter>
       </SheetContent>
     </Sheet>
   )

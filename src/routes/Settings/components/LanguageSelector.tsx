@@ -10,14 +10,7 @@ import {
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 
 import { CIcon } from '@coreui/icons-react'
 import * as icon from '@coreui/icons'
@@ -56,7 +49,6 @@ export function LanguageSelector() {
           name="language"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t('settings.languageSelector.title')}</FormLabel>
               <Select
                 onValueChange={(e) => {
                   // TODO: make this part of user preferences

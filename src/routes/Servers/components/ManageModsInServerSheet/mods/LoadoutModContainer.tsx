@@ -4,9 +4,16 @@ import { getModNamesInLoadout } from '@/api'
 import { useQuery } from '@tanstack/react-query'
 import { LoadoutMod } from './LoadoutMod'
 import { useTranslation } from 'react-i18next'
+import { useEffect, useState } from 'react'
+import clsx from 'clsx'
 
 export function LoadoutModContainer({ loadoutName }: { loadoutName: string }) {
   const { t } = useTranslation()
+
+  const [visible, setVisible] = useState(false)
+  useEffect(() => {
+    setVisible(true)
+  }, [])
 
   const { isPending, isError, data, error } = useQuery({
     queryKey: [`${QueryKey.GetAllModNames}-${loadoutName}`],
@@ -45,7 +52,12 @@ export function LoadoutModContainer({ loadoutName }: { loadoutName: string }) {
   }
 
   return (
-    <table className="text-center">
+    <table
+      className={clsx(
+        'text-center transition-all duration-700 ease-out',
+        visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0',
+      )}
+    >
       <tbody>
         <tr className="border border-secondary">
           <th className="h-auto border border-secondary">

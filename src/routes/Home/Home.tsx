@@ -1,15 +1,18 @@
 import { QueryKey, STALE } from '@/config/config'
 import PlayVUForm from './components/PlayVU/PlayVUForm'
-import PlayerCredentialsSheet from './components/PlayerCredentialsSheet/PlayerCredentialsSheet'
-import ServerSheet from './components/ServerSheet/ServerSheet'
 import { getUserPreferences } from '@/api'
 import { useQuery } from '@tanstack/react-query'
 import { Loader } from 'lucide-react'
-
 import { useTranslation } from 'react-i18next'
+import { useEffect, useState, useRef } from 'react'
+
+import clsx from 'clsx'
 
 export default function Home() {
   const { t } = useTranslation()
+  const [panelVisible, setPanelVisible] = useState(true) // Start visible
+
+  const isFirstRender = useRef(true)
 
   const { isPending, isError, data, error } = useQuery({
     queryKey: [QueryKey.UserPreferences],
@@ -17,33 +20,58 @@ export default function Home() {
     staleTime: STALE.never,
   })
 
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false
+      return
+    }
+
+    // For page transitions (remounts), animate in
+    setPanelVisible(false) // Reset to hidden
+    const panelTimeout = setTimeout(() => setPanelVisible(true), 50)
+    return () => clearTimeout(panelTimeout)
+  }, [])
+
   if (isPending) {
     return (
-      <div>
-        <h1>{t('home.loading')}</h1>
-        <Loader />
+      <div className="flex min-h-[100vh] items-center justify-center bg-gradient-to-br from-gray-900 to-black">
+        <div className="text-center">
+          <h1 className="mb-4 text-2xl font-bold text-white">{t('home.loading')}</h1>
+          <Loader className="animate-spin mx-auto h-8 w-8 text-primary" />
+        </div>
       </div>
     )
   }
 
   if (isError) {
     return (
-      <div className="rounded-md bg-destructive pl-2 pr-2 text-xl leading-9">
-        <h1>{t('home.error')}</h1>
-        <p>{error.message}</p>
+      <div className="flex min-h-[100vh] items-center justify-center bg-gradient-to-br from-gray-900 to-black">
+        <div className="mx-auto max-w-md rounded-md bg-destructive p-4 text-xl leading-9 text-destructive-foreground">
+          <h1 className="font-bold">{t('home.error')}</h1>
+          <p className="mt-2">{error?.message ?? 'Unknown error occurred'}</p>
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="m-auto flex min-h-[100vh] flex-col justify-center bg-[url(assets/home_background.png)] bg-cover">
-      <div className="m-auto flex max-w-96 flex-col justify-between gap-8 rounded-md bg-black p-8">
-        <div className="flex justify-between gap-8">
-          <PlayerCredentialsSheet />
-          <ServerSheet />
+    <>
+      <div
+        data-tauri-drag-region
+        className="relative z-10 ml-[56px] flex min-h-[100vh] flex-col items-center justify-center"
+      >
+        <div
+          className={clsx(
+            'max-w-96 transform rounded-md bg-black bg-opacity-90 p-8 drop-shadow-2xl transition-all duration-700 ease-in-out',
+            panelVisible
+              ? 'translate-y-0 opacity-100 shadow-2xl'
+              : 'translate-y-4 opacity-0 shadow-md',
+          )}
+          style={{ willChange: 'opacity, transform' }}
+        >
+          <PlayVUForm preferences={data} />
         </div>
-        <PlayVUForm preferences={data} />
       </div>
-    </div>
+    </>
   )
 }

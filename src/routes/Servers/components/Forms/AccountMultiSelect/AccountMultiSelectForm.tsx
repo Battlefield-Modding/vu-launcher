@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { useTranslation } from 'react-i18next'
+import { useEffect, useState } from 'react'
+import clsx from 'clsx'
 
 const formSchema = z.object({
   account0: z.boolean(),
@@ -54,16 +56,32 @@ export function AccountMultiSelectForm({
     setSheetOpen(false)
   }
 
+  const [visible, setVisible] = useState(false)
+  useEffect(() => {
+    setVisible(true)
+  }, [])
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-8">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className={clsx(
+          'flex flex-col gap-8 transition-all duration-700 ease-out',
+          visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0',
+        )}
+      >
         {usernames.map((x, index) => (
           <FormField
             control={form.control}
             name={`account${index}` as 'account0' | 'account1' | 'account2' | 'account3'}
             key={`serverStartupAccounts-${x}`}
             render={({ field }) => (
-              <FormItem className="m-auto flex w-96 justify-between">
+              <FormItem
+                className={clsx(
+                  'm-auto flex w-96 justify-between transition-all duration-700 ease-out',
+                  visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0',
+                )}
+              >
                 <FormLabel className="text-2xl leading-10">{x}</FormLabel>
                 <FormControl className="h-10 w-1/6">
                   {/* @ts-expect-error */}
@@ -78,7 +96,14 @@ export function AccountMultiSelectForm({
             )}
           />
         ))}
-        <Button type="submit" className="m-auto w-96 p-8 text-2xl">
+        <Button
+          type="submit"
+          className={clsx(
+            'm-auto w-96 p-8 text-2xl transition-all duration-700 ease-out',
+            visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0',
+          )}
+          style={{ transitionDelay: visible ? `${250 * usernames.length}ms` : '0ms' }}
+        >
           {t('servers.loadouts.loadout.multiAccount.form.play')}
         </Button>
       </form>

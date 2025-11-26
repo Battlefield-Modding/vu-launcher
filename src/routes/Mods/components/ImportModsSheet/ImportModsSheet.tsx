@@ -1,10 +1,17 @@
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
-import { Folder, FolderArchive, Upload } from 'lucide-react'
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet'
+import { Upload } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ModFolderImport } from './ModFolderImport'
-import { ZippedModImport } from './ZippedModImport'
-import clsx from 'clsx'
+import { Button } from '@/components/ui/button'
+import ImportModsForm from './ImportModsForm'
 
 export default function ImportModsSheet({
   importToLoadout,
@@ -14,7 +21,7 @@ export default function ImportModsSheet({
   loadoutName: string | undefined
 }) {
   const [sheetOpen, setSheetOpen] = useState(false)
-  const [zipActive, setZipActive] = useState(false)
+
   const { t } = useTranslation()
 
   return (
@@ -24,43 +31,20 @@ export default function ImportModsSheet({
           {t('mods.import.sheet.trigger')} <Upload />
         </div>
       </SheetTrigger>
-      <SheetContent className="flex flex-col">
+      <SheetContent className={'flex flex-col'}>
         <SheetHeader>
           <SheetTitle className="text-center">{t('mods.import.sheet.title')}</SheetTitle>
         </SheetHeader>
         <br />
-        <div className="flex justify-center gap-8">
-          <div
-            className={clsx(
-              'min-h-20 min-w-20 flex-col items-center justify-center rounded-md border bg-secondary p-4 transition hover:cursor-pointer hover:bg-secondary/80',
-              zipActive && 'border-cyan-500',
-              importToLoadout && 'hidden',
-              !importToLoadout && 'flex',
-            )}
-            onClick={() => {
-              setZipActive(() => true)
-            }}
-          >
-            .zip <FolderArchive />
-          </div>
-          <div
-            className={clsx(
-              'flex min-h-20 min-w-20 flex-col items-center justify-center rounded-md border bg-secondary p-4 transition hover:cursor-pointer hover:bg-secondary/80',
-              !zipActive && 'border-cyan-500',
-            )}
-            onClick={() => {
-              setZipActive(() => false)
-            }}
-          >
-            {t('mods.import.sheet.folder')} <Folder />
-          </div>
-        </div>
-        {zipActive && !importToLoadout && (
-          <ZippedModImport importToLoadout={importToLoadout} loadoutName={loadoutName} />
-        )}
-        {!zipActive && (
-          <ModFolderImport importToLoadout={importToLoadout} loadoutName={loadoutName} />
-        )}
+
+        <ImportModsForm importToLoadout={importToLoadout} loadoutName={loadoutName} />
+        <SheetFooter className="fixed bottom-4 left-4 m-0 p-0">
+          <SheetClose asChild>
+            <Button className="w-24" variant="outline">
+              {t('button.back')}
+            </Button>
+          </SheetClose>
+        </SheetFooter>
       </SheetContent>
     </Sheet>
   )

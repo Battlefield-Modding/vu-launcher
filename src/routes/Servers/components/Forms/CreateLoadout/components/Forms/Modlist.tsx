@@ -4,11 +4,30 @@ import { Switch } from '@/components/ui/switch'
 import clsx from 'clsx'
 import { useTranslation } from 'react-i18next'
 import { GameMod } from '@/config/config'
+import { useEffect, useState } from 'react'
 
-export function ModList({ form, mods }: { form: CreateLoadoutFormType; mods: GameMod[] }) {
+export function ModList({
+  form,
+  mods,
+  delay,
+}: {
+  form: CreateLoadoutFormType
+  mods: GameMod[]
+  delay: number
+}) {
   const { t } = useTranslation()
+  const [visible, setVisible] = useState(false)
+  useEffect(() => {
+    setVisible(true)
+  }, [])
   return (
-    <div>
+    <div
+      className={clsx(
+        'transition-all duration-700 ease-out',
+        visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0',
+      )}
+      style={{ transitionDelay: visible ? `${delay}ms` : '0ms' }}
+    >
       <FormItem>
         <FormLabel className="text-xl">
           {t('servers.loadouts.createLoadout.form.modlist.title')}

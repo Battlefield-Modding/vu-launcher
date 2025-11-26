@@ -11,7 +11,6 @@ import { AutomaticallyUpdateToggle } from './components/AutomaticallyUpdateToggl
 import { CheckForUpdatesToggle } from './components/CheckForUpdatesToggle'
 import { SetVuPathSheet } from './components/SetVuPath/SetVuPathSheet'
 import { CopyProdToDev } from './components/CopyProdToDev'
-import { InstallVUFromSettings } from './components/InstallVuFromSettings'
 import { Button } from '@/components/ui/button'
 
 export default function Settings() {
@@ -42,7 +41,7 @@ export default function Settings() {
   }
 
   return (
-    <div className="flex min-h-[100vh] flex-col">
+    <div className="ml-[56px] flex min-h-[100vh] flex-col items-center justify-center">
       <div className="flex max-w-screen-md flex-col gap-4 rounded-md p-8 text-primary">
         <h1 className="text-center text-4xl">{t('settings.title')}</h1>
 
@@ -67,7 +66,6 @@ export default function Settings() {
         {data.automatically_check_for_updates && <AutomaticallyUpdateToggle data={data} />}
         <SetVuPathSheet preferences={data} />
         <div>
-          <InstallVUFromSettings />
           <CopyProdToDev />
         </div>
         <LocalServerGuidForm guid={data.server_guid} />

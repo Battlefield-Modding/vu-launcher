@@ -1,21 +1,7 @@
 import { Button } from '@/components/ui/button'
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  Form,
-} from '@/components/ui/form'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+import { FormLabel, Form } from '@/components/ui/form'
+
 import { useFieldArray, useForm } from 'react-hook-form'
-import { allMaps, RealityModGameModes } from './Setup/allMaps'
 import { Trash } from 'lucide-react'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -23,9 +9,12 @@ import { LoadoutJSON, QueryKey } from '@/config/config'
 import { editServerLoadout } from '@/api'
 import { toast } from 'sonner'
 import { useQueryClient } from '@tanstack/react-query'
-import { useEffect, useState } from 'react'
+import { Profiler, useEffect, useRef, useState } from 'react'
 import { LoaderComponent } from '@/components/LoaderComponent'
 import { useTranslation } from 'react-i18next'
+import clsx from 'clsx'
+import { MapSelector } from './MapSelector'
+import { GameModeSelector } from './GameModeSelector'
 
 const formSchema = z.object({
   maplist: z.array(
@@ -45,6 +34,7 @@ export function MaplistForm({
 }) {
   const [submitLoading, setSubmitLoading] = useState(false)
   const [realityModActive, SetRealityModActive] = useState(false)
+  const renderTimeRef = useRef([])
   const queryClient = useQueryClient()
   const { t } = useTranslation()
 
@@ -97,141 +87,119 @@ export function MaplistForm({
     }
   }
 
+  const [visible, setVisible] = useState(false)
+  useEffect(() => {
+    setVisible(true)
+  }, [])
+
   const fieldArray = useFieldArray({ name: 'maplist', control: form.control })
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="m-auto flex max-w-screen-md flex-col">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className={clsx(
+          'm-auto flex max-w-screen-md flex-col transition-all duration-700 ease-out',
+          visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0',
+        )}
+      >
         {fieldArray.fields.length === 0 && (
           <Button
             variant={'constructive'}
             className="m-auto w-fit"
             onClick={(e) => {
               e.preventDefault()
-              fieldArray.append({ mapCode: '', gameMode: '' })
+              fieldArray.append({ mapCode: 'MP_001', gameMode: 'ConquestLarge0' })
             }}
           >
             {t('servers.loadouts.loadout.maplist.form.button.addFirstMap')}
           </Button>
         )}
-        <div className="flex w-fit flex-col items-end gap-4">
-          {fieldArray.fields.map((x, index) => {
-            return (
-              <div className="flex flex-col gap-4" key={`maplist-${index}`}>
-                <div className="flex gap-4">
-                  <FormLabel className="mb-auto mt-auto text-xl">{index + 1}.&#41;</FormLabel>
-
-                  <FormField
-                    control={form.control}
-                    name={`maplist.${index}.mapCode`}
-                    key={`${x.id}-mapCode`}
-                    render={({ field }) => (
-                      <FormItem className="w-64">
-                        <Select
-                          onValueChange={(e) => {
-                            clearGamemode(index)
-                            console.log('Chosen Map Changed!')
-                            field.onChange(e)
-                          }}
-                          defaultValue={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue
-                                placeholder={t(
-                                  'servers.loadouts.loadout.maplist.form.mapPlaceholder',
-                                )}
-                              />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {allMaps.map((x, index) => {
-                              return (
-                                <SelectItem value={x.mapCode} key={`chosen-map-${index}`}>
-                                  [{x.mapCode}]: {x.displayName}
-                                </SelectItem>
-                              )
-                            })}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name={`maplist.${index}.gameMode`}
-                    key={`${x.id}-gameMode`}
-                    render={({ field }) => (
-                      <FormItem className="w-64">
-                        <Select onValueChange={field.onChange} value={field.value}>
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue
-                                placeholder={t(
-                                  'servers.loadouts.loadout.maplist.form.gamemodePlaceholder',
-                                )}
-                              />
-                            </SelectTrigger>
-                          </FormControl>
-
-                          <SelectContent>
-                            {realityModActive &&
-                              RealityModGameModes.map((x, index) => {
-                                return (
-                                  <SelectItem key={`chosen-gamemode-${index}`} value={x}>
-                                    {x}
-                                  </SelectItem>
-                                )
-                              })}
-
-                            {!realityModActive &&
-                              allMaps
-                                .filter(
-                                  (x) => x.mapCode === form.getValues(`maplist.${index}.mapCode`),
-                                )[0]
-                                ?.gameModes.map((x, index) => {
-                                  return (
-                                    <SelectItem key={`chosen-gamemode-${index}`} value={x}>
-                                      {x}
-                                    </SelectItem>
-                                  )
-                                })}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <div
-                    className="flex hover:cursor-pointer hover:text-red-500"
-                    onClick={() => {
-                      fieldArray.remove(index)
-                    }}
-                  >
-                    <Trash className="m-auto" />
-                  </div>
-                </div>
-
-                {index === fieldArray.fields.length - 1 && (
-                  <Button
-                    variant={'constructive'}
-                    className="ml-auto mr-0 w-fit"
-                    onClick={(e) => {
-                      e.preventDefault()
-                      fieldArray.append({ mapCode: '', gameMode: '' })
-                    }}
-                  >
-                    {t('servers.loadouts.loadout.maplist.form.button.addAnotherMap')}
-                  </Button>
-                )}
-              </div>
+        <Profiler
+          id={`mapListFormFieldsArray`}
+          // @ts-expect-error
+          onRender={(id, phase, actualDuration, baseDuration, startTime, commitTime, number) => {
+            renderTimeRef.current = [
+              // @ts-expect-error
+              ...renderTimeRef.current,
+              // @ts-expect-error
+              parseFloat(actualDuration).toFixed(0),
+            ]
+            let total = 0
+            const sum = renderTimeRef.current.reduce(
+              // @ts-expect-error
+              (prev, cur) => parseFloat(prev) + parseFloat(cur),
+              total,
             )
-          })}
-        </div>
+            const avg = sum / renderTimeRef.current.length
+            console.log(
+              `renderTime array: ${renderTimeRef.current} || Average: ${avg}ms || Total: ${sum}ms`,
+            )
+          }}
+        >
+          <div className="flex w-fit flex-col items-end gap-4">
+            {fieldArray.fields.map((map, index) => {
+              return (
+                <div
+                  className={clsx(
+                    'flex flex-col gap-4 transition-all duration-700 ease-out',
+                    visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0',
+                  )}
+                  style={{ transitionDelay: visible ? `${100 * index}ms` : '0ms' }}
+                  key={`maplist-${index}`}
+                >
+                  <div className="flex gap-4">
+                    <FormLabel className="mb-auto mt-auto text-xl">{index + 1}.&#41;</FormLabel>
+
+                    <MapSelector
+                      form={form}
+                      index={index}
+                      clearGamemode={clearGamemode}
+                      key={`${map.id}-mapCode`}
+                    />
+
+                    <GameModeSelector
+                      form={form}
+                      index={index}
+                      realityModActive={realityModActive}
+                      key={`${map.id}-gameMode`}
+                    />
+
+                    <div
+                      className="flex hover:cursor-pointer hover:text-red-500"
+                      onClick={() => {
+                        fieldArray.remove(index)
+                      }}
+                    >
+                      <Trash className="m-auto" />
+                    </div>
+                  </div>
+
+                  {index === fieldArray.fields.length - 1 && (
+                    <Button
+                      variant={'constructive'}
+                      className="ml-auto mr-0 w-fit"
+                      onClick={(e) => {
+                        e.preventDefault()
+                        fieldArray.append({ mapCode: 'MP_001', gameMode: 'ConquestLarge0' })
+                      }}
+                    >
+                      {t('servers.loadouts.loadout.maplist.form.button.addAnotherMap')}
+                    </Button>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        </Profiler>
         {submitLoading && <LoaderComponent />}
-        <div className="mt-8 flex justify-center">
+        <div
+          className={clsx(
+            'mt-8 flex justify-center transition-all duration-700 ease-out',
+            visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0',
+          )}
+          style={{ transitionDelay: visible ? `${100 * fieldArray.fields.length}ms` : '0ms' }}
+        >
           <Button type="submit">{t('servers.loadouts.loadout.maplist.form.submit')}</Button>
         </div>
       </form>

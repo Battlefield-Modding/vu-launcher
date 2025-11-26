@@ -1,17 +1,27 @@
 import { getAllLoadoutNames } from '@/api'
-import { QueryKey, STALE } from '@/config/config'
+import { QueryKey, routes, STALE } from '@/config/config'
 import { useQuery } from '@tanstack/react-query'
 import { Loader } from 'lucide-react'
-import { DeleteLoadoutDialog } from './DeleteLoadoutDialog'
 import { CreateLoadoutSheet } from '../Forms/CreateLoadout/CreateLoadoutSheet'
 import { UploadLoadoutSheet } from '../Forms/UploadLoadout/UploadLoadoutSheet'
 import clsx from 'clsx'
 import { useTranslation } from 'react-i18next'
-import { Link, Outlet, useParams } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Loadout } from './Loadout'
 
 export function LoadoutContainer() {
   const { t } = useTranslation()
   const params = useParams()
+  const navigate = useNavigate()
 
   const { isPending, isError, data, error } = useQuery({
     queryKey: [QueryKey.GetAllLoadoutNames],
@@ -46,29 +56,41 @@ export function LoadoutContainer() {
   }
 
   return (
-    <div className="m-auto mt-0 flex w-full flex-1">
-      <div className="flex w-64 flex-col border border-b-0 border-l-0 border-secondary bg-secondary">
-        {data.map((loadoutName, index) => (
-          <div
-            key={`${loadoutName}-${index}`}
-            className={clsx(
-              'flex items-center justify-between hover:cursor-pointer hover:bg-black/60',
-              params.loadoutName === loadoutName && 'bg-black/80',
-            )}
-          >
-            <Link to={`./${loadoutName}`} className="flex-1 p-2" viewTransition>
-              <p>{loadoutName}</p>
-            </Link>
-            <DeleteLoadoutDialog name={loadoutName} />
-          </div>
-        ))}
-        <div className="mb-0 mt-auto flex">
-          <CreateLoadoutSheet />
-          <UploadLoadoutSheet />
-        </div>
+    <div className="flex h-full flex-col items-center justify-center gap-16">
+      <div className="mt-16">
+        <Select
+          onValueChange={(e) => {
+            navigate(`${routes.SERVERS}/${e}`)
+          }}
+        >
+          <SelectTrigger className="w-fit">
+            <SelectValue placeholder={params.loadoutName ?? 'Choose Loadout'} />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>{t('servers.loadouts.selectLabel')}</SelectLabel>
+              {data.map((loadoutName, index) => (
+                <SelectItem
+                  key={`${loadoutName}-${index}`}
+                  value={loadoutName}
+                  className={clsx(
+                    'flex items-center justify-between hover:cursor-pointer hover:bg-black/60',
+                    params.loadoutName === loadoutName && 'bg-black/80',
+                  )}
+                >
+                  {loadoutName}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
       </div>
-      <div className="flex w-full">
-        <Outlet />
+
+      <Loadout />
+
+      <div className="mb-16">
+        <CreateLoadoutSheet />
+        <UploadLoadoutSheet />
       </div>
     </div>
   )

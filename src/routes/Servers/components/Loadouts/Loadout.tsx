@@ -1,4 +1,4 @@
-import { Folder, Loader, Server, User } from 'lucide-react'
+import { Folder, Server, User } from 'lucide-react'
 import {
   getLoadoutJson,
   getUserPreferences,
@@ -23,19 +23,25 @@ import clsx from 'clsx'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
 import { TooltipWrapper } from '@/components/TooltipWrapper'
+import { DeleteLoadoutDialog } from './DeleteLoadoutDialog'
+import { LoadoutSkeleton } from './LoadoutSkeleton'
 
 export function Loadout() {
   let { loadoutName } = useParams()
-  if (!loadoutName) {
-    return <div>No loadoutName specified...</div>
-  }
+  const { t } = useTranslation()
 
   const queryClient = useQueryClient()
-  const { t } = useTranslation()
 
   const { isPending, isError, data, error } = useQuery({
     queryKey: [QueryKey.GetLoadoutJSON, loadoutName],
-    queryFn: async (): Promise<{ preferences: UserPreferences; loadout: LoadoutJSON }> => {
+    queryFn: async (): Promise<{
+      preferences: UserPreferences | undefined
+      loadout: LoadoutJSON | undefined
+    }> => {
+      if (!loadoutName) {
+        return { preferences: undefined, loadout: undefined }
+      }
+
       const loadout = (await getLoadoutJson(loadoutName as string))[0]
       const preferences = await getUserPreferences()
 
@@ -45,12 +51,8 @@ export function Loadout() {
   })
 
   if (isPending) {
-    return (
-      <div>
-        <h1>{t('servers.loadouts.loadout.loading')}</h1>
-        <Loader />
-      </div>
-    )
+    console.log(t('servers.loadouts.loadout.loading'))
+    return <LoadoutSkeleton />
   }
 
   if (isError) {
@@ -102,6 +104,10 @@ export function Loadout() {
     }
   }
 
+  if (loadoutName == undefined || data.preferences == undefined || data.loadout == undefined) {
+    return <LoadoutSkeleton />
+  }
+
   return (
     <div className="flex w-full flex-col items-center justify-center gap-0">
       <div className="mb-4 ml-auto mr-auto flex max-w-80 items-center gap-2 lg:max-w-lg xl:max-w-screen-md">
@@ -109,6 +115,7 @@ export function Loadout() {
         <div onClick={handleRefreshLoadout} className="w-fit">
           <RefreshLoadoutTooltip />
         </div>
+        <DeleteLoadoutDialog name={loadoutName} />
       </div>
 
       <div className="m-auto mb-8 mt-8">
@@ -147,7 +154,7 @@ export function Loadout() {
           <TooltipWrapper text={t('servers.loadouts.loadout.startServer')}>
             <div
               onClick={handleServer}
-              className="rounded-md bg-green-800 p-4 text-xl text-primary hover:cursor-pointer hover:bg-green-800/80"
+              className="rounded-md bg-green-700 p-4 text-xl text-primary hover:cursor-pointer hover:bg-green-700/80"
             >
               <Server />
             </div>
@@ -155,7 +162,7 @@ export function Loadout() {
           <TooltipWrapper text={t('servers.loadouts.loadout.startServerAndClient')}>
             <div
               onClick={handlePlay}
-              className="flex items-center justify-center gap-2 rounded-md bg-green-800 p-4 text-xl text-primary hover:cursor-pointer hover:bg-green-800/80"
+              className="flex items-center justify-center gap-2 rounded-md bg-green-700 p-4 text-xl text-primary hover:cursor-pointer hover:bg-green-700/80"
             >
               <Server />
               <User />

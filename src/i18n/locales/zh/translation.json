@@ -1,4 +1,7 @@
 {
+  "button": {
+    "back": "后退"
+  },
   "home": {
     "error": "加载主页路径错误",
     "loading": "加载主页路径",
@@ -29,6 +32,7 @@
           }
         },
         "devBranch": {
+          "description": "实验性更新",
           "title": "使用Dev分支"
         },
         "error": "加载Play VU表单时出错",
@@ -48,6 +52,7 @@
       "error": "未能加载玩家凭据",
       "form": {
         "button": "提交",
+        "hint": "* 必填欄位",
         "password": {
           "description": "使用操作系统的本机凭证管理器存储",
           "placeholder": "密码",
@@ -94,7 +99,7 @@
       "sheet": {
         "description": "选择士兵后即可加入服务器，无需通过服务器浏览器",
         "title": "添加快速加入服务器",
-        "trigger": "添加服务器"
+        "trigger": "添加"
       }
     }
   },
@@ -215,10 +220,12 @@
   },
   "onboarding": {
     "account": {
-      "add": "添加VU账户"
+      "add": "添加VU账户",
+      "description": "输入您的 VU 凭据以自动登录"
     },
     "activate": {
       "button": "激活BF3",
+      "description": "请按照以下步骤激活 BF3",
       "header": "用EA App / Origin激活BF3",
       "step1": "请启动您的EA App / Origin并登录",
       "step2": "登录后，单击激活BF3按钮：",
@@ -226,12 +233,24 @@
     },
     "button": {
       "complete": "跳过 /完成引导",
-      "continue": "跳过 /继续"
+      "continue": "跳过 /继续",
+      "refresh": "刷新检查",
+      "skip": "跳过",
+      "verify": "核实"
     },
     "error": "未能加载引导组件",
     "failure": "未能完成初始设置",
     "header": "首次设置",
     "install": {
+      "button": {
+        "cancel": "取消",
+        "cancelDiskSpace": "取消（没有剩余磁盘空间）",
+        "resume": "简历下载",
+        "resumeFrom": "简历来自",
+        "retry": "重试"
+      },
+      "complete": "安装完成！",
+      "description": "下载最新版本的威尼斯释放",
       "dev": {
         "button": "选择安装位置",
         "dialog": {
@@ -248,6 +267,8 @@
         },
         "header": "找到VU Prod，还安装VU Dev吗？"
       },
+      "extractDescription": "剩余文件数",
+      "extractTitle": "提取文件",
       "prod": {
         "dialog": {
           "button": {
@@ -262,15 +283,28 @@
           "button": "选择安装位置",
           "header": "下载VU"
         },
+        "error": {
+          "generic": "安装失败，请重试。",
+          "stalled": "下载停止（网络问题）。\n检查连接并在准备好后恢复。"
+        },
         "locate": {
           "button": "找到VU",
           "header": "VU已经安装了？"
         },
+        "noPath": "无法恢复，因为找不到安装路径。\n选择新的安装路径。",
         "progress": {
+          "description": "下载正在进行中。\n这可能需要几分钟的时间，具体取决于您的连接情况。",
           "extractingPrefix": "提取文件",
           "extractingSuffix": "保持不变",
-          "header": "下载VU"
+          "header": "下载VU",
+          "label": "进步"
         },
+        "resumeHint": "单击恢复继续部分下载",
+        "resuming": "恢复自",
+        "stalled": "连接中断。\n检查您的连接并单击恢复。",
+        "stalledDescription": "检测到连接问题。\n检查互联网并单击“继续”继续。",
+        "stalledHeader": "连接停止",
+        "stalledMessage": "检查连接并单击恢复继续。",
         "toast": {
           "chooseInstallDir": {
             "failure": "未能设置VU安装路径",
@@ -278,11 +312,34 @@
           },
           "installComplete": "VU安装完成"
         }
-      }
+      },
+      "success": "VU 即可使用。",
+      "title": "下载释放威尼斯"
     },
     "loading": "加载引导系统组件",
+    "steps": {
+      "account": {
+        "title": "添加账户"
+      },
+      "activate": {
+        "description": "VU 需要第一次 bf3 激活步骤。\n如果您已经激活 BF3，则可以跳过此步骤。",
+        "title": "激活BF3"
+      },
+      "install": {
+        "description": "下载释放威尼斯",
+        "title": "安装语音单元"
+      }
+    },
     "toast": {
-      "activateBF3": "Activating BF3"
+      "activateBF3": "Activating BF3",
+      "completeStep": "请先完成此步骤，然后再继续",
+      "learnMore": "了解有关威尼斯释放的更多信息"
+    },
+    "unknownError": "发生未知错误",
+    "verify": {
+      "error": "无法验证安装状态",
+      "installed": "威尼斯释放已正确安装！",
+      "notInstalled": "未找到《威尼斯释放》。\n请安装它以继续。"
     }
   },
   "servers": {
@@ -300,9 +357,12 @@
       },
       "loading": "检查服务器密钥是否存在",
       "redoGuid": "请重新输入您的服务器GUID",
+      "serverKeyImageAlt": "显示如何获取服务器密钥信息的图像",
       "step1": "从此网站下载服务器密钥",
       "step2": "从上方复制服务器密钥的GUID",
-      "step3": "将密钥文件拖入此窗口"
+      "step3": "将密钥文件拖入此窗口",
+      "subtitle": "匯入伺服器金鑰並設定快速加入",
+      "title": "初始設定"
     },
     "loadouts": {
       "createLoadout": {
@@ -570,7 +630,8 @@
           "serverFailure": "无法启动服务器配置文件",
           "serverSuccess": "启动VU服务器..."
         }
-      }
+      },
+      "selectLabel": "主动装载"
     }
   },
   "settings": {
@@ -763,6 +824,9 @@
     "checkFailed": "无法检查更新",
     "checking": "检查更新",
     "close": "关闭",
+    "download": "下载",
+    "downloadComplete": "下载完成。\n自动安装在",
+    "downloading": "下载更新",
     "header": "安装更新",
     "ignore": "忽略更新",
     "install": "找到新的更新！现在安装？"

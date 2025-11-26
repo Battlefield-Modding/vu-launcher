@@ -195,6 +195,7 @@ pub struct StartupArgs {
 }
 
 #[allow(non_snake_case)]
+#[allow(non_camel_case_types)]
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
 pub struct RM_Commands {
     pub setDevelopers: Vec<String>, // Set list of developers, separated by a space
@@ -239,6 +240,7 @@ impl RM_Commands {
 }
 
 #[allow(non_snake_case)]
+#[allow(non_camel_case_types)]
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
 pub struct VU_Commands {
     pub ColorCorrectionEnabled: Option<bool>, // "Enable blue-tint filter",

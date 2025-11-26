@@ -20,6 +20,11 @@ export function ZippedModImport({
   const [isDraggingOver, setIsDraggingOver] = useState(false)
   const { t } = useTranslation()
 
+  const [visible, setVisible] = useState(false)
+  useEffect(() => {
+    setVisible(true)
+  }, [])
+
   let handleDrop: UnlistenFn | undefined
   let handleDragEnter: UnlistenFn | undefined
   let handleDragLeave: UnlistenFn | undefined
@@ -144,9 +149,11 @@ export function ZippedModImport({
   return (
     <div
       className={clsx(
-        'flex flex-1 flex-col justify-center border-2 border-dashed border-primary bg-secondary text-center text-primary',
+        'flex flex-1 flex-col justify-center border-2 border-dashed border-primary bg-secondary text-center text-primary transition-all duration-700 ease-out',
         isDraggingOver && 'bg-green-500/80',
+        visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0',
       )}
+      style={{ transitionDelay: visible ? '150ms' : '0ms' }}
       onClick={handleClick}
     >
       {isDraggingOver ? (

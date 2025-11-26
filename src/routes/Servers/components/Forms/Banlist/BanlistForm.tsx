@@ -7,10 +7,11 @@ import { LoadoutJSON, QueryKey } from '@/config/config'
 import { editServerLoadout } from '@/api'
 import { toast } from 'sonner'
 import { useQueryClient } from '@tanstack/react-query'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { LoaderComponent } from '@/components/LoaderComponent'
 import { Banlist } from '../CreateLoadout/components/Forms/Banlist'
 import { useTranslation } from 'react-i18next'
+import clsx from 'clsx'
 
 const formSchema = z.object({
   banlist: z.array(z.string().optional()),
@@ -58,15 +59,30 @@ export function BanlistForm({
     }
   }
 
+  const [visible, setVisible] = useState(false)
+  useEffect(() => {
+    setVisible(true)
+  }, [])
+
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="m-auto mt-8 flex max-w-screen-md flex-col items-center"
+        className={clsx(
+          'm-auto mt-8 flex max-w-screen-md flex-col items-center transition-all duration-700 ease-out',
+          visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0',
+        )}
       >
-        <Banlist form={form} alwaysAutoFocus={true} />
+        <Banlist form={form} alwaysAutoFocus={true} delay={100} />
         {submitLoading && <LoaderComponent />}
-        <Button type="submit" className="m-auto mt-8">
+        <Button
+          type="submit"
+          className={clsx(
+            'm-auto mt-8 transition-all duration-700 ease-out',
+            visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0',
+          )}
+          style={{ transitionDelay: visible ? '300ms' : '0ms' }}
+        >
           {t('servers.loadouts.loadout.banlist.form.submit')}
         </Button>
       </form>
