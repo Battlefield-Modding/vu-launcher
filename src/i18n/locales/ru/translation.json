@@ -630,7 +630,8 @@
           "serverFailure": "Не удалось запустить загрузку сервера",
           "serverSuccess": "Запустил Vu Server ..."
         }
-      }
+      },
+      "selectLabel": "Активная загрузка"
     }
   },
   "settings": {

@@ -630,7 +630,8 @@
           "serverFailure": "无法启动服务器配置文件",
           "serverSuccess": "启动VU服务器..."
         }
-      }
+      },
+      "selectLabel": "主动装载"
     }
   },
   "settings": {

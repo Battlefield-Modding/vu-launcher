@@ -68,7 +68,7 @@ export function LoadoutContainer() {
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              <SelectLabel>Active Loadout</SelectLabel>
+              <SelectLabel>{t('servers.loadouts.selectLabel')}</SelectLabel>
               {data.map((loadoutName, index) => (
                 <SelectItem
                   key={`${loadoutName}-${index}`}

@@ -630,7 +630,8 @@
           "serverFailure": "Der Server -Loadout fehlgeschlagen",
           "serverSuccess": "VU Server gestartet ..."
         }
-      }
+      },
+      "selectLabel": "Aktives Loadout"
     }
   },
   "settings": {
