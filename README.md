@@ -1,18 +1,26 @@
 # Unofficial VU Launcher
-![image](https://github.com/user-attachments/assets/d2da0481-1600-4eb3-ac0b-abb7e93671b8)
+<img width="1294" height="757" alt="image" src="https://github.com/user-attachments/assets/c07f0760-e5f4-497d-bcba-f034f73acc95" />
+
 ## What?
 A WIP launcher for Battlefield 3: Venice Unleashed. Mostly useful if playing VU locally or developing mods.
 ### Features:
-- Install VU Prod / Dev
-- Simultaneous VU Installs (Prod/Dev)
-- Guided server setup
+- Do stuff in one place
+  - No more digging through directories to find txt files / mod folders
+  - No more looking up documentation to change things like maplist
 - Server Loadouts
   - Quickly swap between different server configurations (startup/maplist/modlist/banlist).
-  - Change parts of the loadout with guided forms, instead of manually typing in a `.txt` file.
-  - Import an existing server configuration. This will copy everything and rename the mod folders.
+  - Replaces manual .txt config with forms so you don't have to worry about typos
+  - Server import. You can drag and drop an existing config right into the launcher.
   - Buttons for common actions like starting server / server + client.
-- Import zipped mod folders which can then be added to any loadout.
-- Activate BF3
+  - Mod import. You can drag and drop a valid mod into a server loadout
+- Translation support with i18n
+## Installation
+### Prerequisites
+- Battlefield 3
+- Windows
+
+Go to the [releases](https://github.com/Battlefield-Modding/vu-launcher/releases) section and get the latest `.exe` file.
+Alternatively download the source code and build it yourself.
 ## Why?
 Trying to learn Tauri/React and I want to make it easier to use Venice Unleashed.
 Some QoL improvements that I wanted:
@@ -20,13 +28,7 @@ Some QoL improvements that I wanted:
 - Easier configuration of server
 - Easier swapping between server configurations (loadouts)
 - Easier adding of launch arguments including auto login, auto server join, etc
-## Installation
-### Prerequisites
-- Battlefield 3
-- Windows
 
-Go to the releases section and get the latest `.exe` file.
-Alternatively download the source code and build it yourself.
 ## Feedback
 If you want to report a bug or request a feature/change do this in the Issues section.
 Please label them as:
