@@ -81,6 +81,7 @@ export function AccountMultiSelectForm({
                   'm-auto flex w-96 justify-between transition-all duration-700 ease-out',
                   visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0',
                 )}
+                style={{ transitionDelay: visible ? `${50 * index}ms` : '0ms' }}
               >
                 <FormLabel className="text-2xl leading-10">{x}</FormLabel>
                 <FormControl className="h-10 w-1/6">
@@ -102,7 +103,7 @@ export function AccountMultiSelectForm({
             'm-auto w-96 p-8 text-2xl transition-all duration-700 ease-out',
             visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0',
           )}
-          style={{ transitionDelay: visible ? `${250 * usernames.length}ms` : '0ms' }}
+          style={{ transitionDelay: visible ? `${50 * usernames.length}ms` : '0ms' }}
         >
           {t('servers.loadouts.loadout.multiAccount.form.play')}
         </Button>
