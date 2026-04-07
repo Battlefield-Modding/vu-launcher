@@ -18,6 +18,7 @@ import { AccountMultiSelectForm } from './AccountMultiSelectForm'
 import { useTranslation } from 'react-i18next'
 import { TooltipWrapper } from '@/components/TooltipWrapper'
 import { Button } from '@/components/ui/button'
+import PlayerCredentialsSheet from '@/routes/Home/components/PlayerCredentialsSheet/PlayerCredentialsSheet'
 
 export function ChooseAccountSheet({ loadoutName }: { loadoutName: string }) {
   const [sheetOpen, setSheetOpen] = useState(false)
@@ -65,10 +66,16 @@ export function ChooseAccountSheet({ loadoutName }: { loadoutName: string }) {
     handlePlay(users)
   }
 
-  if (!data || !data[0]) {
+  if (!data) {
     return (
       <div className="rounded-md bg-red-600 pl-2 pr-2 text-xl leading-9 text-primary">
         <h1>{t('servers.loadouts.loadout.multiAccount.sheet.empty')}</h1>
+      </div>
+    )
+  } else if (data.length == 0) {
+    return (
+      <div className="flex justify-between gap-2 rounded-md bg-secondary text-xl text-primary hover:cursor-pointer hover:bg-secondary/80">
+        <PlayerCredentialsSheet />
       </div>
     )
   } else {
