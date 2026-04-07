@@ -125,7 +125,7 @@ async fn get_vu_data() -> String {
 }
 
 #[tauri::command]
-async fn play_vu(account_index: usize, use_dev_branch: bool) -> bool {
+async fn play_vu() -> bool {
     let preferences_prematch = get_user_preferences_as_struct();
     let preferences = match preferences_prematch {
         Ok(info) => info,
@@ -136,7 +136,7 @@ async fn play_vu(account_index: usize, use_dev_branch: bool) -> bool {
 
     args.push("/C");
 
-    if use_dev_branch {
+    if preferences.use_dev_branch {
         if preferences.dev_venice_unleashed_shortcut_location.len() > 1 {
             args.push(&preferences.dev_venice_unleashed_shortcut_location);
             args.push("-updateBranch");
@@ -200,9 +200,10 @@ async fn play_vu(account_index: usize, use_dev_branch: bool) -> bool {
         }
         _ => {
             args.push("-username");
-            args.push(&preferences.usernames[account_index]);
+            args.push(&preferences.usernames[preferences.preferred_player_index as usize]);
 
-            let username = String::from(&preferences.usernames[account_index]);
+            let username =
+                String::from(&preferences.usernames[preferences.preferred_player_index as usize]);
 
             match get_vu_account_password(username) {
                 Ok(pw) => {

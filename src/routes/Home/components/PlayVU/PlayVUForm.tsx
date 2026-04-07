@@ -91,29 +91,12 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
     )
   }
 
-  async function onSubmit(formData: z.infer<typeof FormSchema>) {
-    let accountIndex = NONE_INDEX
-    let useDevBranch = formData.useDevBranch
+  async function onSubmit(e: any) {
+    // Doing a manual onSubmit on PlayVUForm because I have nested forms that trigger react hook forms onsubmit for the parent...
+    e.preventDefault()
 
-    if (formData.accountIndex === undefined) {
-      if (data && data.usernames.length > 0) {
-        accountIndex = 0
-      }
-    } else {
-      accountIndex = parseInt(formData.accountIndex)
-    }
-
-    // Parse serverIndex similarly (original ignores it; uncomment if needed for playVU)
-    // let serverIndex = NONE_INDEX
-    // if (formData.serverIndex === undefined) {
-    //   if (data && data.servers.length > 0) {
-    //     serverIndex = 0
-    //   }
-    // } else {
-    //   serverIndex = parseInt(formData.serverIndex)
-    // }
-
-    const status = await playVU({ accountIndex, useDevBranch /* , serverIndex */ })
+    // player index, server index, and dev branch are all handled in preferences logic. No need to use the formdata here?
+    const status = await playVU()
 
     if (status) {
       toast.success(t('home.playVu.form.toast.success'))
@@ -156,7 +139,7 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-72 space-y-6">
+      <form className="w-72 space-y-6">
         <img src={VUIcon} alt="VU Icon" className="m-auto size-32 p-1" />
         {/* Account Select */}
         <FormField
@@ -281,6 +264,7 @@ export default function PlayVUForm({ preferences }: { preferences: UserPreferenc
           variant="constructive"
           className="w-full rounded-lg p-8 text-3xl uppercase tracking-widest shadow-md transition-shadow hover:shadow-lg"
           aria-label={t('home.playVu.form.submit')}
+          onClick={onSubmit}
         >
           {t('home.playVu.form.submit')}
         </Button>

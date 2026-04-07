@@ -33,17 +33,8 @@ export async function saveUserCredentials({
   return false
 }
 
-export async function playVU({
-  accountIndex,
-  useDevBranch,
-}: {
-  accountIndex: number
-  useDevBranch: boolean
-}): Promise<boolean> {
-  const status = (await invoke(rust_fns.play_vu, {
-    accountIndex,
-    useDevBranch,
-  })) as boolean
+export async function playVU(): Promise<boolean> {
+  const status = (await invoke(rust_fns.play_vu)) as boolean
   return status
 }
 
