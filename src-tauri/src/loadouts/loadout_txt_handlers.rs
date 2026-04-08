@@ -320,7 +320,7 @@ pub fn import_startup_txt_into_loadout(loadout_name: &String) -> io::Result<Star
             Err(_) => {}
         }
 
-        match arg.value.parse::<u32>() {
+        match arg.value.parse::<i32>() {
             Ok(float) => {
                 match serde_json::to_value(float) {
                     Ok(val) => {

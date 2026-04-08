@@ -33,11 +33,11 @@ export type Vars = {
   regenerateHealth?: boolean | undefined // Set if health regeneration should be active
   teamKillCountForKick?: number | undefined // Set number of teamkills allowed during a round
   teamKillValueForKick?: number | undefined // Set max kill-value allowed for a player before he/she is kicked
-  teamKillValuelncrease?: number | undefined // Set kill-value increase for a teamkill
+  teamKillValueIncrease?: number | undefined // Set kill-value increase for a teamkill
   teamKillValueDecreasePerSecond?: number | undefined // Set kill-value decrease per second
   teamKillKickForBan?: number | undefined // Set number of team-kill kicks that will lead to permaban
   idleTimeout?: number | undefined // Set idle timeout
-  idleBanRounds?: boolean | undefined // Set how many rounds idle timeout should ban (if at all)
+  idleBanRounds?: number | undefined // Set how many rounds idle timeout should ban (if at all)
   vehicleSpawnAllowed?: boolean | undefined // Set whether vehicles should spawn in-game
   vehicleSpawnDelay?: number | undefined // Set vehicle spawn delay scale factor
   soldierHealth?: number | undefined // Set soldier max health scale factor
@@ -46,6 +46,12 @@ export type Vars = {
   bulletDamage?: number | undefined // Set bullet damage scale factor
   gameModeCounter?: number | undefined // Set scale factor for number of tickets to end round
   onlySquadLeaderSpawn?: boolean | undefined // Set if players can only spawn on their squad leader
+  ctfRoundTimeModifier?: number | undefined // Set time modifier on CTF
+  gunMasterWeaponsPreset?: number | undefined // Set preset index for gunmaster
+  killRotation?: boolean | undefined // ??
+  maxSpectators?: number | undefined // Set max spectator count
+  premiumStatus?: boolean | undefined // Set premium status?
+  roundWarmupTimeout?: number | undefined // Pregame timer?
   // unlockMode?: any | undefined,                           // Set weapons & gadgets to be available on an unranked server
 }
 

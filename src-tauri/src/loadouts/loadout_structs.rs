@@ -107,8 +107,8 @@ pub struct Vars {
     pub serverName: String,   // Set the server name
     pub gamePassword: Option<String>, // Set the game password for the server
     pub autoBalance: Option<bool>, // Set if the server should autobalance
-    pub roundStartPlayerCount: Option<u32>, // Set minimum numbers of players to go from warm-up to pre-round/in-round
-    pub roundRestartPlayerCount: Option<u32>, // Set minimum numbers of players to go from in-round to warm-up
+    pub roundStartPlayerCount: Option<i32>, // Set minimum numbers of players to go from warm-up to pre-round/in-round
+    pub roundRestartPlayerCount: Option<i32>, // Set minimum numbers of players to go from in-round to warm-up
     pub roundLockdownCountdown: Option<u32>,  // Set the duration of pre-round
     pub serverMessage: Option<String>,        // Set the server welcome message
     pub friendlyFire: Option<bool>,           // Set if the server should allow team damage
@@ -125,11 +125,11 @@ pub struct Vars {
     pub regenerateHealth: Option<bool>, // Set if health regeneration should be active
     pub teamKillCountForKick: Option<u32>, // Set number of teamkills allowed during a round
     pub teamKillValueForKick: Option<f64>, // Set max kill-value allowed for a player before he/she is kicked
-    pub teamKillValuelncrease: Option<f64>, // Set kill-value increase for a teamkill
+    pub teamKillValueIncrease: Option<f64>, // Set kill-value increase for a teamkill
     pub teamKillValueDecreasePerSecond: Option<f64>, // Set kill-value decrease per second
     pub teamKillKickForBan: Option<u32>, // Set number of team-kill kicks that will lead to permaban
     pub idleTimeout: Option<u32>,        // Set idle timeout
-    pub idleBanRounds: Option<bool>,     // Set how many rounds idle timeout should ban (if at all)
+    pub idleBanRounds: Option<i32>,      // Set how many rounds idle timeout should ban (if at all)
     pub vehicleSpawnAllowed: Option<bool>, // Set whether vehicles should spawn in-game
     pub vehicleSpawnDelay: Option<u32>,  // Set vehicle spawn delay scale factor
     pub soldierHealth: Option<u32>,      // Set soldier max health scale factor
@@ -138,6 +138,12 @@ pub struct Vars {
     pub bulletDamage: Option<u32>,       // Set bullet damage scale factor
     pub gameModeCounter: Option<u32>,    // Set scale factor for number of tickets to end round
     pub onlySquadLeaderSpawn: Option<bool>, // Set if players can only spawn on their squad leader
+    pub ctfRoundTimeModifier: Option<i32>, // Set time modifier on CTF
+    pub gunMasterWeaponsPreset: Option<i32>, // Set preset index for gunmaster
+    pub killRotation: Option<bool>,      // ??
+    pub maxSpectators: Option<i32>,      // Set max spectator count
+    pub premiumStatus: Option<bool>,     // Set premium status?
+    pub roundWarmupTimeout: Option<i32>, // Pregame timer?
                                          // pub unlockMode: Option<Vec<String>>, // Set weapons & gadgets to be available on an unranked server
 }
 
@@ -147,13 +153,13 @@ impl Vars {
             ranked: Some(false),
             serverName: String::from(""),
             gamePassword: Some(String::from("")),
-            autoBalance: Some(false),
-            roundStartPlayerCount: Some(8),
-            roundRestartPlayerCount: Some(0),
-            roundLockdownCountdown: Some(10),
+            autoBalance: Some(true),
+            roundStartPlayerCount: Some(-1),
+            roundRestartPlayerCount: Some(-1),
+            roundLockdownCountdown: Some(15),
             serverMessage: Some(String::from("")),
             friendlyFire: Some(false),
-            maxPlayers: Some(64),
+            maxPlayers: Some(127),
             serverDescription: Some(String::from("")),
             killCam: Some(true),
             miniMap: Some(true),
@@ -164,21 +170,27 @@ impl Vars {
             nameTag: Some(true),
             _3pCam: Some(true),
             regenerateHealth: Some(true),
-            teamKillCountForKick: Some(0),
-            teamKillValueForKick: Some(2.0),
-            teamKillValuelncrease: Some(0.525),
-            teamKillValueDecreasePerSecond: Some(0.01),
+            teamKillCountForKick: Some(5),
+            teamKillValueForKick: Some(4.1),
+            teamKillValueIncrease: Some(1.0),
+            teamKillValueDecreasePerSecond: Some(0.05),
             teamKillKickForBan: Some(0),
-            idleTimeout: Some(9000),
-            idleBanRounds: Some(false),
+            idleTimeout: Some(300),
+            idleBanRounds: Some(0),
             vehicleSpawnAllowed: Some(true),
-            vehicleSpawnDelay: Some(1),
+            vehicleSpawnDelay: Some(100),
             soldierHealth: Some(100),
-            playerRespawnTime: Some(1),
-            playerManDownTime: Some(1),
-            bulletDamage: Some(1),
-            gameModeCounter: Some(1),
+            playerRespawnTime: Some(100),
+            playerManDownTime: Some(100),
+            bulletDamage: Some(100),
+            gameModeCounter: Some(100),
             onlySquadLeaderSpawn: Some(false),
+            ctfRoundTimeModifier: Some(100),
+            gunMasterWeaponsPreset: Some(0),
+            killRotation: Some(true),
+            maxSpectators: Some(0),
+            premiumStatus: Some(false),
+            roundWarmupTimeout: Some(600),
             // unlockMode: None,
         }
     }
