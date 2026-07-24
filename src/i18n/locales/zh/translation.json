@@ -1,6 +1,6 @@
 {
   "button": {
-    "back": "后退"
+    "back": "返回"
   },
   "home": {
     "error": "加载主页路径错误",
@@ -33,7 +33,7 @@
         },
         "devBranch": {
           "description": "实验性更新",
-          "title": "使用Dev分支"
+          "title": "使用预览版本"
         },
         "error": "加载Play VU表单时出错",
         "loading": "加载Play VU表单",
@@ -52,7 +52,7 @@
       "error": "未能加载玩家凭据",
       "form": {
         "button": "提交",
-        "hint": "* 必填欄位",
+        "hint": "* 必填选项",
         "password": {
           "description": "使用操作系统的本机凭证管理器存储",
           "placeholder": "密码",
@@ -221,51 +221,51 @@
   "onboarding": {
     "account": {
       "add": "添加VU账户",
-      "description": "输入您的 VU 凭据以自动登录"
+      "description": "输入您的VU凭据以自动登录"
     },
     "activate": {
       "button": "激活BF3",
-      "description": "请按照以下步骤激活 BF3",
+      "description": "请按照以下步骤激活BF3",
       "header": "用EA App / Origin激活BF3",
       "step1": "请启动您的EA App / Origin并登录",
       "step2": "登录后，单击激活BF3按钮：",
       "step3": "成功后，单击继续"
     },
     "button": {
-      "complete": "跳过 /完成引导",
-      "continue": "跳过 /继续",
+      "complete": "跳过/完成引导",
+      "continue": "跳过/继续",
       "refresh": "刷新检查",
       "skip": "跳过",
       "verify": "核实"
     },
     "error": "未能加载引导组件",
-    "failure": "未能完成初始设置",
+    "failure": "未能完成首次设置",
     "header": "首次设置",
     "install": {
       "button": {
         "cancel": "取消",
         "cancelDiskSpace": "取消（没有剩余磁盘空间）",
-        "resume": "简历下载",
-        "resumeFrom": "简历来自",
+        "resume": "继续下载",
+        "resumeFrom": "继续从",
         "retry": "重试"
       },
       "complete": "安装完成！",
-      "description": "下载最新版本的威尼斯释放",
+      "description": "下载最新版本的Venice Unleashed",
       "dev": {
         "button": "选择安装位置",
         "dialog": {
           "button": {
             "cancel": "取消",
-            "confirm": "安装VU Dev"
+            "confirm": "安装VU预览版"
           },
-          "description": "这将把VU Dev版本安装到上述目录中",
-          "title": "安装VU Dev到",
+          "description": "这将把VU预览版安装到上述目录中",
+          "title": "安装VU预览版到",
           "toast": {
-            "failure": "未能将VU Prod复制到dev文件夹",
-            "success": "成功将VU Prod复制到dev文件夹"
+            "failure": "未能将VU正式版复制到dev文件夹",
+            "success": "成功将VU正式版复制到dev文件夹"
           }
         },
-        "header": "找到VU Prod，还安装VU Dev吗？"
+        "header": "找到VU正式版，还安装VU预览版吗？"
       },
       "extractDescription": "剩余文件数",
       "extractTitle": "提取文件",
@@ -273,8 +273,8 @@
         "dialog": {
           "button": {
             "cancel": "取消",
-            "confirmBoth": "安装VU Prod和Dev",
-            "confirmOne": "安装VU Prod"
+            "confirmBoth": "安装VU正式版和预览版",
+            "confirmOne": "安装VU正式版"
           },
           "description": "这将安装VU到上述目录",
           "title": "将VU安装到："
@@ -285,7 +285,7 @@
         },
         "error": {
           "generic": "安装失败，请重试。",
-          "stalled": "下载停止（网络问题）。\n检查连接并在准备好后恢复。"
+          "stalled": "下载停止（网络问题）。\n下载卡顿（网络问题）。请检查连接并准备好后继续。"
         },
         "locate": {
           "button": "找到VU",
@@ -297,9 +297,9 @@
           "extractingPrefix": "提取文件",
           "extractingSuffix": "保持不变",
           "header": "下载VU",
-          "label": "进步"
+          "label": "下载进度"
         },
-        "resumeHint": "单击恢复继续部分下载",
+        "resumeHint": "点击继续以恢复部分下载",
         "resuming": "恢复自",
         "stalled": "连接中断。\n检查您的连接并单击恢复。",
         "stalledDescription": "检测到连接问题。\n检查互联网并单击“继续”继续。",
@@ -313,33 +313,33 @@
           "installComplete": "VU安装完成"
         }
       },
-      "success": "VU 即可使用。",
-      "title": "下载释放威尼斯"
+      "success": "VU即可使用。",
+      "title": "下载Venice Unleashed"
     },
-    "loading": "加载引导系统组件",
+    "loading": "加载新手引导组件",
     "steps": {
       "account": {
         "title": "添加账户"
       },
       "activate": {
-        "description": "VU 需要第一次 bf3 激活步骤。\n如果您已经激活 BF3，则可以跳过此步骤。",
+        "description": "VU需要第一次bf3激活步骤。\n如果您已经激活 BF3，则可以跳过此步骤。",
         "title": "激活BF3"
       },
       "install": {
-        "description": "下载释放威尼斯",
-        "title": "安装语音单元"
+        "description": "下载Venice Unleashed",
+        "title": "安装VU"
       }
     },
     "toast": {
       "activateBF3": "Activating BF3",
       "completeStep": "请先完成此步骤，然后再继续",
-      "learnMore": "了解有关威尼斯释放的更多信息"
+      "learnMore": "了解有关Venice Unleashed的更多信息"
     },
     "unknownError": "发生未知错误",
     "verify": {
       "error": "无法验证安装状态",
-      "installed": "威尼斯释放已正确安装！",
-      "notInstalled": "未找到《威尼斯释放》。\n请安装它以继续。"
+      "installed": "Venice Unleashed已正确安装！",
+      "notInstalled": "未找到Venice Unleashed。\n请安装它以继续。"
     }
   },
   "servers": {
@@ -357,12 +357,12 @@
       },
       "loading": "检查服务器密钥是否存在",
       "redoGuid": "请重新输入您的服务器GUID",
-      "serverKeyImageAlt": "显示如何获取服务器密钥信息的图像",
+      "serverKeyImageAlt": "展示如何获取服务器密钥信息的图片",
       "step1": "从此网站下载服务器密钥",
       "step2": "从上方复制服务器密钥的GUID",
       "step3": "将密钥文件拖入此窗口",
-      "subtitle": "匯入伺服器金鑰並設定快速加入",
-      "title": "初始設定"
+      "subtitle": "在此导入服务器密钥并设置快速加入",
+      "title": "首次设置"
     },
     "loadouts": {
       "createLoadout": {
@@ -478,7 +478,7 @@
             "trigger": "封禁名单"
           }
         },
-        "devToggle": "使用dev分支？",
+        "devToggle": "使用预览版本？",
         "error": "未能加载用户所偏好的配置文件",
         "launchArgs": {
           "form": {
@@ -631,7 +631,7 @@
           "serverSuccess": "启动VU服务器..."
         }
       },
-      "selectLabel": "主动装载"
+      "selectLabel": "激活配置"
     }
   },
   "settings": {
@@ -675,7 +675,7 @@
       }
     },
     "copyProdToDev": {
-      "button": "选择Vu Dev的文件夹（副本Vu Prod）"
+      "button": "选择VU预览版的文件夹（复制VU正式版）"
     },
     "error": "无法加载设置",
     "fileExplorer": "打开文件资源管理器",
@@ -710,14 +710,14 @@
       },
       "table": {
         "headerOne": "分支",
-        "headerTwo": "地点",
-        "rowOneLabel": "生产",
-        "rowTwoLabel": "发展"
+        "headerTwo": "位置",
+        "rowOneLabel": "预览",
+        "rowTwoLabel": "正式"
       },
       "title": "更改VU安装路径",
       "tooltip": {
-        "development": "更新VU开发分支机构安装路径",
-        "production": "更新VU生产分支机构安装路径"
+        "development": "更新VU预览分支安装路径",
+        "production": "更新VU正式分支安装路径"
       },
       "trigger": "更新VU安装位置"
     },
@@ -766,31 +766,25 @@
       "autoBalance": "是否启用自动平衡",
       "bulletDamage": "设置子弹的百分比伤害",
       "crossHair": "为所有武器启用准星",
-      "ctfRoundTimeModifier": "设置CTF的回合时间修改器",
       "friendlyFire": "是否开启友伤",
       "gameModeCounter": "设置兵力值的百分比数值",
       "gamePassword": "设置加入服务器的密码",
-      "gunMasterWeaponsPreset": "设置枪主武器预设索引",
       "hud": "是否启用HUD",
       "idleBanRounds": "是否设置空闲多少回合应该被封禁（如果有）",
       "idleTimeout": "设置空闲超时",
       "killCam": "是否启用被击杀时的镜头",
-      "killRotation": "未知",
       "maxPlayers": "设置最大玩家数量",
-      "maxSpectators": "设置最大观众数（可能与启动参数冲突）",
       "miniMap": "是否启用小地图",
       "miniMapSpotting": "是否在小地图上启用索敌标记",
       "nameTag": "是否启用玩家名称标签",
       "onlySquadLeaderSpawn": "只能重生在小队长身上",
       "playerManDownTime": "设置玩家倒地时间的百分比",
       "playerRespawnTime": "设置玩家重生时间的百分比",
-      "premiumStatus": "设置服务器的高级状态",
       "ranked": "是否启用等级排名",
       "regenerateHealth": "是否启用自动回血功能",
       "roundLockdownCountdown": "设置预回合的时间",
       "roundRestartPlayerCount": "设置恢复热身的最小玩家数量",
       "roundStartPlayerCount": "设置在预回合/回合内的最小玩家数量",
-      "roundWarmupTimeout": "设置赛前超时（默认 600）",
       "serverDescription": "设置服务器描述",
       "serverMessage": "设置服务器欢迎消息",
       "serverName": "设置服务器名称",
@@ -799,7 +793,7 @@
       "teamKillKickForBan": "设置击杀多少友军会被永久封禁",
       "teamKillValueDecreasePerSecond": "设置因友杀导致每秒击杀衰减的数量",
       "teamKillValueForKick": "设置玩家在被踢出前允许的最大击杀值",
-      "teamKillValueIncrease": "设置因友杀导致每秒击杀值增加的数量",
+      "teamKillValuelncrease": "设置因友杀导致每秒击杀值增加的数量",
       "vehicleSpawnAllowed": "是否启用载具生成",
       "vehicleSpawnDelay": "设置载具生成时间的百分比"
     },
@@ -811,12 +805,12 @@
       "DisablePreRound": "是否禁用预回合",
       "FriendlyFireSuppression": "是否启用启友军火力压制",
       "HighPerformanceReplication": "是否为远程玩家启用高性能更新",
-      "HttpAssetUrl": "设置指向远程 [ui.vuic] 的 URL，而不是从游戏服务器下载",
-      "ServerBanner": "设置指向 1378x162 jpg 的浏览器横幅 URL",
+      "HttpAssetUrl": "设置指向远程[ui.vuic]的URL，而不是从游戏服务器下载",
+      "ServerBanner": "设置指向1378x162分辨率的jpg的浏览器横幅 URL",
       "SetTeamTicketCount": "设置一个队伍单独的兵力值数量",
       "SquadSize": "设置每个小队的最大玩家数量",
       "SunFlareEnabled": "是否启用大太阳功能",
-      "SuppressionMultiplier": "设置火力压制强度 [0，无限]",
+      "SuppressionMultiplier": "设置火力压制强度[0，无限]",
       "TeamActivatedMines": "是否启用友军触发地雷效果功能",
       "TimeScale": "减缓或加快游戏速度 [0，2.0]",
       "VehicleDisablingEnabled": "是否启用对载具的瘫痪机制"
@@ -824,7 +818,7 @@
   },
   "toggleDevBranch": {
     "failure": "无法更新偏好",
-    "success": "保存的偏好"
+    "success": "保存偏好"
   },
   "update": {
     "checkFailed": "无法检查更新",
@@ -835,6 +829,6 @@
     "downloading": "下载更新",
     "header": "安装更新",
     "ignore": "忽略更新",
-    "install": "找到新的更新！现在安装？"
+    "install": "发现新的更新！现在安装？"
   }
 }
