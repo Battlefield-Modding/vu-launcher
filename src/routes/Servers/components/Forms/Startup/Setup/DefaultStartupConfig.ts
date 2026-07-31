@@ -128,7 +128,7 @@ export const defaultStartupArguments: StartupArgs = {
     ctfRoundTimeModifier: 100,
     gunMasterWeaponsPreset: 0,
     killRotation: true,
-    maxSpectators: 0,
+    maxSpectators: 24,
     premiumStatus: false,
     roundWarmupTimeout: 600,
     // unlockMode: None,

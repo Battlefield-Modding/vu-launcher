@@ -188,7 +188,7 @@ impl Vars {
             ctfRoundTimeModifier: Some(100),
             gunMasterWeaponsPreset: Some(0),
             killRotation: Some(true),
-            maxSpectators: Some(0),
+            maxSpectators: Some(24),
             premiumStatus: Some(false),
             roundWarmupTimeout: Some(600),
             // unlockMode: None,
